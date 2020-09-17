@@ -23,14 +23,14 @@ namespace OpenDental.User_Controls.SetupWizard {
 
 		private void UserControlSetupWizProvider_Load(object sender,EventArgs e) {
 			FillGrid();
-			if(Providers.GetWhere(x => x.FirstName.ToLower() != "default",true).ToList().Count==0) {
+			if(Providers.FindAll(x => x.FirstName.ToLower() != "default",true).ToList().Count==0) {
 				MsgBox.Show("You have no valid providers. Please click the add button to Add a provider or Add information to the default providers.");
 				timer1.Start();
 			}
 		}
 
 		private void FillGrid() {
-			List<Provider> listProvs=Providers.GetDeepCopy(true);
+			List<Provider> listProvs=Providers.GetAll(true);
 			Color needsAttnCol = OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
 			gridMain.BeginUpdate();
 			gridMain.Columns.Clear();

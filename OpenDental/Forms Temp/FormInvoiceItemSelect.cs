@@ -9,6 +9,7 @@ using OpenDental.UI;
 using CodeBase;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
+using System.Linq;
 
 namespace OpenDental {
 	public partial class FormInvoiceItemSelect:ODForm {
@@ -48,7 +49,7 @@ namespace OpenDental {
 			gridMain.Columns.Add(col);
 			gridMain.Rows.Clear();
 			GridRow row;
-			List<ProcedureCode> listProcCodes=ProcedureCodes.GetAllCodes();
+			List<ProcedureCode> listProcCodes=ProcedureCodes.GetAllCodes().ToList();
 			foreach(DataRow tableRow in _tableSuperFamAcct.Rows) {
 				row=new GridRow();
 				row.Cells.Add(PIn.Date(tableRow["Date"].ToString()).ToShortDateString());
@@ -69,9 +70,9 @@ namespace OpenDental {
 				}
 				else {	//It's a procedure
 					ProcedureCode procCode=ProcedureCodes.GetProcCode(PIn.Long(tableRow["Code"].ToString()),listProcCodes);
-					row.Cells.Add(procCode.ProcCode);
+					row.Cells.Add(procCode.Code);
 					row.Cells.Add(Tooth.ToInternat(tableRow["Tooth"].ToString()));
-					row.Cells.Add(procCode.Descript);
+					row.Cells.Add(procCode.Description);
 				}
 				row.Cells.Add(PIn.Double(tableRow["Amount"].ToString()).ToString("F"));
 				row.Tag=tableRow;

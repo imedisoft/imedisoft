@@ -29,7 +29,7 @@ namespace Imedisoft.Forms
 			if (rxAlert.AllergyDefId > 0)
 			{
 				nameLabel.Text = Translation.Rx.IfPatientAlreadyHasThisAllergy;
-				nameTextBox.Text = AllergyDefs.GetOne(rxAlert.AllergyDefId).Description;
+				nameTextBox.Text = AllergyDefs.GetById(rxAlert.AllergyDefId).Description;
 			}
 
 			if (rxAlert.MedicationId > 0)

@@ -28,6 +28,8 @@ namespace OpenDental.UI
 	{
 		private static readonly Color ColorBackGround = Color.FromArgb(230, 230, 230);
 		private static readonly Color ColorBorder = Color.FromArgb(0, 70, 140);
+		private static readonly Color ColorBorderSeperator = Color.FromArgb(120, 120, 120);
+
 
 		private static readonly Color ColorTextDisabled = Color.FromArgb(161, 161, 146);
 
@@ -72,7 +74,7 @@ namespace OpenDental.UI
 		//private Font _fontCellBold96=new Font(FontFamily.GenericSansSerif,8.5f,FontStyle.Bold);
 		//Pens---------------------------------------------------------------------------------------------------
 		///<summary>Review.  Also separates column headers.  Also used in a few other places where darker line needed.  Maybe change name _penGridlineDark?</summary>
-		private Pen _penColumnSeparator = new Pen(Color.FromArgb(120, 120, 120));
+
 		///<summary>Seems to only be used once as the line between title and headers.</summary>
 		private Pen _penGridInnerLine = new Pen(Color.FromArgb(102, 102, 122));
 		private Pen _penGridline = new Pen(Color.FromArgb(180, 180, 180));
@@ -93,7 +95,7 @@ namespace OpenDental.UI
 
 		#region Fields - Private for Properties
 		private bool _addButtonEnabled = true;
-		private Color _colorSelectedRow = Color.Silver;
+		private Color _colorSelectedRow = SystemColors.Highlight;
 		private bool _hasAddButton = false;
 		private bool _hasDropDowns = false;
 		private bool _headersVisible = true;
@@ -143,7 +145,7 @@ namespace OpenDental.UI
 		private bool _hasEditableColumn;
 
 		///<summary>Starts out 15, but code can push it higher to fit multiline text. If header is not visible, this will be set to 0.</summary>
-		private int _heightHeader = 15;
+		private int _heightHeader = 20;
 		///<summary>The total height of the actual grid area, including the parts hidden by scroll.</summary>
 		private int _heightTotal;
 		private bool _isMouseDown;
@@ -1025,7 +1027,10 @@ namespace OpenDental.UI
 			int hTot = gridRow.State.HeightMain + gridRow.State.HeightNote;
 			Font font;//do not dispose this ref.
 					  //selected row color
-			if (_selectedIndices.Contains(rowI))
+
+			bool isSelected = _selectedIndices.Contains(rowI);
+
+			if (isSelected)
 			{
 				//todo: brushes aren't disposed
 				g.FillRectangle(new SolidBrush(GetSelectedColor(gridRow.BackColor, ColorSelectedRow)),
@@ -1052,6 +1057,7 @@ namespace OpenDental.UI
 					_widthTotal,
 					hTot);
 			}
+
 			//Color Individual Cells.
 			for (int i = 0; i < gridRow.Cells.Count; i++)
 			{
@@ -1147,7 +1153,7 @@ namespace OpenDental.UI
 			Pen penLower = new Pen(_penGridline.Color);//disposed a few pages down
 			if (rowI == Rows.Count - 1)
 			{//last row
-				penLower = new Pen(_penColumnSeparator.Color);
+				penLower = new Pen(ColorBorderSeperator);
 			}
 			else
 			{
@@ -1183,19 +1189,26 @@ namespace OpenDental.UI
 				{
 					continue;
 				}
+
+				var textFormatFlags = TextFormatFlags.VerticalCenter;
 				switch (Columns[i].TextAlign)
 				{
 					case HorizontalAlignment.Left:
 						_stringFormat.Alignment = StringAlignment.Near;
+						textFormatFlags |= TextFormatFlags.Left;
 						break;
 					case HorizontalAlignment.Center:
 						_stringFormat.Alignment = StringAlignment.Center;
+						textFormatFlags |= TextFormatFlags.HorizontalCenter;
 						break;
 					case HorizontalAlignment.Right:
 						_stringFormat.Alignment = StringAlignment.Far;
+						textFormatFlags |= TextFormatFlags.Right;
 						break;
 				}
-				Rectangle rectangleText = new Rectangle(-hScroll.Value + Columns[i].State.XPos, top + 1, Columns[i].State.Width, hMain);
+
+
+				Rectangle rectangleText = new Rectangle(-hScroll.Value + Columns[i].State.XPos, top, Columns[i].State.Width, hMain - 3);
 				if (WrapText && Columns[i].TextAlign == HorizontalAlignment.Left)
 				{
 					//The line below is a compromise that leaves a bit of extra white space on the right, 
@@ -1236,6 +1249,9 @@ namespace OpenDental.UI
 				{
 					colorText = gridRow.Cells[i].ForeColor.Value;
 				}
+
+				if (isSelected) colorText = Color.White;
+				
 
 
 				if (gridRow.Cells[i].Bold == true)
@@ -1295,12 +1311,11 @@ namespace OpenDental.UI
 						g.DrawLines(Pens.Black, new PointF[] { topPoint, midPoint, rightPoint });
 					}
 				}
+
+
 				if (Columns[i].ImageList == null)
-				{//text
-					using (SolidBrush brush = new SolidBrush(colorText))
-					{
-						g.DrawString(gridRow.Cells[i].Text, font, brush, rectangleText, _stringFormat);
-					}
+				{
+					TextRenderer.DrawText(g, gridRow.Cells[i].Text, Font, rectangleText, colorText, textFormatFlags);
 				}
 				else
 				{//image
@@ -1427,30 +1442,51 @@ namespace OpenDental.UI
 
 		private void DrawHeaders(Graphics g)
 		{
-			if (_heightHeader == 0)
-			{
-				return;
-			}
+			if (_heightHeader == 0) return;
 
-			g.FillRectangle(_brushHeaderBackground, 1, DpiScale(titleHeight) + 1, Width, DpiScale(_heightHeader));//background
-			g.DrawLine(_penGridInnerLine, 0, DpiScale(titleHeight), Width, DpiScale(titleHeight));//line between title and headers
-			StringFormat stringFormat = new StringFormat();
-			stringFormat.Alignment = StringAlignment.Center;
-			stringFormat.LineAlignment = StringAlignment.Center;
+			using var background = new LinearGradientBrush(
+				new Point(0, titleHeight + 1), 
+				new Point(0, titleHeight + 1 + _heightHeader), 
+				Color.FromArgb(240, 240, 240), 
+				Color.FromArgb(187, 187, 187));
+
+
+			g.FillRectangle(background, 1, titleHeight + 1, Width, _heightHeader);
+			g.DrawLine(_penGridInnerLine, 0, titleHeight, Width, titleHeight);
+
+			using var pen = new Pen(ColorBorderSeperator);
+			using var penShadow = new Pen(Color.FromArgb(240, 240, 240));
+
 			for (int i = 0; i < Columns.Count; i++)
 			{
 				if (i != 0)
 				{
-					//vertical lines to right of column header
-					g.DrawLine(_penColumnSeparator, -hScroll.Value + Columns[i].State.XPos, DpiScale(titleHeight) + 3,
-						-hScroll.Value + Columns[i].State.XPos, OriginY() - 2);
-					g.DrawLine(new Pen(Color.White), -hScroll.Value + Columns[i].State.XPos + 1, DpiScale(titleHeight) + 3,
-						-hScroll.Value + Columns[i].State.XPos + 1, OriginY() - 2);
+					int x1 = -hScroll.Value + Columns[i].State.XPos;
+					int y1 = titleHeight + 1;
+					int x2 = x1;
+					int y2 = y1 + _heightHeader - 2;
+
+					g.DrawLine(pen, x1, y1, x2, y2);
+					g.DrawLine(penShadow, x1 + 1, y1, x2 + 1, y2);
 				}
-				RectangleF rect = new RectangleF(Columns[i].State.XPos - hScroll.Value, DpiScale(titleHeight) + 2,
-					Columns[i].State.Width, DpiScale(_heightHeader));
-				g.DrawString(Columns[i].HeaderText, _fontHeader, _brushHeaderText, rect, stringFormat);
+
+				if (string.IsNullOrEmpty(Columns[i].HeaderText)) continue;
+
+				int rx = Columns[i].State.XPos - hScroll.Value;
+				int ry = titleHeight + 2;
+				int rw = Columns[i].State.Width;
+				int rh = _heightHeader - 3;
+
+				TextRenderer.DrawText(g, Columns[i].HeaderText, Font,
+					new Rectangle(rx + 1, ry + 1, rw, rh), Color.FromArgb(240, 240, 240),
+					TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter);
+
+				TextRenderer.DrawText(g, Columns[i].HeaderText, Font, 
+					new Rectangle(rx, ry, rw, rh), Color.Black, 
+					TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter);
 			}
+
+
 			GraphicsState graphicsState = g.Save();
 			g.SmoothingMode = SmoothingMode.HighQuality;
 			for (int i = 0; i < Columns.Count; i++)
@@ -1487,9 +1523,9 @@ namespace OpenDental.UI
 				}//if
 			}//for
 			g.Restore(graphicsState);//to possibly turn off HighQuality
-			stringFormat.Dispose();
+
 			//line below headers
-			g.DrawLine(_penColumnSeparator, 0, OriginY(), Width, OriginY());
+			g.DrawLine(pen, 0, OriginY(), Width, OriginY());
 		}
 
 
@@ -2470,7 +2506,7 @@ namespace OpenDental.UI
 			Pen penLower = new Pen(_penGridline.Color);//disposed a few pages down
 			if (rowI == Rows.Count - 1)
 			{//last row
-				penLower = new Pen(_penColumnSeparator.Color);
+				penLower = new Pen(ColorBorderSeperator);
 			}
 			else
 			{
@@ -2726,7 +2762,7 @@ namespace OpenDental.UI
 			XPen xPenLower = new XPen(_penGridline);
 			if (rowI == Rows.Count - 1)
 			{//last row
-				xPenLower = new XPen(XColor.FromArgb(_penColumnSeparator.Color.ToArgb()));
+				xPenLower = new XPen(XColor.FromArgb(ColorBorderSeperator.ToArgb()));
 			}
 			else
 			{
@@ -3924,6 +3960,9 @@ namespace OpenDental.UI
 				}
 				SortedByColumnIdx = -1;
 			}
+
+			SelectionCommitted?.Invoke(this, new EventArgs());
+
 			Invalidate();
 		}
 
@@ -4117,7 +4156,7 @@ namespace OpenDental.UI
 			Pen lowerPen = new Pen(_penGridline.Color);
 			if (_printedRows == Rows.Count - 1)
 			{//last row
-				lowerPen = new Pen(_penColumnSeparator.Color);
+				lowerPen = new Pen(ColorBorderSeperator);
 			}
 			else
 			{
@@ -4777,10 +4816,10 @@ namespace OpenDental.UI
 							//But both printing and sheets need to calculate slightly differently.
 							//The line below is a compromise for now, until a more rigorous overhaul can be done
 							//to combine all three into one set of drawing commands.
-							hTemp = g.MeasureString(Rows[i].Cells[j].Text, font, Columns[j].State.Width, _stringFormat).Height;
+							hTemp = g.MeasureString(Rows[i].Cells[j].Text, font, Columns[j].State.Width, _stringFormat).Height + 2;
 							if (Rows[i].Cells[j].IsButton)
 							{
-								hTemp = g.MeasureString(Rows[i].Cells[j].Text, font, Columns[j].State.Width - 1, _stringFormat).Height;
+								hTemp = g.MeasureString(Rows[i].Cells[j].Text, font, Columns[j].State.Width - 1, _stringFormat).Height + 2;
 							}
 							if (_hasDropDowns && j == 0)
 							{//only draw the dropdown arrow in the first column of the row.

@@ -425,16 +425,16 @@ namespace OpenDentBusiness.Eclaims {
 				throw new ODException("Invalid insurance subscriber associated to claim.");
 			}
 			//Insplan
-			InsPlan insPlan=InsPlans.GetPlan(claim.PlanNum,null);
+			InsurancePlan insPlan=InsPlans.GetPlan(claim.PlanNum,null);
 			if(insPlan==null) {
 				throw new ODException("Invalid insurance plan associated to claim.");
 			}
 			//Carrier
-			Carrier carrier=Carriers.GetCarrier(insPlan.CarrierNum);
+			Carrier carrier=Carriers.GetCarrier(insPlan.CarrierId);
 			if(carrier==null) {
 				throw new ODException("Invalid carrier associated to claim.");
 			}
-			if(carrier.ElectID.Length<2) {
+			if(carrier.ElectronicId.Length<2) {
 				throw new ODException("Invalid ElectID.");
 			}
 			//Subscriber
@@ -502,7 +502,7 @@ namespace OpenDentBusiness.Eclaims {
 			attachment.SubscriberFirstName=subscriber.FName;
 			attachment.SubscriberLastName=subscriber.LName;
 			attachment.ProviderClaimID=TruncateClaimIdentifierIfNeeded(claim.ClaimIdentifier);
-			attachment.PayerIdCode=carrier.ElectID;
+			attachment.PayerIdCode=carrier.ElectronicId;
 			if(claim.DateService.Year>1880) {
 				attachment.DateOfService=claim.DateService;
 				attachment.DateOfServiceSpecified=true;
@@ -535,19 +535,19 @@ namespace OpenDentBusiness.Eclaims {
 		}
 		
 		private static Clearinghouse GetClearingHouseForClaim(Claim claim) {
-			InsPlan insPlan=InsPlans.GetPlan(claim.PlanNum,null);
+			InsurancePlan insPlan=InsPlans.GetPlan(claim.PlanNum,null);
 			if(insPlan==null) {
 				throw new ODException("Invalid insurance plan associated to claim.");
 			}
-			Carrier carrier=Carriers.GetCarrier(insPlan.CarrierNum);
+			Carrier carrier=Carriers.GetCarrier(insPlan.CarrierId);
 			if(carrier==null) {
 				throw new ODException("Invalid carrier associated to claim.");
 			}
-			if(carrier.ElectID.Length<2) {
+			if(carrier.ElectronicId.Length<2) {
 				throw new ODException("Invalid ElectID.");
 			}
 			//Fill clearing house with HQ fields
-			long clearingHouseNum=Clearinghouses.AutomateClearinghouseHqSelection(carrier.ElectID,claim.MedType);
+			long clearingHouseNum=Clearinghouses.AutomateClearinghouseHqSelection(carrier.ElectronicId,claim.MedType);
 			Clearinghouse clearingHouse=Clearinghouses.GetClearinghouse(clearingHouseNum);
 			//Refill clearingHouse with clinic specific fields
 			return Clearinghouses.OverrideFields(clearingHouse,claim.ClinicNum);

@@ -487,7 +487,7 @@ namespace OpenDentBusiness
 			List<AllergyDef> listAllergyDefs = new List<AllergyDef>();
 			for (int i = 0; i < listAllergies.Count; i++)
 			{
-				listAllergyDefs.Add(AllergyDefs.GetOne(listAllergies[i].AllergyDefId));
+				listAllergyDefs.Add(AllergyDefs.GetById(listAllergies[i].AllergyDefId));
 			}
 			for (int i = 0; i < listDiseases.Count; i++)
 			{
@@ -604,7 +604,7 @@ namespace OpenDentBusiness
 			{
 				if (ehrTrig.AllergyDefNumList.Contains(" " + listAllergies[a].AllergyDefId + " "))
 				{
-					AllergyDef allergyDefCur = AllergyDefs.GetOne(listAllergies[a].AllergyDefId);
+					AllergyDef allergyDefCur = AllergyDefs.GetById(listAllergies[a].AllergyDefId);
 					if (allergyDefCur != null)
 					{
 						listObjectMatches.Add(allergyDefCur);
@@ -1279,7 +1279,7 @@ namespace OpenDentBusiness
 					cdsTrig.Type = "Allergy";
 					cdsTrig.Code = POut.Long(allergyObj.Id);
 					cdsTrig.CodeSystem = CodeSyst.AllergyDef;
-					cdsTrig.Description = AllergyDefs.GetOne(allergyObj.Id).Description;
+					cdsTrig.Description = AllergyDefs.GetById(allergyObj.Id).Description;
 					listCDSTrigs.Add(cdsTrig);
 					break;
 				default:

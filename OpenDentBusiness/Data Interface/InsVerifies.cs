@@ -94,7 +94,7 @@ namespace OpenDentBusiness{
 			#endregion insurance verification
 			#region Benifit Renewal
 			if(Preferences.GetBool(PreferenceName.InsVerifyFutureDateBenefitYear)) {
-				InsPlan insPlan=InsPlans.GetPlan(insVer.PlanNum,null);
+				InsurancePlan insPlan=InsPlans.GetPlan(insVer.PlanNum,null);
 				//Setup the month renew dates.  Need all 3 years in case the appointment verify window crosses over a year
 				//e.g. Appt verify date: 12/30/2016 and Appt Date: 1/6/2017
 				DateTime dateTimeOldestRenewal=new DateTime(DateTime.Now.Year-1,Math.Max((byte)1,insPlan.MonthRenew),1);
@@ -405,16 +405,16 @@ namespace OpenDentBusiness{
 			Logger.LogVerbose($"{listInsVerify.Count} insverify grid objects",LogLevel.Verbose,"InsVerifyBatch");
 			Dictionary<long,Carrier> dictTrustedCarriers=null;//Key: CarrierNum, Value: Carrier
 			Dictionary<long,InsSub> dictInsSubs=null;//Key: InsSubNum, Value: InsSub
-			Dictionary<long,InsPlan> dictInsPlans=null;//Key: PlanNum, Value: InsPlan
+			Dictionary<long,InsurancePlan> dictInsPlans=null;//Key: PlanNum, Value: InsPlan
 			long errorStatusDefNum=-1;//FK to defNum associated to DefinitionCategory.InsuranceVerificationStatus 'ServiceError' def.
 			if(listInsVerify.Count>0){//Avoid queries/logic if not necessary, but still update PrefName.InsVerifyServiceBatchLastRunDate below.
 				dictTrustedCarriers=Carriers.GetWhere(x => x.TrustedEtransFlags.HasFlag(TrustedEtransTypes.RealTimeEligibility))
-					.ToDictionary(x => x.CarrierNum,x => x);
+					.ToDictionary(x => x.Id,x => x);
 				List<long> listInsSubNums=listInsVerify.Where(x => x.PatInsVerify!=null).Select(x => x.PatInsVerify.InsSubNum).ToList();
 				//Eventually we might incoroprate ins plan verification
 				//listInsSubNums.AddRange(listInsVerify.Where(x => x.PlanInsVerify!=null).Select(x => x.PlanInsVerify.InsSubNum).ToList());
 				dictInsSubs=InsSubs.GetMany(listInsSubNums).ToDictionary(x => x.InsSubNum, x => x);
-				dictInsPlans=InsPlans.GetByInsSubs(listInsSubNums).ToDictionary(x => x.PlanNum, x => x);
+				dictInsPlans=InsPlans.GetByInsSubs(listInsSubNums).ToDictionary(x => x.Id, x => x);
 				errorStatusDefNum=Definitions.GetByExactName(DefinitionCategory.InsuranceVerificationStatus,"ServiceError");//0 if not found
 			}
 			List<InsVerify> listInsVerifies=new List<InsVerify>();
@@ -448,7 +448,7 @@ namespace OpenDentBusiness{
 							List<Benefit> listBensForPat=Benefits.RefreshForPlan(insVerifyObj.PatInsVerify.PlanNum,insVerifyObj.PatInsVerify.PatPlanNum);
 							//If the benefits received from 271 are valid, continue with further validation
 							if(x271.IsValidForBatchVerification(listEb271,isCoinsuranceInverted,out errorStatus)) {
-								string strGroupNumInOd=dictInsPlans[insVerifyObj.PatInsVerify.PlanNum].GroupNum;
+								string strGroupNumInOd=dictInsPlans[insVerifyObj.PatInsVerify.PlanNum].GroupNumber;
 								string strGroupNumIn271=x271.GetGroupNum();
 								errorStatus+=ValidateGroupNumber(strGroupNumInOd,strGroupNumIn271);
 								#region Validate Plan dates

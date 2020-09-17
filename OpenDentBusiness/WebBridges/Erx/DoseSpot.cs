@@ -76,7 +76,7 @@ namespace OpenDentBusiness {
 
 		public static void MakeClinicErxAlert(ClinicErx clinicErx,bool clinicAutomaticallyAttached) {
 			AlertItem alert=AlertItems.RefreshForType(AlertType.DoseSpotClinicRegistered)
-				.FirstOrDefault(x => x.ObjectId==clinicErx.ClinicErxNum);
+				.FirstOrDefault(x => x.ObjectId==clinicErx.Id);
 			if(alert!=null) {
 				return;//alert already exists
 			}
@@ -88,23 +88,23 @@ namespace OpenDentBusiness {
       if(clinic!=null || clinicAutomaticallyAttached) {
         //A clinic was associated with the clinicerx successfully, no user action needed.
         alert=new AlertItem {
-          Actions=ActionType.MarkAsRead | ActionType.Delete,
+          Actions=AlertAction.MarkAsRead | AlertAction.Delete,
           Description=(clinicErx.ClinicDesc=="" ? "Headquarters" : clinicErx.ClinicDesc)+" "+"has been registered",
-          Severity=SeverityType.Low,
+          Severity=AlertSeverityType.Low,
           Type=AlertType.DoseSpotClinicRegistered,
-          ObjectId=clinicErx.ClinicErxNum,
+          ObjectId=clinicErx.Id,
           ClinicId=clinicErx.ClinicNum,
         };
       }
       else {
         //User action needed to make a link to an existing clinic that was registered.
         alert=new AlertItem {
-          Actions=ActionType.MarkAsRead | ActionType.Delete | ActionType.OpenForm,
+          Actions=AlertAction.MarkAsRead | AlertAction.Delete | AlertAction.OpenForm,
           Description="Select clinic to assign ID",
-          Severity=SeverityType.Low,
+          Severity=AlertSeverityType.Low,
           Type=AlertType.DoseSpotClinicRegistered,
           ClinicId=-1,//Show in all clinics.  We only want 1 alert, but that alert can be processed from any clinic because we don't know which clinic to display in.
-          ObjectId=clinicErx.ClinicErxNum,
+          ObjectId=clinicErx.Id,
           FormToOpen=FormType.FormDoseSpotAssignClinicId,
         };
       }
@@ -120,13 +120,13 @@ namespace OpenDentBusiness {
 				return;//alert already exists
 			}
 			//get a list of users that correspond to a non-hidden provider
-			List<Provider> listProviders=Providers.GetWhere(x => x.NationalProviderID==providerErx.NationalProviderID,true);
+			List<Provider> listProviders=Providers.FindAll(x => x.NationalProviderID==providerErx.NationalProviderID,true);
 			List<User> listDoseUsers=Users.Find(x => !x.IsHidden && listProviders.Exists(y => y.Id==x.ProviderId));//Only consider non-hidden users.
 			if(listDoseUsers.Count==1) {//One provider matched so simply notify the office and set the DoseSpot User Id.
 				alert=new AlertItem {
-					Actions=ActionType.MarkAsRead | ActionType.Delete | ActionType.ShowItemValue,
+					Actions=AlertAction.MarkAsRead | AlertAction.Delete | AlertAction.ShowItemValue,
 					Description="User automatically assigned.",
-					Severity=SeverityType.Low,
+					Severity=AlertSeverityType.Low,
 					Type=AlertType.DoseSpotProviderRegistered,
 					ObjectId=providerErx.ProviderErxNum,
 					ClinicId=-1,//Show in all clinics.  We only want 1 alert, but that alert can be processed from any clinic because providers aren't clinic specific
@@ -142,9 +142,9 @@ namespace OpenDentBusiness {
 			}
 			else {//More than one or no user associated to the NPI, generate alert with form to have the office choose which user to assign.
 				alert=new AlertItem {
-					Actions=ActionType.MarkAsRead | ActionType.Delete | ActionType.OpenForm,
+					Actions=AlertAction.MarkAsRead | AlertAction.Delete | AlertAction.OpenForm,
 					Description="Select user to assign ID",
-					Severity=SeverityType.Low,
+					Severity=AlertSeverityType.Low,
 					Type=AlertType.DoseSpotProviderRegistered,
 					ObjectId=providerErx.ProviderErxNum,
 					ClinicId=-1,//Show in all clinics.  We only want 1 alert, but that alert can be processed from any clinic because providers aren't clinic specific

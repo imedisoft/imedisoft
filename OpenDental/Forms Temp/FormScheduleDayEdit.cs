@@ -516,7 +516,7 @@ namespace OpenDental{
 			_dictClinicNumClinic=_listClinics.ToDictionary(x => x.Id);//speed up sorting of schedules.
 			comboClinic.SelectedClinicNum=_clinicNumInitial;
 			comboClinicChanged();//fills provs and emps and also fills grid
-			comboProv.Items.AddProvsAbbr(Providers.GetDeepCopy(true));
+			comboProv.Items.AddProvsAbbr(Providers.GetAll(true));
 			comboProv.SetSelectedProvNum(Preferences.GetLong(PreferenceName.ScheduleProvUnassigned));
 			labelDate.Text=_dateSched.ToString("dddd")+"\r\n"+_dateSched.ToShortDateString();
 			if(_isFromSchedule && (_provAbbrFilter!="" || _employeeNameFilter!="")) {//single person was passed in from the schedule window.
@@ -575,7 +575,7 @@ namespace OpenDental{
 				_listEmps.AddRange(Employees.GetEmpsForClinic(comboClinic.SelectedClinicNum));
 			}
 			else {
-				_listProvs.AddRange(Providers.GetDeepCopy(true));
+				_listProvs.AddRange(Providers.GetAll(true));
 				_listEmps.AddRange(Employees.GetAll(true));
 			}
 			//Prov Listbox

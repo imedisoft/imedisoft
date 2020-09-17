@@ -1,6 +1,7 @@
 ﻿using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.Forms;
 using OpenDentBusiness;
 using System;
@@ -176,11 +177,11 @@ namespace OpenDental
 				// TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.Start);
 				List<List<AlertItem>> listUniqueAlerts = AlertItems.GetUniqueAlerts(userNumCur, clinicNumCur);
 				//We will set the alert's tag to all the items in its list so that all can be marked read/deleted later.
-				listUniqueAlerts.ForEach(x => x.First().TagOD = x.Select(y => y.Id).ToList());
+				//listUniqueAlerts.ForEach(x => x.First().TagOD = x.Select(y => y.Id).ToList());
 				List<AlertItem> listAlertItems = listUniqueAlerts.Select(x => x.First())
 					.Where(x => x.Type != AlertType.ClinicsChangedInternal).ToList();//These alerts are not supposed to be displayed to the end user.
 																					 //Update listUserAlertTypes to only those with active AlertItems.
-				List<AlertType> listUserAlertLinks = listAlertItems.Select(x => x.Type).ToList();
+				List<string> listUserAlertLinks = listAlertItems.Select(x => x.Type).ToList();
 				var listAlertItemReads = AlertReads.RefreshForAlertNums(userNumCur, listAlertItems.Select(x => x.Id).ToList());
 				this.InvokeIfRequired(() =>
 				{
@@ -467,9 +468,9 @@ namespace OpenDental
 			AlertItems.Insert(new AlertItem
 			{
 				//Do not allow delete. The only way for this alert to be deleted is for the eConnector to insert a heartbeat, which will in-turn delete this alert.
-				Actions = ActionType.MarkAsRead | ActionType.OpenForm,
+				Actions = AlertAction.MarkAsRead | AlertAction.OpenForm,
 				Description = "eConnector needs to be restarted",
-				Severity = SeverityType.High,
+				Severity = AlertSeverityType.High,
 				Type = AlertType.EConnectorDown,
 				//Show for all clinics.
 				ClinicId = -1,

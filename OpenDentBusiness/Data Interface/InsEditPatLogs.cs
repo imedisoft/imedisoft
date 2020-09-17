@@ -176,7 +176,7 @@ namespace OpenDentBusiness
 					if (tableColumn.Name == nameof(PatPlan.OrthoAutoFeeBilledOverride) && (strValOld == "-1" || strValCur == "-1"))
 					{
 						PatPlan patPlan = priKeyItem as PatPlan;
-						InsPlan insPlanForPatPlan = InsPlans.GetByInsSubs(new List<long> { patPlan.InsSubNum }).FirstOrDefault();
+						InsurancePlan insPlanForPatPlan = InsPlans.GetByInsSubs(new List<long> { patPlan.InsSubNum }).FirstOrDefault();
 						//The UseDefaultFee check box was altered. Create a new log entry for the UseDefaultFee value.
 						logCur = new InsEditPatLog()
 						{

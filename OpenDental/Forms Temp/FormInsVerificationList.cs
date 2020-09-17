@@ -142,20 +142,20 @@ namespace OpenDental {
 			}
 		}
 
-		private void FillInsuranceDisplay(InsPlan insPlanVerify) {
+		private void FillInsuranceDisplay(InsurancePlan insPlanVerify) {
 			if(insPlanVerify==null) {//Should never happen, but if it does, return because it is just for display purposes.
 				return;
 			}
 			textInsPlanGroupName.Text=insPlanVerify.GroupName;
-			textInsPlanGroupNumber.Text=insPlanVerify.GroupNum;
+			textInsPlanGroupNumber.Text=insPlanVerify.GroupNumber;
 			textInsPlanNote.Text=insPlanVerify.PlanNote;
 			Employer employer=Employers.GetEmployer(insPlanVerify.EmployerNum);
 			if(employer!=null) {
 				textInsPlanEmployer.Text=employer.Name;
 			}
-			Carrier carrierVerify=Carriers.GetCarrier(insPlanVerify.CarrierNum);
+			Carrier carrierVerify=Carriers.GetCarrier(insPlanVerify.CarrierId);
 			if(carrierVerify!=null) {
-				textCarrierName.Text=carrierVerify.CarrierName;
+				textCarrierName.Text=carrierVerify.Name;
 				textCarrierPhoneNumber.Text=carrierVerify.Phone;
 			}
 		}
@@ -566,7 +566,7 @@ namespace OpenDental {
 			}
 			PatPlan pp=null;
 			InsSub insSub=null;
-			InsPlan ip=null;
+			InsurancePlan ip=null;
 			if(_gridRowSelected.PatInsVerify!=null) {				
 				pp=PatPlans.GetByPatPlanNum(patPlanNum);
 				if(pp==null) {
@@ -582,10 +582,10 @@ namespace OpenDental {
 					FillGrids();
 					return;
 				}
-				ip=InsPlans.GetPlan(insSub.PlanNum,new List<InsPlan>());
+				ip=InsPlans.GetPlan(insSub.PlanNum,new List<InsurancePlan>());
 			}
 			else if(_gridRowSelected.PlanInsVerify!=null) {
-				ip=InsPlans.GetPlan(_gridRowSelected.PlanInsVerify.FKey,new List<InsPlan>());				
+				ip=InsPlans.GetPlan(_gridRowSelected.PlanInsVerify.FKey,new List<InsurancePlan>());				
 			}
 			if(ip==null) {
 				MessageBox.Show("The selected insurance plan cannot be found.");

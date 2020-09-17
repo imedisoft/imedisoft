@@ -315,11 +315,11 @@ namespace Imedisoft.Forms
 					foreach (var code in procedureCodes)
 					{
 						var procedureCode = ProcedureCodes.GetProcCode(code);
-						if (procedureCode.CodeNum == 0)
+						if (procedureCode.Id == 0)
 						{
 							// Now check to see if the trimmed version of the code does not exist either.
 							procedureCode = ProcedureCodes.GetProcCode(code.Trim());
-							if (procedureCode.CodeNum == 0)
+							if (procedureCode.Id == 0)
 							{
 								ShowError("Invalid procedure code entered: " + code);
 
@@ -327,7 +327,7 @@ namespace Imedisoft.Forms
 							}
 						}
 
-						procedureCodesFound.Add(procedureCode.ProcCode);
+						procedureCodesFound.Add(procedureCode.Code);
 					}
 
 					valueTextBox.Text = string.Join(",", procedureCodesFound);

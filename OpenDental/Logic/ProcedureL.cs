@@ -13,7 +13,7 @@ namespace OpenDental
 	{
 		///<summary>Sets all procedures for apt complete.  Flags procedures as CPOE as needed (when prov logged in).  Makes a log
 		///entry for each completed proc.  Then fires the CompleteProcedure automation trigger.</summary>
-		public static List<Procedure> SetCompleteInAppt(Appointment apt, List<InsPlan> PlanList, List<PatPlan> patPlans, Patient patient,
+		public static List<Procedure> SetCompleteInAppt(Appointment apt, List<InsurancePlan> PlanList, List<PatPlan> patPlans, Patient patient,
 			List<InsSub> subList, bool removeCompletedProcs)
 		{
 			List<Procedure> listProcsInAppt = Procedures.SetCompleteInAppt(apt, PlanList, patPlans, patient, subList, removeCompletedProcs);
@@ -36,7 +36,7 @@ namespace OpenDental
 			{
 				Procedure proc = procs[i];
 				ProcedureCode procCode = ProcedureCodes.GetProcCode(procs[i].CodeNum);
-				string procCodeStr = procCode.ProcCode;
+				string procCodeStr = procCode.Code;
 				if (procCodeStr.Length > 5
 					&& procCodeStr.StartsWith("D")
 					&& !hasLongDCodes)
@@ -47,7 +47,7 @@ namespace OpenDental
 				{
 					Procedure procDup = procsChecked[j];
 					ProcedureCode procCodeDup = ProcedureCodes.GetProcCode(procsChecked[j].CodeNum);
-					string procCodeDupStr = procCodeDup.ProcCode;
+					string procCodeDupStr = procCodeDup.Code;
 					if (procCodeDupStr.Length > 5
 						&& procCodeDupStr.StartsWith("D")
 						&& !hasLongDCodes)

@@ -71,7 +71,7 @@ namespace OpenDental {
 		private void FillComboProv() {
 			comboProv.Items.Clear();
 			comboProv.Items.Add(new ODBoxItem<Provider>("Inherit"));//Inherit was carefully approved by Nathan (and reluctantly Allen)
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			foreach(Provider prov in _listProviders) {
 				comboProv.Items.Add(new ODBoxItem<Provider>(prov.Abbr,prov));
 			}

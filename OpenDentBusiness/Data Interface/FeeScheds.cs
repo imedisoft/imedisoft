@@ -18,13 +18,13 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary>Gets the fee sched from the first insplan, the patient, or the provider in that order.  Uses procProvNum if>0, otherwise pat.PriProv.
 		///Either returns a fee schedule (fk to definition.DefNum) or 0.</summary>
-		public static long GetFeeSched(Patient pat,List<InsPlan> planList,List<PatPlan> patPlans,List<InsSub> subList,long procProvNum) {
+		public static long GetFeeSched(Patient pat,List<InsurancePlan> planList,List<PatPlan> patPlans,List<InsSub> subList,long procProvNum) {
 			//No need to check RemotingRole; no call to db.
 			//there's not really a good place to put this function, so it's here.
 			long priPlanFeeSched=0;
 			PatPlan patPlanPri = patPlans.FirstOrDefault(x => x.Ordinal==1);
 			if(patPlanPri!=null) {
-				InsPlan planCur=InsPlans.GetPlan(InsSubs.GetSub(patPlanPri.InsSubNum,subList).PlanNum,planList);
+				InsurancePlan planCur=InsPlans.GetPlan(InsSubs.GetSub(patPlanPri.InsSubNum,subList).PlanNum,planList);
 				if(planCur!=null) {
 					priPlanFeeSched=planCur.FeeSched;
 				}
@@ -36,13 +36,13 @@ namespace OpenDentBusiness{
 		///Might return a 0 if the primary provider does not have a fee schedule set.</summary>
 		public static long GetFeeSched(long priPlanFeeSched,long patFeeSched,long provNum) {
 			//No need to check RemotingRole; no call to db.
-			long provFeeSched=(Providers.GetFirstOrDefault(x => x.Id==provNum)??new Provider()).FeeScheduleId;//defaults to 0
+			long provFeeSched=(Providers.FirstOrDefault(x => x.Id==provNum)??new Provider()).FeeScheduleId;//defaults to 0
 			return new[] { priPlanFeeSched,patFeeSched,provFeeSched }.FirstOrDefault(x => x>0);//defaults to 0 if all fee scheds are 0
 		}
 
 		///<summary>Gets the fee schedule from the primary MEDICAL insurance plan, 
 		///the first insurance plan, the patient, or the provider in that order.</summary>
-		public static long GetMedFeeSched(Patient pat,List<InsPlan> planList,List<PatPlan> patPlans,List<InsSub> subList,long procProvNum) {
+		public static long GetMedFeeSched(Patient pat,List<InsurancePlan> planList,List<PatPlan> patPlans,List<InsSub> subList,long procProvNum) {
 			//No need to check RemotingRole; no call to db.
 			long retVal = 0;
 			if(PatPlans.GetInsSubNum(patPlans,1) != 0){
@@ -61,7 +61,7 @@ namespace OpenDentBusiness{
 					return GetFeeSched(pat,planList,patPlans,subList,procProvNum);  //Use dental insurance fee schedule
 				}
 				subCur=InsSubs.GetSub(PatPlans.GetInsSubNum(patPlans,planOrdinal),subList);
-				InsPlan PlanCur=InsPlans.GetPlan(subCur.PlanNum, planList);
+				InsurancePlan PlanCur=InsPlans.GetPlan(subCur.PlanNum, planList);
 				if (PlanCur==null){
 					retVal=0;
 				} 
@@ -79,7 +79,7 @@ namespace OpenDentBusiness{
 					} 
 					else {
 						Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-						Provider provider=Providers.GetFirstOrDefault(x => x.Id==pat.PriProv)??providerFirst;
+						Provider provider=Providers.FirstOrDefault(x => x.Id==pat.PriProv)??providerFirst;
 						retVal=provider.FeeScheduleId;
 					}
 				}
@@ -103,7 +103,7 @@ namespace OpenDentBusiness{
 
 		#region Misc Methods
 		///<summary>Copies one fee schedule to one or more fee schedules.  fromClinicNum, fromProvNum, and toProvNum can be zero.  Set listClinicNumsTo to copy to multiple clinic overrides.  If this list is null or empty, clinicNum 0 will be used.</summary>
-		public static void CopyFeeSchedule(FeeSched fromFeeSched,long fromClinicNum,long fromProvNum,FeeSched toFeeSched,List<long> listClinicNumsTo,long toProvNum){
+		public static void CopyFeeSchedule(FeeSchedule fromFeeSched,long fromClinicNum,long fromProvNum,FeeSchedule toFeeSched,List<long> listClinicNumsTo,long toProvNum){
 			
 			if(listClinicNumsTo==null) {
 				listClinicNumsTo=new List<long>();
@@ -112,13 +112,13 @@ namespace OpenDentBusiness{
 				listClinicNumsTo.Add(0);
 			}			
 			//Store a local copy of the fees from the old FeeSched
-			List<Fee> listFeeLocalCopy=Fees.GetListExact(toFeeSched.FeeSchedNum,listClinicNumsTo,toProvNum);
+			List<Fee> listFeeLocalCopy=Fees.GetListExact(toFeeSched.Id,listClinicNumsTo,toProvNum);
 			//Delete all fees that exactly match setting in "To" combo selections.
 			foreach(long clinicNum in listClinicNumsTo){
-				Fees.DeleteFees(toFeeSched.FeeSchedNum,clinicNum,toProvNum);
+				Fees.DeleteFees(toFeeSched.Id,clinicNum,toProvNum);
 			}
 			//Copy:
-			List<Fee> listNewFees=Fees.GetListExact(fromFeeSched.FeeSchedNum,fromClinicNum,fromProvNum);
+			List<Fee> listNewFees=Fees.GetListExact(fromFeeSched.Id,fromClinicNum,fromProvNum);
 			int blockValue=0;
 			int blockMax=(listNewFees.Count * listClinicNumsTo.Count);
 			object locker=new object();
@@ -131,13 +131,13 @@ namespace OpenDentBusiness{
 						newFee.FeeNum=0;
 						newFee.ProvNum=toProvNum;
 						newFee.ClinicNum=clinicNumTo;
-						newFee.FeeSched=toFeeSched.FeeSchedNum;
+						newFee.FeeScheduleId=toFeeSched.Id;
 						Fees.Insert(newFee);
 						//Check to see if this replaced an old fee with the same fee details
 						Fee oldFee=listFeeLocalCopy.Where(x => x.ProvNum==newFee.ProvNum)
 							.Where(x => x.ClinicNum==newFee.ClinicNum)
 							.Where(x => x.CodeNum==newFee.CodeNum)
-							.Where(x => x.FeeSched==newFee.FeeSched)
+							.Where(x => x.FeeScheduleId==newFee.FeeScheduleId)
 							.FirstOrDefault();
 						if(oldFee!=null)	{ 
 							isReplacementFee=true;
@@ -147,7 +147,7 @@ namespace OpenDentBusiness{
 						if(clinicNumTo!=0){
 							securityLogText+="To Clinic \""+Clinics.GetDescription(clinicNumTo)+"\", ";
 						}
-						securityLogText+="Proc Code \""+procCode.ProcCode+"\", Fee \""+fee.Amount+"\", ";
+						securityLogText+="Proc Code \""+procCode.Code+"\", Fee \""+fee.Amount+"\", ";
 						if(isReplacementFee) { 
 							securityLogText+="Replacing Previous Fee \""+oldFee.Amount+"\"";
 						}
@@ -167,12 +167,12 @@ namespace OpenDentBusiness{
 
 		///<summary>Replaces ImportCanadaFeeSchedule.  Imports a canadian fee schedule. Called only in FormFeeSchedTools, located here to allow unit testing. 
 		///Fires FeeSchedEvents for a progress bar.</summary>
-		public static List<Fee> ImportCanadaFeeSchedule2(FeeSched feeSched,string feeData,long clinicNum,long provNum,out int numImported,out int numSkipped) {
+		public static List<Fee> ImportCanadaFeeSchedule2(FeeSchedule feeSched,string feeData,long clinicNum,long provNum,out int numImported,out int numSkipped) {
 			//No need to check RemotingRole; no call to db.
 			string[] feeLines=feeData.Split('\n');
 			numImported=0;
 			numSkipped=0;
-			List<Fee> listFees=Fees.GetListExact(feeSched.FeeSchedNum,clinicNum,provNum);
+			List<Fee> listFees=Fees.GetListExact(feeSched.Id,clinicNum,provNum);
 			List<Fee> listFeesImported=new List<Fee>(listFees);
 			for(int i=0;i<feeLines.Length;i++) {
 				string[] fields=feeLines[i].Split('\t');
@@ -180,7 +180,7 @@ namespace OpenDentBusiness{
 					string procCode=fields[0];
 					if(ProcedureCodes.IsValidCode(procCode)) { 
 						long codeNum = ProcedureCodes.GetCodeNum(procCode);
-						Fee fee=Fees.GetFee(codeNum,feeSched.FeeSchedNum,clinicNum,provNum,listFees);//gets best match
+						Fee fee=Fees.GetFee(codeNum,feeSched.Id,clinicNum,provNum,listFees);//gets best match
 						if(fields[1]=="") {//an empty entry will delete an existing fee, but not insert a blank override
 							if(fee==null){//nothing to do
 								
@@ -195,7 +195,7 @@ namespace OpenDentBusiness{
 							if(fee==null){//no current fee
 								fee=new Fee();
 								fee.Amount=PIn.Double(fields[1],doUseEnUSFormat: true);//The fees are always in the format "1.00" so we need to parse accordingly.
-								fee.FeeSched=feeSched.FeeSchedNum;
+								fee.FeeScheduleId=feeSched.Id;
 								fee.CodeNum=codeNum;
 								fee.ClinicNum=clinicNum;
 								fee.ProvNum=provNum;
@@ -232,14 +232,14 @@ namespace OpenDentBusiness{
 				List<Fee> listFees=Fees.GetListForScheds(feeSchedNum,clinicNum,provNum);//gets best matches
 				foreach(ProcedureCode procCode in listProcCodes) {
 					//Get the best matching fee (not exact match) for the current selections. 
-					Fee fee=Fees.GetFee(procCode.CodeNum,feeSchedNum,clinicNum,provNum,listFees);
-					sr.Write(procCode.ProcCode+"\t");
+					Fee fee=Fees.GetFee(procCode.Id,feeSchedNum,clinicNum,provNum,listFees);
+					sr.Write(procCode.Code+"\t");
 					if(fee!=null && fee.Amount!=-1) {
 						sr.Write(fee.Amount.ToString("n"));
 					}
 					sr.Write("\t");
-					sr.Write(procCode.AbbrDesc+"\t");
-					sr.WriteLine(procCode.Descript);
+					sr.Write(procCode.ShortDescription+"\t");
+					sr.WriteLine(procCode.Description);
 					double percent=((rowNum*1.0)/listProcCodes.Count*100);
 					FeeSchedEvent.Fire(EventCategory.FeeSched,new ProgressBarHelper(
 						"Exporting fees, please wait...",percent.ToString(),blockValue:(int)percent,progressStyle:ProgBarStyle.Continuous));
@@ -249,19 +249,19 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>Used for moving feesched items to a new location within the feesched list.</summary>
-		public static void RepositionFeeSched(FeeSched feeSched,int newItemOrder) {
+		public static void RepositionFeeSched(FeeSchedule feeSched,int newItemOrder) {
 			
 			string command;
 			//change specific row in question.
-			command="UPDATE feesched SET ItemOrder="+POut.Int(newItemOrder)+" WHERE FeeSchedNum="+POut.Long(feeSched.FeeSchedNum);
+			command="UPDATE feesched SET ItemOrder="+POut.Int(newItemOrder)+" WHERE FeeSchedNum="+POut.Long(feeSched.Id);
 			Database.ExecuteNonQuery(command);
 			//decrement items below old pos to close the gap, except the one we're moving
-			command="UPDATE feesched SET ItemOrder=ItemOrder-1 WHERE ItemOrder >"+POut.Int(feeSched.ItemOrder)
-				+" AND FeeSchedNum !="+POut.Long(feeSched.FeeSchedNum);
+			command="UPDATE feesched SET ItemOrder=ItemOrder-1 WHERE ItemOrder >"+POut.Int(feeSched.SortOrder)
+				+" AND FeeSchedNum !="+POut.Long(feeSched.Id);
 			Database.ExecuteNonQuery(command);
 			//increment items (move down) at or below new pos, except the one we're moving
 			command="UPDATE feesched SET ItemOrder=ItemOrder+1 WHERE ItemOrder >= "+POut.Int(newItemOrder)
-			 +" AND FeeSchedNum !="+POut.Long(feeSched.FeeSchedNum);
+			 +" AND FeeSchedNum !="+POut.Long(feeSched.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
@@ -303,7 +303,7 @@ namespace OpenDentBusiness{
 			List<Fee> listFeesHQandClinic;
 			Lookup<FeeKey2,Fee> lookupFeesByCodeAndSched;
 			List<InsSub> listInsSubs;
-			List<InsPlan> listInsPlans;
+			List<InsurancePlan> listInsPlans;
 			List<PatPlan> listPatPlans;
 			List<Benefit> listBenefits;
 			List<Action> listActions;
@@ -327,7 +327,7 @@ namespace OpenDentBusiness{
 				if(PrefC.HasClinicsEnabled && clinicNumCur>0) {//listFeesHQ is already the fees for ClinicNum 0, only add to list if > 0
 					listFeesHQandClinic.AddRange(Fees.GetByClinicNum(clinicNumCur));//could be empty for some clinics that don't use overrides
 				}
-				lookupFeesByCodeAndSched=(Lookup<FeeKey2,Fee>)listFeesHQandClinic.ToLookup(x => new FeeKey2(x.CodeNum,x.FeeSched));
+				lookupFeesByCodeAndSched=(Lookup<FeeKey2,Fee>)listFeesHQandClinic.ToLookup(x => new FeeKey2(x.CodeNum,x.FeeScheduleId));
 				List<Procedure> listProcsTp;
 				if(PrefC.HasClinicsEnabled) {
 					listProcsTp=Procedures.GetAllTp(clinicNumCur);
@@ -407,7 +407,7 @@ namespace OpenDentBusiness{
 					List<long> listInsSubNumsPatPlanCur=listPatPlans.Where(y => y.PatNum.In(listPatNums)).Select(y => y.InsSubNum).ToList();
 					List<InsSub> listInsSubsCur=listInsSubs.FindAll(y => listPatNums.Contains(y.Subscriber) || y.InsSubNum.In(listInsSubNumsPatPlanCur));
 					List<long> listInsSubPlanNumsCur=listInsSubsCur.Select(y => y.PlanNum).ToList();
-					List<InsPlan> listInsPlansCur=listInsPlans.FindAll(y => listInsSubPlanNumsCur.Contains(y.PlanNum));
+					List<InsurancePlan> listInsPlansCur=listInsPlans.FindAll(y => listInsSubPlanNumsCur.Contains(y.Id));
 					List<SubstitutionLink> listSubstitutionLinks=SubstitutionLinks.GetAllForPlans(listInsPlansCur);
 					List<PatPlan> listPatPlansCur;
 					List<Benefit> listBenefitsCur;
@@ -416,7 +416,7 @@ namespace OpenDentBusiness{
 							continue;
 						}
 						listPatPlansCur=listPatPlans.FindAll(y => y.PatNum==patProc.PatNum);
-						List<long> listInsPlanNumsCur=listInsPlansCur.Select(y => y.PlanNum).ToList();
+						List<long> listInsPlanNumsCur=listInsPlansCur.Select(y => y.Id).ToList();
 						List<long> listPatPlanNumsCur=listPatPlansCur.Select(y => y.PatPlanNum).ToList();
 						listBenefitsCur=listBenefits
 							.FindAll(y => listInsPlanNumsCur.Contains(y.PlanNum) || listPatPlanNumsCur.Contains(y.PatPlanNum));
@@ -479,24 +479,24 @@ namespace OpenDentBusiness{
 
 		#region CachePattern
 
-		private class FeeSchedCache : CacheListAbs<FeeSched> {
-			protected override List<FeeSched> GetCacheFromDb() {
+		private class FeeSchedCache : CacheListAbs<FeeSchedule> {
+			protected override List<FeeSchedule> GetCacheFromDb() {
 				string command="SELECT * FROM feesched ORDER BY ItemOrder";
 				return Crud.FeeSchedCrud.SelectMany(command);
 			}
-			protected override List<FeeSched> TableToList(DataTable table) {
+			protected override List<FeeSchedule> TableToList(DataTable table) {
 				return Crud.FeeSchedCrud.TableToList(table);
 			}
-			protected override FeeSched Copy(FeeSched feeSched) {
+			protected override FeeSchedule Copy(FeeSchedule feeSched) {
 				return feeSched.Copy();
 			}
-			protected override DataTable ListToTable(List<FeeSched> listFeeScheds) {
+			protected override DataTable ListToTable(List<FeeSchedule> listFeeScheds) {
 				return Crud.FeeSchedCrud.ListToTable(listFeeScheds,"FeeSched");
 			}
 			protected override void FillCacheIfNeeded() {
 				FeeScheds.GetTableFromCache(false);
 			}
-			protected override bool IsInListShort(FeeSched feeSched) {
+			protected override bool IsInListShort(FeeSchedule feeSched) {
 				return !feeSched.IsHidden;
 			}
 		}
@@ -508,23 +508,23 @@ namespace OpenDentBusiness{
 			return _feeSchedCache.GetCount(isShort);
 		}
 
-		public static List<FeeSched> GetDeepCopy(bool isShort=false) {
+		public static List<FeeSchedule> GetDeepCopy(bool isShort=false) {
 			return _feeSchedCache.GetDeepCopy(isShort);
 		}
 
-		public static FeeSched GetFirst(bool isShort=true) {
+		public static FeeSchedule GetFirst(bool isShort=true) {
 			return _feeSchedCache.GetFirst(isShort);
 		}
 
-		public static FeeSched GetFirst(Func<FeeSched,bool> match,bool isShort=true) {
+		public static FeeSchedule GetFirst(Func<FeeSchedule,bool> match,bool isShort=true) {
 			return _feeSchedCache.GetFirst(match,isShort);
 		}
 
-		public static FeeSched GetFirstOrDefault(Func<FeeSched,bool> match,bool isShort=false) {
+		public static FeeSchedule GetFirstOrDefault(Func<FeeSchedule,bool> match,bool isShort=false) {
 			return _feeSchedCache.GetFirstOrDefault(match,isShort);
 		}
 
-		public static List<FeeSched> GetWhere(Predicate<FeeSched> match,bool isShort=false) {
+		public static List<FeeSchedule> GetWhere(Predicate<FeeSchedule> match,bool isShort=false) {
 			return _feeSchedCache.GetWhere(match,isShort);
 		}
 
@@ -547,21 +547,21 @@ namespace OpenDentBusiness{
 		#endregion Cache Pattern
 
 		///<summary></summary>
-		public static long Insert(FeeSched feeSched) {
+		public static long Insert(FeeSchedule feeSched) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			feeSched.SecUserNumEntry=Security.CurrentUser.Id;
+			feeSched.AddedBy=Security.CurrentUser.Id;
 			return Crud.FeeSchedCrud.Insert(feeSched);
 		}
 
 		///<summary></summary>
-		public static void Update(FeeSched feeSched) {
+		public static void Update(FeeSchedule feeSched) {
 			
 			Crud.FeeSchedCrud.Update(feeSched);
 		}
 
 		///<summary>Inserts, updates, or deletes database rows to match supplied list.</summary>
-		public static bool Sync(List<FeeSched> listNew,List<FeeSched> listOld) {
+		public static bool Sync(List<FeeSchedule> listNew,List<FeeSchedule> listOld) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			return Crud.FeeSchedCrud.Sync(listNew,listOld,Security.CurrentUser.Id);
@@ -571,7 +571,7 @@ namespace OpenDentBusiness{
 		public static string GetDescription(long feeSchedNum) {
 			//No need to check RemotingRole; no call to db.
 			string feeSchedDesc="";
-			FeeSched feeSched=GetFirstOrDefault(x => x.FeeSchedNum==feeSchedNum);
+			FeeSchedule feeSched=GetFirstOrDefault(x => x.Id==feeSchedNum);
 			if(feeSched!=null) {
 				feeSchedDesc=feeSched.Description+(feeSched.IsHidden ? " ("+"hidden"+")" : "");
 			}
@@ -581,39 +581,39 @@ namespace OpenDentBusiness{
 		///<summary>Returns whether the FeeSched is hidden.  Defaults to true if not found.</summary>
 		public static bool GetIsHidden(long feeSchedNum) {
 			//No need to check RemotingRole; no call to db.
-			FeeSched feeSched=GetFirstOrDefault(x => x.FeeSchedNum==feeSchedNum);
+			FeeSchedule feeSched=GetFirstOrDefault(x => x.Id==feeSchedNum);
 			return (feeSched==null ? true : feeSched.IsHidden);
 		}
 
 		///<summary>Returns whether the FeeSched has IsGlobal set to true.  Defaults to false if not found.</summary>
 		public static bool IsGlobal(long feeSchedNum) {
 			//No need to check RemotingRole; no call to db.
-			FeeSched feeSched=GetFirstOrDefault(x => x.FeeSchedNum==feeSchedNum);
+			FeeSchedule feeSched=GetFirstOrDefault(x => x.Id==feeSchedNum);
 			return (feeSched==null ? false : feeSched.IsGlobal);
 		}
 
 		///<summary>Will return null if exact name not found.</summary>
-		public static FeeSched GetByExactName(string description){
+		public static FeeSchedule GetByExactName(string description){
 			//No need to check RemotingRole; no call to db.
 			return GetFirstOrDefault(x => x.Description==description);
 		}
 
 		///<summary>Will return null if exact name not found.</summary>
-		public static FeeSched GetByExactName(string description,FeeScheduleType feeSchedType){
+		public static FeeSchedule GetByExactName(string description,FeeScheduleType feeSchedType){
 			//No need to check RemotingRole; no call to db.
-			return GetFirstOrDefault(x => x.FeeSchedType==feeSchedType && x.Description==description);
+			return GetFirstOrDefault(x => x.Type==feeSchedType && x.Description==description);
 		}
 
 		///<summary>Used to find FeeScheds of a certain type from within a given list.</summary>
-		public static List<FeeSched> GetListForType(FeeScheduleType feeSchedType,bool includeHidden,List<FeeSched> listFeeScheds=null) {
+		public static List<FeeSchedule> GetListForType(FeeScheduleType feeSchedType,bool includeHidden,List<FeeSchedule> listFeeScheds=null) {
 			//No need to check RemotingRole; no call to db.
 			listFeeScheds=listFeeScheds??GetDeepCopy();
-			List<FeeSched> retVal=new List<FeeSched>();
+			List<FeeSchedule> retVal=new List<FeeSchedule>();
 			for(int i=0;i<listFeeScheds.Count;i++) {
 				if(!includeHidden && listFeeScheds[i].IsHidden){
 					continue;
 				}
-				if(listFeeScheds[i].FeeSchedType==feeSchedType){
+				if(listFeeScheds[i].Type==feeSchedType){
 					retVal.Add(listFeeScheds[i]);
 				}
 			}

@@ -244,8 +244,8 @@ namespace OpenDental
 					docc.Description = "Statement";
 				}
 			}
-			docc.DateCreated = StmtCur.DateSent;
-			StmtCur.DocNum = docc.DocNum;//this signals the calling class that the pdf was created successfully.
+			docc.AddedOnDate = StmtCur.DateSent;
+			StmtCur.DocNum = docc.Id;//this signals the calling class that the pdf was created successfully.
 			Statements.AttachDoc(StmtCur.StatementNum, docc);
 			return tempPath;
 		}
@@ -758,7 +758,7 @@ namespace OpenDental
 			if (CultureInfo.CurrentCulture.Name == "en-AU")
 			{//English (Australia)
 				Providers.RefreshCache();
-				List<Provider> listProviders = Providers.GetDeepCopy(true);
+				List<Provider> listProviders = Providers.GetAll(true);
 				legendOffset = 25 + 15 * (1 + listProviders.Count);
 				MigraDocHelper.InsertSpacer(section, legendOffset);
 				frame = MigraDocHelper.CreateContainer(section, 45, 390, 250, legendOffset);

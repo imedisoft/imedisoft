@@ -243,7 +243,7 @@ namespace OpenDental {
 							if(insertCard && xChargeToken!="") {//Might not be necessary but we've had successful charges with no tokens returned before.
 								creditCardCur=new CreditCard();
 								List<CreditCard> itemOrderCount=CreditCards.Refresh(PatCur.PatNum);
-								creditCardCur.PatNum=PatCur.PatNum;
+								creditCardCur.PatientId=PatCur.PatNum;
 								creditCardCur.ItemOrder=itemOrderCount.Count;
 								creditCardCur.CCNumberMasked=accountMasked;
 								creditCardCur.XChargeToken=xChargeToken;
@@ -301,8 +301,8 @@ namespace OpenDental {
 			}
 			int selected=gridMain.GetSelectedIndex();
 			CreditCard creditCard=_listCreditCards[selected];
-			long patNumOrig=creditCard.PatNum;
-			creditCard.PatNum=form.SelectedPatientId;
+			long patNumOrig=creditCard.PatientId;
+			creditCard.PatientId=form.SelectedPatientId;
 			CreditCards.Update(creditCard);
 			FillGrid();
 			MessageBox.Show("Credit card moved successfully");

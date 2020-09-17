@@ -22,7 +22,7 @@ namespace OpenDental{
 		private System.ComponentModel.Container components = null;
 		///<summary>Set this externally.</summary>
 		public Family FamCur;
-		private List<InsPlan> PlanList;
+		private List<InsurancePlan> PlanList;
 		private List<InsSub> SubList;
 
 		///<summary></summary>
@@ -141,12 +141,12 @@ namespace OpenDental{
 			gridMain.Rows.Clear();
 			GridRow row;
 			//PatPlan[] patPlanArray;
-			InsPlan plan;
+			InsurancePlan plan;
 			for(int i=0;i<SubList.Count;i++){
 				plan=InsPlans.GetPlan(SubList[i].PlanNum,PlanList);
 				row=new GridRow();
 				row.Cells.Add(FamCur.GetNameInFamLF(SubList[i].Subscriber));
-				row.Cells.Add(Carriers.GetName(plan.CarrierNum));
+				row.Cells.Add(Carriers.GetName(plan.CarrierId));
 				if(SubList[i].DateEffective.Year<1880)
 					row.Cells.Add("");
 				else
@@ -165,7 +165,7 @@ namespace OpenDental{
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			InsPlan plan=InsPlans.GetPlan(SubList[e.Row].PlanNum,PlanList);
+			InsurancePlan plan=InsPlans.GetPlan(SubList[e.Row].PlanNum,PlanList);
 			FormInsPlan FormIP=new FormInsPlan(plan,null,SubList[e.Row]);
 			FormIP.ShowDialog();
 			FillGrid();

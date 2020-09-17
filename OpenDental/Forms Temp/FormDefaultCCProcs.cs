@@ -34,7 +34,7 @@ namespace OpenDental
 			listProcs.Items.Clear();
 			foreach (string procStr in _listCCProcs)
 			{
-				listProcs.Items.Add(procStr + "- " + ProcedureCodes.GetLaymanTerm(ProcedureCodes.GetProcCode(procStr).CodeNum));
+				listProcs.Items.Add(procStr + "- " + ProcedureCodes.GetLaymanTerm(ProcedureCodes.GetProcCode(procStr).Id));
 			}
 		}
 

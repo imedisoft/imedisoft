@@ -22,7 +22,7 @@ namespace OpenDental
 		/// If a recallNum is not 0 or -1, then it will create an appt of that recalltype.
 		/// Otherwise it will only use either a Perio or Prophy recall type.
 		/// </summary>
-		public static Appointment CreateRecallApt(Patient patient, List<InsPlan> insPlans, long recallNum, List<InsSub> insSubs, DateTime aptDateTime = default)
+		public static Appointment CreateRecallApt(Patient patient, List<InsurancePlan> insPlans, long recallNum, List<InsSub> insSubs, DateTime aptDateTime = default)
 		{
 			var recalls = Recalls.GetList(patient.PatNum);
 
@@ -114,7 +114,7 @@ namespace OpenDental
 			bool suppressHistory = false;
 			if (procCode != null)
 			{
-				suppressHistory = procCode.ProcCode.In("D9986", "D9987");
+				suppressHistory = procCode.Code.In("D9986", "D9987");
 			}
 
 			Appointments.SetAptStatus(appt, ApptStatus.Broken, suppressHistory); // Appointments S-Class handles Signalods.
@@ -177,7 +177,7 @@ namespace OpenDental
 			#region Charting the proc
 			if (procCode != null)
 			{
-				switch (procCode.ProcCode)
+				switch (procCode.Code)
 				{
 					case "D9986"://Missed
 						HistAppointments.CreateHistoryEntry(appt.AptNum, HistAppointmentAction.Missed);
@@ -187,8 +187,8 @@ namespace OpenDental
 						break;
 				}
 				brokenProcedure.PatNum = pat.PatNum;
-				brokenProcedure.ProvNum = (procCode.ProvNumDefault > 0 ? procCode.ProvNumDefault : appt.ProvNum);
-				brokenProcedure.CodeNum = procCode.CodeNum;
+				brokenProcedure.ProvNum = procCode.DefaultProviderId.HasValue ? procCode.DefaultProviderId.Value : appt.ProvNum;
+				brokenProcedure.CodeNum = procCode.Id;
 				brokenProcedure.ProcDate = DateTime.Today;
 				brokenProcedure.DateEntryC = DateTime.Now;
 				brokenProcedure.ProcStatus = ProcStat.C;
@@ -197,9 +197,9 @@ namespace OpenDental
 				brokenProcedure.Note = "Appt BROKEN for" + " " + appt.ProcDescript + "  " + appt.AptDateTime.ToString();
 				brokenProcedure.PlaceService = Preferences.GetString(PreferenceName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default proc place of service for the Practice is used. 
 				List<InsSub> listInsSubs = InsSubs.RefreshForFam(Patients.GetFamily(pat.PatNum));
-				List<InsPlan> listInsPlans = InsPlans.RefreshForSubList(listInsSubs);
+				List<InsurancePlan> listInsPlans = InsPlans.RefreshForSubList(listInsSubs);
 				List<PatPlan> listPatPlans = PatPlans.Refresh(pat.PatNum);
-				InsPlan insPlanPrimary = null;
+				InsurancePlan insPlanPrimary = null;
 				InsSub insSubPrimary = null;
 				if (listPatPlans.Count > 0)
 				{
@@ -208,7 +208,7 @@ namespace OpenDental
 				}
 				double procFee;
 				long feeSch;
-				if (insPlanPrimary == null || procCode.NoBillIns)
+				if (insPlanPrimary == null || procCode.NoInsuranceBill)
 				{
 					feeSch = FeeScheds.GetFeeSched(0, pat.FeeSched, brokenProcedure.ProvNum);
 				}
@@ -223,7 +223,7 @@ namespace OpenDental
 					brokenProcedure.ProvNum);
 					brokenProcedure.ProcFee = Math.Max(provFee, procFee);
 				}
-				else if (listSplitsForApptProcs.Count > 0 && Preferences.GetBool(PreferenceName.TpPrePayIsNonRefundable) && procCode.ProcCode == "D9986")
+				else if (listSplitsForApptProcs.Count > 0 && Preferences.GetBool(PreferenceName.TpPrePayIsNonRefundable) && procCode.Code == "D9986")
 				{
 					//if there are pre-payments, non-refundable pre-payments is turned on, and the broken appointment is a missed code then auto-fill 
 					//the window with the sum of the procs for the appointment. Transfer money below after broken procedure is confirmed by the user.

@@ -584,7 +584,7 @@ namespace OpenDental{
 					listLab.SelectedIndex=i;
 				}
 			}
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			for(int i=0;i<_listProviders.Count;i++){
 				comboProv.Items.Add(_listProviders[i].Abbr);
 				if(_listProviders[i].Id==CaseCur.ProvNum){

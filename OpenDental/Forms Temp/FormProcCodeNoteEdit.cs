@@ -249,7 +249,7 @@ namespace OpenDental{
 		#endregion
 
 		private void FormProcCodeNoteEdit_Load(object sender,EventArgs e) {
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			strBTime=new StringBuilder(NoteCur.ProcTime);
 			for(int i=0;i<_listProviders.Count;i++){
 				listProv.Items.Add(_listProviders[i].GetLongDesc());

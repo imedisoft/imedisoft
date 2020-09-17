@@ -20,7 +20,7 @@ namespace Imedisoft.Data
 
 		private static readonly AutoCodeItemCache cache = new AutoCodeItemCache();
 
-		public static bool GetContainsKey(long autoCodeItemId) 
+		public static bool Contains(long autoCodeItemId) 
 			=> cache.Contains(autoCodeItemId);
 
 		public static void RefreshCache() 
@@ -124,29 +124,29 @@ namespace Imedisoft.Data
 		{
 			procedureCodeId = procedure.CodeNum;
 
-			if (procedureCode.TreatArea == TreatmentArea.Mouth || procedureCode.TreatArea == TreatmentArea.Quad || procedureCode.TreatArea == TreatmentArea.Sextant || Procedures.IsAttachedToClaim(procedure, claimProcedures))
+			if (procedureCode.TreatmentArea == ProcedureTreatmentArea.Mouth || procedureCode.TreatmentArea == ProcedureTreatmentArea.Quad || procedureCode.TreatmentArea == ProcedureTreatmentArea.Sextant || Procedures.IsAttachedToClaim(procedure, claimProcedures))
 			{
 				return false;
 			}
 
-			if (procedureCode.TreatArea == TreatmentArea.Arch && string.IsNullOrEmpty(procedure.Surf))
+			if (procedureCode.TreatmentArea == ProcedureTreatmentArea.Arch && string.IsNullOrEmpty(procedure.Surf))
             {
 				return false;
             }
 
-			procedureCodeId = procedureCode.TreatArea switch
+			procedureCodeId = procedureCode.TreatmentArea switch
 			{
-				TreatmentArea.Arch => VerifyProcedureCode(
-					procedureCode.CodeNum, procedure.Surf == "U" ? "1" : "32", "", procedure.IsAdditional, patient.PatNum, patient.Age),
+				ProcedureTreatmentArea.Arch => VerifyProcedureCode(
+					procedureCode.Id, procedure.Surf == "U" ? "1" : "32", "", procedure.IsAdditional, patient.PatNum, patient.Age),
 
-				TreatmentArea.ToothRange => VerifyProcedureCode(
-					procedureCode.CodeNum, isMandibular ? "32" : "1", "", procedure.IsAdditional, patient.PatNum, patient.Age),
+				ProcedureTreatmentArea.ToothRange => VerifyProcedureCode(
+					procedureCode.Id, isMandibular ? "32" : "1", "", procedure.IsAdditional, patient.PatNum, patient.Age),
 
 				_ => VerifyProcedureCode(
-					procedureCode.CodeNum, procedure.ToothNum, Tooth.SurfTidyForClaims(procedure.Surf, procedure.ToothNum), procedure.IsAdditional, patient.PatNum, patient.Age)
+					procedureCode.Id, procedure.ToothNum, Tooth.SurfTidyForClaims(procedure.Surf, procedure.ToothNum), procedure.IsAdditional, patient.PatNum, patient.Age)
 			};
 
-			return procedureCode.CodeNum != procedureCodeId;
+			return procedureCode.Id != procedureCodeId;
 		}
 	}
 }

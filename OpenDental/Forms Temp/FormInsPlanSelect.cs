@@ -24,8 +24,8 @@ namespace OpenDental{
 		private Patient PatCur;
 		private Family FamCur;
 		///<summary>After closing this form, this will contain the selected plan.  May be null to indicate none.</summary>
-		public InsPlan SelectedPlan;
-		private List <InsPlan> PlanList;
+		public InsurancePlan SelectedPlan;
+		private List <InsurancePlan> PlanList;
 		private OpenDental.UI.ODGrid gridMain;
 		private OpenDental.UI.Button butNone;
 		private long PatNum;
@@ -216,7 +216,7 @@ namespace OpenDental{
 			gridMain.Rows.Clear();
 			GridRow row;
 			//PatPlan[] patPlanArray;
-			InsPlan plan;
+			InsurancePlan plan;
 			for(int i=0;i<SubList.Count;i++) {
 				if(!checkShowPlansNotInUse.Checked && //Only show insurance plans for PatCur.
 					!_listPatCurPatPlans.Exists(x => x.InsSubNum==SubList[i].InsSubNum))
@@ -228,7 +228,7 @@ namespace OpenDental{
 				//row.Cells.Add((gridMain.Rows.Count+1).ToString());
 				row.Cells.Add(FamCur.GetNameInFamLF(SubList[i].Subscriber));
 				plan=InsPlans.GetPlan(SubList[i].PlanNum,PlanList);
-				row.Cells.Add(Carriers.GetName(plan.CarrierNum));
+				row.Cells.Add(Carriers.GetName(plan.CarrierId));
 				if(SubList[i].DateEffective.Year<1880)
 					row.Cells.Add("");
 				else

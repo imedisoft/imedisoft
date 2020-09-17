@@ -154,7 +154,7 @@ namespace OpenDental{
 			Text=displayTitle;
 			displayedDoc=thisDocument;
 			List<long> docNums=new List<long>();
-			docNums.Add(thisDocument.DocNum);
+			docNums.Add(thisDocument.Id);
 			string fileName=Documents.GetPaths(docNums, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath())[0];
 			if(!Storage.FileExists(fileName)) {
 				MessageBox.Show(fileName+" +"+"could not be found.");

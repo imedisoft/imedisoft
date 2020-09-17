@@ -36,7 +36,7 @@ namespace OpenDental {
 			gridMain.Rows.Clear();
 			GridRow row;
 			if(_listProviders==null) {
-				_listProviders=Providers.GetDeepCopy(true);
+				_listProviders=Providers.GetAll(true);
 			}
 			for(int i=0;i<_listProviders.Count;i++){
 				row=new GridRow();

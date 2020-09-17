@@ -55,7 +55,7 @@ namespace OpenDentBusiness.HL7 {
 						proc=listProcs[j];
 					}
 					PatPlan patPlanCur=null;
-					InsPlan insPlanCur=null;
+					InsurancePlan insPlanCur=null;
 					InsSub insSubCur=null;
 					Carrier carrierCur=null;
 					Patient subscriber=null;
@@ -63,7 +63,7 @@ namespace OpenDentBusiness.HL7 {
 						patPlanCur=listPatPlans[j];
 						insSubCur=InsSubs.GetOne(patPlanCur.InsSubNum);
 						insPlanCur=InsPlans.RefreshOne(insSubCur.PlanNum);
-						carrierCur=Carriers.GetCarrier(insPlanCur.CarrierNum);
+						carrierCur=Carriers.GetCarrier(insPlanCur.CarrierId);
 						subscriber=Patients.GetPat(insSubCur.Subscriber);
 					}
 					SegmentHL7 seg=new SegmentHL7(hl7DefMessage.hl7DefSegments[i].SegmentName);
@@ -125,7 +125,7 @@ namespace OpenDentBusiness.HL7 {
 				//for example, countRepeat can be zero if the patient does not have any current insplans, in which case no IN1 segments will be included
 				for(int j=0;j<countRepeat;j++) {//IN1 is optional and can repeat so add as many as listPatplans
 					PatPlan patplanCur=null;
-					InsPlan insplanCur=null;
+					InsurancePlan insplanCur=null;
 					InsSub inssubCur=null;
 					Carrier carrierCur=null;
 					Patient patSub=null;
@@ -133,7 +133,7 @@ namespace OpenDentBusiness.HL7 {
 						patplanCur=listPatPlans[j];
 						inssubCur=InsSubs.GetOne(patplanCur.InsSubNum);
 						insplanCur=InsPlans.RefreshOne(inssubCur.PlanNum);
-						carrierCur=Carriers.GetCarrier(insplanCur.CarrierNum);
+						carrierCur=Carriers.GetCarrier(insplanCur.CarrierId);
 						if(pat.PatNum==inssubCur.Subscriber) {
 							patSub=pat.Copy();
 						}

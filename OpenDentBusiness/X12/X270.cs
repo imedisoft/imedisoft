@@ -17,7 +17,7 @@ namespace OpenDentBusiness
 
 		///<summary>In progress.  Probably needs a different name.  Info must be validated first.
 		///Set dependent to the currently selected patient, compares dependent.PatNum to subscriber.PatNum to either contruct a subscriber based or dependent based benefit request.</summary>
-		public static string GenerateMessageText(Clearinghouse clearinghouseClin,Carrier carrier,Provider billProv,Clinic clinic,InsPlan insPlan,Patient subscriber,InsSub insSub,Patient patForRequest) {
+		public static string GenerateMessageText(Clearinghouse clearinghouseClin,Carrier carrier,Provider billProv,Clinic clinic,InsurancePlan insPlan,Patient subscriber,InsSub insSub,Patient patForRequest) {
 			bool isSubscriberRequest=(subscriber.PatNum==patForRequest.PatNum);
 			int batchNum=Clearinghouses.GetNextBatchNumber(clearinghouseClin);
 			string groupControlNumber=batchNum.ToString();//Must be unique within file.  We will use batchNum
@@ -87,10 +87,10 @@ namespace OpenDentBusiness
 			seg++;
 			strb.AppendLine("NM1*PR*"//NM101: PR=Payer
 				+"2*"//NM102: 2=Non person
-				+Sout(carrier.CarrierName,35)+"*"//NM103: Name Last.
+				+Sout(carrier.Name,35)+"*"//NM103: Name Last.
 				+"****"//NM104-07 not used
 				+"PI*"//NM108: PI=PayorID
-				+Sout(carrier.ElectID,80,2)+"~");//NM109: PayorID. Validated to be at least length of 2.
+				+Sout(carrier.ElectronicId,80,2)+"~");//NM109: PayorID. Validated to be at least length of 2.
 			HLcount++;
 			//2000B HL: Information Receiver------------------------------------------------------------------------
 			seg++;
@@ -215,14 +215,14 @@ namespace OpenDentBusiness
 				+"*"//NM107: suffix. Not present in Open Dental yet.
 				+"MI*"//NM108: MI=MemberID
 				+Sout(insSub.SubscriberID.Replace("-",""),80)+"~");//NM109: Subscriber ID. Validated to be L>2.
-			if(!String.IsNullOrEmpty(insPlan.GroupNum)) {//Is allowed to be blank for Medicaid.
+			if(!String.IsNullOrEmpty(insPlan.GroupNumber)) {//Is allowed to be blank for Medicaid.
 				//Medicaid uses the patient First/Last/DOB to get benefits, not group number.
 				//However, the Edit Electronic Benefit Request window (FormEtrans270Edit) will show a "Mismatched group number" warning
 				//if Medicaid returns a Group Num in the response, so we send the GroupNum out if specified to prevent the warning.
 				//2100C REF: Subscriber Additional Information.  Without this, old plans seem to be frequently returned.
 				seg++;
 				strb.AppendLine("REF*6P*"//REF01: 6P=GroupNumber
-					+Sout(insPlan.GroupNum,30)+"~");//REF02: Supplemental ID. Validated.
+					+Sout(insPlan.GroupNumber,30)+"~");//REF02: Supplemental ID. Validated.
 			}
 			//2100C DMG: Subscriber Demographic Information
 			seg++;
@@ -266,7 +266,7 @@ namespace OpenDentBusiness
 				//2100D REF: Dependent Additional Identification
 				seg++;
 				strb.AppendLine("REF*6P*"//REF01: 6P=GroupNumber
-					+Sout(insPlan.GroupNum,30)+"~");//REF02: Supplemental ID. Validated.
+					+Sout(insPlan.GroupNumber,30)+"~");//REF02: Supplemental ID. Validated.
 				//2100D DMG: Dependent Demographic Information
 				seg++;
 				strb.AppendLine("DMG*D8*"//DMG01: Date Time Period Qualifier.  D8=CCYYMMDD
@@ -339,11 +339,11 @@ IEA*1*000012145~";
 			return X12Generator.TidyString(str,-1,-1);
 		}
 
-		public static string Validate(Clearinghouse clearinghouseClin,Carrier carrier,Provider billProv,Clinic clinic,InsPlan insPlan,Patient subscriber,InsSub insSub,Patient patForRequest) {
+		public static string Validate(Clearinghouse clearinghouseClin,Carrier carrier,Provider billProv,Clinic clinic,InsurancePlan insPlan,Patient subscriber,InsSub insSub,Patient patForRequest) {
 			StringBuilder strb=new StringBuilder();
 			X12Validate.ISA(clearinghouseClin,strb);
 			X12Validate.Carrier(carrier,strb);
-			if(carrier.ElectID.Length<2) {
+			if(carrier.ElectronicId.Length<2) {
 				if(strb.Length!=0) {
 					strb.Append(",");
 				}
@@ -385,11 +385,11 @@ IEA*1*000012145~";
 					strb.Append("Dependent Birthdate");
 				}
 			}
-			ElectID eID=ElectIDs.GetID(carrier.ElectID);
+			ElectID eID=ElectIDs.GetID(carrier.ElectronicId);
 			//Medicaid uses the patient First/Last/DOB to get benefits, not group number, so skip this validation if this is medicaid
-			bool isMedicaid=(eID!=null && eID.IsMedicaid) || carrier.CarrierName.ToLower().Contains("medicaid");
+			bool isMedicaid=(eID!=null && eID.IsMedicaid) || carrier.Name.ToLower().Contains("medicaid");
 			if(!isMedicaid) {
-				if(insPlan.GroupNum=="") {
+				if(insPlan.GroupNumber=="") {
 					if(strb.Length!=0) {
 						strb.Append(",");
 					}
@@ -398,7 +398,7 @@ IEA*1*000012145~";
 			}
 			//Darien at Dentalxchange helped us resolve one issue where the Group Number included a dash and was failing.
 			//The fix suggested by Darien was to only include the numbers before the dash...  See task #705773
-			if(IsClaimConnect(clearinghouseClin) && insPlan.GroupNum.Contains("-")) {
+			if(IsClaimConnect(clearinghouseClin) && insPlan.GroupNumber.Contains("-")) {
 				if(strb.Length!=0) {
 					strb.Append(",");
 				}
@@ -414,7 +414,7 @@ IEA*1*000012145~";
 
 		///<summary>Checks carrier ElectIDs to match to Denti-Cal's unique ElectID.</summary>
 		private static bool IsDentiCalCarrier(Carrier carrier) {
-			return (carrier.ElectID=="94146");
+			return (carrier.ElectronicId=="94146");
 		}
 
 		///<summary>DentiCal is a carrier.  Pass in either a clinic or HQ-level clearinghouse.</summary>

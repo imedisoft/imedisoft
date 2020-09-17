@@ -755,7 +755,7 @@ namespace OpenDental{
 			else {
 				groupSwiss.Visible=false;
 			}
-			comboProv.Items.AddProvsFull(Providers.GetDeepCopy(true));
+			comboProv.Items.AddProvsFull(Providers.GetAll(true));
 			comboProv.SetSelectedProvNum(Preferences.GetLong(PreferenceName.PracticeDefaultProv));
 			listBillType.Items.Clear();
 			_listBillingTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true);
@@ -782,7 +782,7 @@ namespace OpenDental{
 			}
 
 			long selectedBillingProvNum=Preferences.GetLong(PreferenceName.InsBillingProv);
-			comboInsBillingProv.Items.AddProvsFull(Providers.GetDeepCopy(true));//selectedIndex could remain -1
+			comboInsBillingProv.Items.AddProvsFull(Providers.GetAll(true));//selectedIndex could remain -1
 			if(selectedBillingProvNum==0) {
 				radioInsBillingProvDefault.Checked=true;//default=0
 			}

@@ -451,6 +451,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
     <value>Prov. #</value>
     <comment>Abbreviation of Provider ID, used in various column headings.</comment>
   </data>
+  <data name="Quarter" xml:space="preserve">
+    <value>Quarter</value>
+  </data>
   <data name="ReEnterPassword" xml:space="preserve">
     <value>Re-Enter Password</value>
   </data>

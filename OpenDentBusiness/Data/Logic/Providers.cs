@@ -20,7 +20,7 @@ namespace Imedisoft.Data
 		public static List<long> GetInvalidProvsByTermDate(List<long> providerIds, DateTime dateCompare)
 		{
 			return 
-				GetWhere(x => providerIds.Any(y => y == x.Id) && x.TerminationDate.HasValue && x.TerminationDate < dateCompare.Date).Select(x => x.Id).ToList();
+				FindAll(x => providerIds.Any(y => y == x.Id) && x.TerminationDate.HasValue && x.TerminationDate < dateCompare.Date).Select(x => x.Id).ToList();
 		}
 
 
@@ -79,46 +79,32 @@ namespace Imedisoft.Data
 
 		private static readonly ProviderCache cache = new ProviderCache();
 
-		public static List<Provider> GetDeepCopy(bool isShort = false)
-		{
-			return cache.GetAll();
-		}
+		public static List<Provider> GetAll(bool excludeHidden = false) 
+			=> excludeHidden ? cache.Find(x => !x.IsHidden) : cache.GetAll();
 
-		public static bool GetExists(Predicate<Provider> match, bool isShort = false)
-		{
-			return cache.Any(match);
-		}
+		public static IEnumerable<Provider> GetAllNoCache()
+			=> SelectMany("SELECT * FROM `providers`");
 
-		public static Provider GetFirst(bool isShort = false)
-		{
-			return cache.FirstOrDefault();
-		}
+		public static bool GetExists(Func<Provider, bool> predicate, bool excludeHidden = false)
+			=> GetAll(excludeHidden).Any(predicate);
 
-		public static Provider GetFirst(Predicate<Provider> predicate, bool isShort = false)
-		{
-			return cache.FirstOrDefault(predicate);
-		}
+		public static Provider GetFirst(bool excludeHidden = false) 
+			=> GetAll(excludeHidden).FirstOrDefault();
 
-		public static Provider GetFirstOrDefault(Predicate<Provider> predicate, bool isShort = false)
-		{
-			return cache.FirstOrDefault(predicate);
-		}
+		public static Provider GetFirst(Func<Provider, bool> predicate, bool excludeHidden = false) 
+			=> GetAll(excludeHidden).FirstOrDefault(predicate);
 
-		public static Provider GetLastOrDefault(Predicate<Provider> predicate, bool isShort = false)
-		{
-			return cache.LastOrDefault(predicate);
-		}
+		public static Provider FirstOrDefault(Func<Provider, bool> predicate, bool excludeHidden = false) 
+			=> GetAll(excludeHidden).FirstOrDefault(predicate);
 
-		public static List<Provider> GetWhere(Predicate<Provider> match, bool isShort = false)
-		{
-			return cache.Find(match);
-		}
+		public static Provider GetLastOrDefault(Func<Provider, bool> predicate, bool excludeHidden = false) 
+			=> GetAll(excludeHidden).LastOrDefault(predicate);
+
+		public static List<Provider> FindAll(Predicate<Provider> predicate, bool excludeHidden = false) 
+			=> GetAll(excludeHidden).FindAll(predicate);
 
 		public static void RefreshCache() 
 			=> cache.Refresh();
-
-		public static IEnumerable<Provider> GetAll() 
-			=> SelectMany("SELECT * FROM `providers`");
 
 		public static void Update(Provider provider) 
 			=> ExecuteUpdate(provider);
@@ -143,7 +129,7 @@ namespace Imedisoft.Data
 
 
 
-		///<summary>Gets table for the FormProviderSetup window.  Always orders by ItemOrder.</summary>
+
 		public static DataTable RefreshStandard(bool canShowPatCount)
 		{
 
@@ -219,7 +205,7 @@ namespace Imedisoft.Data
 		}
 
 		public static List<Provider> GetInstructors() 
-			=> GetWhere(x => x.IsInstructor);
+			=> FindAll(x => x.IsInstructor);
 
 		public static IEnumerable<Provider> GetChangedSince(DateTime changedSince) 
 			=> SelectMany("SELECT * FROM `providers` WHERE `last_modified_date` > @date",
@@ -303,7 +289,7 @@ namespace Imedisoft.Data
 		public static List<Provider> GetProvsByProvNums(List<long> listProvNums, bool isShort = false)
 		{
 			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.Id.In(listProvNums), isShort);
+			return FindAll(x => x.Id.In(listProvNums), isShort);
 		}
 
 		/// <summary>
@@ -321,7 +307,7 @@ namespace Imedisoft.Data
 			}
 
 			//GetListLong already returns a copy of the prov from the cache, no need to .Copy
-			return GetWhere(x => x.LastName.ToLower() == lName.ToLower() && x.FirstName.ToLower() == fName.ToLower());
+			return FindAll(x => x.LastName.ToLower() == lName.ToLower() && x.FirstName.ToLower() == fName.ToLower());
 		}
 
 		///<summary>Gets a list of providers from ListLong with either the NPI provided or a blank NPI and the Medicaid ID provided.
@@ -335,7 +321,7 @@ namespace Imedisoft.Data
 			{
 				return retval;
 			}
-			List<Provider> listProvs = Providers.GetDeepCopy();
+			List<Provider> listProvs = GetAll();
 			for (int i = 0; i < listProvs.Count; i++)
 			{
 				//if the prov has a NPI set and it's a match, add this prov to the list
@@ -392,7 +378,7 @@ namespace Imedisoft.Data
 			{//Return the list of providers without clinics.
 			 //We need to find all providers not associated to a clinic (via userod) and also include all providers not even associated to a user.
 			 //Since listProvsWithClinics is comprised of all providers associated to a clinic, simply loop through the provider cache and remove providers present in listProvsWithClinics.
-				List<Provider> listProvsUnassigned = Providers.GetDeepCopy(true);
+				List<Provider> listProvsUnassigned = Providers.GetAll(true);
 				for (int i = listProvsUnassigned.Count - 1; i >= 0; i--)
 				{
 					for (int j = 0; j < listProvsWithClinics.Count; j++)
@@ -428,7 +414,7 @@ namespace Imedisoft.Data
 			{
 				return null;
 			}
-			Provider provider = GetFirstOrDefault(x => x.EcwID == eID);
+			Provider provider = FirstOrDefault(x => x.EcwID == eID);
 			if (provider != null)
 			{
 				return provider;
@@ -437,7 +423,7 @@ namespace Imedisoft.Data
 			//The UI layer won't know about the addition.
 			//So we need to refresh if we can't initially find the prov.
 			RefreshCache();
-			return GetFirstOrDefault(x => x.EcwID == eID);
+			return FirstOrDefault(x => x.EcwID == eID);
 		}
 
 		/// <summary>
@@ -518,7 +504,7 @@ namespace Imedisoft.Data
 			//No need to check RemotingRole; no call to db.
 			if (!PrefC.HasClinicsEnabled)
 			{
-				return Providers.GetDeepCopy(true);//if clinics not enabled, return all visible providers.
+				return Providers.GetAll(true);//if clinics not enabled, return all visible providers.
 			}
 			//The GetWhere uses a "UserClinicNum>-1" in its selection to behave as a "Where true" to retrieve everything from the cache 
 			Dictionary<long, List<long>> dictUserClinicsReference = UserClinics.GetWhere(x => x.Id > -1).GroupBy(x => x.UserId).ToDictionary(x => x.Key, x => x.Select(y => y.ClinicId).ToList());
@@ -527,7 +513,7 @@ namespace Imedisoft.Data
 			Dictionary<long?, List<long>> dictProvUsers = Users.Find(x => x.ProviderId > 0).GroupBy(x => x.ProviderId)
 				.ToDictionary(x => x.Key, x => x.Select(y => y.Id).ToList());
 			HashSet<long> hashSetProvsRestrictedOtherClinic = new HashSet<long>(ProviderClinicLinks.GetProvsRestrictedToOtherClinics(clinicNum));
-			return Providers.GetWhere(x =>
+			return Providers.FindAll(x =>
 				(!dictProvUsers.ContainsKey(x.Id) //provider not associated to any users.
 				|| dictProvUsers[x.Id].Any(y => dictUserClinics[y].Count == 0) //provider associated with user not restricted to any clinics
 				|| dictProvUsers[x.Id].Any(y => dictUserClinics[y].Contains(clinicNum))) //provider associated to user restricted to clinic at hand
@@ -619,7 +605,7 @@ namespace Imedisoft.Data
 				ORDER BY AptDateTime DESC";
 			List<long> listPatHygNums = Database.GetListLong(command);
 			//Now that we have all hygienists for this patient.  Lets find the last non-hidden hygienist and return that one.
-			List<Provider> listProviders = Providers.GetDeepCopy(true);
+			List<Provider> listProviders = Providers.GetAll(true);
 			List<long> listProvNums = listProviders.Select(x => x.Id).Distinct().ToList();
 			long lastHygNum = listPatHygNums.FirstOrDefault(x => listProvNums.Contains(x));
 			return listProviders.FirstOrDefault(x => x.Id == lastHygNum);
@@ -629,7 +615,7 @@ namespace Imedisoft.Data
 		public static List<Provider> GetProvidersForWebSched(long patNum, long clinicNum)
 		{
 			//No need to check RemotingRole; no call to db.
-			List<Provider> listProviders = Providers.GetDeepCopy(true);
+			List<Provider> listProviders = Providers.GetAll(true);
 			WebSchedProviderRules providerRule = PIn.Enum<WebSchedProviderRules>(
 					ClinicPrefs.GetString(clinicNum, PreferenceName.WebSchedProviderRule) ?? Preferences.GetString(PreferenceName.WebSchedProviderRule));
 			switch (providerRule)
@@ -670,7 +656,7 @@ namespace Imedisoft.Data
 			//Currently all providers are allowed to be considered for new patient appointments.
 			//This follows the "WebSchedProviderRules.FirstAvailable" logic for recall Web Sched appointments which is what Nathan agreed upon.
 			//This method is here so that we have a central location to go and get these types of providers in case we change this in the future.
-			return Providers.GetWhere(x => !x.IsNotPerson, true);//Make sure that we only return not is not persons.
+			return Providers.FindAll(x => !x.IsNotPerson, true);//Make sure that we only return not is not persons.
 		}
 
 		public static IEnumerable<long> GetChangedSinceProvNums(DateTime changedSince) 
@@ -702,7 +688,7 @@ namespace Imedisoft.Data
 		public static List<Provider> GetFilteredProviderList(long provNum, string lName, string fName, long classNum)
 		{
 			//No need to check RemotingRole; no call to db.
-			List<Provider> listProvs = Providers.GetDeepCopy(true);
+			List<Provider> listProvs = Providers.GetAll(true);
 			if (Preferences.GetBool(PreferenceName.EasyHideDentalSchools))
 			{//This is here to save doing the logic below for users who have no way to filter the provider picker list.
 				return listProvs;
@@ -957,7 +943,7 @@ namespace Imedisoft.Data
 		///<summary>Only for reports. Includes all providers where IsHiddenReport = 0 and ProvStatus != Deleted.</summary>
 		public static List<Provider> GetListReports()
 		{
-			return GetWhere(x => !x.IsHiddenReport && x.Status != ProviderStatus.Deleted);
+			return FindAll(x => !x.IsHiddenReport && x.Status != ProviderStatus.Deleted);
 		}
 	}
 }

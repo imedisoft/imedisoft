@@ -25,10 +25,10 @@ namespace OpenDental {
 			carriers=Carriers.GetWhere(x => x.CDAnetVersion!="02" &&//This transaction does not exist in version 02.
 				(x.CanadianSupportedTypes & CanSupTransTypes.RequestForPaymentReconciliation_06)==CanSupTransTypes.RequestForPaymentReconciliation_06);
 			foreach(Carrier carrier in carriers) {
-				listCarriers.Items.Add(carrier.CarrierName);
+				listCarriers.Items.Add(carrier.Name);
 			}
 			long defaultProvNum=Preferences.GetLong(PreferenceName.PracticeDefaultProv);
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				if(_listProviders[i].IsCDAnet) {
 					listBillingProvider.Items.Add(_listProviders[i].Abbr);

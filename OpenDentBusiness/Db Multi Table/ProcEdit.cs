@@ -38,7 +38,7 @@ namespace OpenDentBusiness
 		public class LoadData
 		{
 			public List<InsSub> ListInsSubs;
-			public List<InsPlan> ListInsPlans;
+			public List<InsurancePlan> ListInsPlans;
 			public List<Claim> ListClaims;
 			public List<ClaimProc> ListClaimProcsForProc;
 			public List<PatPlan> ListPatPlans;

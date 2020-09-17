@@ -908,7 +908,7 @@ namespace OpenDental {
 		// Load initial data for providers and patient status
 		//
 		private void FormLaserLabels_Load(object sender,System.EventArgs e) {
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			for(int i = 0;i < _listProviders.Count;i++) {
 				listProviders.Items.Add(_listProviders[i].GetLongDesc());
 			}
@@ -1389,14 +1389,14 @@ namespace OpenDental {
 		private string FillFromInsCoList(long carrierNum) {
 			Carrier carrier = Carriers.GetCarrier(carrierNum);
 			if(insRange == 0) {
-				textInsCoStart.Text = carrier.CarrierName;
-				labInsCoStartAddr.Text = carrier.Address;
+				textInsCoStart.Text = carrier.Name;
+				labInsCoStartAddr.Text = carrier.AddressLine1;
 			}
 			else {
-				textInsCoEnd.Text = carrier.CarrierName;
-				labInsCoEndAddr.Text = carrier.Address;
+				textInsCoEnd.Text = carrier.Name;
+				labInsCoEndAddr.Text = carrier.AddressLine1;
 			}
-			return (carrier.CarrierName);
+			return (carrier.Name);
 		}
 		private void textInsCoStart_Click(object sender,EventArgs e) {
 			//insRange = 0;
@@ -1416,7 +1416,7 @@ namespace OpenDental {
 			if(sender==butInsCoEnd) {
 				insRange=1;
 			}
-			FillFromInsCoList(FormIP.SelectedPlan.CarrierNum);
+			FillFromInsCoList(FormIP.SelectedPlan.CarrierId);
 		}
 		//
 		//Custom Tab

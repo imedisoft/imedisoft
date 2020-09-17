@@ -305,7 +305,7 @@ namespace OpenDental{
 				return;
 			}
 			_alergyDefNum=formA.SelectedAllergyDef.Id;
-			textAllergiesIndicateNone.Text=AllergyDefs.GetOne(_alergyDefNum).Description;
+			textAllergiesIndicateNone.Text=AllergyDefs.GetById(_alergyDefNum).Description;
 		}
 
 		private void butDiagnosisCode_Click(object sender,EventArgs e) {

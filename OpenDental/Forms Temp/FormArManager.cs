@@ -52,7 +52,7 @@ namespace OpenDental
 			else {//clinics disabled
 				_listClinics.Add(Clinics.GetPracticeAsClinicZero("Unassigned"));
 			}
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			_tsiProg=Programs.GetCur(ProgramName.Transworld);
 			_dictClinicProgProps=new Dictionary<long,List<ProgramProperty>>();
 			if(_tsiProg!=null && _tsiProg.Enabled) {

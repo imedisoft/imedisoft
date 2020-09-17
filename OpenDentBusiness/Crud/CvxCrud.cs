@@ -43,7 +43,7 @@ namespace OpenDentBusiness.Crud{
 			Cvx cvx;
 			foreach(DataRow row in table.Rows) {
 				cvx=new Cvx();
-				cvx.CvxNum     = PIn.Long  (row["CvxNum"].ToString());
+				cvx.Id     = PIn.Long  (row["CvxNum"].ToString());
 				cvx.CvxCode    = PIn.String(row["CvxCode"].ToString());
 				cvx.Description= PIn.String(row["Description"].ToString());
 				cvx.IsActive   = PIn.String(row["IsActive"].ToString());
@@ -64,7 +64,7 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("IsActive");
 			foreach(Cvx cvx in listCvxs) {
 				table.Rows.Add(new object[] {
-					POut.Long  (cvx.CvxNum),
+					POut.Long  (cvx.Id),
 					            cvx.CvxCode,
 					            cvx.Description,
 					            cvx.IsActive,
@@ -81,7 +81,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one Cvx into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(Cvx cvx,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				cvx.CvxNum=ReplicationServers.GetKey("cvx","CvxNum");
+				cvx.Id=ReplicationServers.GetKey("cvx","CvxNum");
 			}
 			string command="INSERT INTO cvx (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -89,7 +89,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="CvxCode,Description,IsActive) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(cvx.CvxNum)+",";
+				command+=POut.Long(cvx.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(cvx.CvxCode)+"',"
@@ -99,9 +99,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				cvx.CvxNum=Database.ExecuteInsert(command);
+				cvx.Id=Database.ExecuteInsert(command);
 			}
-			return cvx.CvxNum;
+			return cvx.Id;
 		}
 
 		///<summary>Inserts one Cvx into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -114,14 +114,14 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO cvx (";
 			if(!useExistingPK) {
-				cvx.CvxNum=ReplicationServers.GetKeyNoCache("cvx","CvxNum");
+				cvx.Id=ReplicationServers.GetKeyNoCache("cvx","CvxNum");
 			}
 			if(useExistingPK) {
 				command+="CvxNum,";
 			}
 			command+="CvxCode,Description,IsActive) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(cvx.CvxNum)+",";
+				command+=POut.Long(cvx.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(cvx.CvxCode)+"',"
@@ -131,9 +131,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				cvx.CvxNum=Database.ExecuteInsert(command);
+				cvx.Id=Database.ExecuteInsert(command);
 			}
-			return cvx.CvxNum;
+			return cvx.Id;
 		}
 
 		///<summary>Updates one Cvx in the database.</summary>
@@ -142,7 +142,7 @@ namespace OpenDentBusiness.Crud{
 				+"CvxCode    = '"+POut.String(cvx.CvxCode)+"', "
 				+"Description= '"+POut.String(cvx.Description)+"', "
 				+"IsActive   = '"+POut.String(cvx.IsActive)+"' "
-				+"WHERE CvxNum = "+POut.Long(cvx.CvxNum);
+				+"WHERE CvxNum = "+POut.Long(cvx.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
@@ -165,7 +165,7 @@ namespace OpenDentBusiness.Crud{
 				return false;
 			}
 			command="UPDATE cvx SET "+command
-				+" WHERE CvxNum = "+POut.Long(cvx.CvxNum);
+				+" WHERE CvxNum = "+POut.Long(cvx.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}

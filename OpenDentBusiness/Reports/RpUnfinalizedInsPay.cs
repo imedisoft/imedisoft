@@ -115,7 +115,7 @@ namespace OpenDentBusiness
 					};
 
 				//find CarrierCur. GetCarrier uses the H List if possible.
-				CarrierCur = Carriers.GetCarrierByName(carrierCur) ?? new Carrier() { CarrierName = carrierCur };
+				CarrierCur = Carriers.GetCarrierByName(carrierCur) ?? new Carrier() { Name = carrierCur };
 				ClaimPaymentCur = claimPay;
 				ClaimCur = claim;
 				Date = date;

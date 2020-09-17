@@ -113,7 +113,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public string Fax;
 
-		[ForeignKey(typeof(EmailAddress), nameof(EmailAddress.EmailAddressNum))]
+		[ForeignKey(typeof(EmailAddress), nameof(EmailAddress.Id))]
 		public long? EmailAddressId;
 
 		/// <summary>

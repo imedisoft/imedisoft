@@ -45,7 +45,7 @@ namespace OpenDentBusiness.Crud{
 			foreach(DataRow row in table.Rows) {
 				creditCard=new CreditCard();
 				creditCard.CreditCardNum     = PIn.Long  (row["CreditCardNum"].ToString());
-				creditCard.PatNum            = PIn.Long  (row["PatNum"].ToString());
+				creditCard.PatientId            = PIn.Long  (row["PatNum"].ToString());
 				creditCard.Address           = PIn.String(row["Address"].ToString());
 				creditCard.Zip               = PIn.String(row["Zip"].ToString());
 				creditCard.XChargeToken      = PIn.String(row["XChargeToken"].ToString());
@@ -104,7 +104,7 @@ namespace OpenDentBusiness.Crud{
 			foreach(CreditCard creditCard in listCreditCards) {
 				table.Rows.Add(new object[] {
 					POut.Long  (creditCard.CreditCardNum),
-					POut.Long  (creditCard.PatNum),
+					POut.Long  (creditCard.PatientId),
 					            creditCard.Address,
 					            creditCard.Zip,
 					            creditCard.XChargeToken,
@@ -150,7 +150,7 @@ namespace OpenDentBusiness.Crud{
 				command+=POut.Long(creditCard.CreditCardNum)+",";
 			}
 			command+=
-				     POut.Long  (creditCard.PatNum)+","
+				     POut.Long  (creditCard.PatientId)+","
 				+"'"+POut.String(creditCard.Address)+"',"
 				+"'"+POut.String(creditCard.Zip)+"',"
 				+"'"+POut.String(creditCard.XChargeToken)+"',"
@@ -205,7 +205,7 @@ namespace OpenDentBusiness.Crud{
 				command+=POut.Long(creditCard.CreditCardNum)+",";
 			}
 			command+=
-				     POut.Long  (creditCard.PatNum)+","
+				     POut.Long  (creditCard.PatientId)+","
 				+"'"+POut.String(creditCard.Address)+"',"
 				+"'"+POut.String(creditCard.Zip)+"',"
 				+"'"+POut.String(creditCard.XChargeToken)+"',"
@@ -243,7 +243,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one CreditCard in the database.</summary>
 		public static void Update(CreditCard creditCard) {
 			string command="UPDATE creditcard SET "
-				+"PatNum            =  "+POut.Long  (creditCard.PatNum)+", "
+				+"PatNum            =  "+POut.Long  (creditCard.PatientId)+", "
 				+"Address           = '"+POut.String(creditCard.Address)+"', "
 				+"Zip               = '"+POut.String(creditCard.Zip)+"', "
 				+"XChargeToken      = '"+POut.String(creditCard.XChargeToken)+"', "
@@ -276,9 +276,9 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one CreditCard in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(CreditCard creditCard,CreditCard oldCreditCard) {
 			string command="";
-			if(creditCard.PatNum != oldCreditCard.PatNum) {
+			if(creditCard.PatientId != oldCreditCard.PatientId) {
 				if(command!="") { command+=",";}
-				command+="PatNum = "+POut.Long(creditCard.PatNum)+"";
+				command+="PatNum = "+POut.Long(creditCard.PatientId)+"";
 			}
 			if(creditCard.Address != oldCreditCard.Address) {
 				if(command!="") { command+=",";}
@@ -380,7 +380,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(CreditCard,CreditCard) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(CreditCard creditCard,CreditCard oldCreditCard) {
-			if(creditCard.PatNum != oldCreditCard.PatNum) {
+			if(creditCard.PatientId != oldCreditCard.PatientId) {
 				return true;
 			}
 			if(creditCard.Address != oldCreditCard.Address) {

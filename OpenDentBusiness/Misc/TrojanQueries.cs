@@ -123,7 +123,7 @@ namespace OpenDentBusiness
 			return Database.ExecuteDataTable(command);
 		}
 
-		public static InsPlan GetPlanWithTrojanID(string trojanID) 
+		public static InsurancePlan GetPlanWithTrojanID(string trojanID) 
 			=> Crud.InsPlanCrud.SelectOne("SELECT * FROM insplan WHERE TrojanID = '" + SOut.String(trojanID) + "'");
 
 		public static void UpdatePlan(TrojanObject troj, long planNum, bool updateBenefits)

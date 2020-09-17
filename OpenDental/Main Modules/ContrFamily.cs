@@ -30,7 +30,7 @@ namespace OpenDental{
 		private PatientNote PatNoteCur;
 		private Family FamCur;
 		private OpenDental.UI.ODPictureBox picturePat;
-		private List <InsPlan> PlanList;
+		private List <InsurancePlan> PlanList;
 		private OpenDental.UI.ODGrid gridIns;
 		private List <PatPlan> PatPlanList;
 		private ODGrid gridPat;
@@ -1458,7 +1458,7 @@ namespace OpenDental{
 			List<Commlog> commlogList=Commlogs.Refresh(PatCur.PatNum);
 			int payPlanCount=PayPlans.GetDependencyCount(PatCur.PatNum);
 			List<InsSub> subList=InsSubs.RefreshForFam(FamCur);
-			List<InsPlan> planList=InsPlans.RefreshForSubList(subList);
+			List<InsurancePlan> planList=InsPlans.RefreshForSubList(subList);
 			List<MedicationPat> medList=MedicationPats.Refresh(PatCur.PatNum,false);
 			PatPlanList=PatPlans.Refresh(PatCur.PatNum);
 			//CovPats.Refresh(planList,PatPlanList);
@@ -2047,7 +2047,7 @@ namespace OpenDental{
 			if(listPatPlansSuper.Count==0) {//super family guar doesn't have an active insplan
 				return;
 			}
-			List<InsPlan> listInsPlansSuper=InsPlans.RefreshForSubList(listInsSubsSuper);
+			List<InsurancePlan> listInsPlansSuper=InsPlans.RefreshForSubList(listInsSubsSuper);
 			InsSub sub=InsSubs.GetSub(
 				PatPlans.GetInsSubNum(listPatPlansSuper,PatPlans.GetOrdinal(PriSecMed.Primary,listPatPlansSuper,listInsPlansSuper,listInsSubsSuper)),
 				listInsSubsSuper);
@@ -2063,7 +2063,7 @@ namespace OpenDental{
 			List<PatPlan> listPatPlansForPat;
 			Family famCur=Patients.GetFamily(guarNum);
 			List<InsSub> listInsSubsForFam=InsSubs.RefreshForFam(famCur);
-			List<InsPlan> listInsPlansForFam=InsPlans.RefreshForSubList(listInsSubsForFam);
+			List<InsurancePlan> listInsPlansForFam=InsPlans.RefreshForSubList(listInsSubsForFam);
 			bool patPlanAdded=false;
 			foreach(Patient pat in famCur.ListPats) {//possibly filter by PatStatus, i.e. .Where(x => x.PatStatus==PatientStatus.Patient)
 				listPatPlansForPat=PatPlans.Refresh(pat.PatNum);
@@ -2327,7 +2327,7 @@ namespace OpenDental{
 				subscriber=Patients.GetPat(FormS.SelectedPatNum);
 			}
 			//Subscriber has been chosen. Now, pick a plan-------------------------------------------------------------------
-			InsPlan plan=null;
+			InsurancePlan plan=null;
 			InsSub sub=null;
 			bool planIsNew=false;
 			List<InsSub> subList=InsSubs.GetListForSubscriber(subscriber.PatNum);
@@ -2345,17 +2345,17 @@ namespace OpenDental{
 				}
 				else{
 					sub=InsSubs.GetSub(FormISS.SelectedInsSubNum,subList);
-					plan=InsPlans.GetPlan(sub.PlanNum,new List<InsPlan>());
+					plan=InsPlans.GetPlan(sub.PlanNum,new List<InsurancePlan>());
 				}
 			}
 			//New plan was selected instead of an existing plan.  Create the plan--------------------------------------------
 			if(planIsNew){
-				plan=new InsPlan();
+				plan=new InsurancePlan();
 				plan.EmployerNum=subscriber.EmployerNum;
 				plan.PlanType="";
 				InsPlans.Insert(plan);
 				sub=new InsSub();
-				sub.PlanNum=plan.PlanNum;
+				sub.PlanNum=plan.Id;
 				sub.Subscriber=subscriber.PatNum;
 				if(subscriber.MedicaidID==""){
 					sub.SubscriberID=subscriber.SSN;
@@ -2371,7 +2371,7 @@ namespace OpenDental{
 					ben=new Benefit();
 					ben.BenefitType=InsBenefitType.CoInsurance;
 					ben.CovCatNum=covCat.Id;
-					ben.PlanNum=plan.PlanNum;
+					ben.PlanNum=plan.Id;
 					ben.Percent=covCat.DefaultPercent;
 					ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 					ben.CodeNum=0;
@@ -2383,7 +2383,7 @@ namespace OpenDental{
 					ben.CodeNum=0;
 					ben.BenefitType=InsBenefitType.Deductible;
 					ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Diagnostic).Id;
-					ben.PlanNum=plan.PlanNum;
+					ben.PlanNum=plan.Id;
 					ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 					ben.MonetaryAmt=0;
 					ben.Percent=-1;
@@ -2396,7 +2396,7 @@ namespace OpenDental{
 					ben.CodeNum=0;
 					ben.BenefitType=InsBenefitType.Deductible;
 					ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive).Id;
-					ben.PlanNum=plan.PlanNum;
+					ben.PlanNum=plan.Id;
 					ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 					ben.MonetaryAmt=0;
 					ben.Percent=-1;
@@ -2501,7 +2501,7 @@ namespace OpenDental{
 			}
 			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.MiscColors);
 			List<InsSub> subArray=new List<InsSub>();//prevents repeated calls to db.
-			List<InsPlan> planArray=new List<InsPlan>();
+			List<InsurancePlan> planArray=new List<InsurancePlan>();
 			InsSub sub;
 			for(int i=0;i<PatPlanList.Count;i++){
 				sub=InsSubs.GetSub(PatPlanList[i].InsSubNum,SubList);
@@ -2593,7 +2593,7 @@ namespace OpenDental{
 			row=new GridRow();
 			row.Cells.Add("Carrier");
 			for(int i=0;i<PatPlanList.Count;i++) {
-				row.Cells.Add(InsPlans.GetCarrierName(planArray[i].PlanNum,planArray));
+				row.Cells.Add(InsPlans.GetCarrierName(planArray[i].Id,planArray));
 			}
 			gridIns.Rows.Add(row);
 			//group name
@@ -2612,7 +2612,7 @@ namespace OpenDental{
 				row.Cells.Add("Group Number");
 			}
 			for(int i=0;i<PatPlanList.Count;i++) {
-				row.Cells.Add(planArray[i].GroupNum);
+				row.Cells.Add(planArray[i].GroupNumber);
 			}
 			gridIns.Rows.Add(row);
 			//plan type
@@ -2627,8 +2627,8 @@ namespace OpenDental{
 						row.Cells.Add("Category Percentage");
 						break;
 					case "p":
-						FeeSched feeSchedCopay=FeeScheds.GetFirstOrDefault(x => x.FeeSchedNum==planArray[i].CopayFeeSched);
-						if(feeSchedCopay!=null && feeSchedCopay.FeeSchedType==FeeScheduleType.FixedBenefit) {
+						FeeSchedule feeSchedCopay=FeeScheds.GetFirstOrDefault(x => x.Id==planArray[i].CopayFeeSched);
+						if(feeSchedCopay!=null && feeSchedCopay.Type==FeeScheduleType.FixedBenefit) {
 							row.Cells.Add("PPO Fixed Benefit");
 						}
 						else {
@@ -2694,7 +2694,7 @@ namespace OpenDental{
 							desc+=CovCats.GetDesc(benMatrix[x,y].CovCatNum)+" % ";
 						}
 						else {
-							desc+=proccode.ProcCode+"-"+proccode.AbbrDesc+" % ";
+							desc+=proccode.Code+"-"+proccode.ShortDescription+" % ";
 						}
 					}
 					else if(benMatrix[x,y].BenefitType==InsBenefitType.Deductible) {
@@ -2775,8 +2775,8 @@ namespace OpenDental{
 						desc+="Implants frequency"+" ";
 						specialFreqAdded=true;
 					}
-					else if(benMatrix[x,y].CodeNum==0 && proccode.AbbrDesc!=null){//e.g. flo
-						desc+=proccode.AbbrDesc+" ";
+					else if(benMatrix[x,y].CodeNum==0 && proccode.ShortDescription!=null){//e.g. flo
+						desc+=proccode.ShortDescription+" ";
 					}
 					else{
 						desc+=benMatrix[x,y].BenefitType.ToString()+" ";
@@ -2821,7 +2821,7 @@ namespace OpenDental{
 					{
 						if(benMatrix[x,y].CodeNum != 0) {
 							proccode=ProcedureCodes.GetProcCode(benMatrix[x,y].CodeNum);
-							val+=proccode.ProcCode+"-"+proccode.AbbrDesc+" ";
+							val+=proccode.Code+"-"+proccode.ShortDescription+" ";
 						}
 						else if(benMatrix[x,y].CovCatNum != 0){
 							val+=CovCats.GetDesc(benMatrix[x,y].CovCatNum)+" ";
@@ -2963,7 +2963,7 @@ namespace OpenDental{
 			SubList=InsSubs.RefreshForFam(FamCur);
 			PlanList=InsPlans.RefreshForSubList(SubList);//this is only here in case, if in FormModuleSetup, the InsDefaultCobRule is changed and cob changed for all plans.
 			InsSub insSub=SubList.Find(x => x.InsSubNum==patPlan.InsSubNum);
-			InsPlan insPlan=InsPlans.GetPlan(insSub.PlanNum,PlanList);
+			InsurancePlan insPlan=InsPlans.GetPlan(insSub.PlanNum,PlanList);
 			string insHistPref=(string)((ODGrid)sender).Rows[e.Row].Tag;
 			if(string.IsNullOrEmpty(insHistPref)) {
 				Cursor=Cursors.Default;

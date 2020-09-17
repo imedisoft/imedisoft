@@ -24,7 +24,7 @@ namespace OpenDental{
 		private ListBox listBoxProviders;
 		private Label label2;
 		private Label label3;
-		private List<FeeSched> _listFeeScheds;
+		private List<FeeSchedule> _listFeeScheds;
 		private List<Clinic> _listClinics;
 		private CheckBox checkShowBlankFees;
 		private GroupBox groupBox5;
@@ -231,7 +231,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender,System.EventArgs e) {
 			ReportComplex report=new ReportComplex(true,true);
-			FeeSched feeSched=_listFeeScheds[listBoxFeeSched.SelectedIndex];
+			FeeSchedule feeSched=_listFeeScheds[listBoxFeeSched.SelectedIndex];
 			long clinicNum=0;
 			if(listBoxClinics.SelectedIndex>0){
 				clinicNum=_listClinics[listBoxClinics.SelectedIndex-1].Id;
@@ -240,7 +240,7 @@ namespace OpenDental{
 			if(listBoxProviders.SelectedIndex>0){
 				provNum=_listProviders[listBoxProviders.SelectedIndex-1].Id;
 			}
-			DataTable dataTable=RpProcCodes.GetData(feeSched.FeeSchedNum,clinicNum,provNum,radioCategories.Checked,checkShowBlankFees.Checked);
+			DataTable dataTable=RpProcCodes.GetData(feeSched.Id,clinicNum,provNum,radioCategories.Checked,checkShowBlankFees.Checked);
 			report.ReportName="Procedure Codes - Fee Schedules";
 			report.AddTitle("Title","Procedure Codes - Fee Schedules");
 			report.AddSubTitle("Fee Schedule",feeSched.Description);

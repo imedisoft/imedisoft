@@ -476,7 +476,7 @@ namespace OpenDentBusiness
 		///<summary>Creates a clone from the patient passed in and then links them together as master and clone via the patientlink table.
 		///After the patient has been cloned successfully, this method will call SynchCloneWithPatient().
 		///That synch method will take care of synching all fields that should be synched for a brand new clone.</summary>
-		public static Patient CreateCloneAndSynch(Patient patient, Family familyCur = null, List<InsPlan> listInsPlans = null, List<InsSub> listInsSubs = null
+		public static Patient CreateCloneAndSynch(Patient patient, Family familyCur = null, List<InsurancePlan> listInsPlans = null, List<InsSub> listInsSubs = null
 			, List<Benefit> listBenefits = null, long primaryProvNum = 0, long clinicNum = 0)
 		{
 			//No need to check RemotingRole; no call to db.
@@ -548,7 +548,7 @@ namespace OpenDentBusiness
 		#region Update
 		///<summary>Synchs all clones related to the patient passed in with it's current information.  Returns a string representing what happened.
 		///Optionally pass in the lists of insurance information to save db calls within a loop.</summary>
-		public static string SynchClonesWithPatient(Patient patient, Family familyCur = null, List<InsPlan> listInsPlans = null
+		public static string SynchClonesWithPatient(Patient patient, Family familyCur = null, List<InsurancePlan> listInsPlans = null
 			, List<InsSub> listInsSubs = null, List<Benefit> listBenefits = null, List<PatPlan> listPatPlans = null)
 		{
 			//No need to check RemotingRole; no call to db.
@@ -581,7 +581,7 @@ namespace OpenDentBusiness
 
 		///<summary>Synchs current information for patient to patientSynch passed in.  Returns a string representing what happened.
 		///Optionally pass in the list of PatPlans for the clone and non-clone in order to potentially save db calls.</summary>
-		public static string SynchCloneWithPatient(Patient patient, Patient patientSynch, Family familyCur = null, List<InsPlan> listInsPlans = null
+		public static string SynchCloneWithPatient(Patient patient, Patient patientSynch, Family familyCur = null, List<InsurancePlan> listInsPlans = null
 			, List<InsSub> listInsSubs = null, List<Benefit> listBenefits = null, List<PatPlan> listPatPlans = null, List<PatPlan> listPatPlansForSynch = null)
 		{
 			//No need to check RemotingRole; no call to db.
@@ -931,8 +931,8 @@ namespace OpenDentBusiness
 			}
 			if (patientSynch.FeeSched != patient.FeeSched)
 			{
-				FeeSched cloneFeeSchedObj = FeeScheds.GetFirstOrDefault(x => x.FeeSchedNum == patientSynch.FeeSched);
-				FeeSched nonCloneFeeSchedObj = FeeScheds.GetFirstOrDefault(x => x.FeeSchedNum == patient.FeeSched);
+				FeeSchedule cloneFeeSchedObj = FeeScheds.GetFirstOrDefault(x => x.Id == patientSynch.FeeSched);
+				FeeSchedule nonCloneFeeSchedObj = FeeScheds.GetFirstOrDefault(x => x.Id == patient.FeeSched);
 				string cloneFeeSched = (cloneFeeSchedObj == null ? "" : cloneFeeSchedObj.Description);
 				string nonCloneFeeSched = (nonCloneFeeSchedObj == null ? "" : nonCloneFeeSchedObj.Description);
 				patientCloneDemoChanges.ListFieldsUpdated.Add(new PatientCloneField("Fee Schedule", cloneFeeSched, nonCloneFeeSched));
@@ -972,7 +972,7 @@ namespace OpenDentBusiness
 		///<summary>Synchs the pat plan information from patient to patientSynch passed in.
 		///Returns a PatientClonePatPlanChanges object that represents specifics regarding anything that changed during the synch.
 		///Optionally pass in the lists of insurance information in order to potentially save db calls.</summary>
-		public static PatientClonePatPlanChanges SynchClonePatPlans(Patient patient, Patient patientSynch, Family familyCur, List<InsPlan> listInsPlans
+		public static PatientClonePatPlanChanges SynchClonePatPlans(Patient patient, Patient patientSynch, Family familyCur, List<InsurancePlan> listInsPlans
 			, List<InsSub> listInsSubs, List<Benefit> listBenefits, List<PatPlan> listPatPlans = null, List<PatPlan> listPatPlansForSynch = null)
 		{
 			//No need to check RemotingRole; no call to db and private method with arguments that act like out parameters.
@@ -2947,7 +2947,7 @@ namespace OpenDentBusiness
 
 			if (retval == 0)
 			{
-				retval = Providers.GetFirstOrDefault(x => true, true)?.Id ?? 0;
+				retval = Providers.FirstOrDefault(x => true, true)?.Id ?? 0;
 			}
 
 			return retval;
@@ -4579,7 +4579,7 @@ namespace OpenDentBusiness
 				listAllClinics = new List<Clinic> { clinic };
 			}
 			Dictionary<string, bool> dictEmailValidForClinics = listAllClinics
-				.ToDictionary(x => x.Id.ToString(), x => EmailAddresses.GetFirstOrDefault(y => y.EmailAddressNum == x.EmailAddressId) != null);
+				.ToDictionary(x => x.Id.ToString(), x => EmailAddresses.GetFirstOrDefault(y => y.Id == x.EmailAddressId) != null);
 			Dictionary<string, bool> dictTextingEnabledForClinics = listAllClinics.ToDictionary(x => x.Id.ToString(), x => Clinics.IsTextingEnabled(x.Id));
 			string curCulture = System.Globalization.CultureInfo.CurrentCulture.Name.Right(2);
 			Dictionary<string, string> dictClinicCountryCodes = listAllClinics.ToDictionary(x => x.Id.ToString(), x => SmsPhones.GetFirstOrDefault(y => y.ClinicNum == x.Id)?.CountryCode ?? "");
@@ -4620,7 +4620,7 @@ namespace OpenDentBusiness
 			foreach (Patient pat in listPats)
 			{
 				Clinic clinic = Clinics.FirstOrDefault(x => x.Id == pat.ClinicNum, true) ?? Clinics.GetPracticeAsClinicZero();
-				bool isEmailValidForClinic = (EmailAddresses.GetFirstOrDefault(x => x.EmailAddressNum == clinic.EmailAddressId) != null);
+				bool isEmailValidForClinic = (EmailAddresses.GetFirstOrDefault(x => x.Id == clinic.EmailAddressId) != null);
 				bool isTextingEnabledForClinic = Clinics.IsTextingEnabled(clinic.Id);
 				string countryCodePhone = SmsPhones.GetFirstOrDefault(x => x.ClinicNum == clinic.Id)?.CountryCode ?? "";
 				listPatComms.Add(new PatComm(pat, isEmailValidForClinic, isTextingEnabledForClinic, isUnknownNo, curCulture, countryCodePhone));

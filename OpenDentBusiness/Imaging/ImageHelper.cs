@@ -6,6 +6,7 @@ using System.IO;
 using CodeBase;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness {
 	public static class ImageHelper {
@@ -16,7 +17,7 @@ namespace OpenDentBusiness {
 				g.Clear(Color.Black);
 				RenderMountFrames(bitmapMount, listMountItems, imageSelected);
 				for(int i=0;i<listMountItems.Count; i++) {
-					g.FillRectangle(Brushes.Black, listMountItems[i].Xpos, listMountItems[i].Ypos,
+					g.FillRectangle(Brushes.Black, listMountItems[i].X, listMountItems[i].Y,
 						listMountItems[i].Width, listMountItems[i].Height);//draw box behind image
 					RenderImageIntoMount(bitmapMount, listMountItems[i], listBitmaps[i], listDocuments[i]);
 				}
@@ -35,7 +36,7 @@ namespace OpenDentBusiness {
 					else {
 						penBorder=new Pen(Color.SlateGray,2);
 					}
-					g.DrawRectangle(penBorder,listMountItems[i].Xpos,listMountItems[i].Ypos,listMountItems[i].Width,listMountItems[i].Height);
+					g.DrawRectangle(penBorder,listMountItems[i].X,listMountItems[i].Y,listMountItems[i].Width,listMountItems[i].Height);
 				}
 				penBorder?.Dispose();
 			}
@@ -47,7 +48,7 @@ namespace OpenDentBusiness {
 				return;
 			}
 			using(Graphics g=Graphics.FromImage(bitmapMount)) {
-				g.FillRectangle(Brushes.Black, mountItem.Xpos, mountItem.Ypos, mountItem.Width, mountItem.Height);//draw box behind image
+				g.FillRectangle(Brushes.Black, mountItem.X, mountItem.Y, mountItem.Width, mountItem.Height);//draw box behind image
 				Bitmap image=ApplyDocumentSettingsToImage(documentMountItem,bitmapMountItem,ImageSettingFlags.ALL);
 				if(image==null) {
 					return;
@@ -62,8 +63,8 @@ namespace OpenDentBusiness {
 					scale=heightScale;
 				}
 				RectangleF rectangleImage=new RectangleF(0,0,scale*image.Width,scale*image.Height);
-				rectangleImage.X = mountItem.Xpos + mountItem.Width / 2 - rectangleImage.Width / 2;
-				rectangleImage.Y = mountItem.Ypos + mountItem.Height / 2 - rectangleImage.Height / 2;
+				rectangleImage.X = mountItem.X + mountItem.Width / 2 - rectangleImage.Width / 2;
+				rectangleImage.Y = mountItem.Y + mountItem.Height / 2 - rectangleImage.Height / 2;
 				g.DrawImage(image,rectangleImage);
 				image.Dispose();
 			}

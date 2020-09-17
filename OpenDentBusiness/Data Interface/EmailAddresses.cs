@@ -1,187 +1,130 @@
-using Imedisoft.Data;
+using Imedisoft.Data.Cache;
+using Imedisoft.Data.Models;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace OpenDentBusiness{
-	///<summary></summary>
-	public class EmailAddresses{
-		#region Get Methods
-		#endregion
+namespace Imedisoft.Data
+{
+    public partial class EmailAddresses
+	{
+		[CacheGroup(nameof(InvalidType.Email))]
+        private class EmailAddressCache : ListCache<EmailAddress>
+        {
+			protected override IEnumerable<EmailAddress> Load() 
+				=> SelectMany("SELECT * FROM `email_addresses` WHERE `user_id` IS NULL ORDER BY `smtp_username`");
+        }
 
-		#region Modification Methods
-		
-		#region Insert
-		#endregion
+        private static readonly EmailAddressCache cache = new EmailAddressCache();
 
-		#region Update
-		#endregion
-
-		#region Delete
-		#endregion
-
-		#endregion
-
-		#region Misc Methods
-		#endregion
-
-		#region CachePattern
-
-		private class EmailAddressCache : CacheListAbs<EmailAddress> {
-			protected override List<EmailAddress> GetCacheFromDb() {
-				string command="SELECT * FROM emailaddress WHERE UserNum = 0 ORDER BY EmailUsername";
-				return Crud.EmailAddressCrud.SelectMany(command);
-			}
-			protected override List<EmailAddress> TableToList(DataTable table) {
-				return Crud.EmailAddressCrud.TableToList(table);
-			}
-			protected override EmailAddress Copy(EmailAddress emailAddress) {
-				return emailAddress.Clone();
-			}
-			protected override DataTable ListToTable(List<EmailAddress> listEmailAddresses) {
-				return Crud.EmailAddressCrud.ListToTable(listEmailAddresses,"EmailAddress");
-			}
-			protected override void FillCacheIfNeeded() {
-				EmailAddresses.GetTableFromCache(false);
-			}
-		}
-		
-		///<summary>The object that accesses the cache in a thread-safe manner.</summary>
-		private static EmailAddressCache _emailAddressCache=new EmailAddressCache();
-
-		public static List<EmailAddress> GetDeepCopy(bool isShort=false) {
-			return _emailAddressCache.GetDeepCopy(isShort);
+		public static List<EmailAddress> GetDeepCopy(bool isShort = false)
+		{
+			return cache.GetAll();
 		}
 
-		public static EmailAddress GetFirstOrDefault(Func<EmailAddress,bool> match,bool isShort=false) {
-			return _emailAddressCache.GetFirstOrDefault(match,isShort);
+		public static EmailAddress GetFirstOrDefault(Predicate<EmailAddress> match, bool isShort = false)
+		{
+			return cache.FirstOrDefault(match);
 		}
 
-		public static List<EmailAddress> GetWhere(Predicate<EmailAddress> match,bool isShort=false) {
-			return _emailAddressCache.GetWhere(match,isShort);
+		public static List<EmailAddress> GetWhere(Predicate<EmailAddress> match, bool isShort = false)
+		{
+			return cache.Find(match);
 		}
 
-		///<summary>Refreshes the cache and returns it as a DataTable. This will refresh the ClientWeb's cache and the ServerWeb's cache.</summary>
-		public static DataTable RefreshCache() {
-			return GetTableFromCache(true);
+		public static void RefreshCache()
+		{
+			cache.Refresh();
 		}
-
-		///<summary>Fills the local cache with the passed in DataTable.</summary>
-		public static void FillCacheFromTable(DataTable table) {
-			_emailAddressCache.FillCacheFromTable(table);
-		}
-
-		///<summary>Always refreshes the ClientWeb's cache.</summary>
-		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			
-			return _emailAddressCache.GetTableFromCache(doRefreshCache);
-		}
-
-		#endregion
 
 		///<summary>Gets the default email address for the clinic/practice. Takes a clinic num. 
 		///If clinic num is 0 or there is no default for that clinic, it will get practice default. 
 		///May return a new blank object.</summary>
-		public static EmailAddress GetByClinic(long clinicNum,bool doAllowNullReturn=false) {
-			//No need to check RemotingRole; no call to db.
-			EmailAddress emailAddress=null;
-			Clinic clinic=Clinics.GetById(clinicNum);
-			if(!PrefC.HasClinicsEnabled || clinic==null) {//No clinic, get practice default
-				emailAddress=GetOne(Preferences.GetLong(PreferenceName.EmailDefaultAddressNum));
+		public static EmailAddress GetByClinic(long clinicId, bool doAllowNullReturn = false)
+		{
+			EmailAddress emailAddress = null;
+			Clinic clinic = Clinics.GetById(clinicId);
+			if (!PrefC.HasClinicsEnabled || clinic == null)
+			{//No clinic, get practice default
+				emailAddress = GetOne(Preferences.GetLong(PreferenceName.EmailDefaultAddressNum));
 			}
-			else {
-				emailAddress=GetOne(clinic.EmailAddressId ?? 0);
-				if(emailAddress==null) {//clinic.EmailAddressNum 0. Use default.
-					emailAddress=GetOne(Preferences.GetLong(PreferenceName.EmailDefaultAddressNum));
+			else
+			{
+				emailAddress = GetOne(clinic.EmailAddressId ?? 0);
+				if (emailAddress == null)
+				{//clinic.EmailAddressNum 0. Use default.
+					emailAddress = GetOne(Preferences.GetLong(PreferenceName.EmailDefaultAddressNum));
 				}
 			}
-			if(emailAddress==null) {
-				emailAddress=GetFirstOrDefault(x => true);//user didn't set a default, so just pick the first email in the list.
-				if(emailAddress==null && !doAllowNullReturn) {//If there are no email addresses AT ALL!!
-					emailAddress=new EmailAddress();//To avoid null checks.
-					emailAddress.EmailPassword="";
-					emailAddress.EmailUsername="";
-					emailAddress.Pop3ServerIncoming="";
-					emailAddress.SenderAddress="";
-					emailAddress.SMTPserver="";
+			if (emailAddress == null)
+			{
+				emailAddress = GetFirstOrDefault(x => true);//user didn't set a default, so just pick the first email in the list.
+				if (emailAddress == null && !doAllowNullReturn)
+				{//If there are no email addresses AT ALL!!
+					emailAddress = new EmailAddress();//To avoid null checks.
+					emailAddress.SmtpPassword = "";
+					emailAddress.SmtpUsername = "";
+					emailAddress.Pop3Server = "";
+					emailAddress.SenderAddress = "";
+					emailAddress.SmtpServer = "";
 				}
 			}
 			return emailAddress;
 		}
 
-		///<summary>Executes a query to the database to get the email address associated to the passed-in user.  
-		///Does not use the cache.  Returns null if no email address in the database matches the passed-in user.</summary>
-		public static EmailAddress GetForUser(long userNum) {
-			
-			string command="SELECT * FROM emailaddress WHERE emailaddress.UserNum = "+userNum;
-			return Crud.EmailAddressCrud.SelectOne(command);
-		}
+		public static EmailAddress GetForUser(long userId) 
+			=> SelectOne("SELECT * FROM `email_addresses` WHERE `user_id` = " + userId);
+		
 
 		///<summary>Gets the default email address for new outgoing emails.
 		///Will attempt to get the current user's email address first. 
 		///If it can't find one, will return the clinic/practice default.
 		///Can return a new blank email address if no email addresses are defined for the clinic/practice.</summary>
-		public static EmailAddress GetNewEmailDefault(long userNum,long clinicNum) {
-			//No need to check RemotingRole; no call to db.
-			return GetForUser(userNum)??GetByClinic(clinicNum);
+		public static EmailAddress GetNewEmailDefault(long userId, long clinicId)
+		{
+			return GetForUser(userId) ?? GetByClinic(clinicId);
 		}
 
-		///<summary>Gets one EmailAddress from the cached listt.  Might be null.</summary>
-		public static EmailAddress GetOne(long emailAddressNum) {
-			//No need to check RemotingRole; no call to db.
-			return GetFirstOrDefault(x => x.EmailAddressNum==emailAddressNum);
-		}
+		public static EmailAddress GetOne(long emailAddressId) 
+			=> cache.FirstOrDefault(x => x.Id == emailAddressId);
 
-		///<summary>Returns true if the passed-in email username already exists in the cached list of non-user email addresses.</summary>
-		public static bool AddressExists(string emailUserName,long skipEmailAddressNum=0) {
-			//No need to check RemotingRole; no call to db.
-			List<EmailAddress> listEmailAddresses=GetWhere(x => x.EmailAddressNum!=skipEmailAddressNum
-				&& x.EmailUsername.Trim().ToLower()==emailUserName.Trim().ToLower());
+		/// <summary>Returns true if the passed-in email username already exists in the cached list of non-user email addresses.</summary>
+		public static bool AddressExists(string emailUserName, long skipEmailAddressNum = 0)
+		{
+			List<EmailAddress> listEmailAddresses = GetWhere(x => x.Id != skipEmailAddressNum
+				  && x.SmtpUsername.Trim().ToLower() == emailUserName.Trim().ToLower());
 			return (listEmailAddresses.Count > 0);
 		}
 
-		///<summary>Gets all email addresses, including those email addresses which are not in the cache.</summary>
-		public static List<EmailAddress> GetAll() {
-			
-			string command="SELECT * FROM emailaddress";
-			return Crud.EmailAddressCrud.SelectMany(command);
+		public static IEnumerable<EmailAddress> GetAll()
+		{
+			return SelectMany("SELECT * FROM `email_addresses`");
 		}
 
-		///<summary>Checks to make sure at least one non-user email address has a valid (not blank) SMTP server.</summary>
-		public static bool ExistsValidEmail() {
-			//No need to check RemotingRole; no call to db.
-			EmailAddress emailAddress=GetFirstOrDefault(x => x.SMTPserver!="");
-			return (emailAddress!=null);
+		public static bool ExistsValidEmail()
+		{
+			return cache.FirstOrDefault(x => x.SmtpServer != "") != null;
 		}
 
-		///<summary>Does basic email validation. Checks if the address has at least 1 character, an '@', at least 1 character, a '.', then at least
-		///1 character.</summary>
-		public static bool IsValidEmail(string email) {
-			//Regex lesson! A period (.) means match any character. A plus (+) means 1 or more of the preceding. The backslash is to match a literal
-			//period (.) character.
-			return Regex.IsMatch(email??"",@".+@.+\..+");
+		public static bool IsValidEmail(string email)
+		{
+			return Regex.IsMatch(email ?? "", @".+@.+\..+");
 		}
 
-		///<summary></summary>
-		public static long Insert(EmailAddress emailAddress) {
-			
-			return Crud.EmailAddressCrud.Insert(emailAddress);
+		public static long Insert(EmailAddress emailAddress)
+		{
+			return ExecuteInsert(emailAddress);
 		}
 
-		///<summary></summary>
-		public static void Update(EmailAddress emailAddress){
-			
-			Crud.EmailAddressCrud.Update(emailAddress);
+		public static void Update(EmailAddress emailAddress)
+		{
+			ExecuteUpdate(emailAddress);
 		}
 
-		///<summary></summary>
-		public static void Delete(long emailAddressNum) {
-			
-			string command= "DELETE FROM emailaddress WHERE EmailAddressNum = "+POut.Long(emailAddressNum);
-			Database.ExecuteNonQuery(command);
+		public static void Delete(long emailAddressNum)
+		{
+			ExecuteDelete(emailAddressNum);
 		}
 	}
 }

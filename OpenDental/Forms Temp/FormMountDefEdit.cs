@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
+using System.Linq;
 
 namespace OpenDental{
 	///<summary></summary>
@@ -396,13 +399,12 @@ namespace OpenDental{
 			if(DialogResult==DialogResult.OK){
 				return;
 			}
-			if(MountDefCur.IsNew){
+			if(MountDefCur.Id== 0){
 				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete mount?")){
 					e.Cancel=true;
 					return;
 				}
-				MountItemDefs.DeleteForMount(MountDefCur.MountDefNum);
-				MountDefs.Delete(MountDefCur.MountDefNum);
+				MountDefs.Delete(MountDefCur.Id);
 			}
 		}
 
@@ -413,22 +415,22 @@ namespace OpenDental{
 			}
 			//Each keypress hits the database, but it's a rare setup window and a light hit.
 			if(e.KeyCode==Keys.Left){
-				_listMountItemDefs[_selectedIndex].Xpos--;
+				_listMountItemDefs[_selectedIndex].X--;
 				MountItemDefs.Update(_listMountItemDefs[_selectedIndex]);
 				FillItems();
 			}
 			if(e.KeyCode==Keys.Right){
-				_listMountItemDefs[_selectedIndex].Xpos++;
+				_listMountItemDefs[_selectedIndex].X++;
 				MountItemDefs.Update(_listMountItemDefs[_selectedIndex]);
 				FillItems();
 			}
 			if(e.KeyCode==Keys.Up){
-				_listMountItemDefs[_selectedIndex].Ypos--;
+				_listMountItemDefs[_selectedIndex].Y--;
 				MountItemDefs.Update(_listMountItemDefs[_selectedIndex]);
 				FillItems();
 			}
 			if(e.KeyCode==Keys.Down){
-				_listMountItemDefs[_selectedIndex].Ypos++;
+				_listMountItemDefs[_selectedIndex].Y++;
 				MountItemDefs.Update(_listMountItemDefs[_selectedIndex]);
 				FillItems();
 			}
@@ -443,17 +445,17 @@ namespace OpenDental{
 			textDescription.Text=MountDefCur.Description;
 			textWidth.Text=MountDefCur.Width.ToString();
 			textHeight.Text=MountDefCur.Height.ToString();
-			butColor.BackColor=MountDefCur.ColorBack;
+			butColor.BackColor=MountDefCur.BackColor;
 			FillItems();
 			ShowWarning();
-			if(!MountDefCur.IsNew){
+			if(MountDefCur.Id > 0){
 				return;
 			}
 			FormMountDefGenerate formMountDefGenerate=new FormMountDefGenerate();
 			formMountDefGenerate.MountDefCur=MountDefCur;
 			formMountDefGenerate.ShowDialog();
 			if(formMountDefGenerate.DialogResult!=DialogResult.OK){
-				MountDefs.Delete(MountDefCur.MountDefNum);
+				MountDefs.Delete(MountDefCur.Id);
 				DialogResult=DialogResult.OK;//to avoid triggering the msgbox in FormClosing
 				return;
 			}
@@ -461,7 +463,7 @@ namespace OpenDental{
 			textDescription.Text=MountDefCur.Description;
 			textWidth.Text=MountDefCur.Width.ToString();
 			textHeight.Text=MountDefCur.Height.ToString();
-			butColor.BackColor=MountDefCur.ColorBack;
+			butColor.BackColor=MountDefCur.BackColor;
 			FillItems();
 			ShowWarning();
 		}
@@ -475,15 +477,14 @@ namespace OpenDental{
 		#region Methods - EventHandlers - Controls
 		private void butAdd_Click(object sender, EventArgs e){
 			MountItemDef mountItemDef=new MountItemDef();
-			mountItemDef.IsNew=true;
-			mountItemDef.MountDefNum=MountDefCur.MountDefNum;
+			mountItemDef.MountDefId=MountDefCur.Id;
 			mountItemDef.Width=MountDefCur.Width/4;
 			mountItemDef.Height=MountDefCur.Height/4;
-			mountItemDef.ItemOrder=1;
+			mountItemDef.SortOrder=1;
 			if(_listMountItemDefs.Count>0){
 				mountItemDef.Width=_listMountItemDefs[0].Width;
 				mountItemDef.Height=_listMountItemDefs[0].Height;
-				mountItemDef.ItemOrder=_listMountItemDefs.Count+1;
+				mountItemDef.SortOrder=_listMountItemDefs.Count+1;
 			}
 			MountItemDefs.Insert(mountItemDef);//don't bother showing the edit window?
 			FillItems();
@@ -507,7 +508,7 @@ namespace OpenDental{
 			CalcRatio();
 			textWidth.Text=MountDefCur.Width.ToString();
 			textHeight.Text=MountDefCur.Height.ToString();
-			butColor.BackColor=MountDefCur.ColorBack;
+			butColor.BackColor=MountDefCur.BackColor;
 			FillItems();
 			ShowWarning();
 		}
@@ -522,10 +523,10 @@ namespace OpenDental{
 				return;
 			}
 			MountItemDef mountItemDef=_listMountItemDefs[selectedIdx];
-			mountItemDef.ItemOrder++;
+			mountItemDef.SortOrder++;
 			MountItemDefs.Update(mountItemDef);
 			MountItemDef mountItemDefBelow=_listMountItemDefs[selectedIdx+1];
-			mountItemDefBelow.ItemOrder--;
+			mountItemDefBelow.SortOrder--;
 			MountItemDefs.Update(mountItemDefBelow);
 			FillItems();
 			_selectedIndex=selectedIdx+1;//visually, this is just the same item as before without moving
@@ -541,10 +542,10 @@ namespace OpenDental{
 				return;
 			}
 			MountItemDef mountItemDef=_listMountItemDefs[selectedIdx];
-			mountItemDef.ItemOrder--;
+			mountItemDef.SortOrder--;
 			MountItemDefs.Update(mountItemDef);
 			MountItemDef mountItemDefAbove=_listMountItemDefs[selectedIdx-1];
-			mountItemDefAbove.ItemOrder++;
+			mountItemDefAbove.SortOrder++;
 			MountItemDefs.Update(mountItemDefAbove);
 			FillItems();
 			_selectedIndex=selectedIdx-1;//visually, this is just the same item as before without moving
@@ -609,16 +610,16 @@ namespace OpenDental{
 					continue;
 				}
 				rectItem=new RectangleF(
-					_rectangleMount.X+_listMountItemDefs[i].Xpos*_ratio,
-					_rectangleMount.Y+_listMountItemDefs[i].Ypos*_ratio,
+					_rectangleMount.X+_listMountItemDefs[i].X*_ratio,
+					_rectangleMount.Y+_listMountItemDefs[i].Y*_ratio,
 					_listMountItemDefs[i].Width*_ratio,
 					_listMountItemDefs[i].Height*_ratio);
 				g.DrawRectangle(Pens.Blue,Rectangle.Round(rectItem));
-				s="#"+_listMountItemDefs[i].ItemOrder.ToString()+"\r\nX:"+_listMountItemDefs[i].Xpos.ToString()+"\r\nY:"+_listMountItemDefs[i].Ypos.ToString()
+				s="#"+_listMountItemDefs[i].SortOrder.ToString()+"\r\nX:"+_listMountItemDefs[i].X.ToString()+"\r\nY:"+_listMountItemDefs[i].Y.ToString()
 					+"\r\nW:"+_listMountItemDefs[i].Width.ToString()+"\r\nH:"+_listMountItemDefs[i].Height.ToString();
 				point=new Point(
-					(int)(_rectangleMount.X+_listMountItemDefs[i].Xpos*_ratio+_listMountItemDefs[i].Width*_ratio/2-g.MeasureString(s,Font).Width/2),
-					(int)(_rectangleMount.Y+_listMountItemDefs[i].Ypos*_ratio+_listMountItemDefs[i].Height*_ratio/2-g.MeasureString(s,Font).Height/2));
+					(int)(_rectangleMount.X+_listMountItemDefs[i].X*_ratio+_listMountItemDefs[i].Width*_ratio/2-g.MeasureString(s,Font).Width/2),
+					(int)(_rectangleMount.Y+_listMountItemDefs[i].Y*_ratio+_listMountItemDefs[i].Height*_ratio/2-g.MeasureString(s,Font).Height/2));
 				g.DrawString(s,Font,Brushes.DarkBlue,point);
 			}
 			//then, draw any selected item so it draws on top
@@ -626,17 +627,17 @@ namespace OpenDental{
 				return;
 			}
 			rectItem=new RectangleF(
-				_rectangleMount.X+_listMountItemDefs[_selectedIndex].Xpos*_ratio,
-				_rectangleMount.Y+_listMountItemDefs[_selectedIndex].Ypos*_ratio,
+				_rectangleMount.X+_listMountItemDefs[_selectedIndex].X*_ratio,
+				_rectangleMount.Y+_listMountItemDefs[_selectedIndex].Y*_ratio,
 				_listMountItemDefs[_selectedIndex].Width*_ratio,
 				_listMountItemDefs[_selectedIndex].Height*_ratio);
 			g.DrawRectangle(Pens.Red,Rectangle.Round(rectItem));
-			s="#"+_listMountItemDefs[_selectedIndex].ItemOrder.ToString()+"\r\nX:"
-				+_listMountItemDefs[_selectedIndex].Xpos.ToString()+"\r\nY:"+_listMountItemDefs[_selectedIndex].Ypos.ToString()
+			s="#"+_listMountItemDefs[_selectedIndex].SortOrder.ToString()+"\r\nX:"
+				+_listMountItemDefs[_selectedIndex].X.ToString()+"\r\nY:"+_listMountItemDefs[_selectedIndex].Y.ToString()
 				+"\r\nW:"+_listMountItemDefs[_selectedIndex].Width.ToString()+"\r\nH:"+_listMountItemDefs[_selectedIndex].Height.ToString();
 			point=new Point(
-				(int)(_rectangleMount.X+_listMountItemDefs[_selectedIndex].Xpos*_ratio+_listMountItemDefs[_selectedIndex].Width*_ratio/2-g.MeasureString(s,Font).Width/2),
-				(int)(_rectangleMount.Y+_listMountItemDefs[_selectedIndex].Ypos*_ratio+_listMountItemDefs[_selectedIndex].Height*_ratio/2-g.MeasureString(s,Font).Height/2));
+				(int)(_rectangleMount.X+_listMountItemDefs[_selectedIndex].X*_ratio+_listMountItemDefs[_selectedIndex].Width*_ratio/2-g.MeasureString(s,Font).Width/2),
+				(int)(_rectangleMount.Y+_listMountItemDefs[_selectedIndex].Y*_ratio+_listMountItemDefs[_selectedIndex].Height*_ratio/2-g.MeasureString(s,Font).Height/2));
 			g.DrawString(s,Font,Brushes.DarkRed,point);
 		}
 		#endregion Methods - EventHandlers - Paint
@@ -665,24 +666,24 @@ namespace OpenDental{
 			_pointMouseDownOrig=e.Location;
 			_selectedIndex=-1;
 			for(int i=0;i<_listMountItemDefs.Count;i++){
-				if(e.X<_rectangleMount.X+_listMountItemDefs[i].Xpos*_ratio){
+				if(e.X<_rectangleMount.X+_listMountItemDefs[i].X*_ratio){
 					continue;
 				}
-				if(e.Y<_rectangleMount.Y+_listMountItemDefs[i].Ypos*_ratio){
+				if(e.Y<_rectangleMount.Y+_listMountItemDefs[i].Y*_ratio){
 					continue;
 				}
-				if(e.X>_rectangleMount.X+_listMountItemDefs[i].Xpos*_ratio+_listMountItemDefs[i].Width*_ratio){
+				if(e.X>_rectangleMount.X+_listMountItemDefs[i].X*_ratio+_listMountItemDefs[i].Width*_ratio){
 					continue;
 				}
-				if(e.Y>_rectangleMount.Y+_listMountItemDefs[i].Ypos*_ratio+_listMountItemDefs[i].Height*_ratio){
+				if(e.Y>_rectangleMount.Y+_listMountItemDefs[i].Y*_ratio+_listMountItemDefs[i].Height*_ratio){
 					continue;
 				}
 				_selectedIndex=i;
 			}
 			if(_selectedIndex!=-1){
 				_pointItemOrig=new Point(
-					(int)(_rectangleMount.X+_listMountItemDefs[_selectedIndex].Xpos*_ratio),
-					(int)(_rectangleMount.Y+_listMountItemDefs[_selectedIndex].Ypos*_ratio));					
+					(int)(_rectangleMount.X+_listMountItemDefs[_selectedIndex].X*_ratio),
+					(int)(_rectangleMount.Y+_listMountItemDefs[_selectedIndex].Y*_ratio));					
 			}
 			Invalidate();
 		}
@@ -702,7 +703,7 @@ namespace OpenDental{
 			if(x > MountDefCur.Width - _listMountItemDefs[_selectedIndex].Width){
 				x=MountDefCur.Width - _listMountItemDefs[_selectedIndex].Width;
 			}
-			_listMountItemDefs[_selectedIndex].Xpos=x;
+			_listMountItemDefs[_selectedIndex].X=x;
 			int y=(int)((e.Y-_pointMouseDownOrig.Y+_pointItemOrig.Y-_rectangleMount.Y)/_ratio);
 			if(y<0){
 				y=0;
@@ -710,7 +711,7 @@ namespace OpenDental{
 			if(y > MountDefCur.Height - _listMountItemDefs[_selectedIndex].Height){
 				y=MountDefCur.Height - _listMountItemDefs[_selectedIndex].Height;
 			}
-			_listMountItemDefs[_selectedIndex].Ypos=y;
+			_listMountItemDefs[_selectedIndex].Y=y;
 			//but don't save to db yet.
 			Invalidate();
 		}
@@ -729,14 +730,13 @@ namespace OpenDental{
 
 		#region Methods - EventHandlers - DeleteOkCancel
 		private void butDelete_Click(object sender, System.EventArgs e) {
-			if(!MountDefCur.IsNew){
+			if(MountDefCur.Id > 0){
 				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete mount?")){
 					return;
 				}
 			}
-			MountItemDefs.DeleteForMount(MountDefCur.MountDefNum);
-			MountDefs.Delete(MountDefCur.MountDefNum);
-			if(MountDefCur.IsNew){
+			MountDefs.Delete(MountDefCur.Id);
+			if(MountDefCur.Id == 0){
 				DialogResult=DialogResult.Cancel;
 			}
 			else{
@@ -762,7 +762,7 @@ namespace OpenDental{
 			MountDefCur.Description=textDescription.Text;
 			MountDefCur.Width=PIn.Int(textWidth.Text);
 			MountDefCur.Height=PIn.Int(textHeight.Text);
-			MountDefCur.ColorBack=butColor.BackColor;
+			MountDefCur.BackColor=butColor.BackColor;
 			int intBlack=System.Drawing.Color.Black.ToArgb();
 			try{
 				MountDefs.Update(MountDefCur);//whether new or not
@@ -804,10 +804,10 @@ namespace OpenDental{
 		}
 
 		private void FillItems(){
-			_listMountItemDefs=MountItemDefs.GetForMountDef(MountDefCur.MountDefNum);
+			_listMountItemDefs=MountItemDefs.GetByMountDefinition(MountDefCur.Id).ToList();
 			for(int i=0;i<_listMountItemDefs.Count;i++){
-				if(_listMountItemDefs[i].ItemOrder!=i+1){//happens quite a bit, like when user deletes an item
-					_listMountItemDefs[i].ItemOrder=i+1;
+				if(_listMountItemDefs[i].SortOrder!=i+1){//happens quite a bit, like when user deletes an item
+					_listMountItemDefs[i].SortOrder=i+1;
 					MountItemDefs.Update(_listMountItemDefs[i]);
 				}
 				//string s="#"+_listMountItemDefs[i].ItemOrder.ToString()+": X:"+_listMountItemDefs[i].Xpos.ToString()+", Y:"+_listMountItemDefs[i].Ypos.ToString()
@@ -823,8 +823,8 @@ namespace OpenDental{
 				return;
 			}
 			for(int i=0;i<_listMountItemDefs.Count;i++){
-				if(_listMountItemDefs[i].Xpos>MountDefCur.Width-2
-					|| _listMountItemDefs[i].Ypos>MountDefCur.Height-2)
+				if(_listMountItemDefs[i].X>MountDefCur.Width-2
+					|| _listMountItemDefs[i].Y>MountDefCur.Height-2)
 				{
 					labelWarning.Visible=true;
 				}

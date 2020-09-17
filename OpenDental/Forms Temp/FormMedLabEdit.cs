@@ -364,7 +364,7 @@ namespace OpenDental {
 				}
 			}
 			docc.Description="MedLab Result";
-			docc.DateCreated=DateTime.Now;
+			docc.AddedOnDate=DateTime.Now;
 			Documents.Update(docc);
 			string filePathAndName="";
 
@@ -447,7 +447,7 @@ namespace OpenDental {
 			int fileMoveFailures=0;
 			for(int i=0;i<listDocs.Count;i++) {
 				Document doc=listDocs[i];
-				string destFileName=Documents.GetUniqueFileNameForPatient(PatCur,doc.DocNum,Path.GetExtension(doc.FileName));
+				string destFileName=Documents.GetUniqueFileNameForPatient(PatCur,doc.Id,Path.GetExtension(doc.FileName));
 
 					string fromFilePath=ODFileUtils.CombinePaths(atozFrom,doc.FileName);
 					if(!File.Exists(fromFilePath)) {
@@ -486,7 +486,7 @@ namespace OpenDental {
 				
 				//if we get here the file was copied successfully or not storing images in the database, so update the document row
 				//Safe to update the document FileName and PatNum to PatCur and new file name
-				doc.PatNum=PatCur.PatNum;
+				doc.PatientId=PatCur.PatNum;
 				doc.FileName=destFileName;
 				Documents.Update(doc);
 			}

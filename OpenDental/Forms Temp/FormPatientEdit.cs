@@ -368,15 +368,15 @@ namespace OpenDental{
 				}
 			}
 			comboFeeSched.Items.Clear();
-			comboFeeSched.Items.Add("None",new FeeSched());
+			comboFeeSched.Items.Add("None",new FeeSchedule());
 			comboFeeSched.SelectedIndex=0;
-			List<FeeSched> listFeeScheds=FeeScheds.GetDeepCopy(false);
-			foreach(FeeSched feeSched in listFeeScheds) {
-				if(feeSched.IsHidden && feeSched.FeeSchedNum!=PatCur.FeeSched) {
+			List<FeeSchedule> listFeeScheds=FeeScheds.GetDeepCopy(false);
+			foreach(FeeSchedule feeSched in listFeeScheds) {
+				if(feeSched.IsHidden && feeSched.Id!=PatCur.FeeSched) {
 					continue;//skip hidden fee schedules as long as not assigned to this patient. This will only occur in rare occurrences.
 				}
 				comboFeeSched.Items.Add(feeSched.Description+(feeSched.IsHidden ? " "+"(Hidden)" : ""),feeSched);
-				if(feeSched.FeeSchedNum==PatCur.FeeSched) {
+				if(feeSched.Id==PatCur.FeeSched) {
 					comboFeeSched.SelectedIndex=comboFeeSched.Items.Count-1;
 				}
 			}
@@ -2961,7 +2961,7 @@ namespace OpenDental{
 				PatCur.FeeSched=0;
 			}
 			else{
-				PatCur.FeeSched=comboFeeSched.GetSelected<FeeSched>().FeeSchedNum;
+				PatCur.FeeSched=comboFeeSched.GetSelected<FeeSchedule>().Id;
 			}
 			PatCur.BillingType=comboBillType.GetSelectedDefNum();
 			PatCur.ClinicNum=comboClinic.SelectedClinicNum;

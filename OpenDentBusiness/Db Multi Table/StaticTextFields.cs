@@ -17,7 +17,7 @@ namespace OpenDentBusiness
 		public PatientNote PatNote;
 		public List<RefAttach> ListRefAttaches;
 		public List<InsSub> ListInsSubs;
-		public List<InsPlan> ListInsPlans;
+		public List<InsurancePlan> ListInsPlans;
 		public List<PatPlan> ListPatPlans;
 		public List<Benefit> ListBenefits;
 		public List<ClaimProcHist> HistList;

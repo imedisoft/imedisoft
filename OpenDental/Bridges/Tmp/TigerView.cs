@@ -343,11 +343,11 @@ namespace OpenDental.Bridges
 			newFileName += ".tig"; //Add extention on to file name after other '.' were replaced.
 			string newpath = CodeBase.ODFileUtils.CombinePaths(ImageStore.GetPatientFolder(patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()), newFileName);
 			Document docCur = new Document();
-			docCur.DocCategory = imageCatDefNum;
+			docCur.Category = imageCatDefNum;
 			docCur.FileName = newFileName;
-			docCur.PatNum = patCur.PatNum;
+			docCur.PatientId = patCur.PatNum;
 			docCur.ImgType = ImageType.Photo;
-			docCur.DateCreated = DateTime.Now;
+			docCur.AddedOnDate = DateTime.Now;
 			docCur.Description = newFileName;
 			System.IO.File.Move(fullPath, newpath);
 			Documents.Insert(docCur, patCur);

@@ -72,7 +72,7 @@ namespace OpenDental{
 		private ComboBox comboProvider3;
 		private ComboBoxClinicPicker comboClinic3;
 		private ComboBox comboFeeSched3;
-		private List<FeeSched> _listFeeScheds; //Note to reviewer: I'm doing these to avoid using calls like FeeSchedC.ListShort[idx] later.
+		private List<FeeSchedule> _listFeeScheds; //Note to reviewer: I'm doing these to avoid using calls like FeeSchedC.ListShort[idx] later.
 		private List<Clinic> _listClinics;
 		private List<Provider> _listProviders;
 		private Label labelSched1;
@@ -1064,7 +1064,7 @@ namespace OpenDental{
 				listCategories.SetSelected(i,true);
 			}
 			_listClinics=Clinics.GetByUser(Security.CurrentUser);
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			_colorProv=Definitions.GetColor(DefinitionCategory.FeeColors,Definitions.GetByExactName(DefinitionCategory.FeeColors,"Provider"));
 			_colorProvClinic=Definitions.GetColor(DefinitionCategory.FeeColors,Definitions.GetByExactName(DefinitionCategory.FeeColors,"Provider and Clinic"));
 			_colorClinic=Definitions.GetColor(DefinitionCategory.FeeColors,Definitions.GetByExactName(DefinitionCategory.FeeColors,"Clinic"));
@@ -1100,7 +1100,7 @@ namespace OpenDental{
 			//Preselect corresponding procedure codes once on load.  Do not do it within FillGrid().
 			if(ListSelectedProcCodes.Count > 0) {
 				for(int i=0;i<gridMain.Rows.Count;i++) {
-					if(ListSelectedProcCodes.Any(x => x.CodeNum==((ProcedureCode)gridMain.Rows[i].Tag).CodeNum)) {
+					if(ListSelectedProcCodes.Any(x => x.Id==((ProcedureCode)gridMain.Rows[i].Tag).Id)) {
 						gridMain.SetSelected(i,true);
 					}
 				}
@@ -1116,33 +1116,33 @@ namespace OpenDental{
 			long feeSchedNum3Selected=0;//Default to none
 			if(_listFeeScheds.Count > 0) {
 				if(comboFeeSched1.SelectedIndex > -1) {
-					feeSchedNum1Selected=comboFeeSched1.GetSelected<FeeSched>().FeeSchedNum;
+					feeSchedNum1Selected=comboFeeSched1.GetSelected<FeeSchedule>().Id;
 				}
 				if(comboFeeSched2.SelectedIndex > 0) {
-					feeSchedNum2Selected=comboFeeSched2.GetSelected<FeeSched>().FeeSchedNum;
+					feeSchedNum2Selected=comboFeeSched2.GetSelected<FeeSchedule>().Id;
 				}
 				if(comboFeeSched3.SelectedIndex > 0) {
-					feeSchedNum3Selected=comboFeeSched3.GetSelected<FeeSched>().FeeSchedNum;
+					feeSchedNum3Selected=comboFeeSched3.GetSelected<FeeSchedule>().Id;
 				}
 			}
 			//Always update _listFeeScheds to reflect any potential changes.
 			_listFeeScheds=FeeScheds.GetDeepCopy(true);
 			//Check if feschednums from above were set to hidden, if so set selected index to 0 for the combo
-			if(feeSchedNum1Selected > 0 && !_listFeeScheds.Any(x => x.FeeSchedNum==feeSchedNum1Selected)) {
+			if(feeSchedNum1Selected > 0 && !_listFeeScheds.Any(x => x.Id==feeSchedNum1Selected)) {
 				comboFeeSched1.SelectedIndex=0;
 			}
-			if(feeSchedNum2Selected > 0 && !_listFeeScheds.Any(x => x.FeeSchedNum==feeSchedNum2Selected)) {
+			if(feeSchedNum2Selected > 0 && !_listFeeScheds.Any(x => x.Id==feeSchedNum2Selected)) {
 				comboFeeSched2.SelectedIndex=0;
 			}
-			if(feeSchedNum3Selected > 0 && !_listFeeScheds.Any(x => x.FeeSchedNum==feeSchedNum3Selected)) {
+			if(feeSchedNum3Selected > 0 && !_listFeeScheds.Any(x => x.Id==feeSchedNum3Selected)) {
 				comboFeeSched3.SelectedIndex=0;
 			}
 			int comboProv1Idx=comboProvider1.SelectedIndex;
 			int comboProv2Idx=comboProvider2.SelectedIndex;
 			int comboProv3Idx=comboProvider3.SelectedIndex;
-			long feeSchedGroup1Num=comboFeeSchedGroup1.GetSelected<FeeSchedGroup>()?.FeeSchedGroupNum??0;
-			long feeSchedGroup2Num=comboFeeSchedGroup2.GetSelected<FeeSchedGroup>()?.FeeSchedGroupNum??0;
-			long feeSchedGroup3Num=comboFeeSchedGroup3.GetSelected<FeeSchedGroup>()?.FeeSchedGroupNum??0;
+			long feeSchedGroup1Num=comboFeeSchedGroup1.GetSelected<FeeScheduleGroup>()?.Id??0;
+			long feeSchedGroup2Num=comboFeeSchedGroup2.GetSelected<FeeScheduleGroup>()?.Id??0;
+			long feeSchedGroup3Num=comboFeeSchedGroup3.GetSelected<FeeScheduleGroup>()?.Id??0;
 			comboFeeSched1.Items.Clear();
 			comboFeeSched2.Items.Clear();
 			comboFeeSched3.Items.Clear();
@@ -1153,7 +1153,7 @@ namespace OpenDental{
 			comboFeeSchedGroup2.Items.Clear();
 			comboFeeSchedGroup3.Items.Clear();
 			//Fill fee sched combo boxes (FeeSched 1 doesn't get the "None" option)
-			ODBoxItem<FeeSched> boxItemNone=new ODBoxItem<FeeSched>("None",new FeeSched());
+			ODBoxItem<FeeSchedule> boxItemNone=new ODBoxItem<FeeSchedule>("None",new FeeSchedule());
 			comboFeeSched2.Items.Add(boxItemNone);
 			if(feeSchedNum2Selected==0) {
 				comboFeeSched2.SelectedItem=boxItemNone;
@@ -1165,26 +1165,26 @@ namespace OpenDental{
 			string str;
 			for(int i=0;i<_listFeeScheds.Count;i++) {
 				str=_listFeeScheds[i].Description;
-				if(_listFeeScheds[i].FeeSchedType!=FeeScheduleType.Normal) {
-					str+=" ("+_listFeeScheds[i].FeeSchedType.ToString()+")";
+				if(_listFeeScheds[i].Type!=FeeScheduleType.Normal) {
+					str+=" ("+_listFeeScheds[i].Type.ToString()+")";
 				}
-				ODBoxItem<FeeSched> boxItem=new ODBoxItem<FeeSched>(str,_listFeeScheds[i]);
+				ODBoxItem<FeeSchedule> boxItem=new ODBoxItem<FeeSchedule>(str,_listFeeScheds[i]);
 				comboFeeSched1.Items.Add(boxItem);
-				if(feeSchedNum1Selected==_listFeeScheds[i].FeeSchedNum) {
+				if(feeSchedNum1Selected==_listFeeScheds[i].Id) {
 					comboFeeSched1.SelectedItem=boxItem;
 				}
 				comboFeeSched2.Items.Add(boxItem);
-				if(feeSchedNum2Selected==_listFeeScheds[i].FeeSchedNum) {
+				if(feeSchedNum2Selected==_listFeeScheds[i].Id) {
 					comboFeeSched2.SelectedItem=boxItem;
 				}
 				comboFeeSched3.Items.Add(boxItem);
-				if(feeSchedNum3Selected==_listFeeScheds[i].FeeSchedNum) {
+				if(feeSchedNum3Selected==_listFeeScheds[i].Id) {
 					comboFeeSched3.SelectedItem=boxItem;
 				}
 			}
 			comboFeeSched1.SelectedIndex=comboFeeSched1.SelectedIndex>-1 ? comboFeeSched1.SelectedIndex : 0;
 			if(_listFeeScheds.Count==0) {//No fee schedules in the database so set the first item to none.
-				comboFeeSched1.Items.Add(new ODBoxItem<FeeSched>("None",new FeeSched()));
+				comboFeeSched1.Items.Add(new ODBoxItem<FeeSchedule>("None",new FeeSchedule()));
 			}
 			//Fill clinic combo boxes
 			//Add none even if clinics is turned off so that 0 is a valid index to select.
@@ -1241,7 +1241,7 @@ namespace OpenDental{
 			comboProvider2.SelectedIndex=comboProv2Idx > -1 ? comboProv2Idx:0;
 			comboProvider3.SelectedIndex=comboProv3Idx > -1 ? comboProv3Idx:0;
 			//If previously selected FeeSched was global, and the newly selected FeeSched is NOT global, select OD's selected Clinic in the combo box.
-			if(_listFeeScheds.Count > 0 && comboFeeSched1.SelectedItem!=null && comboFeeSched1.GetSelected<FeeSched>().IsGlobal) {
+			if(_listFeeScheds.Count > 0 && comboFeeSched1.SelectedItem!=null && comboFeeSched1.GetSelected<FeeSchedule>().IsGlobal) {
 				comboClinic1.Enabled=false;
 				butPickClinic1.Enabled=false;
 				comboClinic1.SelectedClinicNum=0;				
@@ -1263,7 +1263,7 @@ namespace OpenDental{
 				comboProvider1.Enabled=true;
 				butPickProv1.Enabled=true;
 			}
-			if(comboFeeSched2.SelectedIndex==0 || (comboFeeSched2.SelectedItem!=null && comboFeeSched2.GetSelected<FeeSched>().IsGlobal)) {
+			if(comboFeeSched2.SelectedIndex==0 || (comboFeeSched2.SelectedItem!=null && comboFeeSched2.GetSelected<FeeSchedule>().IsGlobal)) {
 				comboClinic2.Enabled=false;
 				butPickClinic2.Enabled=false;
 				comboClinic2.SelectedClinicNum=0;
@@ -1285,7 +1285,7 @@ namespace OpenDental{
 				comboProvider2.Enabled=true;
 				butPickProv2.Enabled=true;
 			}
-			if(comboFeeSched3.SelectedIndex==0 || (comboFeeSched3.SelectedItem!=null && comboFeeSched3.GetSelected<FeeSched>().IsGlobal)) {
+			if(comboFeeSched3.SelectedIndex==0 || (comboFeeSched3.SelectedItem!=null && comboFeeSched3.GetSelected<FeeSchedule>().IsGlobal)) {
 				comboClinic3.Enabled=false;
 				butPickClinic3.Enabled=false;
 				comboClinic3.SelectedClinicNum=0;
@@ -1313,17 +1313,17 @@ namespace OpenDental{
 			,long feeSchedNumSelected,long feeSchedGroupNum,List<long> listComboGroupNums,ODBoxItem<Clinic> boxItemClinic)
 		{
 			//Returning null means we didn't find a FeeSchedGroup.
-			FeeSchedGroup feeSchedGroupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSchedNumSelected,boxItemClinic.Tag.Id);
+			FeeScheduleGroup feeSchedGroupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSchedNumSelected,boxItemClinic.Tag.Id);
 			if(feeSchedGroupCur!=null) {
 				//If there is a clinic in the group that the user does not have access to do not add the group to the combobox.
 				//_listClinics already filters for clinic restrictions.
 				if(!feeSchedGroupCur.ListClinicNumsAll.Exists(x => !_listClinics.Any(y => y.Id==x))) {
-					if(!listComboGroupNums.Contains(feeSchedGroupCur.FeeSchedGroupNum) && feeSchedGroupCur.ListClinicNumsAll.Count>0) {//Skip duplicate/empty groups.
-						ODBoxItem<FeeSchedGroup> boxItemFeeSchedGroup=new ODBoxItem<FeeSchedGroup>(feeSchedGroupCur.Description,feeSchedGroupCur);
+					if(!listComboGroupNums.Contains(feeSchedGroupCur.Id) && feeSchedGroupCur.ListClinicNumsAll.Count>0) {//Skip duplicate/empty groups.
+						ODBoxItem<FeeScheduleGroup> boxItemFeeSchedGroup=new ODBoxItem<FeeScheduleGroup>(feeSchedGroupCur.Description,feeSchedGroupCur);
 						comboFeeSchedGroup.Items.Add(boxItemFeeSchedGroup);
-						listComboGroupNums.Add(feeSchedGroupCur.FeeSchedGroupNum);
+						listComboGroupNums.Add(feeSchedGroupCur.Id);
 						//Set this fee sched group as the selection if it matches the previous selection before refreshing
-						if(boxItemFeeSchedGroup.Tag.FeeSchedGroupNum==feeSchedGroupNum) {
+						if(boxItemFeeSchedGroup.Tag.Id==feeSchedGroupNum) {
 							comboFeeSchedGroup.SelectedItem=boxItemFeeSchedGroup;
 						}
 					}
@@ -1341,15 +1341,15 @@ namespace OpenDental{
 			//Then, fill a new list
 			long feeSched1=0;
 			if(comboFeeSched1.SelectedIndex>-1) {//0 idx is "none"
-				feeSched1=_listFeeScheds[comboFeeSched1.SelectedIndex].FeeSchedNum;
+				feeSched1=_listFeeScheds[comboFeeSched1.SelectedIndex].Id;
 			}
 			long feeSched2=0;
 			if(comboFeeSched2.SelectedIndex>0){//0 idx is "none"
-				feeSched2=_listFeeScheds[comboFeeSched2.SelectedIndex-1].FeeSchedNum;
+				feeSched2=_listFeeScheds[comboFeeSched2.SelectedIndex-1].Id;
 			}
 			long feeSched3=0;
 			if(comboFeeSched3.SelectedIndex>0){
-				feeSched3=_listFeeScheds[comboFeeSched3.SelectedIndex-1].FeeSchedNum;
+				feeSched3=_listFeeScheds[comboFeeSched3.SelectedIndex-1].Id;
 			}
 			long provider1Num=0;
 			long provider2Num=0;
@@ -1370,21 +1370,21 @@ namespace OpenDental{
 				if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups)) {
 					//First groupbox
 					if(checkGroups1.Checked && comboFeeSchedGroup1.SelectedIndex>-1) {
-						clinic1Num=comboFeeSchedGroup1.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
+						clinic1Num=comboFeeSchedGroup1.GetSelected<FeeScheduleGroup>().ListClinicNumsAll.FirstOrDefault();
 					}
 					else {
 						clinic1Num=comboClinic1.SelectedClinicNum;
 					}
 					//Second groupbox
 					if(checkGroups2.Checked && comboFeeSchedGroup2.SelectedIndex>-1) {
-						clinic2Num=comboFeeSchedGroup2.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
+						clinic2Num=comboFeeSchedGroup2.GetSelected<FeeScheduleGroup>().ListClinicNumsAll.FirstOrDefault();
 					}
 					else {
 							clinic2Num=comboClinic2.SelectedClinicNum;
 					}
 					//Third groupbox
 					if(checkGroups3.Checked && comboFeeSchedGroup3.SelectedIndex>-1) {
-						clinic3Num=comboFeeSchedGroup3.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
+						clinic3Num=comboFeeSchedGroup3.GetSelected<FeeScheduleGroup>().ListClinicNumsAll.FirstOrDefault();
 					}
 					else {
 							clinic3Num=comboClinic3.SelectedClinicNum;
@@ -1448,12 +1448,12 @@ namespace OpenDental{
 			for(int i=0;i<listCategories.SelectedIndices.Count;i++) {
 				listCatDefs.Add(CatList[listCategories.SelectedIndices[i]]);
 			}
-			FeeSched feeSched1=_listFeeScheds[comboFeeSched1.SelectedIndex]; //First feesched will always have something selected.
-			FeeSched feeSched2=null;
+			FeeSchedule feeSched1=_listFeeScheds[comboFeeSched1.SelectedIndex]; //First feesched will always have something selected.
+			FeeSchedule feeSched2=null;
 			if(comboFeeSched2.SelectedIndex>0) {
 				feeSched2=_listFeeScheds[comboFeeSched2.SelectedIndex-1];
 			} 
-			FeeSched feeSched3=null;
+			FeeSchedule feeSched3=null;
 			if(comboFeeSched3.SelectedIndex>0){
 				feeSched3=_listFeeScheds[comboFeeSched3.SelectedIndex-1];
 			}
@@ -1478,21 +1478,21 @@ namespace OpenDental{
 				if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups)) {
 					//First groupbox
 					if(checkGroups1.Checked && comboFeeSchedGroup1.SelectedIndex>-1) {
-						clinic1Num=comboFeeSchedGroup1.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
+						clinic1Num=comboFeeSchedGroup1.GetSelected<FeeScheduleGroup>().ListClinicNumsAll.FirstOrDefault();
 					}
 					else {
 						clinic1Num=comboClinic1.SelectedClinicNum;
 					}
 					//Second groupbox
 					if(checkGroups2.Checked && comboFeeSchedGroup2.SelectedIndex>-1) {
-						clinic2Num=comboFeeSchedGroup2.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
+						clinic2Num=comboFeeSchedGroup2.GetSelected<FeeScheduleGroup>().ListClinicNumsAll.FirstOrDefault();
 					}
 					else {
 						clinic2Num=comboClinic2.SelectedClinicNum;
 					}
 					//Third groupbox
 					if(checkGroups3.Checked && comboFeeSchedGroup3.SelectedIndex>-1) {
-						clinic3Num=comboFeeSchedGroup3.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
+						clinic3Num=comboFeeSchedGroup3.GetSelected<FeeScheduleGroup>().ListClinicNumsAll.FirstOrDefault();
 					}
 					else {
 						clinic3Num=comboClinic3.SelectedClinicNum;
@@ -1533,29 +1533,29 @@ namespace OpenDental{
 					//Get all procedure codes that are part of the selected category.  Then order the list of procedures by ProcCodes.
 					//Append the list of ordered procedures to the master list of procedures for the selected categories.
 					//Appending the procedure codes in this fashion keeps them ordered correctly via the definitions ItemOrder.
-					listProcsForCats.AddRange(ProcedureCodes.GetWhereFromList(proc => proc.ProcCat==listCatDefs[i].Id)
-						.OrderBy(proc => proc.ProcCode).ToList());
+					listProcsForCats.AddRange(ProcedureCodes.GetWhereFromList(proc => proc.ProcedureCategory==listCatDefs[i].Id)
+						.OrderBy(proc => proc.Code).ToList());
 				}
 			}
 			else if(_procCodeSort==ProcCodeListSort.ProcCode) {
 				for(int i = 0;i<listCatDefs.Count;i++) {
-					listProcsForCats.AddRange(ProcedureCodes.GetWhereFromList(proc => proc.ProcCat==listCatDefs[i].Id).ToList());
+					listProcsForCats.AddRange(ProcedureCodes.GetWhereFromList(proc => proc.ProcedureCategory==listCatDefs[i].Id).ToList());
 				}
-				listProcsForCats=listProcsForCats.OrderBy(proc => proc.ProcCode).ToList();
+				listProcsForCats=listProcsForCats.OrderBy(proc => proc.Code).ToList();
 			}
 			//Remove any procedures that do not meet our filters.
-			listProcsForCats.RemoveAll(proc => !proc.AbbrDesc.ToLower().Contains(searchAbbr.ToLower()));
-			listProcsForCats.RemoveAll(proc => !proc.Descript.ToLower().Contains(searchDesc.ToLower()));
-			listProcsForCats.RemoveAll(proc => !proc.ProcCode.ToLower().Contains(searchCode.ToLower()));
+			listProcsForCats.RemoveAll(proc => !proc.ShortDescription.ToLower().Contains(searchAbbr.ToLower()));
+			listProcsForCats.RemoveAll(proc => !proc.Description.ToLower().Contains(searchDesc.ToLower()));
+			listProcsForCats.RemoveAll(proc => !proc.Code.ToLower().Contains(searchCode.ToLower()));
 			if(IsSelectionMode) {
-				listProcsForCats.RemoveAll(proc => proc.ProcCode==ProcedureCodes.GroupProcCode);
+				listProcsForCats.RemoveAll(proc => proc.Code==ProcedureCodes.GroupProcCode);
 			}
 			string lastCategoryName="";
 			foreach(ProcedureCode procCode in listProcsForCats) { 
 				row=new GridRow();
 				row.Tag=procCode;
 				//Only show the category on the first procedure code in that category.
-				string categoryName=Definitions.GetName(DefinitionCategory.ProcCodeCats,procCode.ProcCat);
+				string categoryName=Definitions.GetName(DefinitionCategory.ProcCodeCats,procCode.ProcedureCategory);
 				if(lastCategoryName!=categoryName && _procCodeSort==ProcCodeListSort.Category) {
 					row.Cells.Add(categoryName);
 					lastCategoryName=categoryName;
@@ -1563,17 +1563,17 @@ namespace OpenDental{
 				else {//This proc code is in the same category or we are not sorting by category.
 					row.Cells.Add("");
 				}
-				row.Cells.Add(procCode.Descript);
-				row.Cells.Add(procCode.AbbrDesc);
-				row.Cells.Add(procCode.ProcCode);
-				Fee fee1=Fees.GetFee(procCode.CodeNum,feeSched1.FeeSchedNum,clinic1Num,provider1Num,_listFees);
+				row.Cells.Add(procCode.Description);
+				row.Cells.Add(procCode.ShortDescription);
+				row.Cells.Add(procCode.Code);
+				Fee fee1=Fees.GetFee(procCode.Id,feeSched1.Id,clinic1Num,provider1Num,_listFees);
 				Fee fee2=null;
 				if(feeSched2!=null) {
-					fee2=Fees.GetFee(procCode.CodeNum,feeSched2.FeeSchedNum,clinic2Num,provider2Num,_listFees);
+					fee2=Fees.GetFee(procCode.Id,feeSched2.Id,clinic2Num,provider2Num,_listFees);
 				}
 				Fee fee3=null;
 				if(feeSched3!=null) {
-					fee3=Fees.GetFee(procCode.CodeNum,feeSched3.FeeSchedNum,clinic3Num,provider3Num,_listFees);
+					fee3=Fees.GetFee(procCode.Id,feeSched3.Id,clinic3Num,provider3Num,_listFees);
 				}
 				if(fee1==null || fee1.Amount==-1) {
 					row.Cells.Add("");
@@ -1620,7 +1620,7 @@ namespace OpenDental{
 				SynchAndFillListFees(true);
 			}
 			if(IsSelectionMode) {
-				SelectedCodeNum=((ProcedureCode)gridMain.Rows[e.Row].Tag).CodeNum;
+				SelectedCodeNum=((ProcedureCode)gridMain.Rows[e.Row].Tag).Id;
 				ListSelectedProcCodes.Clear();
 				ListSelectedProcCodes.Add(((ProcedureCode)gridMain.Rows[e.Row].Tag).Copy());
 				DialogResult=DialogResult.OK;
@@ -1637,7 +1637,7 @@ namespace OpenDental{
 			//not on a fee: Edit code instead
 			//changed=false;//We just updated the database and synced our cache, set changed to false.
 			ProcedureCode procCode=(ProcedureCode)gridMain.Rows[e.Row].Tag;
-			Definition defProcCat=Definitions.GetDefsForCategory(DefinitionCategory.ProcCodeCats).FirstOrDefault(x => x.Id==procCode.ProcCat);
+			Definition defProcCat=Definitions.GetDefsForCategory(DefinitionCategory.ProcCodeCats).FirstOrDefault(x => x.Id==procCode.ProcedureCategory);
 			FormProcCodeEdit formProcCodeEdit=new FormProcCodeEdit(procCode);
 			formProcCodeEdit.IsNew=false;
 			formProcCodeEdit.ShowHiddenCategories=(defProcCat!=null ? defProcCat.IsHidden : false);
@@ -1660,8 +1660,8 @@ namespace OpenDental{
 				return;
 			}
 			//Logic only works for columns 4 to 6.
-			long codeNum=((ProcedureCode)gridMain.Rows[e.Row].Tag).CodeNum;
-			FeeSched feeSched=null;
+			long codeNum=((ProcedureCode)gridMain.Rows[e.Row].Tag).Id;
+			FeeSchedule feeSched=null;
 			long provNum=0;
 			long clinicNum=0;
 			Fee fee=null;
@@ -1673,14 +1673,14 @@ namespace OpenDental{
 				}
 				if(PrefC.HasClinicsEnabled) {
 					if(checkGroups1.Checked && comboFeeSchedGroup1.SelectedIndex>-1) {
-						clinicNum=comboFeeSchedGroup1.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
+						clinicNum=comboFeeSchedGroup1.GetSelected<FeeScheduleGroup>().ListClinicNumsAll.FirstOrDefault();
 						isEditingGroup=true;
 					}
 					else {
 						clinicNum=comboClinic1.SelectedClinicNum;
 					}
 				}
-				fee=Fees.GetFee(codeNum,feeSched.FeeSchedNum,clinicNum,provNum,_listFees);
+				fee=Fees.GetFee(codeNum,feeSched.Id,clinicNum,provNum,_listFees);
 			}
 			else if(e.Col==5) {
 				if(comboFeeSched2.SelectedIndex==0) {//It's on the "none" option
@@ -1693,14 +1693,14 @@ namespace OpenDental{
 				}
 				if(PrefC.HasClinicsEnabled) {
 					if(checkGroups2.Checked && comboFeeSchedGroup2.SelectedIndex>-1) {
-						clinicNum=comboFeeSchedGroup2.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
+						clinicNum=comboFeeSchedGroup2.GetSelected<FeeScheduleGroup>().ListClinicNumsAll.FirstOrDefault();
 						isEditingGroup=true;
 					}
 					else {
 						clinicNum=comboClinic2.SelectedClinicNum;
 					}
 				}
-				fee=Fees.GetFee(codeNum,feeSched.FeeSchedNum,clinicNum,provNum,_listFees);
+				fee=Fees.GetFee(codeNum,feeSched.Id,clinicNum,provNum,_listFees);
 			}
 			else if(e.Col==6) {
 				if(comboFeeSched3.SelectedIndex==0) {//It's on the "none" option
@@ -1713,14 +1713,14 @@ namespace OpenDental{
 				}
 				if(PrefC.HasClinicsEnabled) {
 					if(checkGroups3.Checked && comboFeeSchedGroup3.SelectedIndex>-1) {
-						clinicNum=comboFeeSchedGroup3.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
+						clinicNum=comboFeeSchedGroup3.GetSelected<FeeScheduleGroup>().ListClinicNumsAll.FirstOrDefault();
 						isEditingGroup=true;
 					}
 					else {
 						clinicNum=comboClinic3.SelectedClinicNum;
 					}
 				}
-				fee=Fees.GetFee(codeNum,feeSched.FeeSchedNum,clinicNum,provNum,_listFees);
+				fee=Fees.GetFee(codeNum,feeSched.Id,clinicNum,provNum,_listFees);
 			}
 			//Fees set in the 3 ifs above.  If too slow, we will just put the fee into a Tag during FillGrid() and run FillGrid less
 			//Fee fee=_feeCache.GetFee(codeNum,feeSched.FeeSchedNum,clinicNum,provNum);
@@ -1751,7 +1751,7 @@ namespace OpenDental{
 			}
 			//Can't use values from fee object as it could be null. Instead use values pulled from UI that are also used to set new fees below.
 			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && provNum==0 && !isEditingGroup) {//Ignore provider fees and don't block from editing a group.
-				FeeSchedGroup groupForClinic=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSched.FeeSchedNum,clinicNum);
+				FeeScheduleGroup groupForClinic=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSched.Id,clinicNum);
 				if(groupForClinic!=null) {
 					MsgBox.Show("Fee Schedule: "+feeSched.Description+" for Clinic: "+(_listClinics.FirstOrDefault(x => x.Id==clinicNum)).Abbr+
 						" is part of Fee Schedule Group: "+groupForClinic.Description+". The fees must be edited at the group level.");
@@ -1773,7 +1773,7 @@ namespace OpenDental{
 			if(feeSched.IsGlobal) { //Global fee schedules have only one fee so blindly insert/update the fee. There will be no more localized copy.
 				if(fee==null) { //Fee doesn't exist, insert
 					fee=new Fee();
-					fee.FeeSched=feeSched.FeeSchedNum;
+					fee.FeeScheduleId=feeSched.Id;
 					fee.CodeNum=codeNum;
 					fee.Amount=feeAmtNew;
 					fee.ClinicNum=0;
@@ -1801,7 +1801,7 @@ namespace OpenDental{
 						//The best match found was the default fee which should never be deleted when editing a fee schedule for a clinic or provider.
 						//In this specific scenario, we have to add a fee to the database for the selected clinic and/or provider with an amount of -1.
 						fee=new Fee();
-						fee.FeeSched=feeSched.FeeSchedNum;
+						fee.FeeScheduleId=feeSched.Id;
 						fee.CodeNum=codeNum;
 						fee.Amount=-1.0;
 						fee.ClinicNum=clinicNum;
@@ -1817,7 +1817,7 @@ namespace OpenDental{
 				//The fee did not previously exist, or the fee found isn't for the currently set settings.
 				else if(fee==null || fee.ClinicNum!=clinicNum || fee.ProvNum!=provNum) {
 					fee=new Fee();
-					fee.FeeSched=feeSched.FeeSchedNum;
+					fee.FeeScheduleId=feeSched.Id;
 					fee.CodeNum=codeNum;
 					fee.Amount=feeAmtNew;
 					fee.ClinicNum=clinicNum;
@@ -1832,7 +1832,7 @@ namespace OpenDental{
 			}
 			SecurityLog secLog=SecurityLogs.MakeLogEntryNoInsert(Permissions.ProcFeeEdit,0,"Procedure: "+ProcedureCodes.GetStringProcCode(fee.CodeNum)
 				+", Fee: "+fee.Amount.ToString("c")
-				+", Fee Schedule: "+FeeScheds.GetDescription(fee.FeeSched)
+				+", Fee Schedule: "+FeeScheds.GetDescription(fee.FeeScheduleId)
 				+". Manual edit in grid from Procedure Codes list.",fee.CodeNum, SecurityLogSource.None);
 			_dictFeeLogs[fee.FeeNum]=new List<SecurityLog>();
 			_dictFeeLogs[fee.FeeNum].Add(secLog);
@@ -1932,7 +1932,7 @@ namespace OpenDental{
 			if(_needsSynch){
 				SynchAndFillListFees(true);
 			}
-			long schedNum=_listFeeScheds[comboFeeSched1.SelectedIndex].FeeSchedNum;
+			long schedNum=_listFeeScheds[comboFeeSched1.SelectedIndex].Id;
 			using(FormFeeSchedTools FormF=new FormFeeSchedTools(schedNum,_listFeeScheds,_listProviders,_listClinics)) {
 				FormF.ShowDialog();
 			}
@@ -1956,10 +1956,10 @@ namespace OpenDental{
 			List<ProcedureCode> listCodes=new List<ProcedureCode>();
 			for(int i=0;i<gridMain.Rows.Count;i++) {
 				ProcedureCode procCode=(ProcedureCode)gridMain.Rows[i].Tag;
-				if(procCode.ProcCode=="") {
+				if(procCode.Code=="") {
 					continue;
 				}
-				procCode.ProvNumDefault=0;  //We do not want to export ProvNumDefault because the receiving DB will not have the same exact provNums.
+				procCode.DefaultProviderId=0;  //We do not want to export ProvNumDefault because the receiving DB will not have the same exact provNums.
 				listCodes.Add(procCode);
 			}
 			string filename="ProcCodes.xml";
@@ -2012,74 +2012,76 @@ namespace OpenDental{
 		///<summary>Can be called externally.  Surround with try catch.  Returns number of codes inserted. 
 		///Supply path to file to import or a list of procedure codes, or an xml string.  Make sure to set the other two values blank or null.</summary>
 		public static int ImportProcCodes(string path,List<ProcedureCode> listCodes,string xmlData) {
-			if(listCodes==null) {
-				listCodes=new List<ProcedureCode>();
-			}
-			//xmlData should already be tested ahead of time to make sure it's not blank.
-			XmlSerializer serializer=new XmlSerializer(typeof(List<ProcedureCode>));
-			if(path!="") {
-				if(!File.Exists(path)) {
-					throw new ApplicationException("File does not exist.");
-				}
-				try {
-					using(TextReader reader=new StreamReader(path)) {
-						listCodes=(List<ProcedureCode>)serializer.Deserialize(reader);
-					}
-				}
-				catch {
-					throw new ApplicationException("Invalid file format");
-				}
-			}
-			else if(xmlData!="") {
-				try {
-					using(TextReader reader=new StringReader(xmlData)) {
-						listCodes=(List<ProcedureCode>)serializer.Deserialize(reader);
-					}
-				}
-				catch {
-					throw new ApplicationException("xml format");
-				}
-				XmlDocument xmlDocNcodes=new XmlDocument();
-				xmlDocNcodes.LoadXml(xmlData);
-				//Currently this will only run for NoFeeProcCodes.txt
-				//If we run this for another file we will need to double check the structure of the file and make changes to this if needed.
-				foreach(XmlNode procNode in xmlDocNcodes.ChildNodes[1]){//1=ArrayOfProcedureCode
-					string procCode="";
-					string procCatDescript="";
-					foreach(XmlNode procFieldNode in procNode.ChildNodes) {
-						if(procFieldNode.Name=="ProcCode") {
-							procCode=procFieldNode.InnerText;
-						}
-						if(procFieldNode.Name=="ProcCatDescript") {
-							procCatDescript=procFieldNode.InnerText;
-						}
-					}
-					listCodes.First(x => x.ProcCode==procCode).ProcCatDescript=procCatDescript;
-				}
-			}
-			int retVal=0;
-			for(int i=0;i<listCodes.Count;i++) {
-				if(ProcedureCodes.GetContainsKey(listCodes[i].ProcCode)) {
-					continue;//don't import duplicates.
-				}
-				listCodes[i].ProcCat=Definitions.GetByExactName(DefinitionCategory.ProcCodeCats,listCodes[i].ProcCatDescript);
-				if(listCodes[i].ProcCat==0) {//no category exists with that name
-					Definition def=new Definition();
-					def.Category=DefinitionCategory.ProcCodeCats;
-					def.Name=listCodes[i].ProcCatDescript;
-					def.SortOrder=Definitions.GetDefsForCategory(DefinitionCategory.ProcCodeCats).Count;
-					Definitions.Insert(def);
-					Cache.Refresh(InvalidType.Defs);
-					listCodes[i].ProcCat=def.Id;
-				}
-				listCodes[i].ProvNumDefault=0;//Always import procedure codes with no specific provider set.  The incoming prov might not exist.
-				ProcedureCodes.Insert(listCodes[i]);				
-				SecurityLogs.MakeLogEntry(Permissions.ProcCodeEdit,0,"Code"+listCodes[i].ProcCode+" added from procedure code import.",listCodes[i].CodeNum,
-					DateTime.MinValue);
-				retVal++;
-			}
-			return retVal;
+			//if(listCodes==null) {
+			//	listCodes=new List<ProcedureCode>();
+			//}
+			////xmlData should already be tested ahead of time to make sure it's not blank.
+			//XmlSerializer serializer=new XmlSerializer(typeof(List<ProcedureCode>));
+			//if(path!="") {
+			//	if(!File.Exists(path)) {
+			//		throw new ApplicationException("File does not exist.");
+			//	}
+			//	try {
+			//		using(TextReader reader=new StreamReader(path)) {
+			//			listCodes=(List<ProcedureCode>)serializer.Deserialize(reader);
+			//		}
+			//	}
+			//	catch {
+			//		throw new ApplicationException("Invalid file format");
+			//	}
+			//}
+			//else if(xmlData!="") {
+			//	try {
+			//		using(TextReader reader=new StringReader(xmlData)) {
+			//			listCodes=(List<ProcedureCode>)serializer.Deserialize(reader);
+			//		}
+			//	}
+			//	catch {
+			//		throw new ApplicationException("xml format");
+			//	}
+			//	XmlDocument xmlDocNcodes=new XmlDocument();
+			//	xmlDocNcodes.LoadXml(xmlData);
+			//	//Currently this will only run for NoFeeProcCodes.txt
+			//	//If we run this for another file we will need to double check the structure of the file and make changes to this if needed.
+			//	foreach(XmlNode procNode in xmlDocNcodes.ChildNodes[1]){//1=ArrayOfProcedureCode
+			//		string procCode="";
+			//		string procCatDescript="";
+			//		foreach(XmlNode procFieldNode in procNode.ChildNodes) {
+			//			if(procFieldNode.Name=="ProcCode") {
+			//				procCode=procFieldNode.InnerText;
+			//			}
+			//			if(procFieldNode.Name=="ProcCatDescript") {
+			//				procCatDescript=procFieldNode.InnerText;
+			//			}
+			//		}
+			//		listCodes.First(x => x.Code==procCode).ProcCatDescript=procCatDescript;
+			//	}
+			//}
+			//int retVal=0;
+			//for(int i=0;i<listCodes.Count;i++) {
+			//	if(ProcedureCodes.GetContainsKey(listCodes[i].Code)) {
+			//		continue;//don't import duplicates.
+			//	}
+			//	listCodes[i].ProcedureCategory=Definitions.GetByExactName(DefinitionCategory.ProcCodeCats,listCodes[i].ProcCatDescript);
+			//	if(listCodes[i].ProcedureCategory==0) {//no category exists with that name
+			//		Definition def=new Definition();
+			//		def.Category=DefinitionCategory.ProcCodeCats;
+			//		def.Name=listCodes[i].ProcCatDescript;
+			//		def.SortOrder=Definitions.GetDefsForCategory(DefinitionCategory.ProcCodeCats).Count;
+			//		Definitions.Insert(def);
+			//		Cache.Refresh(InvalidType.Defs);
+			//		listCodes[i].ProcedureCategory=def.Id;
+			//	}
+			//	listCodes[i].DefaultProviderId=0;//Always import procedure codes with no specific provider set.  The incoming prov might not exist.
+			//	ProcedureCodes.Insert(listCodes[i]);				
+			//	SecurityLogs.MakeLogEntry(Permissions.ProcCodeEdit,0,"Code"+listCodes[i].Code+" added from procedure code import.",listCodes[i].Id,
+			//		DateTime.MinValue);
+			//	retVal++;
+			//}
+			//return retVal;
 			//don't forget to refresh procedurecodes
+
+			return 0;
 		}
 
 		private void butProcTools_Click(object sender,EventArgs e) {
@@ -2155,7 +2157,7 @@ namespace OpenDental{
 
 		private void butPickClinic_Click(object sender,EventArgs e){
 			List<Clinic> listClinicsToShow=new List<Clinic>();
-			List<FeeSchedGroup> listGroupsToShow=new List<FeeSchedGroup>();
+			List<FeeScheduleGroup> listGroupsToShow=new List<FeeScheduleGroup>();
 			UI.Button pickerButton=(UI.Button)sender;
 			bool isPickingFeeSchedGroup=false;
 			//Build the list of clinics to show from the combobox tags.
@@ -2163,7 +2165,7 @@ namespace OpenDental{
 			//TODO: overload to show generic picker for feeschedgroups.
 			if(pickerButton==butPickClinic1) {
 				if(checkGroups1.Checked){
-					listGroupsToShow=(comboFeeSchedGroup1.Items.OfType<ODBoxItem<FeeSchedGroup>>()).Select(x => x.Tag).ToList();
+					listGroupsToShow=(comboFeeSchedGroup1.Items.OfType<ODBoxItem<FeeScheduleGroup>>()).Select(x => x.Tag).ToList();
 					isPickingFeeSchedGroup=true;
 				}
 				else {
@@ -2172,7 +2174,7 @@ namespace OpenDental{
 			}
 			else if(pickerButton==butPickClinic2) {
 				if(checkGroups2.Checked) {
-					listGroupsToShow=(comboFeeSchedGroup2.Items.OfType<ODBoxItem<FeeSchedGroup>>()).Select(x => x.Tag).ToList();
+					listGroupsToShow=(comboFeeSchedGroup2.Items.OfType<ODBoxItem<FeeScheduleGroup>>()).Select(x => x.Tag).ToList();
 					isPickingFeeSchedGroup=true;
 				}
 				else {
@@ -2181,7 +2183,7 @@ namespace OpenDental{
 			}
 			else if(pickerButton==butPickClinic3) {
 				if(checkGroups3.Checked) {
-					listGroupsToShow=(comboFeeSchedGroup3.Items.OfType<ODBoxItem<FeeSchedGroup>>()).Select(x => x.Tag).ToList();
+					listGroupsToShow=(comboFeeSchedGroup3.Items.OfType<ODBoxItem<FeeScheduleGroup>>()).Select(x => x.Tag).ToList();
 					isPickingFeeSchedGroup=true;
 				}
 				else {
@@ -2261,7 +2263,7 @@ namespace OpenDental{
 			return FormC.SelectedClinic?.Id ?? 0;
 		}
 
-		private int GetFeeSchedGroupIndexFromPicker(List<FeeSchedGroup> listFeeSchedGroup) {
+		private int GetFeeSchedGroupIndexFromPicker(List<FeeScheduleGroup> listFeeSchedGroup) {
 			List<GridColumn> listColumnHeaders=new List<GridColumn>() {
 				new GridColumn("Description",100){ IsWidthDynamic=true }
 			};
@@ -2275,7 +2277,7 @@ namespace OpenDental{
 			string gridTitle="Fee Schedule Groups";
 			FormGridSelection form=new FormGridSelection(listColumnHeaders,listRowValues,formTitle,gridTitle);
 			if(form.ShowDialog()==DialogResult.OK) {
-				return listFeeSchedGroup.FindIndex((x => x.FeeSchedGroupNum==((FeeSchedGroup)form.ListSelectedTags[0]).FeeSchedGroupNum));
+				return listFeeSchedGroup.FindIndex((x => x.Id==((FeeScheduleGroup)form.ListSelectedTags[0]).Id));
 			}
 			//Nothing was selected. This matches what happens with GetClinicIndexFromPicker.
 			return 0;
@@ -2287,7 +2289,7 @@ namespace OpenDental{
 			//No need to check security because we are launching the form in selection mode.
 			FormFeeScheds FormFS=new FormFeeScheds(true);
 			FormFS.ShowDialog();
-			return _listFeeScheds.FindIndex(x => x.FeeSchedNum==FormFS.SelectedFeeSchedNum);//Returns index of the found element or -1.
+			return _listFeeScheds.FindIndex(x => x.Id==FormFS.SelectedFeeSchedNum);//Returns index of the found element or -1.
 		}
 
 		#endregion
@@ -2368,7 +2370,7 @@ namespace OpenDental{
 				return;
 			}
 			ListSelectedProcCodes=gridMain.SelectedTags<ProcedureCode>().Select(x => x.Copy()).ToList();
-			SelectedCodeNum=ListSelectedProcCodes.First().CodeNum;
+			SelectedCodeNum=ListSelectedProcCodes.First().Id;
 			DialogResult=DialogResult.OK;
 		}
 

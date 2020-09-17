@@ -32,12 +32,12 @@ namespace OpenDental {
 		private bool IsProc;
 		private Family FamCur;
 		private Patient PatCur;
-		private List <InsPlan> PlanList;
+		private List <InsurancePlan> PlanList;
 		///<summary>List of substitution links.  Lazy loaded, do not directly use this variable, use the property instead.</summary>
 		private List<SubstitutionLink> _listSubLinks=null;
 		///<summary>Set this to true if user does not have permission to edit procedure.</summary>
 		public bool NoPermissionProc;
-		private InsPlan Plan;
+		private InsurancePlan Plan;
 		private long PatPlanNum;
 		private List<Benefit> BenefitList;
 		private List<ClaimProcHist> HistList;
@@ -65,7 +65,7 @@ namespace OpenDental {
 		}
 
 		///<summary>procCur can be null if not editing from within an actual procedure.  If the save is to happen within this window, then set saveToDb true.  If the object is to be altered here, but saved in a different window, then saveToDb=false.</summary>
-		public FormClaimProc(ClaimProc claimProcCur,Procedure procCur,Family famCur,Patient patCur,List<InsPlan> planList,List<ClaimProcHist> histList,ref List<ClaimProcHist> loopList,List<PatPlan> patPlanList,bool saveToDb,List<InsSub> subList) {
+		public FormClaimProc(ClaimProc claimProcCur,Procedure procCur,Family famCur,Patient patCur,List<InsurancePlan> planList,List<ClaimProcHist> histList,ref List<ClaimProcHist> loopList,List<PatPlan> patPlanList,bool saveToDb,List<InsSub> subList) {
 			ClaimProcCur=claimProcCur;//always work directly with the original object.  Revert if we change our mind.
 			ClaimProcOld=ClaimProcCur.Copy();
 			proc=procCur;
@@ -196,7 +196,7 @@ namespace OpenDental {
 				if(proc==null) {
 					proc=Procedures.GetOneProc(ClaimProcCur.ProcNum,false);
 				}
-				textDescription.Text=ProcedureCodes.GetProcCode(proc.CodeNum).Descript;
+				textDescription.Text=ProcedureCodes.GetProcCode(proc.CodeNum).Description;
 				textProcDate.ReadOnly=true;//user not allowed to edit ProcDate unless it's for a total payment
 			}
 			//get the date to use for checking whether the user has InsWriteOffEdit permission
@@ -491,7 +491,7 @@ namespace OpenDental {
 		private void FillInitialAmounts(){
 			if(IsProc){
 				textFee.Text=proc.ProcFeeTotal.ToString("f");
-				InsPlan plan=InsPlans.GetPlan(ClaimProcCur.PlanNum,PlanList);
+				InsurancePlan plan=InsPlans.GetPlan(ClaimProcCur.PlanNum,PlanList);
 				long insFeeSchedNum=FeeScheds.GetFeeSched(PatCur,PlanList,PatPlanList,SubList,proc.ProvNum);
 				textFeeSched.Text=FeeScheds.GetDescription(insFeeSchedNum);//show ins fee sched, unless PPO plan and standard fee is greater, checked below
 				if(plan.PlanType=="p") {//if ppo
@@ -506,7 +506,7 @@ namespace OpenDental {
 				//int codeNum=proc.CodeNum;
 				long substCodeNum=proc.CodeNum;
 				if(SubstitutionLinks.HasSubstCodeForPlan(plan,proc.CodeNum,ListSubLinks)) {
-					substCodeNum=ProcedureCodes.GetSubstituteCodeNum(stringProcCode,proc.ToothNum,plan.PlanNum,ListSubLinks);//for posterior composites
+					substCodeNum=ProcedureCodes.GetSubstituteCodeNum(stringProcCode,proc.ToothNum,plan.Id,ListSubLinks);//for posterior composites
 				}
 				if(proc.CodeNum!=substCodeNum) {
 					textSubstCode.Text=ProcedureCodes.GetStringProcCode(substCodeNum);
@@ -595,7 +595,7 @@ namespace OpenDental {
 		}
 
 		private void butUpdateAllowed_Click(object sender, System.EventArgs e) {
-			InsPlan plan=InsPlans.GetPlan(ClaimProcCur.PlanNum,PlanList);
+			InsurancePlan plan=InsPlans.GetPlan(ClaimProcCur.PlanNum,PlanList);
 			if(plan==null){
 				//this should never happen
 			}
@@ -622,10 +622,10 @@ namespace OpenDental {
 			Fee FeeCur=Fees.GetFee(proc.CodeNum,feeSched,proc.ClinicNum,proc.ProvNum);
 			if (FeeCur == null)
 			{
-				FeeSched feeSchedObj = FeeScheds.GetFirst(x => x.FeeSchedNum == feeSched);
+				FeeSchedule feeSchedObj = FeeScheds.GetFirst(x => x.Id == feeSched);
                 FeeCur = new Fee
                 {
-                    FeeSched = feeSched,
+                    FeeScheduleId = feeSched,
                     CodeNum = proc.CodeNum,
                     ClinicNum = (feeSchedObj.IsGlobal) ? 0 : proc.ClinicNum,
                     ProvNum = (feeSchedObj.IsGlobal) ? 0 : proc.ProvNum
@@ -641,7 +641,7 @@ namespace OpenDental {
 			DateTime datePrevious=FeeCur.SecDateTEdit;
 			//Make an audit entry that the user manually launched the Fee Edit window from this location.
 			SecurityLogs.MakeLogEntry(Permissions.ProcFeeEdit,0,"Procedure"+": "+ProcedureCodes.GetStringProcCode(FeeCur.CodeNum)
-				+", "+"Fee"+": "+FeeCur.Amount.ToString("c")+", "+"Fee Schedule"+": "+FeeScheds.GetDescription(FeeCur.FeeSched)
+				+", "+"Fee"+": "+FeeCur.Amount.ToString("c")+", "+"Fee Schedule"+": "+FeeScheds.GetDescription(FeeCur.FeeScheduleId)
 				+". "+"Manually launched Edit Fee window via Edit Claim Procedure window.",FeeCur.CodeNum,DateTime.MinValue);
 			SecurityLogs.MakeLogEntry(Permissions.LogFeeEdit,0,"Fee Inserted",FeeCur.FeeNum,datePrevious);
 			FormFE.ShowDialog();
@@ -1158,7 +1158,7 @@ namespace OpenDental {
 			//Any changes to this calculation should also consider FormClaimPayTotal.IsClaimProcGreaterThanProcFee().
 			creditRem=feeAcct-patPayAmt-insPayAmt-writeOff+adj;
 			bool isCreditGreater=creditRem.IsLessThanZero();
-			string procDescript=ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode
+			string procDescript=ProcedureCodes.GetProcCode(proc.CodeNum).Code
 				+"\t"+"Fee"+": "+feeAcct.ToString("F")
 				+"\t"+"Credits"+": "+Math.Abs((-patPayAmt-insPayAmt-writeOff+adj)).ToString("F")
 				+"\t"+"Remaining"+": ("+Math.Abs(creditRem).ToString("F")+")";
@@ -1339,7 +1339,7 @@ namespace OpenDental {
 					+Providers.GetAbbr(ClaimProcOld.ProvNum)+" "+"to"+" "+Providers.GetAbbr(ClaimProcCur.ProvNum);
 				}
 				else {
-					strSecLog = ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode+" - "+textInsPlan.Text+". "+"Provider changed from"+" "
+					strSecLog = ProcedureCodes.GetProcCode(proc.CodeNum).Code+" - "+textInsPlan.Text+". "+"Provider changed from"+" "
 					+Providers.GetAbbr(ClaimProcOld.ProvNum)+" "+"to"+" "+Providers.GetAbbr(ClaimProcCur.ProvNum);
 				}
 				SecurityLogs.MakeLogEntry(Permissions.ClaimProcClaimAttachedProvEdit,ClaimProcCur.PatNum,strSecLog);

@@ -4,6 +4,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -16,21 +18,21 @@ namespace OpenDental {
 		}
 
 		private void FormMountItemDefEdit_Load(object sender, EventArgs e){
-			textXpos.Text=MountItemDefCur.Xpos.ToString();
-			textYpos.Text=MountItemDefCur.Ypos.ToString();
+			textXpos.Text=MountItemDefCur.X.ToString();
+			textYpos.Text=MountItemDefCur.Y.ToString();
 			textWidth.Text=MountItemDefCur.Width.ToString();
 			textHeight.Text=MountItemDefCur.Height.ToString();
 		}
 
 		private void butDelete_Click(object sender, EventArgs e){
-			if(MountItemDefCur.IsNew){//although not currenly used
+			if(MountItemDefCur.Id == 0){//although not currenly used
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
 			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")){
 				return;
 			}
-			MountItemDefs.Delete(MountItemDefCur.MountItemDefNum);
+			MountItemDefs.Delete(MountItemDefCur.Id);
 			DialogResult=DialogResult.OK;
 		}
 
@@ -43,11 +45,11 @@ namespace OpenDental {
 				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
-			MountItemDefCur.Xpos=PIn.Int(textXpos.Text);
-			MountItemDefCur.Ypos=PIn.Int(textYpos.Text);
+			MountItemDefCur.X=PIn.Int(textXpos.Text);
+			MountItemDefCur.Y=PIn.Int(textYpos.Text);
 			MountItemDefCur.Width=PIn.Int(textWidth.Text);
 			MountItemDefCur.Height=PIn.Int(textHeight.Text);
-			if(MountItemDefCur.IsNew){//but not currenly used
+			if(MountItemDefCur.Id == 0){//but not currenly used
 				MountItemDefs.Insert(MountItemDefCur);
 			}
 			else{

@@ -107,7 +107,7 @@ namespace OpenDental {
 				if(unfinalCur.CountPats > 1) {
 					patName+=" "+"(multiple)";
 				}
-				string carrierName=unfinalCur.CarrierCur.CarrierName;
+				string carrierName=unfinalCur.CarrierCur.Name;
 				row.Cells.Add(unfinalCur.Type.GetDescription());
 				row.Cells.Add(patName);
 				row.Cells.Add(carrierName);
@@ -194,8 +194,8 @@ namespace OpenDental {
 			claimPayment.ClinicNum=unfinalPay.ClinicCur.Id;
 			Family famCur=Patients.GetFamily(unfinalPay.PatientCur.PatNum);
 			List<InsSub> listInsSub=InsSubs.RefreshForFam(famCur);
-			List<InsPlan> listInsPlan=InsPlans.RefreshForSubList(listInsSub);
-			claimPayment.CarrierName=Carriers.GetName(InsPlans.GetPlan(unfinalPay.ClaimCur.PlanNum,listInsPlan).CarrierNum);
+			List<InsurancePlan> listInsPlan=InsPlans.RefreshForSubList(listInsSub);
+			claimPayment.CarrierName=Carriers.GetName(InsPlans.GetPlan(unfinalPay.ClaimCur.PlanNum,listInsPlan).CarrierId);
 			ClaimPayments.Insert(claimPayment);
 			double amt=ClaimProcs.AttachAllOutstandingToPayment(claimPayment.ClaimPaymentNum,PrefC.DateClaimReceivedAfter);
 			claimPayment.CheckAmt=amt;

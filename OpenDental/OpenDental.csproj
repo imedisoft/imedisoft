@@ -534,6 +534,9 @@
     <Compile Include="Forms Reports\FormRpServiceDateView.designer.cs">
       <DependentUpon>FormRpServiceDateView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms T\FormCarrierEdit.Designer.cs">
+      <DependentUpon>FormCarrierEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormPerioEdit.Designer.cs">
       <DependentUpon>FormPerioEdit.cs</DependentUpon>
     </Compile>
@@ -1453,16 +1456,16 @@
     <Compile Include="Forms Temp\FormWebSchedAppts.designer.cs">
       <DependentUpon>FormWebSchedAppts.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormAlertCategoryEdit.cs">
+    <Compile Include="Forms\FormAlertCategoryEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAlertCategoryEdit.designer.cs">
+    <Compile Include="Forms\FormAlertCategoryEdit.designer.cs">
       <DependentUpon>FormAlertCategoryEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormAlertCategorySetup.cs">
+    <Compile Include="Forms\FormAlertCategorySetup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAlertCategorySetup.designer.cs">
+    <Compile Include="Forms\FormAlertCategorySetup.designer.cs">
       <DependentUpon>FormAlertCategorySetup.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormDefEditBlockout.cs">
@@ -3229,22 +3232,16 @@
     <Compile Include="Forms Temp\FormElectIDEdit.designer.cs">
       <DependentUpon>FormElectIDEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrQuarterlyKeyEditCust.cs">
+    <Compile Include="Forms T\FormEhrQuarterlyKeyEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrQuarterlyKeyEditCust.designer.cs">
-      <DependentUpon>FormEhrQuarterlyKeyEditCust.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEhrQuarterlyKeyEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEhrQuarterlyKeyEdit.designer.cs">
+    <Compile Include="Forms T\FormEhrQuarterlyKeyEdit.designer.cs">
       <DependentUpon>FormEhrQuarterlyKeyEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrQuarterlyKeys.cs">
+    <Compile Include="Forms T\FormEhrQuarterlyKeys.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrQuarterlyKeys.designer.cs">
+    <Compile Include="Forms T\FormEhrQuarterlyKeys.designer.cs">
       <DependentUpon>FormEhrQuarterlyKeys.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormTestLatency.cs">
@@ -4325,10 +4322,10 @@
     <Compile Include="Forms Temp\FormCarrierCombine.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormCarrierEdit.cs">
+    <Compile Include="Forms T\FormCarrierEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormCarriers.cs">
+    <Compile Include="Forms T\FormCarriers.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormClaimEdit.cs">
@@ -5555,10 +5552,10 @@
     <EmbeddedResource Include="Forms Temp\FormWebSchedAppts.resx">
       <DependentUpon>FormWebSchedAppts.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAlertCategoryEdit.resx">
+    <EmbeddedResource Include="Forms\FormAlertCategoryEdit.resx">
       <DependentUpon>FormAlertCategoryEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAlertCategorySetup.resx">
+    <EmbeddedResource Include="Forms\FormAlertCategorySetup.resx">
       <DependentUpon>FormAlertCategorySetup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormDefEditBlockout.resx">
@@ -6521,15 +6518,11 @@
       <DependentUpon>FormElectIDEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrQuarterlyKeyEditCust.resx">
-      <DependentUpon>FormEhrQuarterlyKeyEditCust.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrQuarterlyKeyEdit.resx">
+    <EmbeddedResource Include="Forms T\FormEhrQuarterlyKeyEdit.resx">
       <DependentUpon>FormEhrQuarterlyKeyEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrQuarterlyKeys.resx">
+    <EmbeddedResource Include="Forms T\FormEhrQuarterlyKeys.resx">
       <DependentUpon>FormEhrQuarterlyKeys.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7143,11 +7136,11 @@
       <DependentUpon>FormCarrierCombine.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormCarrierEdit.resx">
+    <EmbeddedResource Include="Forms T\FormCarrierEdit.resx">
       <DependentUpon>FormCarrierEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormCarriers.resx">
+    <EmbeddedResource Include="Forms T\FormCarriers.resx">
       <DependentUpon>FormCarriers.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -8379,6 +8372,10 @@
     <None Include="Web References\NewCrop\Update1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\IconTable.png" />
+    <None Include="Resources\IconCopyGreen.png" />
+    <None Include="Resources\IconBug.png" />
+    <None Include="Resources\Icon32Bug.png" />
     <None Include="Resources\IconHistory.png" />
     <None Include="Resources\IconThumbtack.png" />
     <None Include="Resources\IconCheckGreen.png" />
@@ -9159,9 +9156,7 @@
       <Name>SparksToothChart</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Forms T\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

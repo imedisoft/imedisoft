@@ -2953,8 +2953,8 @@ namespace OpenDentBusiness{
 							+"SELECT DISTINCT procedurelog.PatNum "
 							+"FROM procedurelog "
 							+"WHERE procedurelog.ProcStatus="+POut.Int((int)ProcStat.C)+" ";
-					string brokenApptCodes=string.Join(",",ProcedureCodes.GetWhereFromList(x => x.ProcCode=="D9986" || x.ProcCode=="D9987")
-						.Select(x => x.CodeNum));
+					string brokenApptCodes=string.Join(",",ProcedureCodes.GetWhereFromList(x => x.Code=="D9986" || x.Code=="D9987")
+						.Select(x => x.Id));
 					if(!string.IsNullOrEmpty(brokenApptCodes)) {
 						command+="AND CodeNum NOT IN ("+brokenApptCodes+") ";
 					}
@@ -3045,8 +3045,8 @@ namespace OpenDentBusiness{
 							+"SELECT procedurelog.PatNum,MIN(procedurelog.ProcDate) AS MinProcDate "
 							+"FROM procedurelog "
 							+"WHERE procedurelog.ProcStatus="+POut.Int((int)ProcStat.C)+" ";
-					brokenApptCodes=string.Join(",",ProcedureCodes.GetWhereFromList(x => x.ProcCode=="D9986" || x.ProcCode=="D9987")
-						.Select(x => x.CodeNum));
+					brokenApptCodes=string.Join(",",ProcedureCodes.GetWhereFromList(x => x.Code=="D9986" || x.Code=="D9987")
+						.Select(x => x.Id));
 					if(!string.IsNullOrEmpty(brokenApptCodes)) {
 						command+="AND CodeNum NOT IN ("+brokenApptCodes+") ";
 					}
@@ -3090,8 +3090,8 @@ namespace OpenDentBusiness{
 							+"SELECT procedurelog.PatNum,procedurelog.ProcNum,procedurelog.ProcDate "
 							+"FROM procedurelog "
 							+"WHERE procedurelog.ProcStatus="+POut.Int((int)ProcStat.C)+" ";
-					brokenApptCodes=string.Join(",",ProcedureCodes.GetWhereFromList(x => x.ProcCode=="D9986" || x.ProcCode=="D9987")
-						.Select(x => x.CodeNum));
+					brokenApptCodes=string.Join(",",ProcedureCodes.GetWhereFromList(x => x.Code=="D9986" || x.Code=="D9987")
+						.Select(x => x.Id));
 					if(!string.IsNullOrEmpty(brokenApptCodes)) {
 						command+="AND CodeNum NOT IN ("+brokenApptCodes+") ";
 					}
@@ -3339,8 +3339,8 @@ namespace OpenDentBusiness{
 							FROM procedurelog 
 							LEFT JOIN tempprocnotesigned"+rndStr+" ON procedurelog.PatNum=tempprocnotesigned"+rndStr+@".PatNum 
 							WHERE procedurelog.ProcStatus !="+POut.Int((int)ProcStat.D)+" ";
-					brokenApptCodes=string.Join(",",ProcedureCodes.GetWhereFromList(x => x.ProcCode=="D9986" || x.ProcCode=="D9987")
-						.Select(x => x.CodeNum));
+					brokenApptCodes=string.Join(",",ProcedureCodes.GetWhereFromList(x => x.Code=="D9986" || x.Code=="D9987")
+						.Select(x => x.Id));
 					if(!string.IsNullOrEmpty(brokenApptCodes)) {
 						command+="AND CodeNum NOT IN ("+brokenApptCodes+") ";
 					}
@@ -5911,8 +5911,8 @@ namespace OpenDentBusiness{
 							+"SELECT DISTINCT procedurelog.PatNum "
 							+"FROM procedurelog "
 							+"WHERE procedurelog.ProcStatus="+POut.Int((int)ProcStat.C)+" ";
-					string brokenApptCodes=string.Join(",",ProcedureCodes.GetWhereFromList(x => x.ProcCode=="D9986" || x.ProcCode=="D9987")
-						.Select(x => x.CodeNum));
+					string brokenApptCodes=string.Join(",",ProcedureCodes.GetWhereFromList(x => x.Code=="D9986" || x.Code=="D9987")
+						.Select(x => x.Id));
 					if(!string.IsNullOrEmpty(brokenApptCodes)) {
 						command+="AND CodeNum NOT IN ("+brokenApptCodes+") ";
 					}
@@ -6003,8 +6003,8 @@ namespace OpenDentBusiness{
 							+"SELECT procedurelog.PatNum,MIN(procedurelog.ProcDate) AS MinProcDate "
 							+"FROM procedurelog "
 							+"WHERE procedurelog.ProcStatus="+POut.Int((int)ProcStat.C)+" ";
-					brokenApptCodes=string.Join(",",ProcedureCodes.GetWhereFromList(x => x.ProcCode=="D9986" || x.ProcCode=="D9987")
-						.Select(x => x.CodeNum));
+					brokenApptCodes=string.Join(",",ProcedureCodes.GetWhereFromList(x => x.Code=="D9986" || x.Code=="D9987")
+						.Select(x => x.Id));
 					if(!string.IsNullOrEmpty(brokenApptCodes)) {
 						command+="AND CodeNum NOT IN ("+brokenApptCodes+") ";
 					}
@@ -6049,8 +6049,8 @@ namespace OpenDentBusiness{
 							+"SELECT procedurelog.PatNum,procedurelog.ProcNum,procedurelog.ProcDate "
 							+"FROM procedurelog "
 							+"WHERE procedurelog.ProcStatus="+POut.Int((int)ProcStat.C)+" ";
-					brokenApptCodes=string.Join(",",ProcedureCodes.GetWhereFromList(x => x.ProcCode=="D9986" || x.ProcCode=="D9987")
-						.Select(x => x.CodeNum));
+					brokenApptCodes=string.Join(",",ProcedureCodes.GetWhereFromList(x => x.Code=="D9986" || x.Code=="D9987")
+						.Select(x => x.Id));
 					if(!string.IsNullOrEmpty(brokenApptCodes)) {
 						command+="AND CodeNum NOT IN ("+brokenApptCodes+") ";
 					}
@@ -6303,8 +6303,8 @@ namespace OpenDentBusiness{
 							FROM procedurelog 
 							LEFT JOIN tempprocnotesigned"+rndStr+" ON procedurelog.PatNum=tempprocnotesigned"+rndStr+@".PatNum 
 							WHERE procedurelog.ProcStatus !="+POut.Int((int)ProcStat.D)+" ";
-					brokenApptCodes=string.Join(",",ProcedureCodes.GetWhereFromList(x => x.ProcCode=="D9986" || x.ProcCode=="D9987")
-						.Select(x => x.CodeNum));
+					brokenApptCodes=string.Join(",",ProcedureCodes.GetWhereFromList(x => x.Code=="D9986" || x.Code=="D9987")
+						.Select(x => x.Id));
 					if(!string.IsNullOrEmpty(brokenApptCodes)) {
 						command+="AND CodeNum NOT IN ("+brokenApptCodes+") ";
 					}

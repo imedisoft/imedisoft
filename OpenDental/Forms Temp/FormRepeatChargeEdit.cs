@@ -646,8 +646,8 @@ namespace OpenDental{
 					return;
 				}
 				ProcedureCode procCode=ProcedureCodes.GetProcCode(FormP.SelectedCodeNum);
-				if(procCode.TreatArea!=TreatmentArea.Mouth 
-					&& procCode.TreatArea!=TreatmentArea.None){
+				if(procCode.TreatmentArea!=ProcedureTreatmentArea.Mouth 
+					&& procCode.TreatmentArea!=ProcedureTreatmentArea.None){
 					MessageBox.Show("Procedure codes that require tooth numbers are not allowed.");
 					DialogResult=DialogResult.Cancel;
 					return;
@@ -657,7 +657,7 @@ namespace OpenDental{
 				RepeatCur.CreatesClaim=false;
 			}
 			textCode.Text=RepeatCur.ProcCode;
-			textDesc.Text=ProcedureCodes.GetProcCode(RepeatCur.ProcCode).Descript;
+			textDesc.Text=ProcedureCodes.GetProcCode(RepeatCur.ProcCode).Description;
 			textChargeAmt.Text=RepeatCur.ChargeAmt.ToString("F");
 			if(RepeatCur.DateStart.Year>1880){
 				textDateStart.Text=RepeatCur.DateStart.ToShortDateString();

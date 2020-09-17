@@ -30,10 +30,10 @@ namespace OpenDental {
 		private Family Fam;
 		///<summary>We must have a readily available bool, whether or not this checkbox field is present on the sheet.  It gets set at the very beginning, then gets changes based on user input on the sheet and in this window.</summary>
 		private bool AddressSameForFam;
-		private InsPlan Plan1;
-		private InsPlan Plan2;
+		private InsurancePlan Plan1;
+		private InsurancePlan Plan2;
 		private List<PatPlan> PatPlanList;
-		private List<InsPlan> PlanList;
+		private List<InsurancePlan> PlanList;
 		private PatPlan PatPlan1;
 		private PatPlan PatPlan2;
 		private Relat? Ins1Relat;
@@ -163,7 +163,7 @@ namespace OpenDental {
 				Sub1=InsSubs.GetSub(PatPlan1.InsSubNum,SubList);
 				Plan1=InsPlans.GetPlan(Sub1.PlanNum,PlanList);
 				Ins1Relat=PatPlan1.Relationship;
-				Carrier1=Carriers.GetCarrier(Plan1.CarrierNum);
+				Carrier1=Carriers.GetCarrier(Plan1.CarrierId);
 			}
 			if(PatPlanList.Count<2) {
 				PatPlan2=null;
@@ -177,7 +177,7 @@ namespace OpenDental {
 				Sub2=InsSubs.GetSub(PatPlan2.InsSubNum,SubList);
 				Plan2=InsPlans.GetPlan(Sub2.PlanNum,PlanList);
 				Ins2Relat=PatPlan2.Relationship;
-				Carrier2=Carriers.GetCarrier(Plan2.CarrierNum);
+				Carrier2=Carriers.GetCarrier(Plan2.CarrierId);
 			}
 			FillRows();
 			FillGrid();
@@ -844,7 +844,7 @@ namespace OpenDental {
 					row.FieldName="ins1CarrierName";
 					row.FieldDisplay="Carrier";
 					if(Carrier1!=null) {
-						row.OldValDisplay=Carrier1.CarrierName;
+						row.OldValDisplay=Carrier1.Name;
 						row.OldValObj=Carrier1;
 					}
 					else {
@@ -939,7 +939,7 @@ namespace OpenDental {
 					row.FieldName="ins1GroupNum";
 					row.FieldDisplay="Group Num";
 					if(Plan1!=null) {
-						row.OldValDisplay=Plan1.GroupNum;
+						row.OldValDisplay=Plan1.GroupNumber;
 					}
 					else {
 						row.OldValDisplay="";
@@ -1052,7 +1052,7 @@ namespace OpenDental {
 					row.FieldName="ins2CarrierName";
 					row.FieldDisplay="Carrier";
 					if(Carrier2!=null) {
-						row.OldValDisplay=Carrier2.CarrierName;
+						row.OldValDisplay=Carrier2.Name;
 						row.OldValObj="";
 					}
 					else {
@@ -1146,7 +1146,7 @@ namespace OpenDental {
 					row.FieldName="ins2GroupNum";
 					row.FieldDisplay="Group Num";
 					if(Plan2!=null) {
-						row.OldValDisplay=Plan2.GroupNum;
+						row.OldValDisplay=Plan2.GroupNumber;
 					}
 					else {
 						row.OldValDisplay="";
@@ -1913,13 +1913,13 @@ namespace OpenDental {
 				carrier=FormC.SelectedCarrier;
 				//Check for nulls because the name AND phone rows might not both be on the sheet.
 				if(carrierNameRow!=null) {
-					if(carrierNameRow.OldValDisplay==carrier.CarrierName) {
+					if(carrierNameRow.OldValDisplay==carrier.Name) {
 						carrierNameRow.DoImport=false;
 					}
 					else {
 						carrierNameRow.DoImport=true;
 					}
-					carrierNameRow.ImpValDisplay=carrier.CarrierName;
+					carrierNameRow.ImpValDisplay=carrier.Name;
 					carrierNameRow.ImpValObj=carrier;
 				}
 				if(carrierPhoneRow!=null) {
@@ -2062,7 +2062,7 @@ namespace OpenDental {
 				MessageBox.Show("Cannot import "+insWarnStr+" until all required fields have been set.  Required fields: Relationship, Subscriber, SubscriberID, CarrierName, and CarrierPhone.");
 				return false;
 			}
-			InsPlan plan=null;
+			InsurancePlan plan=null;
 			InsSub sub=null;
 			long insSubNum=0;
 			long employerNum=0;
@@ -2091,20 +2091,20 @@ namespace OpenDental {
 				return false;
 			}
 			plan=FormIP.SelectedPlan;
-			if(plan.PlanNum==0) {
+			if(plan.Id==0) {
 				//User clicked blank plan, so a new plan will be created using the import values.
 				planIsNew=true;
 			}
 			else {//An existing plan was selected so see if the plan is already subscribed to by the subscriber or create a new inssub.  Patplan will be taken care of later.
 				for(int i=0;i<subList.Count;i++) {
-					if(subList[i].PlanNum==plan.PlanNum) {
+					if(subList[i].PlanNum==plan.Id) {
 						sub=subList[i];
 						insSubNum=sub.InsSubNum;
 					}
 				}
 				if(sub==null) {//Create a new inssub if subscriber is not subscribed to this plan yet.
 					sub=new InsSub();
-					sub.PlanNum=plan.PlanNum;
+					sub.PlanNum=plan.Id;
 					sub.Subscriber=subscriber.PatNum;
 					sub.SubscriberID=subscriberIdRow.ImpValDisplay;
 					sub.ReleaseInfo=true;
@@ -2116,7 +2116,7 @@ namespace OpenDental {
 			//It's still okay to let the user return at this point in order to change importing information.
 			DialogResult result;
 			//Carrier check-----------------------------------------------------------------------------------------
-			if(!planIsNew && plan.CarrierNum!=((Carrier)carrierNameRow.ImpValObj).CarrierNum) {
+			if(!planIsNew && plan.CarrierId!=((Carrier)carrierNameRow.ImpValObj).Id) {
 				result=InsuranceImportQuestion("carrier",isPrimary);
 				//Yes means the user wants to keep the information on the plan they picked, nothing to do.
 				if(result==DialogResult.No) {
@@ -2166,7 +2166,7 @@ namespace OpenDental {
 				}
 			}
 			//Group num check---------------------------------------------------------------------------------------
-			if(groupNumRow!=null && !planIsNew && plan.GroupNum!=groupNumRow.ImpValDisplay) {
+			if(groupNumRow!=null && !planIsNew && plan.GroupNumber!=groupNumRow.ImpValDisplay) {
 				result=InsuranceImportQuestion("group num",isPrimary);
 				if(result==DialogResult.No) {
 					planIsNew=true;
@@ -2177,21 +2177,21 @@ namespace OpenDental {
 			}
 			//Create a new plan-------------------------------------------------------------------------------------
 			if(planIsNew) {
-				plan=new InsPlan();
+				plan=new InsurancePlan();
 				if(employerNum>0) {
 					plan.EmployerNum=employerNum;
 				}
 				plan.PlanType="";
-				plan.CarrierNum=((Carrier)carrierNameRow.ImpValObj).CarrierNum;
+				plan.CarrierId=((Carrier)carrierNameRow.ImpValObj).Id;
 				if(groupNameRow!=null) {
 					plan.GroupName=groupNameRow.ImpValDisplay;
 				}
 				if(groupNumRow!=null) {
-					plan.GroupNum=groupNumRow.ImpValDisplay;
+					plan.GroupNumber=groupNumRow.ImpValDisplay;
 				}
 				InsPlans.Insert(plan);
 				sub=new InsSub();
-				sub.PlanNum=plan.PlanNum;
+				sub.PlanNum=plan.Id;
 				sub.Subscriber=subscriber.PatNum;
 				sub.SubscriberID=subscriberIdRow.ImpValDisplay;
 				sub.ReleaseInfo=true;
@@ -2206,7 +2206,7 @@ namespace OpenDental {
 					ben=new Benefit();
 					ben.BenefitType=InsBenefitType.CoInsurance;
 					ben.CovCatNum=listCovCats[i].Id;
-					ben.PlanNum=plan.PlanNum;
+					ben.PlanNum=plan.Id;
 					ben.Percent=listCovCats[i].DefaultPercent;
 					ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 					ben.CodeNum=0;
@@ -2218,7 +2218,7 @@ namespace OpenDental {
 					ben.CodeNum=0;
 					ben.BenefitType=InsBenefitType.Deductible;
 					ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Diagnostic).Id;
-					ben.PlanNum=plan.PlanNum;
+					ben.PlanNum=plan.Id;
 					ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 					ben.MonetaryAmt=0;
 					ben.Percent=-1;
@@ -2231,7 +2231,7 @@ namespace OpenDental {
 					ben.CodeNum=0;
 					ben.BenefitType=InsBenefitType.Deductible;
 					ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive).Id;
-					ben.PlanNum=plan.PlanNum;
+					ben.PlanNum=plan.Id;
 					ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 					ben.MonetaryAmt=0;
 					ben.Percent=-1;
@@ -2258,7 +2258,7 @@ namespace OpenDental {
 			List<Procedure> procs=Procedures.Refresh(PatCur.PatNum);
 			List<PatPlan> patPlans=PatPlans.Refresh(PatCur.PatNum);
 			subList=InsSubs.RefreshForFam(Fam);
-			List<InsPlan> planList=InsPlans.RefreshForSubList(subList);
+			List<InsurancePlan> planList=InsPlans.RefreshForSubList(subList);
 			List<Benefit> benList=Benefits.Refresh(patPlans,subList);
 			Procedures.ComputeEstimatesForAll(PatCur.PatNum,claimProcs,procs,planList,patPlans,benList,PatCur.Age,subList);
 			Patients.SetHasIns(PatCur.PatNum);

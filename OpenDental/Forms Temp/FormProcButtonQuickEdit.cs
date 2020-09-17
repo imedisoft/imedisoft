@@ -4,6 +4,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -41,7 +42,7 @@ namespace OpenDental {
 			if(FormPC.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			textProcedureCode.Text=ProcedureCodes.GetProcCode(FormPC.SelectedCodeNum).ProcCode;
+			textProcedureCode.Text=ProcedureCodes.GetProcCode(FormPC.SelectedCodeNum).Code;
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {

@@ -28,8 +28,7 @@ namespace Imedisoft.Data
 				"ORDER BY pe.`exam_date`");
 
 		public static IEnumerable<PerioMeasure> GetByPerioExam(long perioExamId)
-			=> SelectMany(
-				"SELECT * FROM `perio_measures` WHERE `perio_exam_id` = " + perioExamId);
+			=> SelectMany("SELECT * FROM `perio_measures` WHERE `perio_exam_id` = " + perioExamId);
 
 		public static void Update(PerioMeasure perioMeasure) 
 			=> ExecuteUpdate(perioMeasure);
@@ -41,7 +40,8 @@ namespace Imedisoft.Data
 			=> ExecuteDelete(perioMeasure);
 
 		/// <summary>
-		/// For the current exam, clears existing skipped teeth and resets them to the specified skipped teeth. The ArrayList valid values are 1-32 int.
+		/// For the current exam, clears existing skipped teeth and resets them to the specified 
+		/// skipped teeth. The ArrayList valid values are 1-32 int.
 		/// </summary>
 		public static void SetSkipped(long perioExamId, List<int> skippedTeeth)
 		{

@@ -218,7 +218,6 @@
     <Compile Include="Crud\ApptThankYouSentCrud.cs" />
     <Compile Include="Crud\AsapCommCrud.cs" />
     <Compile Include="Crud\EmailHostingTemplateCrud.cs" />
-    <Compile Include="Crud\CareCreditWebResponseCrud.cs" />
     <Compile Include="Crud\EClipboardSheetDefCrud.cs" />
     <Compile Include="Crud\FeeSchedGroupCrud.cs" />
     <Compile Include="Crud\InsEditPatLogCrud.cs" />
@@ -258,9 +257,8 @@
     <Compile Include="Crud\StmtLinkCrud.cs" />
     <Compile Include="Crud\TsiTransLogCrud.cs" />
     <Compile Include="Crud\WebSchedRecallCrud.cs" />
-    <Compile Include="Data\AlertCategories.cs" />
-    <Compile Include="Data\AlertCategoryLinks.cs" />
-    <Compile Include="Data Interface\CareCreditWebResponses.cs" />
+    <Compile Include="Data\Logic\AlertCategories.cs" />
+    <Compile Include="Data\Logic\AlertCategoryLinks.cs" />
     <Compile Include="Data Interface\EmailHostingTemplates.cs" />
     <Compile Include="Data Interface\PromotionLogs.cs" />
     <Compile Include="Data Interface\Promotions.cs" />
@@ -378,7 +376,7 @@
     <Compile Include="TableTypes\CareCreditWebResponse.cs" />
     <Compile Include="TableTypes\EClipboardSheetDef.cs" />
     <Compile Include="TableTypes\EmailHostingTemplate.cs" />
-    <Compile Include="TableTypes\FeeSchedGroup.cs" />
+    <Compile Include="Data Temp\FeeScheduleGroup.cs" />
     <Compile Include="TableTypes\InsEditPatLog.cs" />
     <Compile Include="TableTypes\LoginAttempt.cs" />
     <Compile Include="TableTypes\MobileAppDevice.cs" />
@@ -484,7 +482,7 @@
     <Compile Include="Data\Crud\Accounts.cs" />
     <Compile Include="Data\Crud\AccountingAutoPays.cs" />
     <Compile Include="Crud\AdjustmentCrud.cs" />
-    <Compile Include="Crud\AlertItemCrud.cs" />
+    <Compile Include="Data\Crud\AlertItems.cs" />
     <Compile Include="Crud\AlertSubCrud.cs" />
     <Compile Include="Data\Crud\Allergies.cs" />
     <Compile Include="Data\Crud\AllergyDefs.cs" />
@@ -580,7 +578,7 @@
     <Compile Include="Crud\EhrQuarterlyKeyCrud.cs" />
     <Compile Include="Crud\EhrSummaryCcdCrud.cs" />
     <Compile Include="Crud\ElectIDCrud.cs" />
-    <Compile Include="Crud\EmailAddressCrud.cs" />
+    <Compile Include="Data\Crud\EmailAddresses.cs" />
     <Compile Include="Crud\EmailAttachCrud.cs" />
     <Compile Include="Crud\EmailAutographCrud.cs" />
     <Compile Include="Crud\EmailMessageCrud.cs" />
@@ -647,10 +645,10 @@
     <Compile Include="Crud\MedLabFacilityCrud.cs" />
     <Compile Include="Crud\MedLabResultCrud.cs" />
     <Compile Include="Crud\MedLabSpecimenCrud.cs" />
-    <Compile Include="Crud\MountCrud.cs" />
-    <Compile Include="Crud\MountDefCrud.cs" />
-    <Compile Include="Crud\MountItemCrud.cs" />
-    <Compile Include="Crud\MountItemDefCrud.cs" />
+    <Compile Include="Data\Crud\Mounts.cs" />
+    <Compile Include="Data\Crud\MountDefs.cs" />
+    <Compile Include="Data\Crud\MountItems.cs" />
+    <Compile Include="Data\Crud\MountItemDefs.cs" />
     <Compile Include="Crud\OIDExternalCrud.cs" />
     <Compile Include="Crud\OIDInternalCrud.cs" />
     <Compile Include="Crud\OperatoryCrud.cs" />
@@ -683,7 +681,7 @@
     <Compile Include="Crud\ProcButtonItemCrud.cs" />
     <Compile Include="Crud\ProcButtonQuickCrud.cs" />
     <Compile Include="Crud\ProcCodeNoteCrud.cs" />
-    <Compile Include="Crud\ProcedureCodeCrud.cs" />
+    <Compile Include="Data\Crud\ProcedureCodes.cs" />
     <Compile Include="Crud\ProcedureCrud.cs" />
     <Compile Include="Crud\ProcGroupItemCrud.cs" />
     <Compile Include="Crud\ProcNoteCrud.cs" />
@@ -740,7 +738,7 @@
     <Compile Include="Data\Crud\UserClinics.cs" />
     <Compile Include="Crud\UserWebCrud.cs" />
     <Compile Include="Crud\XWebResponseCrud.cs" />
-    <Compile Include="Data Interface\AlertItems.cs" />
+    <Compile Include="Data\Logic\AlertItems.cs" />
     <Compile Include="Data Interface\AlertReads.cs" />
     <Compile Include="Data Interface\AlertSubs.cs" />
     <Compile Include="Data Interface\ApptReminderRules.cs" />
@@ -816,7 +814,7 @@
     <Compile Include="Crud\XChargeTransactionCrud.cs" />
     <Compile Include="Crud\ZipCodeCrud.cs" />
     <Compile Include="Data\Logic\Allergies.cs" />
-    <Compile Include="Data Interface\AllergyDefs.cs" />
+    <Compile Include="Data\Logic\AllergyDefs.cs" />
     <Compile Include="Data Interface\AppointmentTypes.cs" />
     <Compile Include="Data\AppointmentFieldDefinitions.cs" />
     <Compile Include="Data Interface\ApptFields.cs" />
@@ -1066,7 +1064,7 @@
     <Compile Include="Data Interface\ProcButtonItems.cs" />
     <Compile Include="Data Interface\ProcButtons.cs" />
     <Compile Include="Data Interface\ProcCodeNotes.cs" />
-    <Compile Include="Data Interface\ProcedureCodes.cs" />
+    <Compile Include="Data\Logic\ProcedureCodes.cs" />
     <Compile Include="Data Interface\Procedures.cs" />
     <Compile Include="Data Interface\ProcTPs.cs" />
     <Compile Include="Data Interface\ProgramProperties.cs" />
@@ -1116,10 +1114,10 @@
     <Compile Include="Data Interface\Documents.cs" />
     <Compile Include="Db Multi Table\Family.cs" />
     <Compile Include="Db Multi Table\Ledgers.cs" />
-    <Compile Include="Data Interface\MountDefs.cs" />
-    <Compile Include="Data Interface\MountItemDefs.cs" />
-    <Compile Include="Data Interface\MountItems.cs" />
-    <Compile Include="Data Interface\Mounts.cs" />
+    <Compile Include="Data\Logic\MountDefs.cs" />
+    <Compile Include="Data\Logic\MountItemDefs.cs" />
+    <Compile Include="Data\Logic\MountItems.cs" />
+    <Compile Include="Data\Logic\Mounts.cs" />
     <Compile Include="Data Interface\PatientNotes.cs" />
     <Compile Include="Data Interface\Patients.cs" />
     <Compile Include="Data\Logic\Providers.cs" />
@@ -1211,8 +1209,6 @@
     <Compile Include="Reports\RpUnfinalizedInsPay.cs" />
     <Compile Include="Reports\RpRouting.cs" />
     <Compile Include="Reports\RpUnearnedIncome.cs" />
-    <Compile Include="Data\Models\AlertCategoryLink.cs" />
-    <Compile Include="Data\Models\AlertCategory.cs" />
     <Compile Include="TableTypes\AsapComm.cs" />
     <Compile Include="TableTypes\DefLink.cs" />
     <Compile Include="TableTypes\Etrans835Attach.cs" />
@@ -1221,7 +1217,6 @@
     <Compile Include="TableTypes\DiscountPlan.cs" />
     <Compile Include="TableTypes\FamAging.cs" />
     <Compile Include="TableTypes\FieldDefLink.cs" />
-    <Compile Include="TableTypes\AlertItem.cs" />
     <Compile Include="TableTypes\AlertSub.cs" />
     <Compile Include="TableTypes\ApptReminderSent.cs" />
     <Compile Include="TableTypes\ApptReminderRule.cs" />
@@ -1316,7 +1311,6 @@
     <Compile Include="TableTypes\WikiPageHist.cs" />
     <Compile Include="TableTypes\WikiPage.cs" />
     <Compile Include="TableTypes\DictCustom.cs" />
-    <Compile Include="TableTypes\EmailAddress.cs" />
     <Compile Include="TableTypes\ErxLog.cs" />
     <Compile Include="TableTypes\ScreenPat.cs" />
     <Compile Include="TableTypes\ToothGridCell.cs" />
@@ -1474,7 +1468,7 @@
     <Compile Include="SheetFramework\SheetEnums.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TableTypes\FeeSched.cs" />
+    <Compile Include="Data Temp\FeeSchedule.cs" />
     <Compile Include="TableTypes\HL7Msg.cs" />
     <Compile Include="TableTypes\ScheduleOp.cs" />
     <Compile Include="TableTypes\PlannedAppt.cs" />
@@ -1527,26 +1521,21 @@
     <Compile Include="TableTypes\LabTurnaround.cs" />
     <Compile Include="TableTypes\LabCase.cs" />
     <Compile Include="TableTypes\Laboratory.cs" />
-    <Compile Include="TableTypes\Mount.cs" />
-    <Compile Include="TableTypes\MountItem.cs" />
-    <Compile Include="TableTypes\MountItemDef.cs" />
-    <Compile Include="TableTypes\MountDef.cs" />
     <Compile Include="TableTypes\Etrans.cs" />
     <Compile Include="TableTypes\FormPat.cs" />
     <Compile Include="TableTypes\CovCat.cs" />
     <Compile Include="TableTypes\CovSpan.cs" />
     <Compile Include="TableTypes\Def.cs" />
     <Compile Include="TableTypes\Deposit.cs" />
-    <Compile Include="TableTypes\Document.cs" />
+    <Compile Include="Data Temp\Document.cs" />
     <Compile Include="TableTypes\Dunning.cs" />
     <Compile Include="TableTypes\ElectID.cs" />
     <Compile Include="TableTypes\EmailAttach.cs" />
     <Compile Include="TableTypes\EmailMessage.cs" />
     <Compile Include="TableTypes\EmailTemplate.cs" />
-    <Compile Include="TableTypes\Employer.cs" />
-    <Compile Include="TableTypes\Fee.cs" />
+    <Compile Include="Data Temp\Fee.cs" />
     <Compile Include="TableTypes\GroupPermission.cs" />
-    <Compile Include="TableTypes\InsPlan.cs" />
+    <Compile Include="Data Temp\InsurancePlan.cs" />
     <Compile Include="Db\Interval.cs" />
     <Compile Include="TableTypes\JournalEntry.cs" />
     <Compile Include="TableTypes\Language.cs" />
@@ -1570,7 +1559,6 @@
     <Compile Include="TableTypes\ProcButton.cs" />
     <Compile Include="TableTypes\ProcButtonItem.cs" />
     <Compile Include="TableTypes\Procedure.cs" />
-    <Compile Include="TableTypes\ProcedureCode.cs" />
     <Compile Include="TableTypes\ProcNote.cs" />
     <Compile Include="TableTypes\ProcTP.cs" />
     <Compile Include="TableTypes\Program.cs" />
@@ -2097,7 +2085,10 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Data Temp\Crud\" />
+    <Folder Include="Data Temp\Logic\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -223,13 +223,13 @@ namespace OpenDental{
 			_listDefNumsImageCats=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true);
 			for(int i=0;i<_listDefNumsImageCats.Count;i++){
 				listCategory.Items.Add(_listDefNumsImageCats[i].Name);
-				if(_listDefNumsImageCats[i].Id==_mountCur.DocCategory){
+				if(_listDefNumsImageCats[i].Id==_mountCur.Category){
 					listCategory.SelectedIndex=i;
 				}
 			}
 			textDescription.Text=_mountCur.Description;
-			textDate.Text=_mountCur.DateCreated.ToShortDateString();
-			textTime.Text=_mountCur.DateCreated.ToShortTimeString();
+			textDate.Text=_mountCur.AddedOn.ToShortDateString();
+			textTime.Text=_mountCur.AddedOn.ToShortTimeString();
 			textNote.Text=_mountCur.Note;
 		}
 
@@ -255,10 +255,10 @@ namespace OpenDental{
 				MessageBox.Show("Please enter a valid time.");
 				return;
 			}
-			_mountCur.DocCategory=_listDefNumsImageCats[listCategory.SelectedIndex].Id;
+			_mountCur.Category=_listDefNumsImageCats[listCategory.SelectedIndex].Id;
 			_mountCur.Description=textDescription.Text;
 			DateTime dateTimeEntered=PIn.Date(textDate.Text+" "+textTime.Text);
-			_mountCur.DateCreated=dateTimeEntered;	
+			_mountCur.AddedOn=dateTimeEntered;	
 			_mountCur.Note=textNote.Text;
 			Mounts.Update(_mountCur);
 			//new mounts are never added here, so it's never an insert

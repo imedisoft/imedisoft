@@ -33,7 +33,7 @@ namespace Imedisoft.Forms
 				if (imagesGrid.SelectedRows.Count > 0 &&
 					imagesGrid.SelectedRows[0].Tag is Document document)
                 {
-					return document.DocNum;
+					return document.Id;
                 }
 
 				return 0;
@@ -71,8 +71,8 @@ namespace Imedisoft.Forms
 			foreach (var document in documents)
 			{
 				var gridRow = new GridRow();
-				gridRow.Cells.Add(document.DateCreated.ToString());
-				gridRow.Cells.Add(Definitions.GetName(DefinitionCategory.ImageCats, document.DocCategory));
+				gridRow.Cells.Add(document.AddedOnDate.ToString());
+				gridRow.Cells.Add(Definitions.GetName(DefinitionCategory.ImageCats, document.Category));
 				gridRow.Cells.Add(document.Description);
 				gridRow.Tag = document;
 

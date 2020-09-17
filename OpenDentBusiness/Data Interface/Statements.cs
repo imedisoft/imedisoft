@@ -398,7 +398,7 @@ namespace OpenDentBusiness
 			{
 				Documents.Update(doc);
 			}
-			string command = "UPDATE statement SET DocNum=" + POut.Long(doc.DocNum)
+			string command = "UPDATE statement SET DocNum=" + POut.Long(doc.Id)
 				+ " WHERE StatementNum=" + POut.Long(statementNum);
 			Database.ExecuteNonQuery(command);
 		}

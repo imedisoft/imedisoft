@@ -6,6 +6,8 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormProcBandingSelect:ODForm {
@@ -40,8 +42,8 @@ namespace OpenDental {
 			foreach(Procedure proc in _listTpBandingProcs) {
 				row=new GridRow();
 				ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
-				row.Cells.Add(procCode.ProcCode);
-				row.Cells.Add(procCode.Descript);
+				row.Cells.Add(procCode.Code);
+				row.Cells.Add(procCode.Description);
 				row.Tag=proc;
 				gridTpBandingProcs.Rows.Add(row);
 			}

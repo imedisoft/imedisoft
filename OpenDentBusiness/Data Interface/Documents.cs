@@ -33,7 +33,7 @@ namespace OpenDentBusiness
 		{
 
 			Insert(doc, pat);
-			return GetByNum(doc.DocNum);
+			return GetByNum(doc.Id);
 		}
 
 		#endregion
@@ -117,7 +117,7 @@ namespace OpenDentBusiness
 		public static long Insert(Document doc, Patient pat)
 		{
 
-			doc.DocNum = Crud.DocumentCrud.Insert(doc);
+			doc.Id = Crud.DocumentCrud.Insert(doc);
 			//If the current filename is just an extension, then assign it a unique name.
 			if (doc.FileName == Path.GetExtension(doc.FileName))
 			{
@@ -131,9 +131,9 @@ namespace OpenDentBusiness
 						doc.FileName += s.Substring(i, 1);
 					}
 				}
-				doc.FileName += doc.DocNum.ToString() + extension;//ensures unique name
+				doc.FileName += doc.Id.ToString() + extension;//ensures unique name
 																  //there is still a slight chance that someone manually added a file with this name, so quick fix:
-				string command = "SELECT FileName FROM document WHERE PatNum=" + POut.Long(doc.PatNum);
+				string command = "SELECT FileName FROM document WHERE PatNum=" + POut.Long(doc.PatientId);
 				DataTable table = Database.ExecuteDataTable(command);
 				string[] usedNames = new string[table.Rows.Count];
 				for (int i = 0; i < table.Rows.Count; i++)
@@ -150,7 +150,7 @@ namespace OpenDentBusiness
 				}*/
 				Update(doc);
 			}
-			return doc.DocNum;
+			return doc.Id;
 		}
 
 		///<summary>This is a generic insert statement used to insert documents with custom file names.</summary>
@@ -178,7 +178,7 @@ namespace OpenDentBusiness
 		public static void Delete(Document doc)
 		{
 
-			Crud.DocumentCrud.Delete(doc.DocNum);
+			Crud.DocumentCrud.Delete(doc.Id);
 		}
 
 		///<summary>This is used by FormImageViewer to get a list of paths based on supplied list of DocNums. The reason is that later we will allow sharing of documents, so the paths may not be in the current patient folder. Rewritten by Ryan on 10/26/2011 to use List&lt;&gt; instead of ArrayList.</summary>
@@ -373,7 +373,7 @@ namespace OpenDentBusiness
 				try
 				{
 					DateTime thumbModifiedTime = File.GetLastWriteTime(thumbFileName);
-					if (thumbModifiedTime > doc.DateTStamp)
+					if (thumbModifiedTime > doc.LastModifiedDate)
 					{
 						return (Bitmap)Bitmap.FromFile(thumbFileName);
 					}
@@ -451,7 +451,7 @@ namespace OpenDentBusiness
 			Document[] documents = new Document[mountItems.Count];
 			for (int i = 0; i < mountItems.Count; i++)
 			{
-				string command = "SELECT * FROM document WHERE MountItemNum='" + POut.Long(mountItems[i].MountItemNum) + "'";
+				string command = "SELECT * FROM document WHERE MountItemNum='" + POut.Long(mountItems[i].Id) + "'";
 				DataTable table = Database.ExecuteDataTable(command);
 				if (table.Rows.Count < 1)
 				{
@@ -494,18 +494,18 @@ namespace OpenDentBusiness
 				if (!inList)
 				{//OD found new images in the patient's folder that aren't part of the DB.
 					Document doc = new Document();
-					doc.DateCreated = File.GetLastWriteTime(fileList[j]);
+					doc.AddedOnDate = File.GetLastWriteTime(fileList[j]);
 
-					DateTime datePrevious = doc.DateTStamp;
+					DateTime datePrevious = doc.LastModifiedDate;
 					doc.Description = fileName;
-					doc.DocCategory = Definitions.GetFirstForCategory(DefinitionCategory.ImageCats, true).Id;
+					doc.Category = Definitions.GetFirstForCategory(DefinitionCategory.ImageCats, true).Id;
 					doc.FileName = fileName;
-					doc.PatNum = patient.PatNum;
+					doc.PatientId = patient.PatNum;
 					Insert(doc, patient);
 					countAdded++;
-					string docCat = Definitions.GetDef(DefinitionCategory.ImageCats, doc.DocCategory).Name;
+					string docCat = Definitions.GetDef(DefinitionCategory.ImageCats, doc.Category).Name;
 					SecurityLogs.MakeLogEntry(Permissions.ImageEdit, patient.PatNum, "Document Created: A file" + ", " + doc.FileName + ", "
-						+ "placed into the patient's AtoZ images folder from outside of the program was detected and a record automatically inserted into the first image category" + ", " + docCat, doc.DocNum, datePrevious);
+						+ "placed into the patient's AtoZ images folder from outside of the program was detected and a record automatically inserted into the first image category" + ", " + docCat, doc.Id, datePrevious);
 				}
 			}
 			return countAdded;
@@ -751,11 +751,11 @@ namespace OpenDentBusiness
 		public static void OpenDoc(long docNum)
 		{
 			Document docCur = Documents.GetByNum(docNum);
-			if (docCur.DocNum == 0)
+			if (docCur.Id == 0)
 			{
 				return;
 			}
-			Patient patCur = Patients.GetPat(docCur.PatNum);
+			Patient patCur = Patients.GetPat(docCur.PatientId);
 			if (patCur == null)
 			{
 				return;
@@ -770,11 +770,11 @@ namespace OpenDentBusiness
 		public static bool DocExists(long docNum)
 		{
 			Document docCur = Documents.GetByNum(docNum);
-			if (docCur.DocNum == 0)
+			if (docCur.Id == 0)
 			{
 				return false;
 			}
-			Patient patCur = Patients.GetPat(docCur.PatNum);
+			Patient patCur = Patients.GetPat(docCur.PatientId);
 			if (patCur == null)
 			{
 				return false;
@@ -801,11 +801,11 @@ namespace OpenDentBusiness
 		public static string GetPath(long docNum)
 		{
 			Document docCur = Documents.GetByNum(docNum);
-			if (docCur.DocNum == 0)
+			if (docCur.Id == 0)
 			{
 				return "";
 			}
-			Patient patCur = Patients.GetPat(docCur.PatNum);
+			Patient patCur = Patients.GetPat(docCur.PatientId);
 			if (patCur == null)
 			{
 				return "";

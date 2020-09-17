@@ -473,7 +473,7 @@ namespace OpenDental{
 			FillSheets();
 			_provNumSelected=RefAttachCur.ProvNum;
 			comboProvNum.Items.Clear();
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboProvNum.Items.Add(_listProviders[i].GetLongDesc());//Only visible provs added to combobox.
 				if(_listProviders[i].Id==RefAttachCur.ProvNum) {

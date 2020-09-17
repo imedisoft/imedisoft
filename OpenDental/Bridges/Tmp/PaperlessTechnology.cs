@@ -557,9 +557,9 @@ namespace OpenDental.Bridges
 				List<PatPlan> patPlanList = PatPlans.Refresh(pat.PatNum);
 				Family fam = Patients.GetFamily(pat.PatNum);
 				List<InsSub> subList = InsSubs.RefreshForFam(fam);
-				List<InsPlan> planList = InsPlans.RefreshForSubList(subList);
+				List<InsurancePlan> planList = InsPlans.RefreshForSubList(subList);
                 InsSub sub = null;
-				InsPlan plan = null;
+				InsurancePlan plan = null;
 				Carrier carrier = null;
 				Employer emp = null;
 				if (patPlanList.Count > 0)
@@ -567,7 +567,7 @@ namespace OpenDental.Bridges
                     PatPlan patplan = patPlanList[0];
                     sub = InsSubs.GetSub(patplan.InsSubNum, subList);
 					plan = InsPlans.GetPlan(sub.PlanNum, planList);
-					carrier = Carriers.GetCarrier(plan.CarrierNum);
+					carrier = Carriers.GetCarrier(plan.CarrierId);
 					if (plan.EmployerNum != 0)
 					{
 						emp = Employers.GetEmployer(plan.EmployerNum);
@@ -586,10 +586,10 @@ namespace OpenDental.Bridges
 				}
 				else
 				{
-					sw.Write(Tidy(carrier.CarrierName) + ",");//PAT_INSNM
+					sw.Write(Tidy(carrier.Name) + ",");//PAT_INSNM
 					sw.Write(Tidy(plan.GroupName) + ",");//PAT_INSGPL Ins group plan name
-					sw.Write(Tidy(carrier.Address) + ",");//PAT_INSAD1
-					sw.Write(Tidy(carrier.Address2) + ",");//PAT_INSAD2
+					sw.Write(Tidy(carrier.AddressLine1) + ",");//PAT_INSAD1
+					sw.Write(Tidy(carrier.AddressLine2) + ",");//PAT_INSAD2
 					sw.Write(Tidy(carrier.City) + ",");//PAT_INSCIT
 					sw.Write(Tidy(carrier.State) + ",");//PAT_INSST
 					sw.Write(Tidy(carrier.Zip) + ",");//PAT_INSZIP
@@ -603,7 +603,7 @@ namespace OpenDental.Bridges
 				}
 				else
 				{
-					sw.Write(Tidy(plan.GroupNum) + ",");//PAT_INSGNO Ins group number
+					sw.Write(Tidy(plan.GroupNumber) + ",");//PAT_INSGNO Ins group number
 				}
 				if (emp == null)
 				{

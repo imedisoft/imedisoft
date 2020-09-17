@@ -21,7 +21,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void UserControlSetupWizClinic_Load(object sender,EventArgs e) {
-			List<Provider> listProvs = Providers.GetDeepCopy(true);
+			List<Provider> listProvs = Providers.GetAll(true);
 			_listSchedProvs=new List<ScheduleProv>();
 			listProvs.ForEach(x => {
 				_listSchedProvs.Add(new ScheduleProv() {
@@ -133,7 +133,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 				IsDone=false;
 			}
 			else {
-				List<Provider> listProviders = Providers.GetWhere(x => x.IsNotPerson == false,true).ToList();
+				List<Provider> listProviders = Providers.FindAll(x => x.IsNotPerson == false,true).ToList();
 				foreach(Provider prov in listProviders) {
 					if(!listSchedule.Select(x => x.ProvNum).Contains(prov.Id)) {
 						IsDone=false;

@@ -61,7 +61,7 @@ namespace OpenDentBusiness {
 				string.Join(",",listRecallTypePractice.Select(x=>x.Procedures).ToList().Union(RecallTypes.GetProcs(RecallTypes.ChildProphyType))));
 			//List of practice recall TP procedures on future scheduled appointments for the listPatNums.
 			List<Procedure> listProcsOnFutureApts=Procedures.GetProcsAttachedToFutureAppt(listPatNums,
-				listRecallProcsPractice.Select(x => x.CodeNum).ToList());
+				listRecallProcsPractice.Select(x => x.Id).ToList());
 			//Dictionary of PatNums and List of Procedures.
 			dictProcsOnFutureApts=listProcsOnFutureApts.GroupBy(x => x.PatNum)
 				.ToDictionary(x => x.Key,x => x.ToList());
@@ -92,7 +92,7 @@ namespace OpenDentBusiness {
 						listOppositeRecallProcs=ProcedureCodes.GetFromCommaDelimitedList(string.Join(",",RecallTypes.GetProcs(RecallTypes.ProphyType)));
 					}
 				}
-				List<long> listCodeNumsOppositeRecallType=listOppositeRecallProcs.Select(x=>x.CodeNum).ToList();
+				List<long> listCodeNumsOppositeRecallType=listOppositeRecallProcs.Select(x=>x.Id).ToList();
 				List<long> listCodeNumsOnFutureApt=pat.Value.Select(x=>x.CodeNum).ToList();
 				//Recall confliction exists when the patient's future scheduled TP procedures contain all of the procedures of the conflicting recall type.
 				if(listCodeNumsOppositeRecallType.All(x => x.In(listCodeNumsOnFutureApt))) {
@@ -1906,7 +1906,7 @@ namespace OpenDentBusiness {
 				Family fam=Patients.GetFamily(patCur.PatNum);
 				List<Procedure> procList=Procedures.Refresh(patCur.PatNum);
 				List<InsSub> listSubs=InsSubs.RefreshForFam(fam);
-				List<InsPlan> listPlans=InsPlans.RefreshForSubList(listSubs);
+				List<InsurancePlan> listPlans=InsPlans.RefreshForSubList(listSubs);
 				List<string> listProcStrs=RecallTypes.GetProcs(recallCur.RecallTypeNum);
 				//Now we need to completely fill the appointment with procedures, claimprocs, etc. for this specific recall.
 				List<Procedure> listProcedures=Appointments.FillAppointmentForRecall(aptCur,recallCur,listRecalls,patCur,listProcStrs,listPlans,listSubs);
@@ -1982,9 +1982,9 @@ namespace OpenDentBusiness {
 						ClinicId=aptCur.ClinicNum,
 						Description=aptCur.AptDateTime.ToString(),
 						Type=AlertType.WebSchedRecallApptCreated,
-						Actions=ActionType.MarkAsRead|ActionType.OpenForm|ActionType.Delete,
+						Actions=AlertAction.MarkAsRead|AlertAction.OpenForm|AlertAction.Delete,
 						FormToOpen=FormType.FormWebSchedAppts,
-						Severity=SeverityType.Low,
+						Severity=AlertSeverityType.Low,
 						ObjectId=aptCur.AptNum
 					};
 					AlertItems.Insert(alert);

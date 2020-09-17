@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {

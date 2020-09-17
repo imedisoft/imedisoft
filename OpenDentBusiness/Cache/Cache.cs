@@ -83,7 +83,7 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.Carriers) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Carriers.ToString());
-				Carriers.GetTableFromCache(true); // run on startup, after telephone reformat, after list edit.
+				Carriers.RefreshCache(); // run on startup, after telephone reformat, after list edit.
 			}
 
 			if (invalidTypes.Contains(InvalidType.ClaimForms) || refreshAll)
@@ -168,7 +168,7 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.Email) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Email.ToString());
-				EmailAddresses.GetTableFromCache(true);
+				EmailAddresses.RefreshCache();
 				EmailTemplates.GetTableFromCache(true);
 				EmailAutographs.GetTableFromCache(true);
 			}
@@ -265,7 +265,7 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.ProcCodes) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ProcCodes.ToString());
-				ProcedureCodes.GetTableFromCache(true);
+				ProcedureCodes.RefreshCache();
 				ProcCodeNotes.GetTableFromCache(true);
 			}
 			if (invalidTypes.Contains(InvalidType.Programs) || refreshAll)
@@ -382,7 +382,7 @@ namespace OpenDentBusiness
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ToolButsAndMounts.ToString());
 				ToolButItems.GetTableFromCache(true);
-				MountDefs.GetTableFromCache(true);
+				MountDefs.RefreshCache();
 			}
 			if (invalidTypes.Contains(InvalidType.UserClinics) || refreshAll)
 			{

@@ -9,6 +9,7 @@ using System.Linq;
 using OpenDentBusiness.Eclaims;
 using System.Globalization;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness {
 	///<summary></summary>
@@ -201,7 +202,7 @@ namespace OpenDentBusiness {
 		///match either the planNum or the patPlanNum.  It figures out how much was already used and reduces the returned value by that amount.  
 		///Both individual and family deductibles will reduce the returned value independently.  Works for individual procs, categories, and general.</summary>
 		public static double GetDeductibleByCode(List<Benefit> benList,long planNum,long patPlanNum,DateTime procDate,string procCode,
-			List<ClaimProcHist> histList,List<ClaimProcHist> loopList,InsPlan plan,long patNum) 
+			List<ClaimProcHist> histList,List<ClaimProcHist> loopList,InsurancePlan plan,long patNum) 
 		{
 			//No need to check RemotingRole; no call to db.
 			if(IsExcluded(procCode,benList,planNum,patPlanNum)) {
@@ -618,7 +619,7 @@ namespace OpenDentBusiness {
 		///There don't seem to be any situations where multiple limitations would each partially reduce coverage for a single code, other than ind/fam.  
 		///The returned value will be the original insEstTotal passed in unless there was some limitation that reduced it.
 		///Considers InsEstTotalOverride when dynamically writing the EstimateNote.</summary>
-		public static double GetLimitationByCode(List<Benefit> benList,long planNum,long patPlanNum,DateTime procDate,string procCodeStr,List<ClaimProcHist> histList,List<ClaimProcHist> loopList,InsPlan plan,long patNum,out string note,double insEstTotal,int patientAge,long insSubNum,double insEstTotalOverride) {
+		public static double GetLimitationByCode(List<Benefit> benList,long planNum,long patPlanNum,DateTime procDate,string procCodeStr,List<ClaimProcHist> histList,List<ClaimProcHist> loopList,InsurancePlan plan,long patNum,out string note,double insEstTotal,int patientAge,long insSubNum,double insEstTotalOverride) {
 			//No need to check RemotingRole;no call to db.
 			note ="";
 			//first, create a much shorter list with only relevant benefits in it.
@@ -1236,7 +1237,7 @@ namespace OpenDentBusiness {
 				if(listShort[b].CodeNum != 0) {
 					long codeNum=0;
 					if(ProcedureCodes.GetContainsKey(claimProcHist.StrProcCode)) {
-						codeNum=ProcedureCodes.GetOne(claimProcHist.StrProcCode).CodeNum;
+						codeNum=ProcedureCodes.GetOne(claimProcHist.StrProcCode).Id;
 					}
 					if(listShort[b].CodeNum==codeNum) {//Enhance later for code ranges when supported by program
 						return true;//a tighter limitation benefit exists for this specific procedure code.
@@ -1698,7 +1699,7 @@ namespace OpenDentBusiness {
 			}
 			else {
 				ProcedureCode proccode=ProcedureCodes.GetProcCode(benefit.CodeNum);
-				retVal=proccode.ProcCode+"-"+proccode.AbbrDesc;
+				retVal=proccode.Code+"-"+proccode.ShortDescription;
 			}
 			return retVal;
 		}

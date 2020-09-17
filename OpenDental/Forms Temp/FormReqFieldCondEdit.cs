@@ -45,7 +45,7 @@ namespace OpenDental {
 			}
 			_listBillingTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true);
 			_listClinics=Clinics.GetAll(true);
-			_listProvs=Providers.GetDeepCopy(true);
+			_listProvs=Providers.GetAll(true);
 			comboOperator1.Items.Add(">");
 			comboOperator1.Items.Add("<");
 			comboOperator1.Items.Add("\u2265");//Greater than or equal to

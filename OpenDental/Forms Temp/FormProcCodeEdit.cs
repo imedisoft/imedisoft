@@ -105,7 +105,7 @@ namespace OpenDental{
 		private Label label25;
 		private CheckBox checkBypassLockDate;
 		private Label labelDefaultPreauthNote;
-		private List<FeeSched> _listFeeScheds;
+		private List<FeeSchedule> _listFeeScheds;
 		private List<Definition> _listProcCodeCatDefs;
 		public bool ShowHiddenCategories;
 		private List<Fee> _listFees;
@@ -1090,31 +1090,31 @@ namespace OpenDental{
 			// TODO: List<ProcedureCode> listCodes=CDT.Class1.GetADAcodes();
 
 			List<ProcedureCode> listCodes = new List<ProcedureCode>();
-			if (listCodes.Count>0 && ProcCode.ProcCode.Length==5 && ProcCode.ProcCode.Substring(0,1)=="D") {
+			if (listCodes.Count>0 && ProcCode.Code.Length==5 && ProcCode.Code.Substring(0,1)=="D") {
 				for(int i=0;i<listCodes.Count;i++) {
-					if(listCodes[i].ProcCode==ProcCode.ProcCode) {
+					if(listCodes[i].Code==ProcCode.Code) {
 						textDescription.ReadOnly=true;
 					}
 				}
 			}
-			textProcCode.Text=ProcCode.ProcCode;
+			textProcCode.Text=ProcCode.Code;
 			textAlternateCode1.Text=ProcCode.AlternateCode1;
 			textMedicalCode.Text=ProcCode.MedicalCode;
 			textSubstitutionCode.Text=ProcCode.SubstitutionCode;
 			for(int i=0;i<Enum.GetNames(typeof(SubstitutionCondition)).Length;i++) {
 				comboSubstOnlyIf.Items.Add(Enum.GetNames(typeof(SubstitutionCondition))[i]);
 			}
-			comboSubstOnlyIf.SelectedIndex=(int)ProcCode.SubstOnlyIf;
-			textDescription.Text=ProcCode.Descript;
-			textAbbrev.Text=ProcCode.AbbrDesc;
+			comboSubstOnlyIf.SelectedIndex=(int)ProcCode.SubstitutionCondition;
+			textDescription.Text=ProcCode.Description;
+			textAbbrev.Text=ProcCode.ShortDescription;
 			textLaymanTerm.Text=ProcCode.LaymanTerm;
-			strBTime=new StringBuilder(ProcCode.ProcTime);
+			strBTime=new StringBuilder(ProcCode.Time);
 			butColor.BackColor=ProcCode.GraphicColor;
 			checkMultiVisit.Checked=ProcCode.IsMultiVisit;
 			checkMultiVisit.Visible=Programs.UsingOrion;
-			checkNoBillIns.Checked=ProcCode.NoBillIns;
+			checkNoBillIns.Checked=ProcCode.NoInsuranceBill;
 			checkIsHygiene.Checked=ProcCode.IsHygiene;
-			checkIsProsth.Checked=ProcCode.IsProsth;
+			checkIsProsth.Checked=ProcCode.IsProsthesis;
 			textBaseUnits.Text=ProcCode.BaseUnits.ToString();
 			textDrugNDC.Text=ProcCode.DrugNDC;
 			textRevenueCode.Text=ProcCode.RevenueCodeDefault;
@@ -1127,13 +1127,13 @@ namespace OpenDental{
 			//}
 			checkIsCanadianLab.Checked=ProcCode.IsCanadianLab;
 			textNote.Text=ProcCode.DefaultNote;
-			textTpNote.Text=ProcCode.DefaultTPNote;
-			textDefaultClaimNote.Text=ProcCode.DefaultClaimNote;
+			textTpNote.Text=ProcCode.DefaultNoteForTreatmentPlan;
+			textDefaultClaimNote.Text=ProcCode.DefaultNoteForClaim;
 			listTreatArea.Items.Clear();
-			for(int i=1;i<Enum.GetNames(typeof(TreatmentArea)).Length;i++){
-				listTreatArea.Items.Add(Enum.GetNames(typeof(TreatmentArea))[i]);
+			for(int i=1;i<Enum.GetNames(typeof(ProcedureTreatmentArea)).Length;i++){
+				listTreatArea.Items.Add(Enum.GetNames(typeof(ProcedureTreatmentArea))[i]);
 			}
-			listTreatArea.SelectedIndex=(int)ProcCode.TreatArea-1;
+			listTreatArea.SelectedIndex=(int)ProcCode.TreatmentArea-1;
 			if(listTreatArea.SelectedIndex==-1) listTreatArea.SelectedIndex=2;
 			for(int i=0;i<Enum.GetNames(typeof(ToothPaintingType)).Length;i++){
 				listPaintType.Items.Add(Enum.GetNames(typeof(ToothPaintingType))[i]);
@@ -1145,7 +1145,7 @@ namespace OpenDental{
 			for(int i=0;i<_listProcCodeCatDefs.Count;i++){
 				string isHidden=(_listProcCodeCatDefs[i].IsHidden) ? " (hidden)" : "";
 				listCategory.Items.Add(_listProcCodeCatDefs[i].Name+isHidden);
-				if(_listProcCodeCatDefs[i].Id==ProcCode.ProcCat) {
+				if(_listProcCodeCatDefs[i].Id==ProcCode.ProcedureCategory) {
 					listCategory.SelectedIndex=i;
 				}
 			}
@@ -1153,8 +1153,8 @@ namespace OpenDental{
 				listCategory.SelectedIndex=0;
 			}
 			comboProvNumDefault.Items.AddProvNone();
-			comboProvNumDefault.Items.AddProvsAbbr(Providers.GetDeepCopy(true));
-			comboProvNumDefault.SetSelectedProvNum(ProcCode.ProvNumDefault);
+			comboProvNumDefault.Items.AddProvsAbbr(Providers.GetAll(true));
+			comboProvNumDefault.SetSelectedProvNum(ProcCode.DefaultProviderId??0);
 			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				labelTreatArea.Visible=false;
 				listTreatArea.Visible=false;
@@ -1189,7 +1189,7 @@ namespace OpenDental{
 		}
 
 		private void FillFees(){
-			_listFees=Fees.GetFeesForCodeNoOverrides(ProcCode.CodeNum);
+			_listFees=Fees.GetFeesForCodeNoOverrides(ProcCode.Id);
 			gridFees.BeginUpdate();
 			gridFees.Columns.Clear();
 			GridColumn col=new GridColumn("Sched",120);
@@ -1200,7 +1200,7 @@ namespace OpenDental{
 			GridRow row;
 			Fee fee;
 			for(int i=0;i<_listFeeScheds.Count;i++){
-				fee=Fees.GetFee(ProcCode.CodeNum,_listFeeScheds[i].FeeSchedNum,0,0,_listFees);
+				fee=Fees.GetFee(ProcCode.Id,_listFeeScheds[i].Id,0,0,_listFees);
 				row=new GridRow();
 				row.Cells.Add(_listFeeScheds[i].Description);
 				if(fee==null){
@@ -1216,12 +1216,12 @@ namespace OpenDental{
 
 		private void FeesGrid_CellDoubleClick(object sender, ODGridClickEventArgs e)
 		{
-			var fee = Fees.GetFee(ProcCode.CodeNum, _listFeeScheds[e.Row].FeeSchedNum, 0, 0, _listFees);
+			var fee = Fees.GetFee(ProcCode.Id, _listFeeScheds[e.Row].Id, 0, 0, _listFees);
 
 			fee ??= new Fee
 			{
-				FeeSched = _listFeeScheds[e.Row].FeeSchedNum,
-				CodeNum = ProcCode.CodeNum
+				FeeScheduleId = _listFeeScheds[e.Row].Id,
+				CodeNum = ProcCode.Id
 			};
 
 			using var formFeeEdit = new FormFeeEdit(fee);
@@ -1235,7 +1235,7 @@ namespace OpenDental{
 
 		///<summary>Fills both the Default Completed Notes Grid and the Default TP Notes Grid simultaneously.</summary>
 		private void FillNotes(){
-			NoteList=ProcCodeNotes.GetList(ProcCode.CodeNum);
+			NoteList=ProcCodeNotes.GetList(ProcCode.Id);
 			gridNotes.BeginUpdate();
 			gridTpNotes.BeginUpdate();
 			gridNotes.Columns.Clear();
@@ -1279,7 +1279,7 @@ namespace OpenDental{
 			FormProcCodeNoteEdit FormP=new FormProcCodeNoteEdit(isTp);
 			FormP.IsNew=true;
 			FormP.NoteCur=new ProcCodeNote();
-			FormP.NoteCur.CodeNum=ProcCode.CodeNum;
+			FormP.NoteCur.CodeNum=ProcCode.Id;
 			if(isTp) {
 				FormP.NoteCur.Note=textTpNote.Text;
 			}
@@ -1395,14 +1395,14 @@ namespace OpenDental{
 		private void butAuditTrail_Click(object sender,EventArgs e) {
 			List<Permissions> perms=new List<Permissions>();
 			perms.Add(Permissions.ProcFeeEdit);
-			FormAuditOneType FormA=new FormAuditOneType(0,perms,"All changes for"+" "+ProcCode.AbbrDesc+" - "+ProcCode.ProcCode,ProcCode.CodeNum);
+			FormAuditOneType FormA=new FormAuditOneType(0,perms,"All changes for"+" "+ProcCode.ShortDescription+" - "+ProcCode.Code,ProcCode.Id);
 			FormA.ShowDialog();
 		}
 
 		///<summary>Returns a line that can be used in a security log entry if the entries are changed.</summary>
 		private string SecurityLogEntryHelper(string oldVal, string newVal,string textInLog) {			
 			if(oldVal!=newVal) {
-				return "Code "+_procCodeOld.ProcCode+" "+textInLog+" changed from '"+oldVal+"' to  '"+newVal+"'\r\n";
+				return "Code "+_procCodeOld.Code+" "+textInLog+" changed from '"+oldVal+"' to  '"+newVal+"'\r\n";
 			}
 			return "";
 		}
@@ -1435,30 +1435,30 @@ namespace OpenDental{
 			ProcCode.AlternateCode1=textAlternateCode1.Text;
 			ProcCode.MedicalCode=textMedicalCode.Text;
 			ProcCode.SubstitutionCode=textSubstitutionCode.Text;
-			ProcCode.SubstOnlyIf=(SubstitutionCondition)comboSubstOnlyIf.SelectedIndex;
-			ProcCode.Descript=textDescription.Text;
-			ProcCode.AbbrDesc=textAbbrev.Text;
+			ProcCode.SubstitutionCondition=(SubstitutionCondition)comboSubstOnlyIf.SelectedIndex;
+			ProcCode.Description=textDescription.Text;
+			ProcCode.ShortDescription=textAbbrev.Text;
 			ProcCode.LaymanTerm=textLaymanTerm.Text;
-			ProcCode.ProcTime=strBTime.ToString();
+			ProcCode.Time=strBTime.ToString();
 			ProcCode.GraphicColor=butColor.BackColor;
 			ProcCode.IsMultiVisit=checkMultiVisit.Checked;
-			ProcCode.NoBillIns=checkNoBillIns.Checked;
-			ProcCode.IsProsth=checkIsProsth.Checked;
+			ProcCode.NoInsuranceBill=checkNoBillIns.Checked;
+			ProcCode.IsProsthesis=checkIsProsth.Checked;
 			ProcCode.IsHygiene=checkIsHygiene.Checked;
 			ProcCode.IsRadiology=checkIsRadiology.Checked;
 			ProcCode.IsCanadianLab=checkIsCanadianLab.Checked;
 			ProcCode.DefaultNote=textNote.Text;
-			ProcCode.DefaultTPNote=textTpNote.Text;
-			ProcCode.DefaultClaimNote=textDefaultClaimNote.Text;
+			ProcCode.DefaultNoteForTreatmentPlan=textTpNote.Text;
+			ProcCode.DefaultNoteForClaim=textDefaultClaimNote.Text;
 			ProcCode.PaintType=(ToothPaintingType)listPaintType.SelectedIndex;
-			ProcCode.TreatArea=(TreatmentArea)listTreatArea.SelectedIndex+1;
+			ProcCode.TreatmentArea=(ProcedureTreatmentArea)listTreatArea.SelectedIndex+1;
 			ProcCode.BaseUnits=PIn.Int(textBaseUnits.Text.ToString());
 			ProcCode.DrugNDC=textDrugNDC.Text;
 			ProcCode.RevenueCodeDefault=textRevenueCode.Text;
 			if(listCategory.SelectedIndex!=-1) {
-				ProcCode.ProcCat=_listProcCodeCatDefs[listCategory.SelectedIndex].Id;
+				ProcCode.ProcedureCategory=_listProcCodeCatDefs[listCategory.SelectedIndex].Id;
 			}
-			ProcCode.ProvNumDefault=comboProvNumDefault.GetSelectedProvNum();			
+			ProcCode.DefaultProviderId=comboProvNumDefault.GetSelectedProvNum();			
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA, for CanadaTimeUnits
 				ProcCode.CanadaTimeUnits=PIn.Double(textTimeUnits.Text);
 			}
@@ -1468,34 +1468,37 @@ namespace OpenDental{
 			else {
 				ProcCode.BypassGlobalLock=BypassLockStatus.NeverBypass;
 			}
-			if(ProcedureCodes.Update(ProcCode,_procCodeOld)) {//whether new or not.
-				string secLog="";
-				secLog+=SecurityLogEntryHelper(_procCodeOld.AlternateCode1,ProcCode.AlternateCode1,"alt code");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.MedicalCode,ProcCode.MedicalCode,"medical code");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.SubstitutionCode,ProcCode.SubstitutionCode,"insurance substitution code");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.SubstOnlyIf.GetDescription(),ProcCode.SubstOnlyIf.GetDescription(),"only if box");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.Descript,ProcCode.Descript,"description");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.AbbrDesc,ProcCode.AbbrDesc,"abbreviation");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.LaymanTerm,ProcCode.LaymanTerm,"layman's terms");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.ProcTime,ProcCode.ProcTime,"procedure time");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.IsMultiVisit.ToString(),ProcCode.IsMultiVisit.ToString(),"'MultiVisit' box");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.NoBillIns.ToString(),ProcCode.NoBillIns.ToString(),"'Do not usually bill to Ins' box");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.IsProsth.ToString(),ProcCode.IsProsth.ToString(),"prosthesis box");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.IsHygiene.ToString(),ProcCode.IsHygiene.ToString(),"hygiene procedure box");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.IsRadiology.ToString(),ProcCode.IsRadiology.ToString(),"radiology box");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.DefaultNote,ProcCode.DefaultNote,"default note");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.DefaultTPNote,ProcCode.DefaultTPNote,"TP'd note");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.DefaultClaimNote,ProcCode.DefaultClaimNote,"default claim note");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.TreatArea.GetDescription(),ProcCode.TreatArea.GetDescription(),"treatment area");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.BaseUnits.ToString(),ProcCode.BaseUnits.ToString(),"base units");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.DrugNDC,ProcCode.DrugNDC,"drug NDC");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.RevenueCodeDefault,ProcCode.RevenueCodeDefault,"default revenue");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.ProvNumDefault.ToString(),ProcCode.ProvNumDefault.ToString(),"provider number");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.BypassGlobalLock.ToString(),ProcCode.BypassGlobalLock.ToString(),"bypass global lock box");
-				secLog+=SecurityLogEntryHelper(_procCodeOld.ProcCatDescript,ProcCode.ProcCatDescript,"category");
-				SecurityLogs.MakeLogEntry(Permissions.ProcCodeEdit,0,secLog,ProcCode.CodeNum,_procCodeOld.DateTStamp);
-				DataValid.SetInvalid(InvalidType.ProcCodes);
-			}
+
+			// TODO: Fix...
+
+			//if(ProcedureCodes.Update(ProcCode,_procCodeOld)) {//whether new or not.
+			//	string secLog="";
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.AlternateCode1,ProcCode.AlternateCode1,"alt code");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.MedicalCode,ProcCode.MedicalCode,"medical code");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.SubstitutionCode,ProcCode.SubstitutionCode,"insurance substitution code");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.SubstitutionCondition.GetDescription(),ProcCode.SubstitutionCondition.GetDescription(),"only if box");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.Description,ProcCode.Description,"description");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.ShortDescription,ProcCode.ShortDescription,"abbreviation");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.LaymanTerm,ProcCode.LaymanTerm,"layman's terms");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.Time,ProcCode.Time,"procedure time");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.IsMultiVisit.ToString(),ProcCode.IsMultiVisit.ToString(),"'MultiVisit' box");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.NoInsuranceBill.ToString(),ProcCode.NoInsuranceBill.ToString(),"'Do not usually bill to Ins' box");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.IsProsthesis.ToString(),ProcCode.IsProsthesis.ToString(),"prosthesis box");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.IsHygiene.ToString(),ProcCode.IsHygiene.ToString(),"hygiene procedure box");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.IsRadiology.ToString(),ProcCode.IsRadiology.ToString(),"radiology box");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.DefaultNote,ProcCode.DefaultNote,"default note");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.DefaultNoteForTreatmentPlan,ProcCode.DefaultNoteForTreatmentPlan,"TP'd note");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.DefaultNoteForClaim,ProcCode.DefaultNoteForClaim,"default claim note");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.TreatmentArea.GetDescription(),ProcCode.TreatmentArea.GetDescription(),"treatment area");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.BaseUnits.ToString(),ProcCode.BaseUnits.ToString(),"base units");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.DrugNDC,ProcCode.DrugNDC,"drug NDC");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.RevenueCodeDefault,ProcCode.RevenueCodeDefault,"default revenue");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.DefaultProviderId.ToString(),ProcCode.DefaultProviderId.ToString(),"provider number");
+			//	secLog+=SecurityLogEntryHelper(_procCodeOld.BypassGlobalLock.ToString(),ProcCode.BypassGlobalLock.ToString(),"bypass global lock box");
+			//	//secLog+=SecurityLogEntryHelper(_procCodeOld.ProcCatDescript,ProcCode.ProcCatDescript,"category");
+			//	SecurityLogs.MakeLogEntry(Permissions.ProcCodeEdit,0,secLog,ProcCode.Id,_procCodeOld.LastModifiedDate);
+			//	DataValid.SetInvalid(InvalidType.ProcCodes);
+			//}
 			DialogResult=DialogResult.OK;
 		}
 

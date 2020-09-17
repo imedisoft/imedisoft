@@ -99,8 +99,8 @@ namespace OpenDentBusiness
 			int parentSubsc = 0;//the HL sequence # of the current subscriber.
 			string hasSubord = "";//0 if no subordinate, 1 if at least one subordinate
 			Claim claim;
-			InsPlan insPlan;
-			InsPlan otherPlan = new InsPlan();
+			InsurancePlan insPlan;
+			InsurancePlan otherPlan = new InsurancePlan();
 			InsSub sub;
 			InsSub otherSub = new InsSub();
 			Patient patient;
@@ -224,7 +224,7 @@ namespace OpenDentBusiness
 						+ "20*"//HL03: Heirarchical level code. 20=Information source
 						+ "1~");//HL04: Heirarchical child code. 1=child HL present
 								//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-					billProv = Providers.GetFirstOrDefault(x => x.Id == claimItems[i].ProvBill1) ?? providerFirst;
+					billProv = Providers.FirstOrDefault(x => x.Id == claimItems[i].ProvBill1) ?? providerFirst;
 					provClinicBill = ProviderClinics.GetFromList(billProv.Id, (clinic == null ? 0 : clinic.Id), listProvClinics, true);
 					if (isMedical)
 					{
@@ -422,19 +422,19 @@ namespace OpenDentBusiness
 				}
 				#endregion Billing Provider
 				claim = Claims.GetClaim(claimItems[i].ClaimNum4);
-				insPlan = InsPlans.GetPlan(claim.PlanNum, new List<InsPlan>());
+				insPlan = InsPlans.GetPlan(claim.PlanNum, new List<InsurancePlan>());
 				sub = InsSubs.GetSub(claim.InsSubNum, null);
 				//insPlan could be null if db corruption. No error checking for that
 				if (claim.PlanNum2 > 0)
 				{
-					otherPlan = InsPlans.GetPlan(claim.PlanNum2, new List<InsPlan>());
+					otherPlan = InsPlans.GetPlan(claim.PlanNum2, new List<InsurancePlan>());
 					otherSub = InsSubs.GetSub(claim.InsSubNum2, null);
 					otherSubsc = Patients.GetPat(otherSub.Subscriber);
-					otherCarrier = Carriers.GetCarrier(otherPlan.CarrierNum);
+					otherCarrier = Carriers.GetCarrier(otherPlan.CarrierId);
 				}
 				patient = Patients.GetPat(claim.PatNum);
 				subscriber = Patients.GetPat(sub.Subscriber);
-				carrier = Carriers.GetCarrier(insPlan.CarrierNum);
+				carrier = Carriers.GetCarrier(insPlan.CarrierId);
 				claimProcList = ClaimProcs.Refresh(patient.PatNum);
 				claimProcs = ClaimProcs.GetForSendClaim(claimProcList, claim.ClaimNum);
 				procList = Procedures.Refresh(claim.PatNum);
@@ -514,7 +514,7 @@ namespace OpenDentBusiness
 					{
 						sw.Write("*");//empty if patient is not subscriber.
 					}
-					sw.Write(Sout(insPlan.GroupNum, 30) + "*"//SBR03: Group Number
+					sw.Write(Sout(insPlan.GroupNumber, 30) + "*"//SBR03: Group Number
 						+ Sout(insPlan.GroupName, 60) + "*"//SBR04: Group Name
 						+ "*");//SBR05: Not used
 					if (isMedical)
@@ -599,26 +599,26 @@ namespace OpenDentBusiness
 					if (clearinghouseClin.ISA08 == "EMS")
 					{
 						//This is a special situation requested by EMS.  This tacks the employer onto the end of the carrier.
-						sw.Write(Sout(carrier.CarrierName, 17) + "|" + Sout(Employers.GetName(insPlan.EmployerNum), 17) + "*");
+						sw.Write(Sout(carrier.Name, 17) + "|" + Sout(Employers.GetName(insPlan.EmployerNum), 17) + "*");
 					}
 					else
 					{
-						sw.Write(Sout(carrier.CarrierName, 35) + "*");//NM103: Name. Length can be 60 in the new medical specs.
+						sw.Write(Sout(carrier.Name, 35) + "*");//NM103: Name. Length can be 60 in the new medical specs.
 					}
 					sw.Write("****"//NM104-07 not used
 						+ "PI*");//NM108: PI=PayorID
 					sw.WriteLine(Sout(GetCarrierElectID(carrier, clearinghouseClin), 80, 2) + "~");//NM109: PayorID
 																								   //2010BB N3: Carrier Address
 					seg++;
-					sw.Write("N3*" + Sout(carrier.Address, 55));//N301: address
-					if (carrier.Address2 == "")
+					sw.Write("N3*" + Sout(carrier.AddressLine1, 55));//N301: address
+					if (carrier.AddressLine2 == "")
 					{
 						sw.WriteLine("~");
 					}
 					else
 					{
 						//N302: Address2. Optional.
-						sw.WriteLine("*" + Sout(carrier.Address2, 55) + "~");
+						sw.WriteLine("*" + Sout(carrier.AddressLine2, 55) + "~");
 					}
 					//2010BB N4: Carrier City,St,Zip
 					seg++;
@@ -1059,7 +1059,7 @@ namespace OpenDentBusiness
 				//2310B Rendering provider. Only required if different from the billing provider
 				//But required by WebClaim, so we will always include it
 				//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-				provTreat = Providers.GetFirstOrDefault(x => x.Id == claim.ProvTreat) ?? providerFirst;
+				provTreat = Providers.FirstOrDefault(x => x.Id == claim.ProvTreat) ?? providerFirst;
 				provClinicTreat = ProviderClinics.GetFromList(provTreat.Id, (clinic == null ? 0 : clinic.Id), listProvClinics, true);
 				//if(claim.ProvTreat!=claim.ProvBill){
 				//2310B NM1: name
@@ -1154,7 +1154,7 @@ namespace OpenDentBusiness
 						sw.Write("T*");//T=Tertiary
 					}
 					sw.Write(GetRelat(claim.PatRelat2) + "*");//SBR02: Individual Relationship Code
-					sw.Write(Sout(otherPlan.GroupNum, 30) + "*"//SBR03: Group Number
+					sw.Write(Sout(otherPlan.GroupNumber, 30) + "*"//SBR03: Group Number
 						+ Sout(otherPlan.GroupName, 60) + "*"//SBR04: Group Name
 						+ "*"//SBR05: Dental: Not used, Medical: not supported
 						+ "*");//SBR06: Not used
@@ -1244,11 +1244,11 @@ namespace OpenDentBusiness
 					if (clearinghouseClin.ISA08 == "EMS")
 					{
 						//This is a special situation requested by EMS.  This tacks the employer onto the end of the carrier.
-						sw.Write(Sout(otherCarrier.CarrierName, 17) + "|" + Sout(Employers.GetName(otherPlan.EmployerNum), 17) + "*");
+						sw.Write(Sout(otherCarrier.Name, 17) + "|" + Sout(Employers.GetName(otherPlan.EmployerNum), 17) + "*");
 					}
 					else
 					{
-						sw.Write(Sout(otherCarrier.CarrierName, 35) + "*");//NM103: Name. Length can be 60 in the new medical specs.
+						sw.Write(Sout(otherCarrier.Name, 35) + "*");//NM103: Name. Length can be 60 in the new medical specs.
 					}
 					sw.Write(
 						 "*"//NM104:
@@ -1370,13 +1370,13 @@ namespace OpenDentBusiness
 							+ proc.Prosthesis + "*"//SV305: Initial or Replacement
 							+ "1~");//SV306: Procedure count
 									//2400 TOO: Tooth number/surface
-						if (procCode.TreatArea == TreatmentArea.Tooth)
+						if (procCode.TreatmentArea == ProcedureTreatmentArea.Tooth)
 						{
 							seg++;
 							sw.WriteLine("TOO*JP*"//TOO01: JP=National tooth numbering
 								+ proc.ToothNum + "~");//TOO02: Tooth number
 						}
-						else if (procCode.TreatArea == TreatmentArea.Surf)
+						else if (procCode.TreatmentArea == ProcedureTreatmentArea.Surface)
 						{
 							seg++;
 							sw.Write("TOO*JP*"//TOO01: JP=National tooth numbering
@@ -1392,7 +1392,7 @@ namespace OpenDentBusiness
 							}
 							sw.WriteLine("~");
 						}
-						else if (procCode.TreatArea == TreatmentArea.ToothRange)
+						else if (procCode.TreatmentArea == ProcedureTreatmentArea.ToothRange)
 						{
 							string[] individTeeth = proc.ToothRange.Split(',');
 							for (int t = 0; t < individTeeth.Length; t++)
@@ -1461,7 +1461,7 @@ namespace OpenDentBusiness
 						&& Preferences.GetBool(PreferenceName.EclaimsSeparateTreatProv))
 					{
 						//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-						provTreat = Providers.GetFirstOrDefault(x => x.Id == proc.ProvNum) ?? providerFirst;
+						provTreat = Providers.FirstOrDefault(x => x.Id == proc.ProvNum) ?? providerFirst;
 						seg++;
 						sw.Write("NM1*82*"//82=rendering prov
 							+ "1*"//NM102: 1=person
@@ -1632,7 +1632,7 @@ namespace OpenDentBusiness
 		///<summary>Pass in either a clinic or HQ-level clearinghouse.</summary>
 		private static string GetCarrierElectID(Carrier carrier, Clearinghouse clearinghouse)
 		{
-			string electid = carrier.ElectID;
+			string electid = carrier.ElectronicId;
 			if (electid == "" && IsApex(clearinghouse))
 			{//only for Apex
 				return "PAPRM";//paper claims
@@ -1723,7 +1723,7 @@ namespace OpenDentBusiness
 		}
 
 		///<summary>This used to be an enumeration.</summary>
-		private static string GetFilingCode(InsPlan plan)
+		private static string GetFilingCode(InsurancePlan plan)
 		{
 			string filingcode = InsFilingCodes.GetEclaimCode(plan.FilingCode);
 			//must be one or two char in length.
@@ -1788,7 +1788,7 @@ namespace OpenDentBusiness
 
 		private static string GetArea(Procedure proc, ProcedureCode procCode)
 		{
-			if (procCode.TreatArea == TreatmentArea.Arch)
+			if (procCode.TreatmentArea == ProcedureTreatmentArea.Arch)
 			{
 				if (proc.Surf == "U")
 				{
@@ -1799,11 +1799,11 @@ namespace OpenDentBusiness
 					return "02";
 				}
 			}
-			if (procCode.TreatArea == TreatmentArea.Mouth)
+			if (procCode.TreatmentArea == ProcedureTreatmentArea.Mouth)
 			{
 				return "";
 			}
-			if (procCode.TreatArea == TreatmentArea.Quad)
+			if (procCode.TreatmentArea == ProcedureTreatmentArea.Quad)
 			{
 				if (proc.Surf == "UR")
 				{
@@ -1822,20 +1822,20 @@ namespace OpenDentBusiness
 					return "30";
 				}
 			}
-			if (procCode.TreatArea == TreatmentArea.Sextant)
+			if (procCode.TreatmentArea == ProcedureTreatmentArea.Sextant)
 			{
 				//we will assume that these are very rarely billed to ins
 				return "";
 			}
-			if (procCode.TreatArea == TreatmentArea.Surf)
+			if (procCode.TreatmentArea == ProcedureTreatmentArea.Surface)
 			{
 				return "";//might need to enhance this
 			}
-			if (procCode.TreatArea == TreatmentArea.Tooth)
+			if (procCode.TreatmentArea == ProcedureTreatmentArea.Tooth)
 			{
 				return "";//might need to enhance this
 			}
-			if (procCode.TreatArea == TreatmentArea.ToothRange)
+			if (procCode.TreatmentArea == ProcedureTreatmentArea.ToothRange)
 			{
 				//already checked for blank tooth range
 				if (Tooth.IsMaxillary(proc.ToothRange.Split(',')[0]))
@@ -1922,10 +1922,10 @@ namespace OpenDentBusiness
 			}
 			List<X12TransactionItem> claimItems = Claims.GetX12TransactionInfo(((ClaimSendQueueItem)queueItem).ClaimNum);//just to get prov. Needs work.
 			Provider providerFirst = Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-			Provider billProv = Providers.GetFirstOrDefault(x => x.Id == claimItems[0].ProvBill1) ?? providerFirst;
-			Provider treatProv = Providers.GetFirstOrDefault(x => x.Id == claim.ProvTreat) ?? providerFirst;
+			Provider billProv = Providers.FirstOrDefault(x => x.Id == claimItems[0].ProvBill1) ?? providerFirst;
+			Provider treatProv = Providers.FirstOrDefault(x => x.Id == claim.ProvTreat) ?? providerFirst;
 			ProviderClinic provClinicTreat = ProviderClinics.GetOneOrDefault(treatProv.Id, (clinic == null ? 0 : clinic.Id));
-			InsPlan insPlan = InsPlans.GetPlan(claim.PlanNum, null);
+			InsurancePlan insPlan = InsPlans.GetPlan(claim.PlanNum, null);
 			InsSub sub = InsSubs.GetSub(claim.InsSubNum, null);
 			//if(insPlan.IsMedical) {
 			//	return "Medical e-claims not allowed";
@@ -2006,9 +2006,9 @@ namespace OpenDentBusiness
 				}
 				strb.Append("InsPlan Release of Info");
 			}
-			Carrier carrier = Carriers.GetCarrier(insPlan.CarrierNum);
+			Carrier carrier = Carriers.GetCarrier(insPlan.CarrierId);
 			X12Validate.Carrier(carrier, strb);
-			ElectID electID = ElectIDs.GetID(carrier.ElectID);
+			ElectID electID = ElectIDs.GetID(carrier.ElectronicId);
 			if (electID != null && electID.IsMedicaid && billProv.MedicaidID == "")
 			{
 				if (strb.Length != 0)
@@ -2020,7 +2020,7 @@ namespace OpenDentBusiness
 			Patient patient = Patients.GetPat(claim.PatNum);
 			if (claim.PlanNum2 > 0)
 			{
-				InsPlan insPlan2 = InsPlans.GetPlan(claim.PlanNum2, new List<InsPlan>());
+				InsurancePlan insPlan2 = InsPlans.GetPlan(claim.PlanNum2, new List<InsurancePlan>());
 				InsSub sub2 = InsSubs.GetSub(claim.InsSubNum2, null);
 				if (sub2.SubscriberID.Length < 2)
 				{
@@ -2043,8 +2043,8 @@ namespace OpenDentBusiness
 				{//Patient address is validated below, so we only need to check if subscriber is not the patient.
 					X12Validate.Subscriber2(subscriber2, strb);
 				}
-				Carrier carrier2 = Carriers.GetCarrier(insPlan2.CarrierNum);
-				if (carrier2.Address.Trim() == "")
+				Carrier carrier2 = Carriers.GetCarrier(insPlan2.CarrierId);
+				if (carrier2.AddressLine1.Trim() == "")
 				{
 					if (strb.Length != 0)
 					{
@@ -2258,42 +2258,42 @@ namespace OpenDentBusiness
 					//However, it is possible to create a claim when the procedures are complete,
 					//then to change the status of a procedure in the group to revert the attached procedure back into In Process status.
 					//This is our last line of defense to block the user from sending an incomplete claim.
-					strb.Append(procCode.AbbrDesc + " is In Process");
+					strb.Append(procCode.ShortDescription + " is In Process");
 				}
-				if (procCode.TreatArea == TreatmentArea.Arch && proc.Surf == "")
+				if (procCode.TreatmentArea == ProcedureTreatmentArea.Arch && proc.Surf == "")
 				{
 					if (strb.Length != 0)
 					{
 						strb.Append(",");
 					}
-					strb.Append(procCode.AbbrDesc + " missing arch");
+					strb.Append(procCode.ShortDescription + " missing arch");
 				}
-				if (procCode.TreatArea == TreatmentArea.ToothRange && proc.ToothRange == "")
+				if (procCode.TreatmentArea == ProcedureTreatmentArea.ToothRange && proc.ToothRange == "")
 				{
 					if (strb.Length != 0)
 					{
 						strb.Append(",");
 					}
-					strb.Append(procCode.AbbrDesc + " tooth range");
+					strb.Append(procCode.ShortDescription + " tooth range");
 				}
-				if ((procCode.TreatArea == TreatmentArea.Tooth || procCode.TreatArea == TreatmentArea.Surf)
+				if ((procCode.TreatmentArea == ProcedureTreatmentArea.Tooth || procCode.TreatmentArea == ProcedureTreatmentArea.Surface)
 					&& !Tooth.IsValidDB(proc.ToothNum))
 				{
 					if (strb.Length != 0)
 					{
 						strb.Append(",");
 					}
-					strb.Append(procCode.AbbrDesc + " tooth number");
+					strb.Append(procCode.ShortDescription + " tooth number");
 				}
-				if (procCode.TreatArea == TreatmentArea.Surf && proc.Surf == "")
+				if (procCode.TreatmentArea == ProcedureTreatmentArea.Surface && proc.Surf == "")
 				{
 					if (strb.Length != 0)
 					{
 						strb.Append(",");
 					}
-					strb.Append(procCode.AbbrDesc + " surface missing");
+					strb.Append(procCode.ShortDescription + " surface missing");
 				}
-				if (procCode.IsProsth)
+				if (procCode.IsProsthesis)
 				{
 					if (proc.Prosthesis == "")
 					{//they didn't enter whether Initial or Replacement
@@ -2301,7 +2301,7 @@ namespace OpenDentBusiness
 						{
 							strb.Append(",");
 						}
-						strb.Append("procedure " + procCode.ProcCode + " must indicate prosthesis Initial or Replacement");
+						strb.Append("procedure " + procCode.Code + " must indicate prosthesis Initial or Replacement");
 					}
 					if (proc.Prosthesis == "R"
 						&& proc.DateOriginalProsth.Year < 1880)
@@ -2310,7 +2310,7 @@ namespace OpenDentBusiness
 						{
 							strb.Append(",");
 						}
-						strb.Append("procedure " + procCode.ProcCode + " must indicate prosthesis Original Date");
+						strb.Append("procedure " + procCode.Code + " must indicate prosthesis Original Date");
 					}
 				}
 				//if(proc.PlaceService!=claim.PlaceService) {
@@ -2336,7 +2336,7 @@ namespace OpenDentBusiness
 				}
 				if (claim.ProvTreat != proc.ProvNum && Preferences.GetBool(PreferenceName.EclaimsSeparateTreatProv))
 				{
-					treatProv = Providers.GetFirstOrDefault(x => x.Id == proc.ProvNum) ?? providerFirst;
+					treatProv = Providers.FirstOrDefault(x => x.Id == proc.ProvNum) ?? providerFirst;
 					if (treatProv.LastName == "")
 					{
 						if (strb.Length != 0)
@@ -2368,7 +2368,7 @@ namespace OpenDentBusiness
 						{
 							strb.Append(",");
 						}
-						strb.Append("Treating Prov Taxonomy Code for proc " + procCode.ProcCode + " must be 10 characters");
+						strb.Append("Treating Prov Taxonomy Code for proc " + procCode.Code + " must be 10 characters");
 					}
 					if (provClinicTreat == null || provClinicTreat.StateLicense == "")
 					{

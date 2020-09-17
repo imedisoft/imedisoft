@@ -56,7 +56,7 @@ namespace OpenDental {
 					}
 					break;
 				case EhrCriterion.Allergy:
-					textCriterionFK.Text=AllergyDefs.GetOne(RuleCur.CriterionFK).Description;
+					textCriterionFK.Text=AllergyDefs.GetById(RuleCur.CriterionFK).Description;
 					break;
 				case EhrCriterion.Age:
 				case EhrCriterion.Gender:

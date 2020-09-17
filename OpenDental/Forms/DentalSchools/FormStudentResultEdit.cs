@@ -74,7 +74,7 @@ namespace Imedisoft.Forms
 			instructorComboBox.Items.Add(Translation.Common.None);
 			instructorComboBox.SelectedIndex = 0;
 
-			foreach (var provider in Providers.GetDeepCopy(true))
+			foreach (var provider in Providers.GetAll(true))
             {
 				instructorComboBox.Items.Add(provider);
 				if (provider.Id == studentResult.InstructorId)

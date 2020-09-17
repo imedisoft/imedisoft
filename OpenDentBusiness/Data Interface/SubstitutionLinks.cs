@@ -1,3 +1,5 @@
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -35,9 +37,9 @@ namespace OpenDentBusiness{
 		*/
 
 		///<summary></summary>
-		public static List<SubstitutionLink> GetAllForPlans(List<InsPlan> listInsPlans) {
+		public static List<SubstitutionLink> GetAllForPlans(List<InsurancePlan> listInsPlans) {
 			//No need to check RemotingRole; no call to db.
-			return GetAllForPlans(listInsPlans.Select(x => x.PlanNum).ToArray());
+			return GetAllForPlans(listInsPlans.Select(x => x.Id).ToArray());
 		}
 
 		///<summary></summary>
@@ -57,24 +59,24 @@ namespace OpenDentBusiness{
 			return Crud.SubstitutionLinkCrud.Sync(listNew,listOld);
 		}
 
-		public static bool HasSubstCodeForPlan(InsPlan insPlan,long codeNum,List<SubstitutionLink> listSubLinks) {
+		public static bool HasSubstCodeForPlan(InsurancePlan insPlan,long codeNum,List<SubstitutionLink> listSubLinks) {
 			//No need to check RemotingRole; no call to db.
 			if(insPlan.CodeSubstNone) {
 				return false;
 			}
-			return !listSubLinks.Exists(x => x.PlanNum==insPlan.PlanNum && x.CodeNum==codeNum && x.SubstOnlyIf==SubstitutionCondition.Never);
+			return !listSubLinks.Exists(x => x.PlanNum==insPlan.Id && x.CodeNum==codeNum && x.SubstOnlyIf==SubstitutionCondition.Never);
 		}
 
 		///<summary>Returns true if the procedure has a substitution code for the give tooth and InsPlans.</summary>
 		public static bool HasSubstCodeForProcCode(ProcedureCode procCode,string toothNum,List<SubstitutionLink> listSubLinks,
-			List<InsPlan> listPatInsPlans) 
+			List<InsurancePlan> listPatInsPlans) 
 		{
 			//No need to check RemotingRole; no call to db.
-			foreach(InsPlan plan in listPatInsPlans) {
+			foreach(InsurancePlan plan in listPatInsPlans) {
 				//Check to see if any allow substitutions.
-				if(HasSubstCodeForPlan(plan,procCode.CodeNum,listSubLinks)) {
-					long subCodeNum=ProcedureCodes.GetSubstituteCodeNum(procCode.ProcCode,toothNum,plan.PlanNum,listSubLinks);//for posterior composites
-					if(procCode.CodeNum!=subCodeNum && subCodeNum>0) {
+				if(HasSubstCodeForPlan(plan,procCode.Id,listSubLinks)) {
+					long subCodeNum=ProcedureCodes.GetSubstituteCodeNum(procCode.Code,toothNum,plan.Id,listSubLinks);//for posterior composites
+					if(procCode.Id!=subCodeNum && subCodeNum>0) {
 						return true;
 					}
 				}

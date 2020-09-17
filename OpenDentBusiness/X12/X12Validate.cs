@@ -57,7 +57,7 @@ namespace OpenDentBusiness
 		///<summary>StringBuilder does not get altered if no invalid data.</summary>
 		public static void Carrier(Carrier carrier, StringBuilder strb, string msgPrepend = "")
 		{
-			if (carrier.Address.Trim() == "")
+			if (carrier.AddressLine1.Trim() == "")
 			{
 				Comma(strb);
 				strb.Append(msgPrepend + "Carrier Address");

@@ -138,20 +138,20 @@ namespace OpenDental{
 			tbCarriers.SetGridColor(Color.Gray);
 			tbCarriers.SetBackGColor(Color.White);
 			for(int i=0;i<carrierList.Count;i++){
-				tbCarriers.Cell[0,i]=carrierList[i].CarrierName;
+				tbCarriers.Cell[0,i]=carrierList[i].Name;
 				tbCarriers.Cell[1,i]=carrierList[i].Phone;
-				tbCarriers.Cell[2,i]=carrierList[i].Address;
-				tbCarriers.Cell[3,i]=carrierList[i].Address2;
+				tbCarriers.Cell[2,i]=carrierList[i].AddressLine1;
+				tbCarriers.Cell[3,i]=carrierList[i].AddressLine2;
 				tbCarriers.Cell[4,i]=carrierList[i].City;
 				tbCarriers.Cell[5,i]=carrierList[i].State;
 				tbCarriers.Cell[6,i]=carrierList[i].Zip;
-				tbCarriers.Cell[7,i]=carrierList[i].ElectID;
+				tbCarriers.Cell[7,i]=carrierList[i].ElectronicId;
 			}
 			tbCarriers.LayoutTables();
 		}
 
 		private void tbCarriers_CellDoubleClicked(object sender, OpenDental.CellEventArgs e) {
-			PickedCarrierNum=carrierList[e.Row].CarrierNum;
+			PickedCarrierNum=carrierList[e.Row].Id;
 			DialogResult=DialogResult.OK;
 		}
 
@@ -160,7 +160,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select an item first.");
 				return;
 			}
-			PickedCarrierNum=carrierList[tbCarriers.SelectedRow].CarrierNum;
+			PickedCarrierNum=carrierList[tbCarriers.SelectedRow].Id;
 			DialogResult=DialogResult.OK;
 		}
 

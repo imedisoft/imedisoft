@@ -76,7 +76,7 @@ namespace OpenDentBusiness
 		{
 			public List<PatPlan> ListPatPlans;
 			public List<InsSub> ListInsSubs;
-			public List<InsPlan> ListInsPlans;
+			public List<InsurancePlan> ListInsPlans;
 			public List<ClaimProc> ListClaimProcs;
 			public List<Procedure> ListProcs;
 			public List<ClaimValCodeLog> ListClaimValCodes;

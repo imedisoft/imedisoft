@@ -74,13 +74,13 @@ namespace OpenDental
 				Preferences.GetLong(PreferenceName.EmailDefaultAddressNum)
 			};
 			if (isOpenedFromEmailSetup && Security.IsAuthorized(Permissions.SecurityAdmin, true)
-				&& (_isNew || !_emailAddressCur.EmailAddressNum.In(listDefaultAddressNums)))
+				&& (_isNew || !_emailAddressCur.Id.In(listDefaultAddressNums)))
 			{
 				butPickUserod.Visible = true;
 			}
 		}
 
-		public FormEmailAddressEdit(long userNum, bool isOpenedFromEmailSetup = false) : this(new EmailAddress() { UserNum = userNum }, isOpenedFromEmailSetup)
+		public FormEmailAddressEdit(long userNum, bool isOpenedFromEmailSetup = false) : this(new EmailAddress() { UserId = userNum }, isOpenedFromEmailSetup)
 		{
 			_isNew = true;
 		}
@@ -587,25 +587,25 @@ namespace OpenDental
 		{
 			if (_emailAddressCur != null)
 			{
-				textSMTPserver.Text = _emailAddressCur.SMTPserver;
-				textUsername.Text = _emailAddressCur.EmailUsername;
-				if (!String.IsNullOrEmpty(_emailAddressCur.EmailPassword))
+				textSMTPserver.Text = _emailAddressCur.SmtpServer;
+				textUsername.Text = _emailAddressCur.SmtpUsername;
+				if (!String.IsNullOrEmpty(_emailAddressCur.SmtpPassword))
 				{ //can happen if creating a new user email.
-					textPassword.Text = MiscUtils.Decrypt(_emailAddressCur.EmailPassword);
+					textPassword.Text = MiscUtils.Decrypt(_emailAddressCur.SmtpPassword);
 				}
-				textPort.Text = _emailAddressCur.ServerPort.ToString();
+				textPort.Text = _emailAddressCur.SmtpPort.ToString();
 				checkSSL.Checked = _emailAddressCur.UseSSL;
 				textSender.Text = _emailAddressCur.SenderAddress;
-				textSMTPserverIncoming.Text = _emailAddressCur.Pop3ServerIncoming;
-				textPortIncoming.Text = _emailAddressCur.ServerPortIncoming.ToString();
+				textSMTPserverIncoming.Text = _emailAddressCur.Pop3Server;
+				textPortIncoming.Text = _emailAddressCur.Pop3Port.ToString();
 				//Both EmailNotifyAddressNum and EmailDefaultAddressNum could be 0 (unset), in which case we still may want to display the user.
 				List<long> listDefaultAddressNums = new List<long>() {
 					Preferences.GetLong(PreferenceName.EmailNotifyAddressNum),
 					Preferences.GetLong(PreferenceName.EmailDefaultAddressNum)
 				};
-				if (_isNew || !_emailAddressCur.EmailAddressNum.In(listDefaultAddressNums))
+				if (_isNew || !_emailAddressCur.Id.In(listDefaultAddressNums))
 				{
-					User user = Users.GetById(_emailAddressCur.UserNum);
+					User user = Users.GetById(_emailAddressCur.UserId??0);
 					textUserod.Tag = user;
 					textUserod.Text = user?.UserName;
 				}
@@ -634,17 +634,17 @@ namespace OpenDental
 				DialogResult = DialogResult.Cancel;
 				return;
 			}
-			if (_emailAddressCur.EmailAddressNum == Preferences.GetLong(PreferenceName.EmailDefaultAddressNum))
+			if (_emailAddressCur.Id == Preferences.GetLong(PreferenceName.EmailDefaultAddressNum))
 			{
 				MessageBox.Show("Cannot delete the default email address.");
 				return;
 			}
-			if (_emailAddressCur.EmailAddressNum == Preferences.GetLong(PreferenceName.EmailNotifyAddressNum))
+			if (_emailAddressCur.Id == Preferences.GetLong(PreferenceName.EmailNotifyAddressNum))
 			{
 				MessageBox.Show("Cannot delete the notify email address.");
 				return;
 			}
-			Clinic clinic = Clinics.FirstOrDefault(x => x.EmailAddressId == _emailAddressCur.EmailAddressNum, true);
+			Clinic clinic = Clinics.FirstOrDefault(x => x.EmailAddressId == _emailAddressCur.Id, true);
 			if (clinic != null)
 			{
 				MessageBox.Show("Cannot delete the email address because it is used by clinic" + " " + clinic.Description);
@@ -654,7 +654,7 @@ namespace OpenDental
 			{
 				return;
 			}
-			EmailAddresses.Delete(_emailAddressCur.EmailAddressNum);
+			EmailAddresses.Delete(_emailAddressCur.Id);
 			DialogResult = DialogResult.OK;//OK triggers a refresh for the grid.
 		}
 
@@ -776,7 +776,7 @@ namespace OpenDental
 				return;
 			}
 			//Only checks against non-user email addresses.
-			if (EmailAddresses.AddressExists(textUsername.Text, _emailAddressCur.EmailAddressNum))
+			if (EmailAddresses.AddressExists(textUsername.Text, _emailAddressCur.Id))
 			{
 				MessageBox.Show("This email address already exists.");
 				return;
@@ -789,7 +789,7 @@ namespace OpenDental
 			_emailAddressCur.AccessToken = textAccessToken.Text;
 			_emailAddressCur.RefreshToken = textRefreshToken.Text;
 			if (!_isNew && (!string.IsNullOrWhiteSpace(_emailAddressCur.AccessToken) || !string.IsNullOrWhiteSpace(_emailAddressCur.RefreshToken))//If has a token
-				&& (_emailAddressCur.SMTPserver != PIn.String(textSMTPserver.Text) || _emailAddressCur.Pop3ServerIncoming != PIn.String(textSMTPserverIncoming.Text)))//And changed a server
+				&& (_emailAddressCur.SmtpServer != PIn.String(textSMTPserver.Text) || _emailAddressCur.Pop3Server != PIn.String(textSMTPserverIncoming.Text)))//And changed a server
 			{
 				if (!MsgBox.Show(MsgBoxButtons.OKCancel, "There is an access token associated to this email address.  "
 					+ "Changing servers will wipe out the access token and may require reauthentication.  Continue?"))
@@ -801,15 +801,15 @@ namespace OpenDental
 				//TODO: If this is a google token, we may want to tell Google we no longer require access to their account.
 				//This will limit our total number of active users
 			}
-			_emailAddressCur.SMTPserver = PIn.String(textSMTPserver.Text);
-			_emailAddressCur.EmailUsername = PIn.String(textUsername.Text);
-			_emailAddressCur.EmailPassword = PIn.String(MiscUtils.Encrypt(textPassword.Text));
-			_emailAddressCur.ServerPort = PIn.Int(textPort.Text);
+			_emailAddressCur.SmtpServer = PIn.String(textSMTPserver.Text);
+			_emailAddressCur.SmtpUsername = PIn.String(textUsername.Text);
+			_emailAddressCur.SmtpPassword = PIn.String(MiscUtils.Encrypt(textPassword.Text));
+			_emailAddressCur.SmtpPort = PIn.Int(textPort.Text);
 			_emailAddressCur.UseSSL = checkSSL.Checked;
 			_emailAddressCur.SenderAddress = PIn.String(textSender.Text);
-			_emailAddressCur.Pop3ServerIncoming = PIn.String(textSMTPserverIncoming.Text);
-			_emailAddressCur.ServerPortIncoming = PIn.Int(textPortIncoming.Text);
-			_emailAddressCur.UserNum = ((User)(textUserod.Tag))?.Id ?? 0;
+			_emailAddressCur.Pop3Server = PIn.String(textSMTPserverIncoming.Text);
+			_emailAddressCur.Pop3Port = PIn.Int(textPortIncoming.Text);
+			_emailAddressCur.UserId = ((User)(textUserod.Tag))?.Id ?? 0;
 			if (_isNew)
 			{
 				EmailAddresses.Insert(_emailAddressCur);

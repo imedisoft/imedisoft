@@ -17,7 +17,7 @@ namespace OpenDentBusiness.Eclaims {
 
 		///<summary>Throws exceptions. The insplan that's passed in need not be properly updated to the database first.</summary>
 		///<returns>The Etrans created from the request. Will be null if the request failed in any way.</returns>
-		public static Etrans RequestBenefits(Clearinghouse clearinghouseClin,InsPlan plan,long patNum,Carrier carrier,InsSub insSub,out string error) {
+		public static Etrans RequestBenefits(Clearinghouse clearinghouseClin,InsurancePlan plan,long patNum,Carrier carrier,InsSub insSub,out string error) {
 			error="";
 			Patient pat=Patients.GetPat(patNum);
 			Patient subsc=Patients.GetPat(insSub.Subscriber);
@@ -39,7 +39,7 @@ namespace OpenDentBusiness.Eclaims {
 			etrans.DateTimeTrans=DateTime.Now;
 			etrans.ClearingHouseNum=clearinghouseClin.HqClearinghouseNum;
 			etrans.Etype=EtransType.BenefitInquiry270;
-			etrans.PlanNum=plan.PlanNum;
+			etrans.PlanNum=plan.Id;
 			etrans.InsSubNum=insSub.InsSubNum;
 			etrans.EtransMessageTextNum=etransMessageText.EtransMessageTextNum;
 			Etranss.Insert(etrans);
@@ -126,7 +126,7 @@ namespace OpenDentBusiness.Eclaims {
 					etrans271.Etype=EtransType.BenefitResponse271;
 				}
 			}
-			etrans271.PlanNum=plan.PlanNum;
+			etrans271.PlanNum=plan.Id;
 			etrans271.InsSubNum=insSub.InsSubNum;
 			etrans271.EtransMessageTextNum=etransMessageText.EtransMessageTextNum;
 			etrans271.MessageText=etransMessageText.MessageText;//Not a DB column, used to save queries for some calling methods (OpenDentalService).
@@ -239,7 +239,7 @@ namespace OpenDentBusiness.Eclaims {
 
 		///<summary>Attempts to request benefits.  If successful the 270 request is returned.
 		///Otherwise null is returned and the out error string will contain more information.  Mimics FormInsPlan.butGetElectronic_Click().</summary>
-		public static Etrans TryInsVerifyRequest(InsVerify insVerify,InsPlan insPlan,Carrier carrier,InsSub insSub,out string error) {
+		public static Etrans TryInsVerifyRequest(InsVerify insVerify,InsurancePlan insPlan,Carrier carrier,InsSub insSub,out string error) {
 			error="";
 			Etrans etrans270Request=null;
 			Clearinghouse clearinghouseHq=Clearinghouses.GetDefaultEligibility();

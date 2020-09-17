@@ -8,6 +8,8 @@ using CodeBase;
 using System.Xml;
 using OpenDental.UI;
 using OpenDentBusiness.IO;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEhrSummaryOfCare:ODForm {
@@ -258,7 +260,7 @@ namespace OpenDental {
 			emailMessage.PatNum=PatCur.PatNum;
 			emailMessage.MsgDateTime=DateTime.Now;
 			emailMessage.SentOrReceived=EmailSentOrReceived.Neither;//To force FormEmailMessageEdit into "compose" mode.
-			emailMessage.FromAddress=emailAddressFrom.EmailUsername;//Cannot be emailAddressFrom.SenderAddress, because it would cause encryption to fail.
+			emailMessage.FromAddress=emailAddressFrom.SmtpUsername;//Cannot be emailAddressFrom.SenderAddress, because it would cause encryption to fail.
 			emailMessage.ToAddress="";//User must set inside of FormEmailMessageEdit
 			emailMessage.Subject="Summary of Care";
 			emailMessage.BodyText="Summary of Care";

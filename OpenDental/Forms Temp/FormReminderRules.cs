@@ -51,7 +51,7 @@ namespace OpenDental {
 						}
 						break;
 					case EhrCriterion.Allergy:
-						row.Cells.Add("Allergy = "+AllergyDefs.GetOne(listReminders[i].CriterionFK).Description);
+						row.Cells.Add("Allergy = "+AllergyDefs.GetById(listReminders[i].CriterionFK).Description);
 						break;
 					case EhrCriterion.Age:
 						row.Cells.Add("Age "+listReminders[i].CriterionValue);

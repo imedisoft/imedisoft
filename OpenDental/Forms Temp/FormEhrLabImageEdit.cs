@@ -51,7 +51,7 @@ namespace OpenDental {
 			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listPatientDocuments.Count;i++) {
-				if(_listPatientDocuments[i].DocNum<=0) { //Invalid doc num indicates 'Waiting for images'. This flag is set in the Load event.
+				if(_listPatientDocuments[i].Id<=0) { //Invalid doc num indicates 'Waiting for images'. This flag is set in the Load event.
 					continue;
 				}
 				//Test if this is a valid image.
@@ -61,11 +61,11 @@ namespace OpenDental {
 				}
 				bmp.Dispose();
 				bmp=null;
-				bool isAttached=EhrLabImages.GetDocNumExistsInList(_ehrLabNum,_listPatientDocuments[i].DocNum,_listAttached);
+				bool isAttached=EhrLabImages.GetDocNumExistsInList(_ehrLabNum,_listPatientDocuments[i].Id,_listAttached);
 				row=new GridRow();
 				row.Cells.Add(isAttached?"X":"");
-				row.Cells.Add(_listPatientDocuments[i].DateCreated.ToString());
-				row.Cells.Add(Definitions.GetName(DefinitionCategory.ImageCats,_listPatientDocuments[i].DocCategory));			  
+				row.Cells.Add(_listPatientDocuments[i].AddedOnDate.ToString());
+				row.Cells.Add(Definitions.GetName(DefinitionCategory.ImageCats,_listPatientDocuments[i].Category));			  
 				row.Cells.Add(_listPatientDocuments[i].Description);
 				row.Tag=_listPatientDocuments[i];
 				gridMain.Rows.Add(row);
@@ -140,7 +140,7 @@ namespace OpenDental {
 				Document doc=GetSelectedDocument();
 				int existingIndex=-1;
 				for(int i=0;i<_listAttached.Count;i++) {
-					if(_listAttached[i].EhrLabNum==_ehrLabNum && _listAttached[i].DocNum==doc.DocNum) {
+					if(_listAttached[i].EhrLabNum==_ehrLabNum && _listAttached[i].DocNum==doc.Id) {
 						//found it, mark it for delete
 						existingIndex=i;
 						break;
@@ -152,7 +152,7 @@ namespace OpenDental {
 				else { //it doesn't exist so add it
 					EhrLabImage labImage=new EhrLabImage();
 					labImage.EhrLabNum=_ehrLabNum;
-					labImage.DocNum=doc.DocNum;
+					labImage.DocNum=doc.Id;
 					_listAttached.Add(labImage);
 				}
 				FillGrid();	

@@ -41,25 +41,25 @@ namespace OpenDentBusiness.Crud{
 			Carrier carrier;
 			foreach(DataRow row in table.Rows) {
 				carrier=new Carrier();
-				carrier.CarrierNum              = PIn.Long  (row["CarrierNum"].ToString());
-				carrier.CarrierName             = PIn.String(row["CarrierName"].ToString());
-				carrier.Address                 = PIn.String(row["Address"].ToString());
-				carrier.Address2                = PIn.String(row["Address2"].ToString());
+				carrier.Id              = PIn.Long  (row["CarrierNum"].ToString());
+				carrier.Name             = PIn.String(row["CarrierName"].ToString());
+				carrier.AddressLine1                 = PIn.String(row["Address"].ToString());
+				carrier.AddressLine2                = PIn.String(row["Address2"].ToString());
 				carrier.City                    = PIn.String(row["City"].ToString());
 				carrier.State                   = PIn.String(row["State"].ToString());
 				carrier.Zip                     = PIn.String(row["Zip"].ToString());
 				carrier.Phone                   = PIn.String(row["Phone"].ToString());
-				carrier.ElectID                 = PIn.String(row["ElectID"].ToString());
+				carrier.ElectronicId                 = PIn.String(row["ElectID"].ToString());
 				carrier.NoSendElect             = (OpenDentBusiness.NoSendElectType)PIn.Int(row["NoSendElect"].ToString());
 				carrier.IsCDA                   = PIn.Bool  (row["IsCDA"].ToString());
 				carrier.CDAnetVersion           = PIn.String(row["CDAnetVersion"].ToString());
-				carrier.CanadianNetworkNum      = PIn.Long  (row["CanadianNetworkNum"].ToString());
+				carrier.CanadianNetworkId      = PIn.Long  (row["CanadianNetworkNum"].ToString());
 				carrier.IsHidden                = PIn.Bool  (row["IsHidden"].ToString());
 				carrier.CanadianEncryptionMethod= PIn.Byte  (row["CanadianEncryptionMethod"].ToString());
 				carrier.CanadianSupportedTypes  = (OpenDentBusiness.CanSupTransTypes)PIn.Int(row["CanadianSupportedTypes"].ToString());
-				carrier.SecUserNumEntry         = PIn.Long  (row["SecUserNumEntry"].ToString());
-				carrier.SecDateEntry            = PIn.Date  (row["SecDateEntry"].ToString());
-				carrier.SecDateTEdit            = PIn.Date (row["SecDateTEdit"].ToString());
+				carrier.AddedByUserId         = PIn.Long  (row["SecUserNumEntry"].ToString());
+				carrier.AddedOnDate            = PIn.Date  (row["SecDateEntry"].ToString());
+				carrier.LastModifiedDate            = PIn.Date (row["SecDateTEdit"].ToString());
 				carrier.TIN                     = PIn.String(row["TIN"].ToString());
 				carrier.CarrierGroupName        = PIn.Long  (row["CarrierGroupName"].ToString());
 				carrier.ApptTextBackColor       = Color.FromArgb(PIn.Int(row["ApptTextBackColor"].ToString()));
@@ -102,25 +102,25 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("TrustedEtransFlags");
 			foreach(Carrier carrier in listCarriers) {
 				table.Rows.Add(new object[] {
-					POut.Long  (carrier.CarrierNum),
-					            carrier.CarrierName,
-					            carrier.Address,
-					            carrier.Address2,
+					POut.Long  (carrier.Id),
+					            carrier.Name,
+					            carrier.AddressLine1,
+					            carrier.AddressLine2,
 					            carrier.City,
 					            carrier.State,
 					            carrier.Zip,
 					            carrier.Phone,
-					            carrier.ElectID,
+					            carrier.ElectronicId,
 					POut.Int   ((int)carrier.NoSendElect),
 					POut.Bool  (carrier.IsCDA),
 					            carrier.CDAnetVersion,
-					POut.Long  (carrier.CanadianNetworkNum),
+					POut.Long  (carrier.CanadianNetworkId),
 					POut.Bool  (carrier.IsHidden),
 					POut.Byte  (carrier.CanadianEncryptionMethod),
 					POut.Int   ((int)carrier.CanadianSupportedTypes),
-					POut.Long  (carrier.SecUserNumEntry),
-					POut.DateT (carrier.SecDateEntry,false),
-					POut.DateT (carrier.SecDateTEdit,false),
+					POut.Long  (carrier.AddedByUserId),
+					POut.DateT (carrier.AddedOnDate,false),
+					POut.DateT (carrier.LastModifiedDate,false),
 					            carrier.TIN,
 					POut.Long  (carrier.CarrierGroupName),
 					POut.Int   (carrier.ApptTextBackColor.ToArgb()),
@@ -139,7 +139,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one Carrier into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(Carrier carrier,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				carrier.CarrierNum=ReplicationServers.GetKey("carrier","CarrierNum");
+				carrier.Id=ReplicationServers.GetKey("carrier","CarrierNum");
 			}
 			string command="INSERT INTO carrier (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -147,25 +147,25 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="CarrierName,Address,Address2,City,State,Zip,Phone,ElectID,NoSendElect,IsCDA,CDAnetVersion,CanadianNetworkNum,IsHidden,CanadianEncryptionMethod,CanadianSupportedTypes,SecUserNumEntry,SecDateEntry,TIN,CarrierGroupName,ApptTextBackColor,IsCoinsuranceInverted,TrustedEtransFlags) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(carrier.CarrierNum)+",";
+				command+=POut.Long(carrier.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(carrier.CarrierName)+"',"
-				+"'"+POut.String(carrier.Address)+"',"
-				+"'"+POut.String(carrier.Address2)+"',"
+				 "'"+POut.String(carrier.Name)+"',"
+				+"'"+POut.String(carrier.AddressLine1)+"',"
+				+"'"+POut.String(carrier.AddressLine2)+"',"
 				+"'"+POut.String(carrier.City)+"',"
 				+"'"+POut.String(carrier.State)+"',"
 				+"'"+POut.String(carrier.Zip)+"',"
 				+"'"+POut.String(carrier.Phone)+"',"
-				+"'"+POut.String(carrier.ElectID)+"',"
+				+"'"+POut.String(carrier.ElectronicId)+"',"
 				+    POut.Int   ((int)carrier.NoSendElect)+","
 				+    POut.Bool  (carrier.IsCDA)+","
 				+"'"+POut.String(carrier.CDAnetVersion)+"',"
-				+    POut.Long  (carrier.CanadianNetworkNum)+","
+				+    POut.Long  (carrier.CanadianNetworkId)+","
 				+    POut.Bool  (carrier.IsHidden)+","
 				+    POut.Byte  (carrier.CanadianEncryptionMethod)+","
 				+    POut.Int   ((int)carrier.CanadianSupportedTypes)+","
-				+    POut.Long  (carrier.SecUserNumEntry)+","
+				+    POut.Long  (carrier.AddedByUserId)+","
 				+    DbHelper.Now()+","
 				//SecDateTEdit can only be set by MySQL
 				+"'"+POut.String(carrier.TIN)+"',"
@@ -177,9 +177,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				carrier.CarrierNum=Database.ExecuteInsert(command);
+				carrier.Id=Database.ExecuteInsert(command);
 			}
-			return carrier.CarrierNum;
+			return carrier.Id;
 		}
 
 		///<summary>Inserts one Carrier into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -192,32 +192,32 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO carrier (";
 			if(!useExistingPK) {
-				carrier.CarrierNum=ReplicationServers.GetKeyNoCache("carrier","CarrierNum");
+				carrier.Id=ReplicationServers.GetKeyNoCache("carrier","CarrierNum");
 			}
 			if(useExistingPK) {
 				command+="CarrierNum,";
 			}
 			command+="CarrierName,Address,Address2,City,State,Zip,Phone,ElectID,NoSendElect,IsCDA,CDAnetVersion,CanadianNetworkNum,IsHidden,CanadianEncryptionMethod,CanadianSupportedTypes,SecUserNumEntry,SecDateEntry,TIN,CarrierGroupName,ApptTextBackColor,IsCoinsuranceInverted,TrustedEtransFlags) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(carrier.CarrierNum)+",";
+				command+=POut.Long(carrier.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(carrier.CarrierName)+"',"
-				+"'"+POut.String(carrier.Address)+"',"
-				+"'"+POut.String(carrier.Address2)+"',"
+				 "'"+POut.String(carrier.Name)+"',"
+				+"'"+POut.String(carrier.AddressLine1)+"',"
+				+"'"+POut.String(carrier.AddressLine2)+"',"
 				+"'"+POut.String(carrier.City)+"',"
 				+"'"+POut.String(carrier.State)+"',"
 				+"'"+POut.String(carrier.Zip)+"',"
 				+"'"+POut.String(carrier.Phone)+"',"
-				+"'"+POut.String(carrier.ElectID)+"',"
+				+"'"+POut.String(carrier.ElectronicId)+"',"
 				+    POut.Int   ((int)carrier.NoSendElect)+","
 				+    POut.Bool  (carrier.IsCDA)+","
 				+"'"+POut.String(carrier.CDAnetVersion)+"',"
-				+    POut.Long  (carrier.CanadianNetworkNum)+","
+				+    POut.Long  (carrier.CanadianNetworkId)+","
 				+    POut.Bool  (carrier.IsHidden)+","
 				+    POut.Byte  (carrier.CanadianEncryptionMethod)+","
 				+    POut.Int   ((int)carrier.CanadianSupportedTypes)+","
-				+    POut.Long  (carrier.SecUserNumEntry)+","
+				+    POut.Long  (carrier.AddedByUserId)+","
 				+    DbHelper.Now()+","
 				//SecDateTEdit can only be set by MySQL
 				+"'"+POut.String(carrier.TIN)+"',"
@@ -229,26 +229,26 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				carrier.CarrierNum=Database.ExecuteInsert(command);
+				carrier.Id=Database.ExecuteInsert(command);
 			}
-			return carrier.CarrierNum;
+			return carrier.Id;
 		}
 
 		///<summary>Updates one Carrier in the database.</summary>
 		public static void Update(Carrier carrier) {
 			string command="UPDATE carrier SET "
-				+"CarrierName             = '"+POut.String(carrier.CarrierName)+"', "
-				+"Address                 = '"+POut.String(carrier.Address)+"', "
-				+"Address2                = '"+POut.String(carrier.Address2)+"', "
+				+"CarrierName             = '"+POut.String(carrier.Name)+"', "
+				+"Address                 = '"+POut.String(carrier.AddressLine1)+"', "
+				+"Address2                = '"+POut.String(carrier.AddressLine2)+"', "
 				+"City                    = '"+POut.String(carrier.City)+"', "
 				+"State                   = '"+POut.String(carrier.State)+"', "
 				+"Zip                     = '"+POut.String(carrier.Zip)+"', "
 				+"Phone                   = '"+POut.String(carrier.Phone)+"', "
-				+"ElectID                 = '"+POut.String(carrier.ElectID)+"', "
+				+"ElectID                 = '"+POut.String(carrier.ElectronicId)+"', "
 				+"NoSendElect             =  "+POut.Int   ((int)carrier.NoSendElect)+", "
 				+"IsCDA                   =  "+POut.Bool  (carrier.IsCDA)+", "
 				+"CDAnetVersion           = '"+POut.String(carrier.CDAnetVersion)+"', "
-				+"CanadianNetworkNum      =  "+POut.Long  (carrier.CanadianNetworkNum)+", "
+				+"CanadianNetworkNum      =  "+POut.Long  (carrier.CanadianNetworkId)+", "
 				+"IsHidden                =  "+POut.Bool  (carrier.IsHidden)+", "
 				+"CanadianEncryptionMethod=  "+POut.Byte  (carrier.CanadianEncryptionMethod)+", "
 				+"CanadianSupportedTypes  =  "+POut.Int   ((int)carrier.CanadianSupportedTypes)+", "
@@ -260,24 +260,24 @@ namespace OpenDentBusiness.Crud{
 				+"ApptTextBackColor       =  "+POut.Int   (carrier.ApptTextBackColor.ToArgb())+", "
 				+"IsCoinsuranceInverted   =  "+POut.Bool  (carrier.IsCoinsuranceInverted)+", "
 				+"TrustedEtransFlags      =  "+POut.Int   ((int)carrier.TrustedEtransFlags)+" "
-				+"WHERE CarrierNum = "+POut.Long(carrier.CarrierNum);
+				+"WHERE CarrierNum = "+POut.Long(carrier.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates one Carrier in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(Carrier carrier,Carrier oldCarrier) {
 			string command="";
-			if(carrier.CarrierName != oldCarrier.CarrierName) {
+			if(carrier.Name != oldCarrier.Name) {
 				if(command!="") { command+=",";}
-				command+="CarrierName = '"+POut.String(carrier.CarrierName)+"'";
+				command+="CarrierName = '"+POut.String(carrier.Name)+"'";
 			}
-			if(carrier.Address != oldCarrier.Address) {
+			if(carrier.AddressLine1 != oldCarrier.AddressLine1) {
 				if(command!="") { command+=",";}
-				command+="Address = '"+POut.String(carrier.Address)+"'";
+				command+="Address = '"+POut.String(carrier.AddressLine1)+"'";
 			}
-			if(carrier.Address2 != oldCarrier.Address2) {
+			if(carrier.AddressLine2 != oldCarrier.AddressLine2) {
 				if(command!="") { command+=",";}
-				command+="Address2 = '"+POut.String(carrier.Address2)+"'";
+				command+="Address2 = '"+POut.String(carrier.AddressLine2)+"'";
 			}
 			if(carrier.City != oldCarrier.City) {
 				if(command!="") { command+=",";}
@@ -295,9 +295,9 @@ namespace OpenDentBusiness.Crud{
 				if(command!="") { command+=",";}
 				command+="Phone = '"+POut.String(carrier.Phone)+"'";
 			}
-			if(carrier.ElectID != oldCarrier.ElectID) {
+			if(carrier.ElectronicId != oldCarrier.ElectronicId) {
 				if(command!="") { command+=",";}
-				command+="ElectID = '"+POut.String(carrier.ElectID)+"'";
+				command+="ElectID = '"+POut.String(carrier.ElectronicId)+"'";
 			}
 			if(carrier.NoSendElect != oldCarrier.NoSendElect) {
 				if(command!="") { command+=",";}
@@ -311,9 +311,9 @@ namespace OpenDentBusiness.Crud{
 				if(command!="") { command+=",";}
 				command+="CDAnetVersion = '"+POut.String(carrier.CDAnetVersion)+"'";
 			}
-			if(carrier.CanadianNetworkNum != oldCarrier.CanadianNetworkNum) {
+			if(carrier.CanadianNetworkId != oldCarrier.CanadianNetworkId) {
 				if(command!="") { command+=",";}
-				command+="CanadianNetworkNum = "+POut.Long(carrier.CanadianNetworkNum)+"";
+				command+="CanadianNetworkNum = "+POut.Long(carrier.CanadianNetworkId)+"";
 			}
 			if(carrier.IsHidden != oldCarrier.IsHidden) {
 				if(command!="") { command+=",";}
@@ -354,7 +354,7 @@ namespace OpenDentBusiness.Crud{
 				return false;
 			}
 			command="UPDATE carrier SET "+command
-				+" WHERE CarrierNum = "+POut.Long(carrier.CarrierNum);
+				+" WHERE CarrierNum = "+POut.Long(carrier.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
@@ -362,13 +362,13 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(Carrier,Carrier) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(Carrier carrier,Carrier oldCarrier) {
-			if(carrier.CarrierName != oldCarrier.CarrierName) {
+			if(carrier.Name != oldCarrier.Name) {
 				return true;
 			}
-			if(carrier.Address != oldCarrier.Address) {
+			if(carrier.AddressLine1 != oldCarrier.AddressLine1) {
 				return true;
 			}
-			if(carrier.Address2 != oldCarrier.Address2) {
+			if(carrier.AddressLine2 != oldCarrier.AddressLine2) {
 				return true;
 			}
 			if(carrier.City != oldCarrier.City) {
@@ -383,7 +383,7 @@ namespace OpenDentBusiness.Crud{
 			if(carrier.Phone != oldCarrier.Phone) {
 				return true;
 			}
-			if(carrier.ElectID != oldCarrier.ElectID) {
+			if(carrier.ElectronicId != oldCarrier.ElectronicId) {
 				return true;
 			}
 			if(carrier.NoSendElect != oldCarrier.NoSendElect) {
@@ -395,7 +395,7 @@ namespace OpenDentBusiness.Crud{
 			if(carrier.CDAnetVersion != oldCarrier.CDAnetVersion) {
 				return true;
 			}
-			if(carrier.CanadianNetworkNum != oldCarrier.CanadianNetworkNum) {
+			if(carrier.CanadianNetworkId != oldCarrier.CanadianNetworkId) {
 				return true;
 			}
 			if(carrier.IsHidden != oldCarrier.IsHidden) {

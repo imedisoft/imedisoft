@@ -617,7 +617,7 @@ namespace OpenDentBusiness.SheetFramework {
 			}
 			List<PatPlan> listPatPlans=PatPlans.Refresh(patCur.PatNum);
 			List<InsSub> listInsSubs=InsSubs.GetMany(listPatPlans.Select(x => x.InsSubNum).ToList());
-			List<InsPlan> listInsPlans=InsPlans.RefreshForSubList(listInsSubs);
+			List<InsurancePlan> listInsPlans=InsPlans.RefreshForSubList(listInsSubs);
 			List<SubstitutionLink> listSubLinks=SubstitutionLinks.GetAllForPlans(listInsPlans);
 			List<Procedure> procList=Procedures.Refresh(patCur.PatNum);
 			decimal subfee=0;
@@ -678,7 +678,7 @@ namespace OpenDentBusiness.SheetFramework {
 				totPat+=(decimal)treatPlan.ListProcTPs[i].PatAmt;
 				row.Prognosis=treatPlan.ListProcTPs[i].Prognosis;//Prognosis
 				row.ProcAbbr=treatPlan.ListProcTPs[i].ProcAbbr;//Abbr
-				if(procCode.NoBillIns) {
+				if(procCode.NoInsuranceBill) {
 					row.FeeAllowed=-1;
 				}
 				else {
@@ -817,16 +817,16 @@ namespace OpenDentBusiness.SheetFramework {
 			}
 			Family famCur=Patients.GetFamily(patCur.PatNum);
 			List<InsSub> subList=InsSubs.RefreshForFam(famCur);
-			List<InsPlan> insPlanList=InsPlans.RefreshForSubList(subList);
+			List<InsurancePlan> insPlanList=InsPlans.RefreshForSubList(subList);
 			List<Benefit> benefitList=Benefits.Refresh(patPlanList,subList);
 			for(int i = 0;i<patPlanList.Count && i<2;i++) {//limit to first 2 insplans
 				InsSub subCur=InsSubs.GetSub(patPlanList[i].InsSubNum,subList);
-				InsPlan planCur=InsPlans.GetPlan(subCur.PlanNum,insPlanList);
-				double familyMax=Benefits.GetAnnualMaxDisplay(benefitList,planCur.PlanNum,patPlanList[i].PatPlanNum,true);
+				InsurancePlan planCur=InsPlans.GetPlan(subCur.PlanNum,insPlanList);
+				double familyMax=Benefits.GetAnnualMaxDisplay(benefitList,planCur.Id,patPlanList[i].PatPlanNum,true);
 				if(!familyMax.IsEqual(-1)) {
 					retVal.Rows[0][i+1]=familyMax.ToString("F");
 				}
-				double familyDed=Benefits.GetDeductGeneralDisplay(benefitList,planCur.PlanNum,patPlanList[i].PatPlanNum,BenefitCoverageLevel.Family);
+				double familyDed=Benefits.GetDeductGeneralDisplay(benefitList,planCur.Id,patPlanList[i].PatPlanNum,BenefitCoverageLevel.Family);
 				if(!familyDed.IsEqual(-1)) {
 					retVal.Rows[1][i+1]=familyDed.ToString("F");
 				}
@@ -865,17 +865,17 @@ namespace OpenDentBusiness.SheetFramework {
 			}
 			Family famCur=Patients.GetFamily(patCur.PatNum);
 			List<InsSub> subList=InsSubs.RefreshForFam(famCur);
-			List<InsPlan> insPlanList=InsPlans.RefreshForSubList(subList);
+			List<InsurancePlan> insPlanList=InsPlans.RefreshForSubList(subList);
 			List<Benefit> benefitList=Benefits.Refresh(patPlanList,subList);
 			List<ClaimProcHist> histList=ClaimProcs.GetHistList(patCur.PatNum,benefitList,patPlanList,insPlanList,DateTimeOD.Today,subList);
 			for(int i = 0;i<patPlanList.Count && i<2;i++) {
 				InsSub subCur=InsSubs.GetSub(patPlanList[i].InsSubNum,subList);
-				InsPlan planCur=InsPlans.GetPlan(subCur.PlanNum,insPlanList);
+				InsurancePlan planCur=InsPlans.GetPlan(subCur.PlanNum,insPlanList);
 				double pend=InsPlans.GetPendingDisplay(histList,DateTime.Today,planCur,patPlanList[i].PatPlanNum,-1,patCur.PatNum,patPlanList[i].InsSubNum,benefitList);
-				double used=InsPlans.GetInsUsedDisplay(histList,DateTime.Today,planCur.PlanNum,patPlanList[i].PatPlanNum,-1,insPlanList,benefitList,patCur.PatNum,patPlanList[i].InsSubNum);
+				double used=InsPlans.GetInsUsedDisplay(histList,DateTime.Today,planCur.Id,patPlanList[i].PatPlanNum,-1,insPlanList,benefitList,patCur.PatNum,patPlanList[i].InsSubNum);
 				retVal.Rows[3][i+1]=used.ToString("F");
 				retVal.Rows[4][i+1]=pend.ToString("F");
-				double maxInd=Benefits.GetAnnualMaxDisplay(benefitList,planCur.PlanNum,patPlanList[i].PatPlanNum,false);
+				double maxInd=Benefits.GetAnnualMaxDisplay(benefitList,planCur.Id,patPlanList[i].PatPlanNum,false);
 				if(!maxInd.IsEqual(-1)) {
 					double remain=maxInd-used-pend;
 					if(remain<0) {
@@ -885,10 +885,10 @@ namespace OpenDentBusiness.SheetFramework {
 					retVal.Rows[5][i+1]=remain.ToString("F");
 				}
 				//deductible:
-				double ded=Benefits.GetDeductGeneralDisplay(benefitList,planCur.PlanNum,patPlanList[i].PatPlanNum,BenefitCoverageLevel.Individual);
-				double dedFam=Benefits.GetDeductGeneralDisplay(benefitList,planCur.PlanNum,patPlanList[i].PatPlanNum,BenefitCoverageLevel.Family);
+				double ded=Benefits.GetDeductGeneralDisplay(benefitList,planCur.Id,patPlanList[i].PatPlanNum,BenefitCoverageLevel.Individual);
+				double dedFam=Benefits.GetDeductGeneralDisplay(benefitList,planCur.Id,patPlanList[i].PatPlanNum,BenefitCoverageLevel.Family);
 				if(!ded.IsEqual(-1)) {
-					double dedRem=InsPlans.GetDedRemainDisplay(histList,DateTime.Today,planCur.PlanNum,patPlanList[i].PatPlanNum,-1,insPlanList,patCur.PatNum,ded,dedFam);
+					double dedRem=InsPlans.GetDedRemainDisplay(histList,DateTime.Today,planCur.Id,patPlanList[i].PatPlanNum,-1,insPlanList,patCur.PatNum,ded,dedFam);
 					retVal.Rows[1][i+1]=ded.ToString("F");
 					retVal.Rows[2][i+1]=dedRem.ToString("F");
 				}
@@ -918,7 +918,7 @@ namespace OpenDentBusiness.SheetFramework {
 					string procDescript="";
 					if(ProcedureCodes.IsValidCode(proc.ProcCodeAdjudicated)) {
 						ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.ProcCodeAdjudicated);
-						procDescript=procCode.AbbrDesc;
+						procDescript=procCode.ShortDescription;
 					}
 					row["ProcDescript"]=procDescript;
 					row["FeeBilled"]=proc.ProcFee.ToString("f2");
@@ -1001,10 +1001,10 @@ namespace OpenDentBusiness.SheetFramework {
 				ProcedureCode procCode=ProcedureCodes.GetProcCode(listProcs[i].CodeNum);
 				dRow["Date"]                                     =listProcs[i].ProcDate.ToShortDateString();
 				dRow["Prov"]                                     =Providers.GetAbbr(listProcs[i].ProcNum);
-				dRow["ProcCode"]               =procCode.ProcCode;
+				dRow["ProcCode"]               =procCode.Code;
 				dRow["Tth"]                    =Tooth.ToInternat(listProcs[i].ToothNum);
 				dRow["Surf"]                   =listProcs[i].Surf;
-				dRow["Description"]            =procCode.Descript;
+				dRow["Description"]            =procCode.Description;
 				dRow["Note"]                                   =listProcs[i].Note;
 				retVal.Rows.Add(dRow);
 			}

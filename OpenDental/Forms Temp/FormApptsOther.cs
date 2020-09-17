@@ -192,7 +192,7 @@ namespace OpenDental {
 		///<summary>Creates a single recall appointment. If it's from a double click, then it will end up on that spot in the Appts module.  If not, it will end up on the pinboard with StringDateJumpTo as due date to jump to.  ListAptNumsSelected will contain the AptNum of the new appointment.</summary>
 		public void MakeRecallAppointment() {
 			List<InsSub> listInsSubs=InsSubs.RefreshForFam(_famCur);
-			List<InsPlan> listInsPlans=InsPlans.RefreshForSubList(listInsSubs);
+			List<InsurancePlan> listInsPlans=InsPlans.RefreshForSubList(listInsSubs);
 			Appointment apt=null;
 			DateTime dateTimeApt=DateTime.MinValue;
 			if(this.IsInitialDoubleClick) {
@@ -268,7 +268,7 @@ namespace OpenDental {
 		///<summary>Creates appointments for each patient in _famCur.  MsgBox informs user of anyone skipped.  StringDateJumpTo will contain the due date (of the last family member) to jump to.  ListAptNumsSelected will contain the AptNums of the new appointments on the pinboard.</summary>
 		public void MakeRecallFamily() {
 			List<Recall> listPatRecalls;
-			List <InsPlan> listInsPlans;
+			List <InsurancePlan> listInsPlans;
 			List<InsSub> listInsSubs;
 			Appointment apt=null;
 			Recall recall;

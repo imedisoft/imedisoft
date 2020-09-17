@@ -44,9 +44,9 @@ namespace OpenDentBusiness.Eclaims
 			Claim claim = Claims.GetClaim(queueItem.ClaimNum);
 			Provider provBill = Providers.GetById(claim.ProvBill);
 			Patient pat = Patients.GetPat(claim.PatNum);
-			InsPlan insplan = InsPlans.GetPlan(claim.PlanNum, new List<InsPlan>());
+			InsurancePlan insplan = InsPlans.GetPlan(claim.PlanNum, new List<InsurancePlan>());
 			InsSub insSub = InsSubs.GetSub(claim.InsSubNum, new List<InsSub>());
-			Carrier carrier = Carriers.GetCarrier(insplan.CarrierNum);
+			Carrier carrier = Carriers.GetCarrier(insplan.CarrierId);
 			List<ClaimProc> claimProcList = ClaimProcs.Refresh(pat.PatNum);
 			List<ClaimProc> claimProcsForClaim = ClaimProcs.GetForSendClaim(claimProcList, claim.ClaimNum);
 			List<Procedure> procList = Procedures.Refresh(claim.PatNum);
@@ -67,7 +67,7 @@ namespace OpenDentBusiness.Eclaims
 				stringBuilder.Append(t);//112
 				stringBuilder.Append(t);//118
 				stringBuilder.Append(pat.SSN + t);//203/403
-				stringBuilder.Append(carrier.CarrierName + t);//carrier name?
+				stringBuilder.Append(carrier.Name + t);//carrier name?
 				stringBuilder.Append(insSub.SubscriberID + t);
 				stringBuilder.Append(pat.PatNum.ToString() + t);
 				stringBuilder.Append(pat.Birthdate.ToString("dd-MM-yyyy") + t);
@@ -89,7 +89,7 @@ namespace OpenDentBusiness.Eclaims
 				stringBuilder.Append(t);
 				stringBuilder.Append(proc.ProcDate.ToString("dd-MM-yyyy") + t);//procDate
 				procCode = ProcedureCodes.GetProcCode(proc.CodeNum);
-				string strProcCode = procCode.ProcCode;
+				string strProcCode = procCode.Code;
 				if (strProcCode.EndsWith("00"))
 				{//ending with 00 indicates it's a lab code.
 					stringBuilder.Append("02" + t);
@@ -220,7 +220,7 @@ namespace OpenDentBusiness.Eclaims
 		/// </summary>
 		public static string GetUL(Procedure procedure, ProcedureCode procedureCode)
 		{
-			if (procedureCode.TreatArea == TreatmentArea.Arch)
+			if (procedureCode.TreatmentArea == ProcedureTreatmentArea.Arch)
 			{
 				if (procedure.Surf == "U") 
 					return "1";

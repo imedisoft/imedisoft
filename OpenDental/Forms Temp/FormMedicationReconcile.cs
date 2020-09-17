@@ -148,7 +148,7 @@ namespace OpenDental {
 				MessageBox.Show("The selected file is not a supported image type.");
 				return;
 			}
-			textDocDateDesc.Text=doc.DateTStamp.ToShortDateString()+" - "+doc.Description.ToString();
+			textDocDateDesc.Text=doc.LastModifiedDate.ToShortDateString()+" - "+doc.Description.ToString();
 			if(BitmapOriginal!=null) {
 				BitmapOriginal.Dispose();
 			}

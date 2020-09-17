@@ -33,6 +33,7 @@ using Google.Apis.Requests;
 using Google;
 using Google.Apis.Services;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness{
 	///<summary>An email message is always attached to a patient.</summary>
@@ -112,7 +113,7 @@ namespace OpenDentBusiness{
 				+" FROM emailmessage "
 				+"WHERE MsgDateTime BETWEEN	"+POut.Date(dateFrom)+" AND "+POut.Date(dateTo.AddDays(1))+" AND ( ";//Cannot use DATE(MsgDateTime), because the index on MsgDateTime would not work.
 			string strSentReceived="";
-			if(emailAddress.WebmailProvNum==0) {//emailmessages
+			if(emailAddress.WebmailProviderId==0) {//emailmessages
 																					//must match one of these EmailSentOrReceived statuses
 				if(arrayMailBoxTypes.Contains(MailboxType.Inbox)) {
 					strSentReceived+=" (SentOrReceived IN ("
@@ -121,7 +122,7 @@ namespace OpenDentBusiness{
 						+POut.Int((int)EmailSentOrReceived.ReceivedEncrypted)+","
 						+POut.Int((int)EmailSentOrReceived.ReceivedDirect)+","
 						+POut.Int((int)EmailSentOrReceived.ReadDirect)
-						+") AND RecipientAddress = '"+POut.String(emailAddress.EmailUsername.Trim())+"') ";
+						+") AND RecipientAddress = '"+POut.String(emailAddress.SmtpUsername.Trim())+"') ";
 				}
 				if(arrayMailBoxTypes.Contains(MailboxType.Sent)) {
 					if(strSentReceived!="") {
@@ -130,9 +131,9 @@ namespace OpenDentBusiness{
 					strSentReceived+=" (SentOrReceived IN(";
 					strSentReceived+=(int)EmailSentOrReceived.Sent+","+(int)EmailSentOrReceived.SentDirect+","
 						+(int)EmailSentOrReceived.WebMailSent+","+(int)EmailSentOrReceived.WebMailSentRead+") "
-						+" AND FromAddress IN('"+POut.String(EmailMessages.GetAddressSimple(emailAddress.EmailUsername).Trim())+"'";
+						+" AND FromAddress IN('"+POut.String(EmailMessages.GetAddressSimple(emailAddress.SmtpUsername).Trim())+"'";
 					if(!string.IsNullOrEmpty(emailAddress.SenderAddress) 
-						&& emailAddress.SenderAddress!=EmailMessages.GetAddressSimple(emailAddress.EmailUsername)) 
+						&& emailAddress.SenderAddress!=EmailMessages.GetAddressSimple(emailAddress.SmtpUsername)) 
 					{
 						strSentReceived+=$",'{POut.String(emailAddress.SenderAddress)}'";
 					}
@@ -151,7 +152,7 @@ namespace OpenDentBusiness{
 					listSentOrReceived.Add(EmailSentOrReceived.WebMailSent);
 				}
 				if(listSentOrReceived.Count>0) {
-					strSentReceived+="ProvNumWebMail="+POut.Long(emailAddress.WebmailProvNum)
+					strSentReceived+="ProvNumWebMail="+POut.Long(emailAddress.WebmailProviderId)
 						+" AND SentOrReceived IN ("+string.Join(",",listSentOrReceived.Select(x => POut.Int((int)x)))+") ";
 				}
 			}
@@ -177,8 +178,8 @@ namespace OpenDentBusiness{
 		///<summary>Returns the list of historically used email addresses.</summary>
 		public static List<string> GetHistoricalEmailAddresses(EmailAddress emailAddress) {
 			
-			string fromAddress=POut.String(EmailMessages.GetAddressSimple(emailAddress.EmailUsername).Trim());
-			string recipientAddress=POut.String(emailAddress.EmailUsername.Trim());
+			string fromAddress=POut.String(EmailMessages.GetAddressSimple(emailAddress.SmtpUsername).Trim());
+			string recipientAddress=POut.String(emailAddress.SmtpUsername.Trim());
 			string command=@"SELECT 
 				(CASE WHEN address.ToAddress='"+fromAddress+@"' THEN '' ELSE address.ToAddress END) ToAddress,
 				(CASE WHEN address.FromAddress='"+fromAddress+@"' THEN '' ELSE address.FromAddress END) FromAddress,
@@ -401,7 +402,7 @@ namespace OpenDentBusiness{
 		///Surround with a try catch.</summary>
 		public static string SendEmailDirect(EmailMessage emailMessage,EmailAddress emailAddressFrom) {
 			//No need to check RemotingRole; no call to db.
-			emailMessage.FromAddress=emailAddressFrom.EmailUsername.Trim();//Cannot be emailAddressFrom.SenderAddress, or else will not find the correct encryption certificate.  Used in ConvertEmailMessageToMessage().
+			emailMessage.FromAddress=emailAddressFrom.SmtpUsername.Trim();//Cannot be emailAddressFrom.SenderAddress, or else will not find the correct encryption certificate.  Used in ConvertEmailMessageToMessage().
 			//Start by converting the emailMessage to an unencrypted message using the Direct libraries. The email must be in this form to carry out encryption.
 			Health.Direct.Common.Mail.Message msgUnencrypted=ConvertEmailMessageToMessage(emailMessage,true);
 			Health.Direct.Agent.MessageEnvelope msgEnvelopeUnencrypted=new Health.Direct.Agent.MessageEnvelope(msgUnencrypted);
@@ -412,7 +413,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Refreshes our cached copy of the public key certificate store and the anchor certificate store from the Windows certificate store.</summary>
 		public static void RefreshCertStoreExternal(EmailAddress emailAddressLocal) {
-			string strSenderAddress=emailAddressLocal.EmailUsername.Trim();//Cannot be emailAddressFrom.SenderAddress, or else will not find the right encryption certificate.
+			string strSenderAddress=emailAddressLocal.SmtpUsername.Trim();//Cannot be emailAddressFrom.SenderAddress, or else will not find the right encryption certificate.
 			try {
 				GetDirectAgentForEmailAddress(strSenderAddress);//This line is where the refresh occurs.
 			}
@@ -425,7 +426,7 @@ namespace OpenDentBusiness{
 		private static string SendEmailDirect(Health.Direct.Agent.OutgoingMessage outMsgUnencrypted,EmailAddress emailAddressFrom) {
 			//No need to check RemotingRole; no call to db.
 			string strErrors="";
-			string strSenderAddress=emailAddressFrom.EmailUsername.Trim();//Cannot be emailAddressFrom.SenderAddress, or else will not find the right encryption certificate.
+			string strSenderAddress=emailAddressFrom.SmtpUsername.Trim();//Cannot be emailAddressFrom.SenderAddress, or else will not find the right encryption certificate.
 			//Locate or discover public certificates for each receiver for encryption purposes.
 			for(int i=0;i<outMsgUnencrypted.Recipients.Count;i++) {
 				string receiveAddress=outMsgUnencrypted.Recipients[i].Address.Trim();
@@ -492,7 +493,7 @@ namespace OpenDentBusiness{
 			//The memory stream for the alternate view must be mime (not an entire email), based on AlternateView use example http://msdn.microsoft.com/en-us/library/system.net.mail.mailmessage.alternateviews.aspx
 			AlternateView alternateView=new AlternateView(ms,outMsgEncrypted.Message.ContentType);//Causes the receiver to recognize this email as an encrypted email.
 			alternateView.TransferEncoding=TransferEncoding.SevenBit;
-			if(emailAddressFrom.ServerPort==465) {//Implicit SSL
+			if(emailAddressFrom.SmtpPort==465) {//Implicit SSL
 				//See comments inside SendEmailUnsecure() regarding why this does not work.
 				if(strErrors!="") {
 					strErrors+="\r\n";
@@ -577,7 +578,7 @@ namespace OpenDentBusiness{
 			//Get the time that the last Direct Ack was sent for the From address.
 			command=DbHelper.LimitOrderBy(
 				"SELECT MsgDateTime FROM emailmessage "
-					+"WHERE FromAddress='"+POut.String(emailAddressFrom.EmailUsername.Trim())+"' AND SentOrReceived="+POut.Long((int)EmailSentOrReceived.AckDirectProcessed)+" "
+					+"WHERE FromAddress='"+POut.String(emailAddressFrom.SmtpUsername.Trim())+"' AND SentOrReceived="+POut.Long((int)EmailSentOrReceived.AckDirectProcessed)+" "
 					+"ORDER BY MsgDateTime DESC",
 				1);
 			DateTime dateTimeLastAck=PIn.Date(Database.ExecuteString(command));//dateTimeLastAck will be 0001-01-01 if there is not yet any sent Acks.
@@ -588,7 +589,7 @@ namespace OpenDentBusiness{
 			//Get the oldest Ack for the From address which has not been sent yet.
 			command=DbHelper.LimitOrderBy(
 				"SELECT * FROM emailmessage "
-					+"WHERE FromAddress='"+POut.String(emailAddressFrom.EmailUsername.Trim())+"' AND SentOrReceived="+POut.Long((int)EmailSentOrReceived.AckDirectNotSent)+" "
+					+"WHERE FromAddress='"+POut.String(emailAddressFrom.SmtpUsername.Trim())+"' AND SentOrReceived="+POut.Long((int)EmailSentOrReceived.AckDirectNotSent)+" "
 					+"ORDER BY EmailMessageNum",//The oldest Ack is the one that was recorded first.  EmailMessageNum is better than using MsgDateTime, because MsgDateTime is only accurate down to the second.
 				1);
 			List <EmailMessage> listEmailMessageUnsentAcks=Crud.EmailMessageCrud.SelectMany(command);
@@ -725,10 +726,10 @@ namespace OpenDentBusiness{
 			MemoryStream msEmailContent=null;
 			AlternateView alternateView=null;
 			try {
-				client=new SmtpClient(emailAddress.SMTPserver,emailAddress.ServerPort);
+				client=new SmtpClient(emailAddress.SmtpServer,emailAddress.SmtpPort);
 				//The default credentials are not used by default, according to: 
 				//http://msdn2.microsoft.com/en-us/library/system.net.mail.smtpclient.usedefaultcredentials.aspx
-				client.Credentials=new NetworkCredential(emailAddress.EmailUsername.Trim(),MiscUtils.Decrypt(emailAddress.EmailPassword));
+				client.Credentials=new NetworkCredential(emailAddress.SmtpUsername.Trim(),MiscUtils.Decrypt(emailAddress.SmtpPassword));
 				client.DeliveryMethod=SmtpDeliveryMethod.Network;
 				client.EnableSsl=emailAddress.UseSSL;
 				client.Timeout=180000;//3 minutes
@@ -813,14 +814,14 @@ namespace OpenDentBusiness{
 				return;
 			}
 			//Verify that we can connect to Google using OAuth before moving on as we can't refresh tokens from OpenDentalEmail Processor.
-			if(!emailAddress.AccessToken.IsNullOrEmpty() && emailAddress.SMTPserver.ToLower()=="smtp.gmail.com") {
+			if(!emailAddress.AccessToken.IsNullOrEmpty() && emailAddress.SmtpServer.ToLower()=="smtp.gmail.com") {
 				using GmailApi.GmailService gService=GoogleApiConnector.CreateGmailService(ODEmailAddressToBasic(emailAddress));
 				try {
 					//This call to Google is only to ensure that we have a valid OAuth token.  
 					//There is no connect or authorize, so this is the best/smallest request we can do.
 					//We have to ensure we have an OAuth token right here because we will send the email in SendEmail.WireEmailUnsecure,
 					// which doesn't have a DB context and wouldn't be able to refresh the token.
-					gService.Users.GetProfile(emailAddress.EmailUsername).Execute();
+					gService.Users.GetProfile(emailAddress.SmtpUsername).Execute();
 				}
 				catch(GoogleApiException gae) {
 					if(!hasRetried && gae.HttpStatusCode==HttpStatusCode.Unauthorized) {
@@ -849,7 +850,7 @@ namespace OpenDentBusiness{
 			}
 			//No need to check RemotingRole; no call to db.
 			emailMessage.UserNum=Security.CurrentUser.Id;
-			emailMessage.FromAddress=emailAddressFrom.EmailUsername.Trim();//Cannot be emailAddressFrom.SenderAddress, or else will not find the correct signing certificate.  Used in ConvertEmailMessageToMessage().
+			emailMessage.FromAddress=emailAddressFrom.SmtpUsername.Trim();//Cannot be emailAddressFrom.SenderAddress, or else will not find the correct signing certificate.  Used in ConvertEmailMessageToMessage().
 			Health.Direct.Common.Mail.Message msg=ConvertEmailMessageToMessage(emailMessage,true);
 			Health.Direct.Agent.MessageEnvelope msgEnvelope=new Health.Direct.Agent.MessageEnvelope(msg);
 			Health.Direct.Agent.OutgoingMessage msgOut=new Health.Direct.Agent.OutgoingMessage(msgEnvelope);
@@ -886,7 +887,7 @@ namespace OpenDentBusiness{
 		///Example host name, pop3.live.com. Port is Normally 110 for plain POP3, 995 for SSL POP3.</summary>
 		public static List<EmailMessage> ReceiveFromInbox(int receiveCount,EmailAddress emailAddressInbox,ref List<string> listSkipMsgUids) {
 			List<EmailMessage> retVal=new List<EmailMessage>();
-			if(_listCurrentlyReceivingEmailAddressNums.Select(x => x.EmailAddressNum).Contains(emailAddressInbox.EmailAddressNum)) {
+			if(_listCurrentlyReceivingEmailAddressNums.Select(x => x.Id).Contains(emailAddressInbox.Id)) {
 				return retVal;//Already in the process of receving email. This can happen if the user clicks the refresh button at the same time the main polling thread is receiving.
 			}
 			_listCurrentlyReceivingEmailAddressNums.Add(emailAddressInbox);
@@ -899,7 +900,7 @@ namespace OpenDentBusiness{
 				throw;
 			}
 			finally {
-				_listCurrentlyReceivingEmailAddressNums.RemoveAll(x => x.EmailAddressNum==emailAddressInbox.EmailAddressNum);
+				_listCurrentlyReceivingEmailAddressNums.RemoveAll(x => x.Id==emailAddressInbox.Id);
 			}
 			return retVal;
 		}
@@ -910,16 +911,16 @@ namespace OpenDentBusiness{
 		private static List<EmailMessage> ReceiveFromInboxThreadSafe(int receiveCount,EmailAddress emailAddressInbox,ref List<string> listSkipMsgUids) {
 			//No need to check RemotingRole; no call to db.
 			List<EmailMessage> retVal=new List<EmailMessage>();
-			if(!emailAddressInbox.AccessToken.IsNullOrEmpty() && emailAddressInbox.Pop3ServerIncoming=="pop.gmail.com") {
+			if(!emailAddressInbox.AccessToken.IsNullOrEmpty() && emailAddressInbox.Pop3Server=="pop.gmail.com") {
 				return RetrieveFromInboxOAuth(emailAddressInbox,ref listSkipMsgUids,receiveCount);
 			}
 			else {
 				//This code is modified from the example at: http://hpop.sourceforge.net/exampleFetchAllMessages.php
 				using(OpenPop.Pop3.Pop3Client client = new OpenPop.Pop3.Pop3Client()) {//The client disconnects from the server when being disposed.
-					client.Connect(emailAddressInbox.Pop3ServerIncoming,emailAddressInbox.ServerPortIncoming,emailAddressInbox.UseSSL,180000,180000,null);//3 minute timeout, just as for sending emails.
-					client.Authenticate(emailAddressInbox.EmailUsername.Trim(),MiscUtils.Decrypt(emailAddressInbox.EmailPassword),OpenPop.Pop3.AuthenticationMethod.UsernameAndPassword);
+					client.Connect(emailAddressInbox.Pop3Server,emailAddressInbox.Pop3Port,emailAddressInbox.UseSSL,180000,180000,null);//3 minute timeout, just as for sending emails.
+					client.Authenticate(emailAddressInbox.SmtpUsername.Trim(),MiscUtils.Decrypt(emailAddressInbox.SmtpPassword),OpenPop.Pop3.AuthenticationMethod.UsernameAndPassword);
 					List <string> listMsgUids=client.GetMessageUids();//Get all unique identifiers for each email in the inbox.
-					List<EmailMessageUid> listDownloadedMsgUids=EmailMessageUids.GetForRecipientAddress(emailAddressInbox.EmailUsername.Trim());
+					List<EmailMessageUid> listDownloadedMsgUids=EmailMessageUids.GetForRecipientAddress(emailAddressInbox.SmtpUsername.Trim());
 					List<string> listDownloadedMsgUidStrs=new List<string>();
 					for(int i = 0;i<listDownloadedMsgUids.Count;i++) {
 						listDownloadedMsgUidStrs.Add(listDownloadedMsgUids[i].MsgId);
@@ -936,7 +937,7 @@ namespace OpenDentBusiness{
 							//In the worst case scenario, we create a Uid for the message based off of the message header information, which takes a little extra time, 
 							//but is better than downloading old messages again, especially if some of those messages contain large attachments.
 							messageHeader=client.GetMessageHeaders(msgIndex);//Takes 1-2 seconds to get this information from the server.  The message, minus body and minus attachments.
-							strMsgUid=messageHeader.DateSent.ToString("yyyyMMddHHmmss")+emailAddressInbox.EmailUsername.Trim()+messageHeader.From.Address+messageHeader.Subject;
+							strMsgUid=messageHeader.DateSent.ToString("yyyyMMddHHmmss")+emailAddressInbox.SmtpUsername.Trim()+messageHeader.From.Address+messageHeader.Subject;
 						}
 						if(strMsgUid.Length>4000) {//The EmailMessageUid.MsgId field is only 4000 characters in size.
 							strMsgUid=strMsgUid.Substring(0,4000);
@@ -978,7 +979,7 @@ namespace OpenDentBusiness{
 								|| ex.Message.StartsWith("'Cp1252' is not a supported encoding name. "
 									+"For information on defining a custom encoding, see the documentation for the Encoding.RegisterProvider method.")) {
 								EmailMessageUid emailMessageUid=new EmailMessageUid();
-								emailMessageUid.RecipientAddress=emailAddressInbox.EmailUsername.Trim();
+								emailMessageUid.RecipientAddress=emailAddressInbox.SmtpUsername.Trim();
 								emailMessageUid.MsgId=strMsgUid;
 								EmailMessageUids.Insert(emailMessageUid);//Remember Uid was downloaded, to avoid email duplication the next time the inbox is refreshed.
 								listDownloadedMsgUidStrs.Add(strMsgUid);
@@ -987,11 +988,11 @@ namespace OpenDentBusiness{
 						}
 						try {
 							bool isEmailFromInbox=true;
-							if(openPopMsg.Headers.From.ToString().ToLower().Contains(emailAddressInbox.EmailUsername.Trim().ToLower())) {//The email Recipient and email From addresses are the same.
+							if(openPopMsg.Headers.From.ToString().ToLower().Contains(emailAddressInbox.SmtpUsername.Trim().ToLower())) {//The email Recipient and email From addresses are the same.
 																																		 //The email Recipient and email To or CC or BCC addresses are the same.  We have verified that a user can send an email to themself using only CC or BCC.
-								if(String.Join(",",openPopMsg.Headers.To).ToLower().Contains(emailAddressInbox.EmailUsername.Trim().ToLower()) ||
-									String.Join(",",openPopMsg.Headers.Cc).ToLower().Contains(emailAddressInbox.EmailUsername.Trim().ToLower()) ||
-									String.Join(",",openPopMsg.Headers.Bcc).ToLower().Contains(emailAddressInbox.EmailUsername.Trim().ToLower())) {
+								if(String.Join(",",openPopMsg.Headers.To).ToLower().Contains(emailAddressInbox.SmtpUsername.Trim().ToLower()) ||
+									String.Join(",",openPopMsg.Headers.Cc).ToLower().Contains(emailAddressInbox.SmtpUsername.Trim().ToLower()) ||
+									String.Join(",",openPopMsg.Headers.Bcc).ToLower().Contains(emailAddressInbox.SmtpUsername.Trim().ToLower())) {
 									//Download this message because it was clearly sent from the user to theirself.
 								}
 								else {
@@ -1006,7 +1007,7 @@ namespace OpenDentBusiness{
 								msgDownloadedCount++;
 							}
 							EmailMessageUid emailMessageUid=new EmailMessageUid();
-							emailMessageUid.RecipientAddress=emailAddressInbox.EmailUsername.Trim();
+							emailMessageUid.RecipientAddress=emailAddressInbox.SmtpUsername.Trim();
 							emailMessageUid.MsgId=strMsgUid;
 							EmailMessageUids.Insert(emailMessageUid);//Remember Uid was downloaded, to avoid email duplication the next time the inbox is refreshed.
 							listDownloadedMsgUidStrs.Add(strMsgUid);
@@ -1037,9 +1038,9 @@ namespace OpenDentBusiness{
 			List<EmailMessage> listEmailMessages=new List<EmailMessage>();
 			using GmailApi.GmailService gService=GoogleApiConnector.CreateGmailService(ODEmailAddressToBasic(emailAddressInbox));
 			List<GmailApi.Data.Message> listMessageIds=new List<GmailApi.Data.Message>();
-			List<EmailMessageUid> listEmailMessageUids=EmailMessageUids.GetForRecipientAddress(emailAddressInbox.EmailUsername);
+			List<EmailMessageUid> listEmailMessageUids=EmailMessageUids.GetForRecipientAddress(emailAddressInbox.SmtpUsername);
 			//This example is from: https://developers.google.com/gmail/api/v1/reference/users/messages/list
-			GmailApi.UsersResource.MessagesResource.ListRequest request=gService.Users.Messages.List(emailAddressInbox.EmailUsername);
+			GmailApi.UsersResource.MessagesResource.ListRequest request=gService.Users.Messages.List(emailAddressInbox.SmtpUsername);
 			do {
 				try {
 					GmailApi.Data.ListMessagesResponse response=request.Execute();
@@ -1061,7 +1062,7 @@ namespace OpenDentBusiness{
 			listMessageIds=listMessageIds.Where(x => !x.Id.In(listEmailMessageUids.Select(y => y.MsgId.TrimStart("GmailId".ToCharArray())))).ToList();
 			//After receiving all of the ID's in the inbox, perform a GET for each email message
 			foreach(GmailApi.Data.Message msg in listMessageIds) {
-				GmailApi.UsersResource.MessagesResource.GetRequest emailRequest=gService.Users.Messages.Get(emailAddressInbox.EmailUsername,msg.Id);
+				GmailApi.UsersResource.MessagesResource.GetRequest emailRequest=gService.Users.Messages.Get(emailAddressInbox.SmtpUsername,msg.Id);
 				emailRequest.Format=GmailApi.UsersResource.MessagesResource.GetRequest.FormatEnum.Raw;
 				try {
 					GmailApi.Data.Message response=emailRequest.Execute();
@@ -1161,7 +1162,7 @@ namespace OpenDentBusiness{
 						//When all recipients are in the bcc field, some clients (Apple mail) remove all address fields (To, cc, bcc) from the header, which causes an error to be thrown.
 						//the code below attempts to add a bcc field with the user's email into the header (seems to work for emails coming from Apple mail)
 						strRawEmailIn=Regex.Replace(strRawEmailIn,@"Subject: ",
-							"Bcc: "+(emailAddressInbox?.EmailUsername??"Failed to match email address")+"\r\nSubject: ",RegexOptions.IgnoreCase);
+							"Bcc: "+(emailAddressInbox?.SmtpUsername??"Failed to match email address")+"\r\nSubject: ",RegexOptions.IgnoreCase);
 					}
 					else {
 						throw new ApplicationException("Failed to parse raw email message.\r\n"+ex.Message);
@@ -1198,7 +1199,7 @@ namespace OpenDentBusiness{
 				emailMessage.RawEmailIn=strRawEmail;//The raw encrypted email, including the message, the attachments, and the signature.  The body of the encrypted email is just a base64 string until decrypted.
 				emailMessage.EmailMessageNum=emailMessageNum;
 				emailMessage.SentOrReceived=EmailSentOrReceived.ReceivedEncrypted;
-				emailMessage.RecipientAddress=emailAddressReceiver.EmailUsername.Trim();
+				emailMessage.RecipientAddress=emailAddressReceiver.SmtpUsername.Trim();
 				//The entire contents of the email are saved in the emailMessage.BodyText field, so that if decryption fails, the email will still be saved to the db for decryption later if possible.
 				emailMessage.BodyText=strRawEmail;
 				try {
@@ -1207,7 +1208,7 @@ namespace OpenDentBusiness{
 					emailMessage.RawEmailIn=strRawEmail;//The raw encrypted email, including the message, the attachments, and the signature.  The body of the encrypted email is just a base64 string until decrypted.
 					emailMessage.EmailMessageNum=emailMessageNum;
 					emailMessage.SentOrReceived=EmailSentOrReceived.ReceivedDirect;
-					emailMessage.RecipientAddress=emailAddressReceiver.EmailUsername.Trim();
+					emailMessage.RecipientAddress=emailAddressReceiver.SmtpUsername.Trim();
 					if(inMsg.HasSenderSignatures) {
 						for(int i=0;i<inMsg.SenderSignatures.Count;i++) {
 							EmailAttach emailAttach=EmailAttaches.CreateAttach("smime.p7s","",inMsg.SenderSignatures[i].Certificate.GetRawCertData(),false);
@@ -1267,7 +1268,7 @@ namespace OpenDentBusiness{
 				}
 				emailMessage.EmailMessageNum=emailMessageNum;
 				emailMessage.SentOrReceived=sentOrReceivedUnencrypted;
-				emailMessage.RecipientAddress=emailAddressReceiver.EmailUsername.Trim();
+				emailMessage.RecipientAddress=emailAddressReceiver.SmtpUsername.Trim();
 			}
 			EhrSummaryCcd ehrSummaryCcd=null;
 			if(isEncrypted) {
@@ -1461,10 +1462,10 @@ namespace OpenDentBusiness{
 		///<summary>Converts an OD email address to a basic email address. Decrypts the password.</summary>
 		public static BasicEmailAddress ODEmailAddressToBasic(EmailAddress odAddress) {
 			BasicEmailAddress emailAddress=new BasicEmailAddress();
-			emailAddress.EmailPassword=MiscUtils.Decrypt(odAddress.EmailPassword,true);
-			emailAddress.EmailUsername=odAddress.EmailUsername;
-			emailAddress.ServerPort=odAddress.ServerPort;
-			emailAddress.SMTPserver=odAddress.SMTPserver;
+			emailAddress.EmailPassword=MiscUtils.Decrypt(odAddress.SmtpPassword,true);
+			emailAddress.EmailUsername=odAddress.SmtpUsername;
+			emailAddress.ServerPort=odAddress.SmtpPort;
+			emailAddress.SMTPserver=odAddress.SmtpServer;
 			emailAddress.UseSSL=odAddress.UseSSL;
 			emailAddress.AccessToken=odAddress.AccessToken;
 			emailAddress.RefreshToken=odAddress.RefreshToken;
@@ -2348,7 +2349,7 @@ namespace OpenDentBusiness{
 			if(isReplyAll) {
 				emailReceived.ToAddress.Split(',')//email@od.com,email2@od.com,...
 					.Select(x => ProcessInlineEncodedText(x))//Decode any UTF-8 or otherwise
-					.Where(x => x!=emailAddress.EmailUsername && x!=emailAddress.SenderAddress)//Since we are replying, remove our current email from list
+					.Where(x => x!=emailAddress.SmtpUsername && x!=emailAddress.SenderAddress)//Since we are replying, remove our current email from list
 					.ForEach(x => replyMessage.ToAddress+=","+x);
 			}
       replyMessage.FromAddress=ProcessInlineEncodedText(emailReceived.RecipientAddress);
@@ -2387,7 +2388,7 @@ namespace OpenDentBusiness{
       //No need to check RemotingRole; no call to db.
       EmailMessage forwardMessage=new EmailMessage();
       forwardMessage.PatNum=emailReceived.PatNum;
-      forwardMessage.FromAddress=emailAddress.EmailUsername;//We cannot use emailAddress.SenderAddress here in case the user wants to send a Direct message.
+      forwardMessage.FromAddress=emailAddress.SmtpUsername;//We cannot use emailAddress.SenderAddress here in case the user wants to send a Direct message.
 			string subject=ProcessInlineEncodedText(emailReceived.Subject);
       if(subject.Trim().ToLower().StartsWith("fwd:")) { //already contains a "fwd:"
         forwardMessage.Subject=subject;
@@ -2466,7 +2467,7 @@ namespace OpenDentBusiness{
 			}
 			EmailAddress emailAddressFrom=EmailAddresses.GetByClinic(0);
 			EmailMessage emailMessage=new EmailMessage();
-			emailMessage.FromAddress=emailAddressFrom.EmailUsername.Trim();
+			emailMessage.FromAddress=emailAddressFrom.SmtpUsername.Trim();
 			emailMessage.ToAddress=strTo.Trim();
 			emailMessage.Subject=subjectAndBody;
 			emailMessage.BodyText=subjectAndBody;
@@ -2492,10 +2493,10 @@ namespace OpenDentBusiness{
 				throw new ApplicationException("No POP server set up.");
 			}
 			EmailAddress emailAddress=new EmailAddress();
-			emailAddress.Pop3ServerIncoming=Preferences.GetString(PreferenceName.EHREmailPOPserver);
-			emailAddress.ServerPortIncoming=PrefC.GetInt(PreferenceName.EHREmailPort);
-			emailAddress.EmailUsername=Preferences.GetString(PreferenceName.EHREmailFromAddress);
-			emailAddress.EmailPassword=Preferences.GetString(PreferenceName.EHREmailPassword);
+			emailAddress.Pop3Server=Preferences.GetString(PreferenceName.EHREmailPOPserver);
+			emailAddress.Pop3Port=PrefC.GetInt(PreferenceName.EHREmailPort);
+			emailAddress.SmtpUsername=Preferences.GetString(PreferenceName.EHREmailFromAddress);
+			emailAddress.SmtpPassword=Preferences.GetString(PreferenceName.EHREmailPassword);
 			List<string> listSkipMsgUids=new List<string>();
 			List<EmailMessage> emailMessages=ReceiveFromInbox(1,emailAddress,ref listSkipMsgUids);
 			if(emailMessages.Count==0) {

@@ -67,7 +67,7 @@ namespace OpenDentBusiness
 
 			if (AllergyDefId > 0)
 			{
-				var allergyDef = AllergyDefs.GetOne(AllergyDefId);
+				var allergyDef = AllergyDefs.GetById(AllergyDefId);
 
 				if (allergyDef != null)
 				{

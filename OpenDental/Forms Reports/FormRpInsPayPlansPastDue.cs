@@ -54,7 +54,7 @@ namespace OpenDental {
 			List<PayPlanCharge> listPayPlanCharges;
 			List<ClaimProc> listPayPlanClaimProcs;
 			List<Patient> listPatients;
-			List<InsPlan> listInsPlans;
+			List<InsurancePlan> listInsPlans;
 			listPayPlans=PayPlans.GetAllOpenInsPayPlans();
       if(listPayPlans.Count==0) {
         MessageBox.Show("There are no insurance payment plans past due.");
@@ -73,7 +73,7 @@ namespace OpenDental {
 					listPatients.FirstOrDefault(x => x.PatNum == plan.PatNum),
 					listPayPlanCharges.Where(x => x.PayPlanNum == plan.PayPlanNum).ToList(),
 					listPayPlanClaimProcs.Where(x => x.PayPlanNum == plan.PayPlanNum).ToList(),
-					listInsPlans.FirstOrDefault(x => x.PlanNum == plan.PlanNum)));
+					listInsPlans.FirstOrDefault(x => x.Id == plan.PlanNum)));
 			}
       return true;
 		}
@@ -115,7 +115,7 @@ namespace OpenDental {
 				}
 				row = new GridRow();
 				string patName =payPlanCur.PatientCur.LName + ", " + payPlanCur.PatientCur.FName;
-				string carrierNamePhone = payPlanCur.CarrierCur.CarrierName+"\r\n"+"Ph:"+" "+payPlanCur.CarrierCur.Phone;
+				string carrierNamePhone = payPlanCur.CarrierCur.Name+"\r\n"+"Ph:"+" "+payPlanCur.CarrierCur.Phone;
 				row.Cells.Add(patName);
 				row.Cells.Add(payPlanCur.DateLastPayment.ToShortDateString());
 				row.Cells.Add(payPlanCur.NumChargesOverdue.ToString());
@@ -261,7 +261,7 @@ namespace OpenDental {
 			public List<PayPlanCharge> ListPayPlanCharges;
 			public List<ClaimProc> ListClaimProcs;
 			public Patient PatientCur;
-			public InsPlan InsPlanCur;
+			public InsurancePlan InsPlanCur;
 			//retrieved
 			public Carrier CarrierCur;
 			//calculated
@@ -271,7 +271,7 @@ namespace OpenDental {
 			public int DaysOverdue;
 			public DateTime DateLastPayment;
 
-			public PayPlanExtended(PayPlan payPlan,Patient patCur,List<PayPlanCharge> listPayPlanCharges,List<ClaimProc> listClaimProcs,InsPlan insPlan) {
+			public PayPlanExtended(PayPlan payPlan,Patient patCur,List<PayPlanCharge> listPayPlanCharges,List<ClaimProc> listClaimProcs,InsurancePlan insPlan) {
 				//assign passed-in values
 				PayPlan=payPlan;
 				if(patCur == null) {
@@ -283,13 +283,13 @@ namespace OpenDental {
 				ListPayPlanCharges=listPayPlanCharges;
 				ListClaimProcs=listClaimProcs;
 				if(insPlan == null) {
-					InsPlanCur = new InsPlan();
+					InsPlanCur = new InsurancePlan();
 				}
 				else {
 					InsPlanCur=insPlan;
 				}
 				//find carrierCur. GetCarrier uses the H List if possible.
-				CarrierCur = Carriers.GetCarrier(InsPlanCur.CarrierNum);
+				CarrierCur = Carriers.GetCarrier(InsPlanCur.CarrierId);
 				CalculateOverdues();
 			}
 

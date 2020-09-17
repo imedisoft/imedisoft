@@ -1621,8 +1621,8 @@ namespace OpenDentBusiness
 						//add changes to dbmLogs
 						if (numUpdated > 0)
 						{
-							listCarriers.ForEach(x => listDbmlogs.Add(new DbmLog(Security.CurrentUser.Id, x.CarrierNum, DbmLogFKeyType.Carrier,
-								DbmLogActionType.Update, methodName, "Updated Carrier info for carrier: " + x.CarrierName)));
+							listCarriers.ForEach(x => listDbmlogs.Add(new DbmLog(Security.CurrentUser.Id, x.Id, DbmLogFKeyType.Carrier,
+								DbmLogActionType.Update, methodName, "Updated Carrier info for carrier: " + x.Name)));
 						}
 					}
 					if (numberFixed != 0 || verbose)
@@ -1753,7 +1753,7 @@ namespace OpenDentBusiness
 						AND ( inssub.PlanNum=0 OR inssub.PlanNum IS NULL )";
 					DataTable table = Database.ExecuteDataTable(command);
 					long numberFixed = table.Rows.Count;
-					InsPlan plan = null;
+					InsurancePlan plan = null;
 					InsSub sub = null;
 					List<DbmLog> listDbmLogs = new List<DbmLog>();
 					string methodName = MethodBase.GetCurrentMethod().Name;
@@ -1761,13 +1761,13 @@ namespace OpenDentBusiness
 					{
 						log += "Reenter insurance information for patients associated to UNKNOWN CARRIER." + "\r\n";
 					}
-					long unknownCarrierNum = Carriers.GetByNameAndPhone("UNKNOWN CARRIER", "", true).CarrierNum;
+					long unknownCarrierNum = Carriers.GetByNameAndPhone("UNKNOWN CARRIER", "", true).Id;
 					for (int i = 0; i < numberFixed; i++)
 					{
-                        plan = new InsPlan
+                        plan = new InsurancePlan
                         {
                             IsHidden = true,
-                            CarrierNum = unknownCarrierNum,
+                            CarrierId = unknownCarrierNum,
                             //Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
                             SecUserNumEntry = Security.CurrentUser.Id
                         };//Create a dummy plan and carrier to attach claims and claim procs to.
@@ -1775,7 +1775,7 @@ namespace OpenDentBusiness
 						long claimNum = PIn.Long(table.Rows[i]["ClaimNum"].ToString());
                         sub = new InsSub
                         {
-                            PlanNum = plan.PlanNum,
+                            PlanNum = plan.Id,
                             Subscriber = PIn.Long(table.Rows[i]["PatNum"].ToString()),
                             SubscriberID = "unknown",
                             //Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
@@ -1785,16 +1785,16 @@ namespace OpenDentBusiness
 						listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, sub.InsSubNum, DbmLogFKeyType.InsSub, DbmLogActionType.Insert,
 							methodName, "Added new InsSub from ClaimWithInvalidInsSubNum."));
 						List<Claim> listClaims = Crud.ClaimCrud.SelectMany("SELECT * FROM claim WHERE ClaimNum=" + claimNum);
-						command = "UPDATE claim SET PlanNum=" + plan.PlanNum + ",InsSubNum=" + sub.InsSubNum + " WHERE ClaimNum=" + claimNum;
+						command = "UPDATE claim SET PlanNum=" + plan.Id + ",InsSubNum=" + sub.InsSubNum + " WHERE ClaimNum=" + claimNum;
 						Database.ExecuteNonQuery(command);
 						listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, x.ClaimNum, DbmLogFKeyType.Claim, DbmLogActionType.Update,
-							methodName, "Updated PlanNum from " + x.PlanNum + " to " + plan.PlanNum
+							methodName, "Updated PlanNum from " + x.PlanNum + " to " + plan.Id
 							+ " and InsSubNum from " + x.InsSubNum + " to " + sub.InsSubNum + " from ClaimWithInvalidInsSubNum")));
 						List<ClaimProc> listClaimProc = Crud.ClaimProcCrud.SelectMany("SELECT * FROM claimproc WHERE ClaimNum=" + claimNum);
-						command = "UPDATE claimproc SET PlanNum=" + plan.PlanNum + ",InsSubNum=" + sub.InsSubNum + " WHERE ClaimNum=" + claimNum;
+						command = "UPDATE claimproc SET PlanNum=" + plan.Id + ",InsSubNum=" + sub.InsSubNum + " WHERE ClaimNum=" + claimNum;
 						Database.ExecuteNonQuery(command);
 						listClaimProc.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, x.ClaimProcNum, DbmLogFKeyType.ClaimProc,
-							DbmLogActionType.Update, methodName, "Updated PlanNum from " + x.PlanNum + " to " + plan.PlanNum
+							DbmLogActionType.Update, methodName, "Updated PlanNum from " + x.PlanNum + " to " + plan.Id
 							+ " and InsSubNum from " + x.InsSubNum + " to " + sub.InsSubNum + " from ClaimWithInvalidInsSubNum")));
 					}
 					if (numberFixed > 0 || verbose)
@@ -4114,16 +4114,16 @@ namespace OpenDentBusiness
 							}
 							Carrier carrier = new Carrier
 							{
-								CarrierName = "UNKNOWN CARRIER " + Math.Max(carrierNum, 0),
-								CarrierNum = carrierNum,
+								Name = "UNKNOWN CARRIER " + Math.Max(carrierNum, 0),
+								Id = carrierNum,
 							};
 							Carriers.Insert(carrier, useExistingPriKey: carrierNum > 0);
 							if (carrierNum <= 0)
 							{
-								carrierNum0 = carrier.CarrierNum;
+								carrierNum0 = carrier.Id;
 							}
 							listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, carrierNum, DbmLogFKeyType.Carrier, DbmLogActionType.Insert, methodName,
-								$"Created new carrier '{carrier.CarrierName}' from InsPlanInvalidCarrier."));
+								$"Created new carrier '{carrier.Name}' from InsPlanInvalidCarrier."));
 						}
 						if (carrierNum0 != 0)
 						{//If we had any plans with CarrierNum of 0
@@ -4492,10 +4492,10 @@ namespace OpenDentBusiness
 						}
 						else
 						{//There are objects referencing this inssub or this insplan.  Insert a dummy plan linked to a dummy carrier with CarrierName=Unknown
-                            InsPlan insplan = new InsPlan
+                            InsurancePlan insplan = new InsurancePlan
                             {
                                 IsHidden = true,
-                                CarrierNum = Carriers.GetByNameAndPhone("UNKNOWN CARRIER", "", true).CarrierNum,
+                                CarrierId = Carriers.GetByNameAndPhone("UNKNOWN CARRIER", "", true).Id,
                                 //Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
                                 SecUserNumEntry = Security.CurrentUser.Id
                             };
@@ -4542,11 +4542,11 @@ namespace OpenDentBusiness
 					List<DbmLog> listDbmLogs = new List<DbmLog>();
 					string methodName = MethodBase.GetCurrentMethod().Name;
 					command = "SELECT * FROM insplan WHERE ClaimFormNum=0";
-					List<InsPlan> listInsPlans = Crud.InsPlanCrud.SelectMany(command);
+					List<InsurancePlan> listInsPlans = Crud.InsPlanCrud.SelectMany(command);
 					command = "UPDATE insplan SET ClaimFormNum=" + POut.Long(Preferences.GetLong(PreferenceName.DefaultClaimForm))
 						+ " WHERE ClaimFormNum=0";
 					long numberFixed = Database.ExecuteNonQuery(command);
-					listInsPlans.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, x.PlanNum, DbmLogFKeyType.InsPlan,
+					listInsPlans.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, x.Id, DbmLogFKeyType.InsPlan,
 						DbmLogActionType.Update, methodName, "Updated ClaimFormNum from 0 to " + Preferences.GetLong(PreferenceName.DefaultClaimForm))));
 					if (numberFixed > 0 || verbose)
 					{
@@ -4896,16 +4896,16 @@ namespace OpenDentBusiness
 						command = "SELECT COUNT(*) FROM insplan WHERE PlanNum=" + table.Rows[i]["PlanNum"].ToString();
 						if (Database.ExecuteString(command) == "0")
 						{
-                            InsPlan plan = new InsPlan
+                            InsurancePlan plan = new InsurancePlan
                             {
-                                PlanNum = PIn.Long(table.Rows[i]["PlanNum"].ToString()),//reuse the existing FK
+                                Id = PIn.Long(table.Rows[i]["PlanNum"].ToString()),//reuse the existing FK
                                 IsHidden = true,
-                                CarrierNum = Carriers.GetByNameAndPhone("UNKNOWN CARRIER", "", true).CarrierNum,
+                                CarrierId = Carriers.GetByNameAndPhone("UNKNOWN CARRIER", "", true).Id,
                                 //Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
                                 SecUserNumEntry = Security.CurrentUser.Id
                             };
                             InsPlans.Insert(plan, true);
-							listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, plan.PlanNum, DbmLogFKeyType.InsPlan, DbmLogActionType.Insert,
+							listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, plan.Id, DbmLogFKeyType.InsPlan, DbmLogActionType.Insert,
 								methodName, "Inserted new insplan from InsSubNumMismatchPlanNum."));
 						}
 						long patNum = PIn.Long(table.Rows[i]["PatNum"].ToString());
@@ -7262,13 +7262,13 @@ namespace OpenDentBusiness
 					{
                         ProcedureCode badCode = new ProcedureCode
                         {
-                            ProcCode = "~BAD~",
-                            Descript = "Invalid procedure",
-                            AbbrDesc = "Invalid procedure",
-                            ProcCat = Definitions.GetByExactNameNeverZero(DefinitionCategory.ProcCodeCats, "Never Used")
+                            Code = "~BAD~",
+                            Description = "Invalid procedure",
+                            ShortDescription = "Invalid procedure",
+                            ProcedureCategory = Definitions.GetByExactNameNeverZero(DefinitionCategory.ProcCodeCats, "Never Used")
                         };
                         ProcedureCodes.Insert(badCode);
-						badCodeNum = badCode.CodeNum;
+						badCodeNum = badCode.Id;
 					}
 					else
 					{
@@ -8004,7 +8004,7 @@ namespace OpenDentBusiness
 					break;
 
 				case DbmMode.Fix:
-					command = @"UPDATE provider SET FeeSched=" + POut.Long(FeeScheds.GetFirst(true).FeeSchedNum) + " "
+					command = @"UPDATE provider SET FeeSched=" + POut.Long(FeeScheds.GetFirst(true).Id) + " "
 						+ "WHERE FeeSched NOT IN (SELECT FeeSchedNum FROM feesched)";
 					long numberFixed = Database.ExecuteNonQuery(command);
 					if (numberFixed > 0 || verbose)
@@ -9466,7 +9466,7 @@ HAVING cnt>1";
 			{
 				return "There are no email messages that need to be cleaned up.";
 			}
-			List<EmailAddress> listEmailAddresses = EmailAddresses.GetAll();//Do not use the cache because the cache doesn't contain all email addresses.
+			List<EmailAddress> listEmailAddresses = EmailAddresses.GetAll().ToList();//Do not use the cache because the cache doesn't contain all email addresses.
 			int noChangeCount = 0;
 			int errorCount = 0;
 			int cleanedCount = 0;
@@ -9480,7 +9480,7 @@ HAVING cnt>1";
 				EmailMessage emailMessage = EmailMessages.GetOne(PIn.Long(row["EmailMessageNum"].ToString()));
 				EmailMessage oldEmailMessage = emailMessage.Copy();
 				//Try and find the corresponding email address for this email.
-				EmailAddress emailAddress = listEmailAddresses.FirstOrDefault(x => x.EmailUsername.ToLower() == emailMessage.RecipientAddress.ToLower());
+				EmailAddress emailAddress = listEmailAddresses.FirstOrDefault(x => x.SmtpUsername.ToLower() == emailMessage.RecipientAddress.ToLower());
 				if (emailAddress == null)
 				{
 					errorCount++;
@@ -9605,7 +9605,7 @@ HAVING cnt>1";
 				//Only use the claim procs associated to the non-completed procedures.
 				List<ClaimProc> listNonCompletedClaimProcs = listClaimProcs.FindAll(x => listNonCompletedProcs.Exists(y => y.ProcNum == x.ProcNum));
 				List<InsSub> listSubs = InsSubs.RefreshForFam(fam);
-				List<InsPlan> listPlans = InsPlans.RefreshForSubList(listSubs);
+				List<InsurancePlan> listPlans = InsPlans.RefreshForSubList(listSubs);
 				List<PatPlan> listPatPlans = PatPlans.Refresh(patNum);
 				List<Benefit> listBenefits = Benefits.Refresh(listPatPlans, listSubs);
 				Procedures.ComputeEstimatesForAll(patNum, listNonCompletedClaimProcs, listNonCompletedProcs, listPlans, listPatPlans, listBenefits, pat.Age, listSubs, null, true);

@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEtrans835ClaimEdit:ODForm {
@@ -136,7 +138,7 @@ namespace OpenDental {
 				string procDescript="";
 				if(ProcedureCodes.IsValidCode(proc.ProcCodeAdjudicated)) {
 					ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.ProcCodeAdjudicated);
-					procDescript=procCode.AbbrDesc;
+					procDescript=procCode.ShortDescription;
 				}
 				row.Cells.Add(new GridCell(procDescript));//ProcDescript
 				row.Cells.Add(new GridCell(proc.ProcFee.ToString("f2")));//FeeBilled

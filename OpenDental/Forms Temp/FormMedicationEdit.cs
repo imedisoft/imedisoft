@@ -374,7 +374,7 @@ namespace OpenDental{
 			if(_patNameMeds.Length>0) {
 				comboPatients.SelectedIndex=0;
 			}
-			AllergyDef alD=AllergyDefs.GetAllergyDefFromMedication(MedicationCur.Id);
+			AllergyDef alD=AllergyDefs.GetByMedication(MedicationCur.Id);
 			if(alD!=null) {
 				_patNameAllergies=Allergies.GetPatNamesForAllergy(alD.Id).ToArray();
 				comboPatientAllergy.Items.Clear();

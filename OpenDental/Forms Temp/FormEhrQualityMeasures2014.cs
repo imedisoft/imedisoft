@@ -37,7 +37,7 @@ namespace OpenDental {
 		private void FormQualityMeasures_Load(object sender,EventArgs e) {
 			Cursor=Cursors.WaitCursor;
 			listProvsKeyed=new List<Provider>();
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				string ehrKey="";
 				int yearValue=0;

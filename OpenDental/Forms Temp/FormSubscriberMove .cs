@@ -14,8 +14,8 @@ using OpenDentBusiness;
 namespace OpenDental {
 	public partial class FormSubscriberMove:ODForm {
 
-		private InsPlan _intoInsPlan;
-		private InsPlan _fromInsPlan;
+		private InsurancePlan _intoInsPlan;
+		private InsurancePlan _fromInsPlan;
 
 		public FormSubscriberMove() {
 			InitializeComponent();
@@ -34,7 +34,7 @@ namespace OpenDental {
 			formIP.IsSelectMode=true;
 			if(formIP.ShowDialog()==DialogResult.OK) {
 				_intoInsPlan=formIP.SelectedPlan;
-				textCarrierNameInto.Text=Carriers.GetName(_intoInsPlan.CarrierNum);
+				textCarrierNameInto.Text=Carriers.GetName(_intoInsPlan.CarrierId);
 			}
 		}
 
@@ -43,12 +43,12 @@ namespace OpenDental {
 			formIP.IsSelectMode=true;
 			if(formIP.ShowDialog()==DialogResult.OK) {
 				_fromInsPlan=formIP.SelectedPlan;
-				textCarrierNameFrom.Text=Carriers.GetName(_fromInsPlan.CarrierNum);
+				textCarrierNameFrom.Text=Carriers.GetName(_fromInsPlan.CarrierId);
 			}
 		}
 
 		private void butViewInsPlanInto_Click(object sender,EventArgs e) {
-			if(_intoInsPlan==null || InsPlans.GetPlan(_intoInsPlan.PlanNum,new List<InsPlan>())==null) {
+			if(_intoInsPlan==null || InsPlans.GetPlan(_intoInsPlan.Id,new List<InsurancePlan>())==null) {
 				MessageBox.Show("Valid insurance plan not selected.\r\nPlease select a valid insurance plan using the picker button.");
 				return;
 			}
@@ -57,7 +57,7 @@ namespace OpenDental {
 		}
 
 		private void butViewInsPlanFrom_Click(object sender,EventArgs e) {
-			if(_fromInsPlan==null || InsPlans.GetPlan(_fromInsPlan.PlanNum,new List<InsPlan>())==null) {
+			if(_fromInsPlan==null || InsPlans.GetPlan(_fromInsPlan.Id,new List<InsurancePlan>())==null) {
 				MessageBox.Show("Valid insurance plan not selected.\r\nPlease select a valid insurance plan using the picker button.");
 				return;
 			}
@@ -66,15 +66,15 @@ namespace OpenDental {
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
-			if(_fromInsPlan==null || InsPlans.GetPlan(_fromInsPlan.PlanNum,new List<InsPlan>())==null) {
+			if(_fromInsPlan==null || InsPlans.GetPlan(_fromInsPlan.Id,new List<InsurancePlan>())==null) {
 				MessageBox.Show("Please pick a valid plan to move subscribers from.");
 				return;
 			}
-			if(_intoInsPlan==null || InsPlans.GetPlan(_intoInsPlan.PlanNum,new List<InsPlan>())==null) {
+			if(_intoInsPlan==null || InsPlans.GetPlan(_intoInsPlan.Id,new List<InsurancePlan>())==null) {
 				MessageBox.Show("Please pick a valid plan to move subscribers to.");
 				return;
 			}
-			if(_fromInsPlan.PlanNum==_intoInsPlan.PlanNum) {
+			if(_fromInsPlan.Id==_intoInsPlan.Id) {
 				MessageBox.Show("Can not move a plan into itself.");
 				return;
 			}
@@ -87,7 +87,7 @@ namespace OpenDental {
 			}
 			try {
 				Cursor=Cursors.WaitCursor;
-				long insSubModifiedCount=InsSubs.MoveSubscribers(_fromInsPlan.PlanNum,_intoInsPlan.PlanNum);
+				long insSubModifiedCount=InsSubs.MoveSubscribers(_fromInsPlan.Id,_intoInsPlan.Id);
 				Cursor=Cursors.Default;
 				MessageBox.Show("Count of Subscribers Moved"+": "+insSubModifiedCount);
 			}
@@ -97,7 +97,7 @@ namespace OpenDental {
 				msgBox.ShowDialog();
 				return;//Since this exception is due to validation failure, do not close the form.  Let the user manually click Cancel so they know what happened.
 			}
-			SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeSubsc,0,"Subscribers Moved from"+" "+_fromInsPlan.PlanNum+" "+"to"+" "+_intoInsPlan.PlanNum);
+			SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeSubsc,0,"Subscribers Moved from"+" "+_fromInsPlan.Id+" "+"to"+" "+_intoInsPlan.Id);
 			DialogResult=DialogResult.OK;//Closes the form.
 		}
 

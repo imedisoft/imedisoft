@@ -1,5 +1,6 @@
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -52,7 +53,7 @@ namespace OpenDental
 			foreach (long orthoProcCodeNum in _listOrthoPlacementCodeNums)
 			{
 				ProcedureCode procCodeCur = ProcedureCodes.GetProcCode(orthoProcCodeNum);
-				ODBoxItem<ProcedureCode> listBoxItem = new ODBoxItem<ProcedureCode>(procCodeCur.ProcCode, procCodeCur);
+				ODBoxItem<ProcedureCode> listBoxItem = new ODBoxItem<ProcedureCode>(procCodeCur.Code, procCodeCur);
 				listboxOrthoPlacementProcs.Items.Add(listBoxItem);
 			}
 		}
@@ -100,7 +101,7 @@ namespace OpenDental
 			}
 			foreach (ODBoxItem<ProcedureCode> boxItem in listboxOrthoPlacementProcs.SelectedItems)
 			{
-				_listOrthoPlacementCodeNums.Remove(boxItem.Tag.CodeNum);
+				_listOrthoPlacementCodeNums.Remove(boxItem.Tag.Id);
 			}
 			RefreshListBoxProcs();
 		}

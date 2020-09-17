@@ -235,19 +235,19 @@ namespace OpenDental {
 				}
 				docSave=ImageStore.Import(draggedFilePath,defNumNodeOverCategory,_patCur);
 				FillTree(false);
-				SelectTreeNode(GetTreeNode(MakeIdDoc(docSave.DocNum)));
+				SelectTreeNode(GetTreeNode(MakeIdDoc(docSave.Id)));
 				FormDocInfo FormD=new FormDocInfo(_patCur,docSave,GetCurrentFolderName(treeMain.SelectedNode));
 				FormD.ShowDialog(this);//some of the fields might get changed, but not the filename
 				if(FormD.DialogResult!=DialogResult.OK) {
 					DeleteSelection(false,false,docSave);
 				}
 				else {
-					nodeIdTag=MakeIdDoc(docSave.DocNum);
+					nodeIdTag=MakeIdDoc(docSave.Id);
 					_documentShowing=docSave.Copy();
 				}
 			}
-			if(docSave!=null && !MakeIdDoc(docSave.DocNum).Equals(nodeIdTag)) {
-				SelectTreeNode(GetTreeNode(MakeIdDoc(docSave.DocNum)));
+			if(docSave!=null && !MakeIdDoc(docSave.Id).Equals(nodeIdTag)) {
+				SelectTreeNode(GetTreeNode(MakeIdDoc(docSave.Id)));
 			}
 			FillTree(true);
 			if(errorMessage!="") {
@@ -417,19 +417,19 @@ namespace OpenDental {
 				return;//category hasn't changed
 			}
 			if(_nodeIdTagDown.NodeType==EnumNodeType.Mount) {
-				Mount mount=Mounts.GetByNum(_nodeIdTagDown.PriKey);
-				string mountSourceCat=Definitions.GetDef(DefinitionCategory.ImageCats,mount.DocCategory).Name;
+				Mount mount=Mounts.GetById(_nodeIdTagDown.PriKey);
+				string mountSourceCat=Definitions.GetDef(DefinitionCategory.ImageCats,mount.Category).Name;
 				string mountDestCat=Definitions.GetDef(DefinitionCategory.ImageCats,nodeOverCategoryDefNum).Name;
-				mount.DocCategory=nodeOverCategoryDefNum;
-				SecurityLogs.MakeLogEntry(Permissions.ImageEdit,mount.PatNum,"Mount moved from"+" "+mountSourceCat+" "
+				mount.Category=nodeOverCategoryDefNum;
+				SecurityLogs.MakeLogEntry(Permissions.ImageEdit,mount.PatientId,"Mount moved from"+" "+mountSourceCat+" "
 					+"to"+" "+mountDestCat);
 				Mounts.Update(mount);
 			}
 			else if(_nodeIdTagDown.NodeType==EnumNodeType.Doc) {
 				Document doc=Documents.GetByNum(_nodeIdTagDown.PriKey);
-				string docSourceCat=Definitions.GetDef(DefinitionCategory.ImageCats,doc.DocCategory).Name;
+				string docSourceCat=Definitions.GetDef(DefinitionCategory.ImageCats,doc.Category).Name;
 				string docDestCat=Definitions.GetDef(DefinitionCategory.ImageCats,nodeOverCategoryDefNum).Name;
-				doc.DocCategory=nodeOverCategoryDefNum;
+				doc.Category=nodeOverCategoryDefNum;
 				string logText="Document moved"+": "+doc.FileName;
 				if(doc.Description!="") {
 					string docDescript=doc.Description;
@@ -439,7 +439,7 @@ namespace OpenDental {
 					logText+=" "+"with description"+" "+docDescript;
 				}
 				logText+=" "+"from category"+" "+docSourceCat+" "+"to category"+" "+docDestCat;
-				SecurityLogs.MakeLogEntry(Permissions.ImageEdit,doc.PatNum,logText,doc.DocNum,doc.DateTStamp);
+				SecurityLogs.MakeLogEntry(Permissions.ImageEdit,doc.PatientId,logText,doc.Id,doc.LastModifiedDate);
 				Documents.Update(doc);
 			}
 			FillTree(true);
@@ -497,7 +497,7 @@ namespace OpenDental {
 			}
 			//Create the document object in the database for this mount image.
 			Bitmap capturedImage=_suniDeviceControl.capturedImage;
-			Document doc=ImageStore.ImportImageToMount(capturedImage,rotationAngle,_listMountItems[_idxSelectedInMount].MountItemNum,GetCurrentCategory(),_patCur);
+			Document doc=ImageStore.ImportImageToMount(capturedImage,rotationAngle,_listMountItems[_idxSelectedInMount].Id,GetCurrentCategory(),_patCur);
 			_arrayBitmapsRaw[_idxSelectedInMount]=capturedImage;
 			_intArrayWidthsImagesCur[_idxSelectedInMount]=capturedImage.Width;
 			_intArrayHeightsImagesCur[_idxSelectedInMount]=capturedImage.Height;
@@ -581,7 +581,7 @@ namespace OpenDental {
 			}
 			if(copied) {
 				FillTree(false);
-				SelectTreeNode(GetTreeNode(MakeIdDoc(doc.DocNum)));
+				SelectTreeNode(GetTreeNode(MakeIdDoc(doc.Id)));
 				FormDocInfo FormD=new FormDocInfo(_patCur,doc,GetCurrentFolderName(treeMain.SelectedNode));
 				FormD.ShowDialog(this);//some of the fields might get changed, but not the filename
 				if(FormD.DialogResult!=DialogResult.OK) {
@@ -595,11 +595,11 @@ namespace OpenDental {
 
 		private void menuMounts_Click(object sender,System.EventArgs e) {
 			int idx = ((MenuItem)sender).Index;
-			List<MountDef> listMountDefs=MountDefs.GetDeepCopy();
+			List<MountDef> listMountDefs=MountDefs.GetAll();
 			//MsgBox.Show(listMountDefs[idx].Description);
-			Mount mount=Mounts.CreateMountFromDef(listMountDefs[idx],_patCur.PatNum,GetCurrentCategory());
+			Mount mount=Mounts.CreateFromDefinition(listMountDefs[idx],_patCur.PatNum,GetCurrentCategory());
 			FillTree(false);
-			SelectTreeNode(GetTreeNode(MakeIdMount(mount.MountNum)));
+			SelectTreeNode(GetTreeNode(MakeIdMount(mount.Id)));
 		}
 
 		private void panelNote_DoubleClick(object sender,EventArgs e) {
@@ -678,7 +678,7 @@ namespace OpenDental {
 					//Assume no item will be selected and enable tools again if an item was actually selected.
 					EnableToolBarButtons(true,true,true,true,false,false,false,true,true,true,false,false,false,true);
 					for(int j=0;j<_listMountItems.Count;j++) {
-						if(_listMountItems[j].ItemOrder==_idxSelectedInMount) {
+						if(_listMountItems[j].SortOrder==_idxSelectedInMount) {
 							if(_arrayDocumentsInMount[j]!=null) {
 								_documentShowing=_arrayDocumentsInMount[j];
 								SetWindowingSlider();
@@ -1306,7 +1306,7 @@ namespace OpenDental {
 				button=new ODToolBarButton("Mounts",-1,"","Mounts");
 				button.Style=ODToolBarButtonStyle.DropDownButton;
 				menuMounts=new ContextMenu();
-				List<MountDef> listMountDefs=MountDefs.GetDeepCopy();
+				List<MountDef> listMountDefs=MountDefs.GetAll();
 				for(int i=0;i<listMountDefs.Count;i++){
 					menuMounts.MenuItems.Add(listMountDefs[i].Description,menuMounts_Click);
 				}
@@ -1563,13 +1563,13 @@ namespace OpenDental {
 			}
 			else if(nodeIdTag.NodeType==EnumNodeType.Mount) {
 				//Creates a complete initial mount image. No need to call invalidate until changes are made to the mount later.
-				_listMountItems=MountItems.GetItemsForMount(nodeIdTag.PriKey);
+				_listMountItems = MountItems.GetByMount(nodeIdTag.PriKey).ToList();
 				_arrayDocumentsInMount=Documents.GetDocumentsForMountItems(_listMountItems);
 				_idxSelectedInMount=-1;//No selection to start.
 				Action actionCloseDownloadProgress=null;
 				_arrayBitmapsRaw=ImageStore.OpenImages(_arrayDocumentsInMount,_patFolder);
 				actionCloseDownloadProgress?.Invoke();
-				_mountShowing=Mounts.GetByNum(nodeIdTag.PriKey);
+				_mountShowing=Mounts.GetById(nodeIdTag.PriKey);
 				_bitmapShowing=new Bitmap(_mountShowing.Width,_mountShowing.Height);
 				ImageHelper.RenderMountImage(_bitmapShowing, new List<Bitmap>(_arrayBitmapsRaw), _listMountItems, 
 					new List<Document>(_arrayDocumentsInMount), _idxSelectedInMount);
@@ -1641,33 +1641,33 @@ namespace OpenDental {
 				if(nodeIdTag.NodeType!=EnumNodeType.Mount) {//No mount is currently selected.
 					//Show the user that they are performing an image capture by generating a new mount.
 					Mount mount=new Mount();
-					mount.DateCreated=DateTimeOD.Today;
+					mount.AddedOn=DateTimeOD.Today;
 					mount.Description="unnamed capture";
-					mount.DocCategory=GetCurrentCategory();
-					mount.PatNum=_patCur.PatNum;
+					mount.Category=GetCurrentCategory();
+					mount.PatientId=_patCur.PatNum;
 					int border=Math.Max(_suniDeviceControl.SensorSize.Width,_suniDeviceControl.SensorSize.Height)/24;
 					mount.Width=4*_suniDeviceControl.SensorSize.Width+5*border;
 					mount.Height=_suniDeviceControl.SensorSize.Height+2*border;
-					mount.MountNum=Mounts.Insert(mount);
+					mount.Id=Mounts.Insert(mount);
 					MountItem mountItem=new MountItem();
-					mountItem.MountNum=mount.MountNum;
+					mountItem.MountId=mount.Id;
 					mountItem.Width=_suniDeviceControl.SensorSize.Width;
 					mountItem.Height=_suniDeviceControl.SensorSize.Height;
-					mountItem.Ypos=border;
-					mountItem.ItemOrder=1;
-					mountItem.Xpos=border;
+					mountItem.Y=border;
+					mountItem.SortOrder=1;
+					mountItem.X=border;
 					MountItems.Insert(mountItem);
-					mountItem.ItemOrder=0;
-					mountItem.Xpos=mountItem.Width+2*border;
+					mountItem.SortOrder=0;
+					mountItem.X=mountItem.Width+2*border;
 					MountItems.Insert(mountItem);
-					mountItem.ItemOrder=2;
-					mountItem.Xpos=2*mountItem.Width+3*border;
+					mountItem.SortOrder=2;
+					mountItem.X=2*mountItem.Width+3*border;
 					MountItems.Insert(mountItem);
-					mountItem.ItemOrder=3;
-					mountItem.Xpos=3*mountItem.Width+4*border;
+					mountItem.SortOrder=3;
+					mountItem.X=3*mountItem.Width+4*border;
 					MountItems.Insert(mountItem);
 					FillTree(false);
-					SelectTreeNode(GetTreeNode(MakeIdMount(mount.MountNum)));
+					SelectTreeNode(GetTreeNode(MakeIdMount(mount.Id)));
 					windowingSlider.MinVal=PrefC.GetInt(PreferenceName.ImageWindowingMin);
 					windowingSlider.MaxVal=PrefC.GetInt(PreferenceName.ImageWindowingMax);
 				}
@@ -1985,7 +1985,7 @@ namespace OpenDental {
 					}
 					if(copied) {
 						FillTree(false);
-						SelectTreeNode(GetTreeNode(MakeIdDoc(doc.DocNum)),fileNames[i]);
+						SelectTreeNode(GetTreeNode(MakeIdDoc(doc.Id)),fileNames[i]);
 						FormDocInfo FormD=new FormDocInfo(_patCur,doc,GetCurrentFolderName(treeMain.SelectedNode));
 						FormD.TopMost=true;
 						FormD.ShowDialog(this);//some of the fields might get changed, but not the filename
@@ -1996,15 +1996,15 @@ namespace OpenDental {
 							if(doc.ImgType==ImageType.Photo) {
 								PatientEvent.Fire(EventCategory.Patient,_patCur);//Possibly updated the patient picture.
 							}
-							nodeIdTag=MakeIdDoc(doc.DocNum);
+							nodeIdTag=MakeIdDoc(doc.Id);
 							_documentShowing=doc.Copy();
 						}
 					}
 				}
 				actionCloseUploadProgress?.Invoke();
 				//Reselect the last successfully added node when necessary.
-				if(doc!=null && !MakeIdDoc(doc.DocNum).Equals(nodeIdTag)) {
-					SelectTreeNode(GetTreeNode(MakeIdDoc(doc.DocNum)),fileNames[fileNames.Length-1]);
+				if(doc!=null && !MakeIdDoc(doc.Id).Equals(nodeIdTag)) {
+					SelectTreeNode(GetTreeNode(MakeIdDoc(doc.Id)),fileNames[fileNames.Length-1]);
 				}
 				FillTree(true);
 			}
@@ -2022,7 +2022,7 @@ namespace OpenDental {
 			}
 			if(nodeIdTag.NodeType==EnumNodeType.ApteryxImage) {
 				Document doc=new Document();
-				doc.DateCreated=nodeIdTag.ApteryxImgDownload.AcquisitionDate;
+				doc.AddedOnDate=nodeIdTag.ApteryxImgDownload.AcquisitionDate;
 				doc.ToothNumbers=string.Join(",",nodeIdTag.ApteryxImgDownload.AdultTeeth,nodeIdTag.ApteryxImgDownload.DeciduousTeeth);
 				FormDocInfo fdi=new FormDocInfo(_patCur,doc,GetCurrentFolderName(treeMain.SelectedNode),true);//disable ok button, they can't save anything. Image is just temp.
 				fdi.ShowDialog(this);
@@ -2097,7 +2097,7 @@ namespace OpenDental {
 					DeleteSelection(false,true);
 				}
 				try {
-					doc=ImageStore.ImportImageToMount(bitmapPaste,0,_listMountItems[_idxSelectedInMount].MountItemNum,GetCurrentCategory(),_patCur);//Makes log entry				
+					doc=ImageStore.ImportImageToMount(bitmapPaste,0,_listMountItems[_idxSelectedInMount].Id,GetCurrentCategory(),_patCur);//Makes log entry				
 					doc.WindowingMax=255;
 					doc.WindowingMin=0;
 					Documents.Update(doc);
@@ -2120,7 +2120,7 @@ namespace OpenDental {
 					return;
 				}
 				FillTree(false);
-				SelectTreeNode(GetTreeNode(MakeIdDoc(doc.DocNum)));
+				SelectTreeNode(GetTreeNode(MakeIdDoc(doc.Id)));
 				FormDocInfo formD=new FormDocInfo(_patCur,doc,GetCurrentFolderName(treeMain.SelectedNode));
 				formD.ShowDialog(this);
 				if(formD.DialogResult!=DialogResult.OK) {
@@ -2407,7 +2407,7 @@ namespace OpenDental {
 				Cursor=Cursors.Default;
 				if(saved) {
 					FillTree(false);//Reload and keep new document selected.
-					SelectTreeNode(GetTreeNode(MakeIdDoc(doc.DocNum)));
+					SelectTreeNode(GetTreeNode(MakeIdDoc(doc.Id)));
 					FormDocInfo formDocInfo=new FormDocInfo(_patCur,_documentShowing,GetCurrentFolderName(treeMain.SelectedNode));
 					formDocInfo.ShowDialog(this);
 					if(formDocInfo.DialogResult!=DialogResult.OK) {
@@ -2539,7 +2539,7 @@ namespace OpenDental {
 				}
 				if(copied) {
 					FillTree(false);
-					SelectTreeNode(GetTreeNode(MakeIdDoc(doc.DocNum)));
+					SelectTreeNode(GetTreeNode(MakeIdDoc(doc.Id)));
 					FormDocInfo FormD=new FormDocInfo(_patCur,doc,GetCurrentFolderName(treeMain.SelectedNode));
 					FormD.ShowDialog(this);//some of the fields might get changed, but not the filename 
 					//Customer complained this window was showing up behind OD.  We changed above line to add a parent form as an attempted fix.
@@ -2548,7 +2548,7 @@ namespace OpenDental {
 						DeleteSelection(false,false,doc);
 					}
 					else {
-						nodeIdTag=MakeIdDoc(doc.DocNum);
+						nodeIdTag=MakeIdDoc(doc.Id);
 						_documentShowing=doc.Copy();
 					}
 				}
@@ -2556,8 +2556,8 @@ namespace OpenDental {
 					,(msg) => MsgBox.Show(msg)//Informs user when a 'file is in use' exception occurs.
 				);
 				//Reselect the last successfully added node when necessary. js This code seems to be copied from import multi.  Simplify it.
-				if(doc!=null && !MakeIdDoc(doc.DocNum).Equals(nodeIdTag)) {
-					SelectTreeNode(GetTreeNode(MakeIdDoc(doc.DocNum)));
+				if(doc!=null && !MakeIdDoc(doc.Id).Equals(nodeIdTag)) {
+					SelectTreeNode(GetTreeNode(MakeIdDoc(doc.Id)));
 				}
 				FillTree(true);
 			}
@@ -2827,7 +2827,7 @@ namespace OpenDental {
 		private void DeleteTempPdf(long docNum) {
 			Document doc=Documents.GetByNum(docNum,doReturnNullIfNotFound:true);//Get old document.
 			if(doc!=null && Path.GetExtension(doc.FileName).ToLower()==".pdf") {//Adobe acrobat file.
-				string pdfFilePath=Storage.CombinePaths(Storage.GetTempPath(),doc.DocNum+(_patCur!=null ? _patCur.PatNum.ToString() : "")+".pdf");
+				string pdfFilePath=Storage.CombinePaths(Storage.GetTempPath(),doc.Id+(_patCur!=null ? _patCur.PatNum.ToString() : "")+".pdf");
 				if(!_suniDeviceControl.IsDisposed){
 					_suniDeviceControl.Dispose();
 				}
@@ -2874,7 +2874,7 @@ namespace OpenDental {
 			threadGetBitmap.Join(2000);//give thread some time to finish before trying to display the image. 
 			Document newDoc=XVWeb.SaveApteryxImageToDoc(apteryxImage,bitmapApiImage,_patCur);
 			if(newDoc!=null) {
-				treeNodeOver.Tag=MakeIdDoc(newDoc.DocNum);
+				treeNodeOver.Tag=MakeIdDoc(newDoc.Id);
 				treeNodeOver.ImageIndex=2+(int)newDoc.ImgType;
 				treeNodeOver.SelectedImageIndex=treeNodeOver.ImageIndex;
 				SelectTreeNode(treeNodeOver);
@@ -3337,18 +3337,18 @@ namespace OpenDental {
 			else {
 				nodeIdTag=new NodeIdTag {
 					NodeType=EnumNodeType.Doc,
-					PriKey=docToDelete.DocNum,
+					PriKey=docToDelete.Id,
 				};
 			}
 			Document doc=null;
 			if(nodeIdTag.NodeType==EnumNodeType.Doc) {
 				doc=docToDelete??Documents.GetByNum(nodeIdTag.PriKey);
 				if(securityCheck) {
-					if(!Security.IsAuthorized(Permissions.ImageDelete,doc.DateCreated)) {
+					if(!Security.IsAuthorized(Permissions.ImageDelete,doc.AddedOnDate)) {
 						return;
 					}
 				}
-				EhrLab lab=EhrLabImages.GetFirstLabForDocNum(doc.DocNum);
+				EhrLab lab=EhrLabImages.GetFirstLabForDocNum(doc.Id);
 				if(lab!=null) {
 					string dateSt=lab.ObservationDateTimeStart.PadRight(8,'0').Substring(0,8);//stored in DB as yyyyMMddhhmmss-zzzz
 					DateTime dateT=PIn.Date(dateSt.Substring(4,2)+"/"+dateSt.Substring(6,2)+"/"+dateSt.Substring(0,4));
@@ -3365,9 +3365,9 @@ namespace OpenDental {
 			if(nodeIdTag.NodeType==EnumNodeType.Mount) {
 				//Delete the mount object.
 				long mountNum=nodeIdTag.PriKey;
-				Mount mount=Mounts.GetByNum(mountNum);
+				Mount mount=Mounts.GetById(mountNum);
 				//Delete the mount items attached to the mount object.
-				List<MountItem> mountItems=MountItems.GetItemsForMount(mountNum);
+				List<MountItem> mountItems=MountItems.GetByMount(mountNum).ToList();
 				if(_idxSelectedInMount>=0 && _arrayDocumentsInMount[_idxSelectedInMount]!=null) {
 					if(verbose) {
 						if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete mount xray image?")) {
@@ -3408,7 +3408,7 @@ namespace OpenDental {
 				docs=new Document[1] { doc };
 				//Since documents can be associated to a statement we need to detach this document from any statements linked to it to avoid orphaned FKs.
 				//If this doucment is not linked to a statement, this method will not alter any statements.
-				Statements.DetachDocFromStatements(docs[0].DocNum);
+				Statements.DetachDocFromStatements(docs[0].Id);
 				SelectTreeNode(null);//Release access to current image so it may be properly deleted.
 			}
 			else if(nodeIdTag.NodeType==EnumNodeType.Eob) {
@@ -3488,7 +3488,7 @@ namespace OpenDental {
 				(location.Y-_pointTranslation.Y)/(_zoomImage*_zoomOverall)+_mountShowing.Height/2);
 			//Enumerate the image locations.
 			for(int i=0;i<_listMountItems.Count;i++) {
-				RectangleF itemLocation=new RectangleF(_listMountItems[i].Xpos,_listMountItems[i].Ypos,
+				RectangleF itemLocation=new RectangleF(_listMountItems[i].X,_listMountItems[i].Y,
 					_listMountItems[i].Width,_listMountItems[i].Height);
 				if(itemLocation.Contains(relativeLocation)) {
 					return i;

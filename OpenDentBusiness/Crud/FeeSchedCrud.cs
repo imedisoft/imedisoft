@@ -10,10 +10,10 @@ using System.Drawing;
 namespace OpenDentBusiness.Crud{
 	public class FeeSchedCrud {
 		///<summary>Gets one FeeSched object from the database using the primary key.  Returns null if not found.</summary>
-		public static FeeSched SelectOne(long feeSchedNum) {
+		public static FeeSchedule SelectOne(long feeSchedNum) {
 			string command="SELECT * FROM feesched "
 				+"WHERE FeeSchedNum = "+POut.Long(feeSchedNum);
-			List<FeeSched> list=TableToList(Database.ExecuteDataTable(command));
+			List<FeeSchedule> list=TableToList(Database.ExecuteDataTable(command));
 			if(list.Count==0) {
 				return null;
 			}
@@ -21,9 +21,9 @@ namespace OpenDentBusiness.Crud{
 		}
 
 		///<summary>Gets one FeeSched object from the database using a query.</summary>
-		public static FeeSched SelectOne(string command) {
+		public static FeeSchedule SelectOne(string command) {
 
-			List<FeeSched> list=TableToList(Database.ExecuteDataTable(command));
+			List<FeeSchedule> list=TableToList(Database.ExecuteDataTable(command));
 			if(list.Count==0) {
 				return null;
 			}
@@ -31,34 +31,34 @@ namespace OpenDentBusiness.Crud{
 		}
 
 		///<summary>Gets a list of FeeSched objects from the database using a query.</summary>
-		public static List<FeeSched> SelectMany(string command) {
+		public static List<FeeSchedule> SelectMany(string command) {
 
-			List<FeeSched> list=TableToList(Database.ExecuteDataTable(command));
+			List<FeeSchedule> list=TableToList(Database.ExecuteDataTable(command));
 			return list;
 		}
 
 		///<summary>Converts a DataTable to a list of objects.</summary>
-		public static List<FeeSched> TableToList(DataTable table) {
-			List<FeeSched> retVal=new List<FeeSched>();
-			FeeSched feeSched;
+		public static List<FeeSchedule> TableToList(DataTable table) {
+			List<FeeSchedule> retVal=new List<FeeSchedule>();
+			FeeSchedule feeSched;
 			foreach(DataRow row in table.Rows) {
-				feeSched=new FeeSched();
-				feeSched.FeeSchedNum    = PIn.Long  (row["FeeSchedNum"].ToString());
+				feeSched=new FeeSchedule();
+				feeSched.Id    = PIn.Long  (row["FeeSchedNum"].ToString());
 				feeSched.Description    = PIn.String(row["Description"].ToString());
-				feeSched.FeeSchedType   = (OpenDentBusiness.FeeScheduleType)PIn.Int(row["FeeSchedType"].ToString());
-				feeSched.ItemOrder      = PIn.Int   (row["ItemOrder"].ToString());
+				feeSched.Type   = (OpenDentBusiness.FeeScheduleType)PIn.Int(row["FeeSchedType"].ToString());
+				feeSched.SortOrder      = PIn.Int   (row["ItemOrder"].ToString());
 				feeSched.IsHidden       = PIn.Bool  (row["IsHidden"].ToString());
 				feeSched.IsGlobal       = PIn.Bool  (row["IsGlobal"].ToString());
-				feeSched.SecUserNumEntry= PIn.Long  (row["SecUserNumEntry"].ToString());
-				feeSched.SecDateEntry   = PIn.Date  (row["SecDateEntry"].ToString());
-				feeSched.SecDateTEdit   = PIn.Date (row["SecDateTEdit"].ToString());
+				feeSched.AddedBy= PIn.Long  (row["SecUserNumEntry"].ToString());
+				feeSched.AddedOn   = PIn.Date  (row["SecDateEntry"].ToString());
+				feeSched.LastModified   = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(feeSched);
 			}
 			return retVal;
 		}
 
 		///<summary>Converts a list of FeeSched into a DataTable.</summary>
-		public static DataTable ListToTable(List<FeeSched> listFeeScheds,string tableName="") {
+		public static DataTable ListToTable(List<FeeSchedule> listFeeScheds,string tableName="") {
 			if(string.IsNullOrEmpty(tableName)) {
 				tableName="FeeSched";
 			}
@@ -72,31 +72,31 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("SecUserNumEntry");
 			table.Columns.Add("SecDateEntry");
 			table.Columns.Add("SecDateTEdit");
-			foreach(FeeSched feeSched in listFeeScheds) {
+			foreach(FeeSchedule feeSched in listFeeScheds) {
 				table.Rows.Add(new object[] {
-					POut.Long  (feeSched.FeeSchedNum),
+					POut.Long  (feeSched.Id),
 					            feeSched.Description,
-					POut.Int   ((int)feeSched.FeeSchedType),
-					POut.Int   (feeSched.ItemOrder),
+					POut.Int   ((int)feeSched.Type),
+					POut.Int   (feeSched.SortOrder),
 					POut.Bool  (feeSched.IsHidden),
 					POut.Bool  (feeSched.IsGlobal),
-					POut.Long  (feeSched.SecUserNumEntry),
-					POut.DateT (feeSched.SecDateEntry,false),
-					POut.DateT (feeSched.SecDateTEdit,false),
+					POut.Long  (feeSched.AddedBy),
+					POut.DateT (feeSched.AddedOn,false),
+					POut.DateT (feeSched.LastModified,false),
 				});
 			}
 			return table;
 		}
 
 		///<summary>Inserts one FeeSched into the database.  Returns the new priKey.</summary>
-		public static long Insert(FeeSched feeSched) {
+		public static long Insert(FeeSchedule feeSched) {
 			return Insert(feeSched,false);
 		}
 
 		///<summary>Inserts one FeeSched into the database.  Provides option to use the existing priKey.</summary>
-		public static long Insert(FeeSched feeSched,bool useExistingPK) {
+		public static long Insert(FeeSchedule feeSched,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				feeSched.FeeSchedNum=ReplicationServers.GetKey("feesched","FeeSchedNum");
+				feeSched.Id=ReplicationServers.GetKey("feesched","FeeSchedNum");
 			}
 			string command="INSERT INTO feesched (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -104,92 +104,92 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="Description,FeeSchedType,ItemOrder,IsHidden,IsGlobal,SecUserNumEntry,SecDateEntry) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(feeSched.FeeSchedNum)+",";
+				command+=POut.Long(feeSched.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(feeSched.Description)+"',"
-				+    POut.Int   ((int)feeSched.FeeSchedType)+","
-				+    POut.Int   (feeSched.ItemOrder)+","
+				+    POut.Int   ((int)feeSched.Type)+","
+				+    POut.Int   (feeSched.SortOrder)+","
 				+    POut.Bool  (feeSched.IsHidden)+","
 				+    POut.Bool  (feeSched.IsGlobal)+","
-				+    POut.Long  (feeSched.SecUserNumEntry)+","
+				+    POut.Long  (feeSched.AddedBy)+","
 				+    DbHelper.Now()+")";
 				//SecDateTEdit can only be set by MySQL
 			if(useExistingPK || PrefC.RandomKeys) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				feeSched.FeeSchedNum=Database.ExecuteInsert(command);
+				feeSched.Id=Database.ExecuteInsert(command);
 			}
-			return feeSched.FeeSchedNum;
+			return feeSched.Id;
 		}
 
 		///<summary>Inserts one FeeSched into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
-		public static long InsertNoCache(FeeSched feeSched) {
+		public static long InsertNoCache(FeeSchedule feeSched) {
 			return InsertNoCache(feeSched,false);
 		}
 
 		///<summary>Inserts one FeeSched into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
-		public static long InsertNoCache(FeeSched feeSched,bool useExistingPK) {
+		public static long InsertNoCache(FeeSchedule feeSched,bool useExistingPK) {
 			
 			string command="INSERT INTO feesched (";
 			if(!useExistingPK) {
-				feeSched.FeeSchedNum=ReplicationServers.GetKeyNoCache("feesched","FeeSchedNum");
+				feeSched.Id=ReplicationServers.GetKeyNoCache("feesched","FeeSchedNum");
 			}
 			if(useExistingPK) {
 				command+="FeeSchedNum,";
 			}
 			command+="Description,FeeSchedType,ItemOrder,IsHidden,IsGlobal,SecUserNumEntry,SecDateEntry) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(feeSched.FeeSchedNum)+",";
+				command+=POut.Long(feeSched.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(feeSched.Description)+"',"
-				+    POut.Int   ((int)feeSched.FeeSchedType)+","
-				+    POut.Int   (feeSched.ItemOrder)+","
+				+    POut.Int   ((int)feeSched.Type)+","
+				+    POut.Int   (feeSched.SortOrder)+","
 				+    POut.Bool  (feeSched.IsHidden)+","
 				+    POut.Bool  (feeSched.IsGlobal)+","
-				+    POut.Long  (feeSched.SecUserNumEntry)+","
+				+    POut.Long  (feeSched.AddedBy)+","
 				+    DbHelper.Now()+")";
 				//SecDateTEdit can only be set by MySQL
 			if(useExistingPK) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				feeSched.FeeSchedNum=Database.ExecuteInsert(command);
+				feeSched.Id=Database.ExecuteInsert(command);
 			}
-			return feeSched.FeeSchedNum;
+			return feeSched.Id;
 		}
 
 		///<summary>Updates one FeeSched in the database.</summary>
-		public static void Update(FeeSched feeSched) {
+		public static void Update(FeeSchedule feeSched) {
 			string command="UPDATE feesched SET "
 				+"Description    = '"+POut.String(feeSched.Description)+"', "
-				+"FeeSchedType   =  "+POut.Int   ((int)feeSched.FeeSchedType)+", "
-				+"ItemOrder      =  "+POut.Int   (feeSched.ItemOrder)+", "
+				+"FeeSchedType   =  "+POut.Int   ((int)feeSched.Type)+", "
+				+"ItemOrder      =  "+POut.Int   (feeSched.SortOrder)+", "
 				+"IsHidden       =  "+POut.Bool  (feeSched.IsHidden)+", "
 				+"IsGlobal       =  "+POut.Bool  (feeSched.IsGlobal)+" "
 				//SecUserNumEntry excluded from update
 				//SecDateEntry not allowed to change
 				//SecDateTEdit can only be set by MySQL
-				+"WHERE FeeSchedNum = "+POut.Long(feeSched.FeeSchedNum);
+				+"WHERE FeeSchedNum = "+POut.Long(feeSched.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates one FeeSched in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
-		public static bool Update(FeeSched feeSched,FeeSched oldFeeSched) {
+		public static bool Update(FeeSchedule feeSched,FeeSchedule oldFeeSched) {
 			string command="";
 			if(feeSched.Description != oldFeeSched.Description) {
 				if(command!="") { command+=",";}
 				command+="Description = '"+POut.String(feeSched.Description)+"'";
 			}
-			if(feeSched.FeeSchedType != oldFeeSched.FeeSchedType) {
+			if(feeSched.Type != oldFeeSched.Type) {
 				if(command!="") { command+=",";}
-				command+="FeeSchedType = "+POut.Int   ((int)feeSched.FeeSchedType)+"";
+				command+="FeeSchedType = "+POut.Int   ((int)feeSched.Type)+"";
 			}
-			if(feeSched.ItemOrder != oldFeeSched.ItemOrder) {
+			if(feeSched.SortOrder != oldFeeSched.SortOrder) {
 				if(command!="") { command+=",";}
-				command+="ItemOrder = "+POut.Int(feeSched.ItemOrder)+"";
+				command+="ItemOrder = "+POut.Int(feeSched.SortOrder)+"";
 			}
 			if(feeSched.IsHidden != oldFeeSched.IsHidden) {
 				if(command!="") { command+=",";}
@@ -206,21 +206,21 @@ namespace OpenDentBusiness.Crud{
 				return false;
 			}
 			command="UPDATE feesched SET "+command
-				+" WHERE FeeSchedNum = "+POut.Long(feeSched.FeeSchedNum);
+				+" WHERE FeeSchedNum = "+POut.Long(feeSched.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
 
 		///<summary>Returns true if Update(FeeSched,FeeSched) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
-		public static bool UpdateComparison(FeeSched feeSched,FeeSched oldFeeSched) {
+		public static bool UpdateComparison(FeeSchedule feeSched,FeeSchedule oldFeeSched) {
 			if(feeSched.Description != oldFeeSched.Description) {
 				return true;
 			}
-			if(feeSched.FeeSchedType != oldFeeSched.FeeSchedType) {
+			if(feeSched.Type != oldFeeSched.Type) {
 				return true;
 			}
-			if(feeSched.ItemOrder != oldFeeSched.ItemOrder) {
+			if(feeSched.SortOrder != oldFeeSched.SortOrder) {
 				return true;
 			}
 			if(feeSched.IsHidden != oldFeeSched.IsHidden) {
@@ -244,19 +244,19 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts, updates, or deletes database rows to match supplied list.  Returns true if db changes were made.
 		///Supply Security.CurUser.UserNum, used to set the SecUserNumEntry field for Inserts.</summary>
-		public static bool Sync(List<FeeSched> listNew,List<FeeSched> listDB,long userNum) {
+		public static bool Sync(List<FeeSchedule> listNew,List<FeeSchedule> listDB,long userNum) {
 			//Adding items to lists changes the order of operation. All inserts are completed first, then updates, then deletes.
-			List<FeeSched> listIns    =new List<FeeSched>();
-			List<FeeSched> listUpdNew =new List<FeeSched>();
-			List<FeeSched> listUpdDB  =new List<FeeSched>();
-			List<FeeSched> listDel    =new List<FeeSched>();
-			listNew.Sort((FeeSched x,FeeSched y) => { return x.FeeSchedNum.CompareTo(y.FeeSchedNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
-			listDB.Sort((FeeSched x,FeeSched y) => { return x.FeeSchedNum.CompareTo(y.FeeSchedNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			List<FeeSchedule> listIns    =new List<FeeSchedule>();
+			List<FeeSchedule> listUpdNew =new List<FeeSchedule>();
+			List<FeeSchedule> listUpdDB  =new List<FeeSchedule>();
+			List<FeeSchedule> listDel    =new List<FeeSchedule>();
+			listNew.Sort((FeeSchedule x,FeeSchedule y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listDB.Sort((FeeSchedule x,FeeSchedule y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
 			int idxNew=0;
 			int idxDB=0;
 			int rowsUpdatedCount=0;
-			FeeSched fieldNew;
-			FeeSched fieldDB;
+			FeeSchedule fieldNew;
+			FeeSchedule fieldDB;
 			//Because both lists have been sorted using the same criteria, we can now walk each list to determine which list contians the next element.  The next element is determined by Primary Key.
 			//If the New list contains the next item it will be inserted.  If the DB contains the next item, it will be deleted.  If both lists contain the next item, the item will be updated.
 			while(idxNew<listNew.Count || idxDB<listDB.Count) {
@@ -279,12 +279,12 @@ namespace OpenDentBusiness.Crud{
 					idxDB++;
 					continue;
 				}
-				else if(fieldNew.FeeSchedNum<fieldDB.FeeSchedNum) {//newPK less than dbPK, newItem is 'next'
+				else if(fieldNew.Id<fieldDB.Id) {//newPK less than dbPK, newItem is 'next'
 					listIns.Add(fieldNew);
 					idxNew++;
 					continue;
 				}
-				else if(fieldNew.FeeSchedNum>fieldDB.FeeSchedNum) {//dbPK less than newPK, dbItem is 'next'
+				else if(fieldNew.Id>fieldDB.Id) {//dbPK less than newPK, dbItem is 'next'
 					listDel.Add(fieldDB);
 					idxDB++;
 					continue;
@@ -297,7 +297,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			//Commit changes to DB
 			for(int i=0;i<listIns.Count;i++) {
-				listIns[i].SecUserNumEntry=userNum;
+				listIns[i].AddedBy=userNum;
 				Insert(listIns[i]);
 			}
 			for(int i=0;i<listUpdNew.Count;i++) {
@@ -306,7 +306,7 @@ namespace OpenDentBusiness.Crud{
 				}
 			}
 			for(int i=0;i<listDel.Count;i++) {
-				Delete(listDel[i].FeeSchedNum);
+				Delete(listDel[i].Id);
 			}
 			if(rowsUpdatedCount>0 || listIns.Count>0 || listDel.Count>0) {
 				return true;

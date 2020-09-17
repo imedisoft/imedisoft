@@ -246,7 +246,7 @@ namespace OpenDentBusiness.HL7 {
 				prov=new Provider();
 				prov.Abbr=eID;//They can manually change this later.
 				prov.EcwID=eID;
-				prov.FeeScheduleId=FeeScheds.GetFirst(true).FeeSchedNum;
+				prov.FeeScheduleId=FeeScheds.GetFirst(true).Id;
 			}
 			if(prov.LastName!=field.GetComponentVal(1)) {
 				provChanged=true;
@@ -276,11 +276,11 @@ namespace OpenDentBusiness.HL7 {
 			if(str=="") {
 				return 0;
 			}
-			FeeSched feeSched=FeeScheds.GetByExactName(str,FeeScheduleType.Normal);
+			FeeSchedule feeSched=FeeScheds.GetByExactName(str,FeeScheduleType.Normal);
 			if(feeSched==null){
 				return 0;
 			}
-			return feeSched.FeeSchedNum;
+			return feeSched.Id;
 		}
 
 

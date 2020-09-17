@@ -10,12 +10,11 @@
 using Imedisoft.Data;
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace OpenDentBusiness.Crud
 {
-	public class AdjustmentCrud
+    public class AdjustmentCrud
 	{
 		public static Adjustment FromReader(MySqlDataReader dataReader)
 		{

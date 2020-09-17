@@ -28,9 +28,9 @@ namespace OpenDental{
 		private ListBox listType;
 		private CheckBox checkIsHidden;
 		private CheckBox checkIsGlobal;
-		public FeeSched FeeSchedCur;
+		public FeeSchedule FeeSchedCur;
 		public Clinic ClinicCur;
-		public List<FeeSched> ListFeeScheds;
+		public List<FeeSchedule> ListFeeScheds;
 		private List<Provider> _listProviders;
 
 		///<summary></summary>
@@ -192,7 +192,7 @@ namespace OpenDental{
 				else {
 					listType.Items.Add(arrayValues.GetValue(i).ToString());
 				}
-				if(FeeSchedCur.FeeSchedType==feeSchedType) {
+				if(FeeSchedCur.Type==feeSchedType) {
 					listType.SetSelected(i,true);
 				}
 			}
@@ -206,7 +206,7 @@ namespace OpenDental{
 			else {
 				checkIsGlobal.Checked=FeeSchedCur.IsGlobal;
 			}
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 		}
 
 		private void checkIsGlobal_Click(object sender,EventArgs e) {
@@ -229,10 +229,10 @@ namespace OpenDental{
 			if(!checkIsHidden.Checked) {
 				return;//Unhiding a fee. OK.
 			}
-			if(FeeSchedCur.FeeSchedNum==0) {
+			if(FeeSchedCur.Id==0) {
 				return;//Allow new fee schedules to be hidden.
 			}
-			List<InsPlan> listInsPlanForFeeSched = InsPlans.GetForFeeSchedNum(FeeSchedCur.FeeSchedNum);
+			List<InsurancePlan> listInsPlanForFeeSched = InsPlans.GetForFeeSchedNum(FeeSchedCur.Id);
 			if(listInsPlanForFeeSched.Count > 0) {
 				string insPlanMsg = "This fee schedule is tied to"+" "
 					+listInsPlanForFeeSched.Count+" "+"insurance plans."+" "+"Continue?";
@@ -243,7 +243,7 @@ namespace OpenDental{
 			}
 			string providersUsingFee="";
 			for(int i=0;i<_listProviders.Count;i++) {
-				if(FeeSchedCur.FeeSchedNum==_listProviders[i].FeeScheduleId) {
+				if(FeeSchedCur.Id==_listProviders[i].FeeScheduleId) {
 					if(providersUsingFee!=""){//There is a name before this on the list
 						providersUsingFee+=", ";
 					}
@@ -256,7 +256,7 @@ namespace OpenDental{
 			}
 			string patsUsingFee="";
 			//Don't allow fee schedules to be hidden if they are in use by a non-deleted patient.
-			List<Patient> listPats=Patients.GetForFeeSched(FeeSchedCur.FeeSchedNum).FindAll(x => x.PatStatus!=PatientStatus.Deleted);
+			List<Patient> listPats=Patients.GetForFeeSched(FeeSchedCur.Id).FindAll(x => x.PatStatus!=PatientStatus.Deleted);
 			patsUsingFee=string.Join("\r\n",listPats.Select(x => x.LName+", "+x.FName));
 			if(patsUsingFee!="") {
 				MsgBoxCopyPaste msgBoxCP=new MsgBoxCopyPaste("Cannot hide. Fee schedule currently in use by the following non-deleted patients"
@@ -274,13 +274,13 @@ namespace OpenDental{
 			//We do not allow global fee schedules to be associated to FeeSchedGroups.
 			//Prevent a fee sched that is associated to a group to be turned into a global fee schedule.
 			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && checkIsGlobal.Checked) {
-				if(FeeSchedGroups.GetAllForFeeSched(FeeSchedCur.FeeSchedNum).Count()>0) {
+				if(FeeSchedGroups.GetAllForFeeSched(FeeSchedCur.Id).Count()>0) {
 					MessageBox.Show("Not allowed to make Fee Schedule global, a Fee Schedule Group exists for this Fee Schedule.");
 					return;
 				}
 			}
 			FeeSchedCur.Description=textDescription.Text;
-			FeeSchedCur.FeeSchedType=(FeeScheduleType)listType.SelectedIndex;
+			FeeSchedCur.Type=(FeeScheduleType)listType.SelectedIndex;
 			FeeSchedCur.IsHidden=checkIsHidden.Checked;
 			bool isGlobalOld=FeeSchedCur.IsGlobal;
 			FeeSchedCur.IsGlobal=checkIsGlobal.Checked;

@@ -17,10 +17,10 @@ namespace OpenDental{
 		private OpenDental.UI.Button butCancel;
 		private OpenDental.UI.Button butOK;
 		///<summary>After closing this form, if OK, then this will contain the Plan that the others will be merged into.</summary>
-		public InsPlan PlanToMergeTo;
+		public InsurancePlan PlanToMergeTo;
 		private OpenDental.UI.ODGrid gridMain;
 		///<summary>This list must be set before loading the form.  All of the PlanNums will be 0.</summary>
-		public InsPlan[] ListAll;
+		public InsurancePlan[] ListAll;
 		private Label label1;
 
 		///<summary></summary>
@@ -151,14 +151,14 @@ namespace OpenDental{
 			for(int i=0;i<ListAll.Length;i++) {
 				row=new GridRow();
 				row.Cells.Add(Employers.GetName(ListAll[i].EmployerNum));
-				carrier=Carriers.GetCarrier(ListAll[i].CarrierNum);
-				row.Cells.Add(carrier.CarrierName);
+				carrier=Carriers.GetCarrier(ListAll[i].CarrierId);
+				row.Cells.Add(carrier.Name);
 				row.Cells.Add(carrier.Phone);
-				row.Cells.Add(carrier.Address);
+				row.Cells.Add(carrier.AddressLine1);
 				row.Cells.Add(carrier.City);
 				row.Cells.Add(carrier.State);
 				row.Cells.Add(carrier.Zip);
-				row.Cells.Add(ListAll[i].GroupNum);
+				row.Cells.Add(ListAll[i].GroupNumber);
 				row.Cells.Add(ListAll[i].GroupName);
 				row.Cells.Add(ListAll[i].NumberSubscribers.ToString());
 				row.Cells.Add(ListAll[i].PlanNote);
@@ -170,7 +170,7 @@ namespace OpenDental{
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e){
-			InsPlan PlanCur=ListAll[e.Row].Copy();
+			InsurancePlan PlanCur=ListAll[e.Row].Copy();
 			FormInsPlan FormIP=new FormInsPlan(PlanCur,null,null);
 			//FormIP.IsForAll=true;
 			//FormIP.IsReadOnly=true;

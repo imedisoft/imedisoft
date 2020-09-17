@@ -44,11 +44,11 @@ namespace OpenDentBusiness.Crud{
 			EhrQuarterlyKey ehrQuarterlyKey;
 			foreach(DataRow row in table.Rows) {
 				ehrQuarterlyKey=new EhrQuarterlyKey();
-				ehrQuarterlyKey.EhrQuarterlyKeyNum= PIn.Long  (row["EhrQuarterlyKeyNum"].ToString());
-				ehrQuarterlyKey.YearValue         = PIn.Int   (row["YearValue"].ToString());
-				ehrQuarterlyKey.QuarterValue      = PIn.Int   (row["QuarterValue"].ToString());
+				ehrQuarterlyKey.Id= PIn.Long  (row["EhrQuarterlyKeyNum"].ToString());
+				ehrQuarterlyKey.Year         = PIn.Int   (row["YearValue"].ToString());
+				ehrQuarterlyKey.Quarter      = PIn.Int   (row["QuarterValue"].ToString());
 				ehrQuarterlyKey.PracticeName      = PIn.String(row["PracticeName"].ToString());
-				ehrQuarterlyKey.KeyValue          = PIn.String(row["KeyValue"].ToString());
+				ehrQuarterlyKey.Key          = PIn.String(row["KeyValue"].ToString());
 				ehrQuarterlyKey.PatNum            = PIn.Long  (row["PatNum"].ToString());
 				ehrQuarterlyKey.Notes             = PIn.String(row["Notes"].ToString());
 				retVal.Add(ehrQuarterlyKey);
@@ -71,11 +71,11 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("Notes");
 			foreach(EhrQuarterlyKey ehrQuarterlyKey in listEhrQuarterlyKeys) {
 				table.Rows.Add(new object[] {
-					POut.Long  (ehrQuarterlyKey.EhrQuarterlyKeyNum),
-					POut.Int   (ehrQuarterlyKey.YearValue),
-					POut.Int   (ehrQuarterlyKey.QuarterValue),
+					POut.Long  (ehrQuarterlyKey.Id),
+					POut.Int   (ehrQuarterlyKey.Year),
+					POut.Int   (ehrQuarterlyKey.Quarter),
 					            ehrQuarterlyKey.PracticeName,
-					            ehrQuarterlyKey.KeyValue,
+					            ehrQuarterlyKey.Key,
 					POut.Long  (ehrQuarterlyKey.PatNum),
 					            ehrQuarterlyKey.Notes,
 				});
@@ -91,7 +91,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one EhrQuarterlyKey into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(EhrQuarterlyKey ehrQuarterlyKey,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				ehrQuarterlyKey.EhrQuarterlyKeyNum=ReplicationServers.GetKey("ehrquarterlykey","EhrQuarterlyKeyNum");
+				ehrQuarterlyKey.Id=ReplicationServers.GetKey("ehrquarterlykey","EhrQuarterlyKeyNum");
 			}
 			string command="INSERT INTO ehrquarterlykey (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -99,13 +99,13 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="YearValue,QuarterValue,PracticeName,KeyValue,PatNum,Notes) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(ehrQuarterlyKey.EhrQuarterlyKeyNum)+",";
+				command+=POut.Long(ehrQuarterlyKey.Id)+",";
 			}
 			command+=
-				     POut.Int   (ehrQuarterlyKey.YearValue)+","
-				+    POut.Int   (ehrQuarterlyKey.QuarterValue)+","
+				     POut.Int   (ehrQuarterlyKey.Year)+","
+				+    POut.Int   (ehrQuarterlyKey.Quarter)+","
 				+"'"+POut.String(ehrQuarterlyKey.PracticeName)+"',"
-				+"'"+POut.String(ehrQuarterlyKey.KeyValue)+"',"
+				+"'"+POut.String(ehrQuarterlyKey.Key)+"',"
 				+    POut.Long  (ehrQuarterlyKey.PatNum)+","
 				+    DbHelper.ParamChar+"paramNotes)";
 			if(ehrQuarterlyKey.Notes==null) {
@@ -116,9 +116,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramNotes);
 			}
 			else {
-				ehrQuarterlyKey.EhrQuarterlyKeyNum=Database.ExecuteInsert(command,paramNotes);
+				ehrQuarterlyKey.Id=Database.ExecuteInsert(command,paramNotes);
 			}
-			return ehrQuarterlyKey.EhrQuarterlyKeyNum;
+			return ehrQuarterlyKey.Id;
 		}
 
 		///<summary>Inserts one EhrQuarterlyKey into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -131,20 +131,20 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO ehrquarterlykey (";
 			if(!useExistingPK) {
-				ehrQuarterlyKey.EhrQuarterlyKeyNum=ReplicationServers.GetKeyNoCache("ehrquarterlykey","EhrQuarterlyKeyNum");
+				ehrQuarterlyKey.Id=ReplicationServers.GetKeyNoCache("ehrquarterlykey","EhrQuarterlyKeyNum");
 			}
 			if(useExistingPK) {
 				command+="EhrQuarterlyKeyNum,";
 			}
 			command+="YearValue,QuarterValue,PracticeName,KeyValue,PatNum,Notes) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(ehrQuarterlyKey.EhrQuarterlyKeyNum)+",";
+				command+=POut.Long(ehrQuarterlyKey.Id)+",";
 			}
 			command+=
-				     POut.Int   (ehrQuarterlyKey.YearValue)+","
-				+    POut.Int   (ehrQuarterlyKey.QuarterValue)+","
+				     POut.Int   (ehrQuarterlyKey.Year)+","
+				+    POut.Int   (ehrQuarterlyKey.Quarter)+","
 				+"'"+POut.String(ehrQuarterlyKey.PracticeName)+"',"
-				+"'"+POut.String(ehrQuarterlyKey.KeyValue)+"',"
+				+"'"+POut.String(ehrQuarterlyKey.Key)+"',"
 				+    POut.Long  (ehrQuarterlyKey.PatNum)+","
 				+    DbHelper.ParamChar+"paramNotes)";
 			if(ehrQuarterlyKey.Notes==null) {
@@ -155,21 +155,21 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramNotes);
 			}
 			else {
-				ehrQuarterlyKey.EhrQuarterlyKeyNum=Database.ExecuteInsert(command,paramNotes);
+				ehrQuarterlyKey.Id=Database.ExecuteInsert(command,paramNotes);
 			}
-			return ehrQuarterlyKey.EhrQuarterlyKeyNum;
+			return ehrQuarterlyKey.Id;
 		}
 
 		///<summary>Updates one EhrQuarterlyKey in the database.</summary>
 		public static void Update(EhrQuarterlyKey ehrQuarterlyKey) {
 			string command="UPDATE ehrquarterlykey SET "
-				+"YearValue         =  "+POut.Int   (ehrQuarterlyKey.YearValue)+", "
-				+"QuarterValue      =  "+POut.Int   (ehrQuarterlyKey.QuarterValue)+", "
+				+"YearValue         =  "+POut.Int   (ehrQuarterlyKey.Year)+", "
+				+"QuarterValue      =  "+POut.Int   (ehrQuarterlyKey.Quarter)+", "
 				+"PracticeName      = '"+POut.String(ehrQuarterlyKey.PracticeName)+"', "
-				+"KeyValue          = '"+POut.String(ehrQuarterlyKey.KeyValue)+"', "
+				+"KeyValue          = '"+POut.String(ehrQuarterlyKey.Key)+"', "
 				+"PatNum            =  "+POut.Long  (ehrQuarterlyKey.PatNum)+", "
 				+"Notes             =  "+DbHelper.ParamChar+"paramNotes "
-				+"WHERE EhrQuarterlyKeyNum = "+POut.Long(ehrQuarterlyKey.EhrQuarterlyKeyNum);
+				+"WHERE EhrQuarterlyKeyNum = "+POut.Long(ehrQuarterlyKey.Id);
 			if(ehrQuarterlyKey.Notes==null) {
 				ehrQuarterlyKey.Notes="";
 			}
@@ -180,21 +180,21 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one EhrQuarterlyKey in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(EhrQuarterlyKey ehrQuarterlyKey,EhrQuarterlyKey oldEhrQuarterlyKey) {
 			string command="";
-			if(ehrQuarterlyKey.YearValue != oldEhrQuarterlyKey.YearValue) {
+			if(ehrQuarterlyKey.Year != oldEhrQuarterlyKey.Year) {
 				if(command!="") { command+=",";}
-				command+="YearValue = "+POut.Int(ehrQuarterlyKey.YearValue)+"";
+				command+="YearValue = "+POut.Int(ehrQuarterlyKey.Year)+"";
 			}
-			if(ehrQuarterlyKey.QuarterValue != oldEhrQuarterlyKey.QuarterValue) {
+			if(ehrQuarterlyKey.Quarter != oldEhrQuarterlyKey.Quarter) {
 				if(command!="") { command+=",";}
-				command+="QuarterValue = "+POut.Int(ehrQuarterlyKey.QuarterValue)+"";
+				command+="QuarterValue = "+POut.Int(ehrQuarterlyKey.Quarter)+"";
 			}
 			if(ehrQuarterlyKey.PracticeName != oldEhrQuarterlyKey.PracticeName) {
 				if(command!="") { command+=",";}
 				command+="PracticeName = '"+POut.String(ehrQuarterlyKey.PracticeName)+"'";
 			}
-			if(ehrQuarterlyKey.KeyValue != oldEhrQuarterlyKey.KeyValue) {
+			if(ehrQuarterlyKey.Key != oldEhrQuarterlyKey.Key) {
 				if(command!="") { command+=",";}
-				command+="KeyValue = '"+POut.String(ehrQuarterlyKey.KeyValue)+"'";
+				command+="KeyValue = '"+POut.String(ehrQuarterlyKey.Key)+"'";
 			}
 			if(ehrQuarterlyKey.PatNum != oldEhrQuarterlyKey.PatNum) {
 				if(command!="") { command+=",";}
@@ -212,7 +212,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			var paramNotes = new MySqlParameter("paramNotes", POut.StringParam(ehrQuarterlyKey.Notes));
 			command="UPDATE ehrquarterlykey SET "+command
-				+" WHERE EhrQuarterlyKeyNum = "+POut.Long(ehrQuarterlyKey.EhrQuarterlyKeyNum);
+				+" WHERE EhrQuarterlyKeyNum = "+POut.Long(ehrQuarterlyKey.Id);
 			Database.ExecuteNonQuery(command,paramNotes);
 			return true;
 		}
@@ -220,16 +220,16 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(EhrQuarterlyKey,EhrQuarterlyKey) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(EhrQuarterlyKey ehrQuarterlyKey,EhrQuarterlyKey oldEhrQuarterlyKey) {
-			if(ehrQuarterlyKey.YearValue != oldEhrQuarterlyKey.YearValue) {
+			if(ehrQuarterlyKey.Year != oldEhrQuarterlyKey.Year) {
 				return true;
 			}
-			if(ehrQuarterlyKey.QuarterValue != oldEhrQuarterlyKey.QuarterValue) {
+			if(ehrQuarterlyKey.Quarter != oldEhrQuarterlyKey.Quarter) {
 				return true;
 			}
 			if(ehrQuarterlyKey.PracticeName != oldEhrQuarterlyKey.PracticeName) {
 				return true;
 			}
-			if(ehrQuarterlyKey.KeyValue != oldEhrQuarterlyKey.KeyValue) {
+			if(ehrQuarterlyKey.Key != oldEhrQuarterlyKey.Key) {
 				return true;
 			}
 			if(ehrQuarterlyKey.PatNum != oldEhrQuarterlyKey.PatNum) {

@@ -99,12 +99,12 @@ namespace OpenDentBusiness {
 			}
 			if(cc==null) {
 				cc=new CreditCard() {
-					PatNum=patNum,
+					PatientId=patNum,
 					PaySimpleToken="",
 				};
 			}
 			if(string.IsNullOrWhiteSpace(cc.PaySimpleToken)) {
-				Patient patCur=Patients.GetPat(cc.PatNum);
+				Patient patCur=Patients.GetPat(cc.PatientId);
 				if(patCur==null) {
 					patCur=new Patient() {
 						PatNum=patNum,
@@ -138,7 +138,7 @@ namespace OpenDentBusiness {
 				throw new ODException("Error making payment by token");
 			}
 			if(cc.CCSource==CreditCardSource.PaySimple) {
-				return MakePayment(cc.PatNum,cc,payAmt,"",DateTime.MinValue,false,"","",clinicNum);
+				return MakePayment(cc.PatientId,cc,payAmt,"",DateTime.MinValue,false,"","",clinicNum);
 			}
 			return MakePaymentACH(pat,cc,payAmt,"","","",false,false,clinicNum);
 		}
@@ -194,7 +194,7 @@ namespace OpenDentBusiness {
 			}
 			if(cc==null) {
 				cc=new CreditCard() {
-					PatNum=pat.PatNum,
+					PatientId=pat.PatNum,
 					PaySimpleToken="",
 				};
 			}

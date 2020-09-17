@@ -91,7 +91,7 @@ namespace OpenDental{
 			listProv.Items.Clear();
 			listProv.Items.Add("none");
 			listProv.SelectedIndex=0;
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				listProv.Items.Add(_listProviders[i].GetLongDesc());
 				if(UserCur.ProviderId==_listProviders[i].Id) {

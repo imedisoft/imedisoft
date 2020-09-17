@@ -10,7 +10,7 @@ namespace OpenDentBusiness{
 	public class FeeSchedGroups{
 		#region Get Methods
 		/// <summary>There will be at most one result for a FeeSched/Clinic combination.  Can return NULL.</summary>
-		public static FeeSchedGroup GetOneForFeeSchedAndClinic(long feeSchedNum, long clinicNum) {
+		public static FeeScheduleGroup GetOneForFeeSchedAndClinic(long feeSchedNum, long clinicNum) {
 			
 			//ClinicNums are stored as a comma delimited list requiring a LIKE condition.
 			string command=$"SELECT * FROM feeschedgroup WHERE FeeSchedNum={feeSchedNum} AND FIND_IN_SET('{clinicNum}',ClinicNums)";
@@ -18,14 +18,14 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>Returns a list of every single FeeSchedGroup in the database.</summary>
-		public static List<FeeSchedGroup> GetAll() {
+		public static List<FeeScheduleGroup> GetAll() {
 			
 			string command="SELECT * FROM feeschedgroup";
 			return Crud.FeeSchedGroupCrud.SelectMany(command);
 		}
 
 		///<summary>Returns a list of all FeeSchedGroups for a given FeeSched.  A feeSchedNum of 0 will return all feeschedgroups.</summary>
-		public static List<FeeSchedGroup> GetAllForFeeSched(long feeSchedNum) {
+		public static List<FeeScheduleGroup> GetAllForFeeSched(long feeSchedNum) {
 			
 			string command=$"SELECT * FROM feeschedgroup {(feeSchedNum>0? $"WHERE FeeSchedNum={feeSchedNum}":"")}";
 			return Crud.FeeSchedGroupCrud.SelectMany(command);
@@ -38,7 +38,7 @@ namespace OpenDentBusiness{
 		#region Insert
 
 		///<summary></summary>
-		public static long Insert(FeeSchedGroup feeSchedGroup) {
+		public static long Insert(FeeScheduleGroup feeSchedGroup) {
 			
 			return Crud.FeeSchedGroupCrud.Insert(feeSchedGroup);
 		}
@@ -47,7 +47,7 @@ namespace OpenDentBusiness{
 		#region Update
 
 		///<summary></summary>
-		public static void Update(FeeSchedGroup feeSchedGroup) {
+		public static void Update(FeeScheduleGroup feeSchedGroup) {
 			
 			Crud.FeeSchedGroupCrud.Update(feeSchedGroup);
 		}
@@ -72,7 +72,7 @@ namespace OpenDentBusiness{
 		public static void UpsertGroupFees(List<Fee> listFees) {
 			//No need to check RemotingRole; no call to db.
 			foreach(Fee feeCur in listFees) {
-				FeeSchedGroup groupCur=GetOneForFeeSchedAndClinic(feeCur.FeeSched, feeCur.ClinicNum);
+				FeeScheduleGroup groupCur=GetOneForFeeSchedAndClinic(feeCur.FeeScheduleId, feeCur.ClinicNum);
 				if(groupCur==null) {
 					continue;
 				}
@@ -92,7 +92,7 @@ namespace OpenDentBusiness{
 			//No need to check RemotingRole; no call to db.
 			List<long> listFeeNumsToDelete=new List<long>();
 			foreach(Fee feeCur in listFees) {
-				FeeSchedGroup groupCur=GetOneForFeeSchedAndClinic(feeCur.FeeSched,feeCur.ClinicNum);
+				FeeScheduleGroup groupCur=GetOneForFeeSchedAndClinic(feeCur.FeeScheduleId,feeCur.ClinicNum);
 				if(groupCur==null) {
 					continue;
 				}
@@ -102,7 +102,7 @@ namespace OpenDentBusiness{
 					if(clinicNum==feeCur.ClinicNum) {
 						continue;
 					}
-					Fee feeToDelete=Fees.GetFeeFromDb(feeCur.CodeNum,feeCur.FeeSched,clinicNum,feeCur.ProvNum,true);
+					Fee feeToDelete=Fees.GetFeeFromDb(feeCur.CodeNum,feeCur.FeeScheduleId,clinicNum,feeCur.ProvNum,true);
 					if(feeToDelete!=null) {
 						listFeeNumsToDelete.Add(feeToDelete.FeeNum);
 					}
@@ -139,35 +139,35 @@ namespace OpenDentBusiness{
 				//begin compare
 				if(fieldNew!=null && fieldDB==null) {//listNew has more items, listDB does not.
 					//Make sure this fee is in a group before sending to the group update logic.
-					if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fieldNew.FeeSched,fieldNew.ClinicNum)!=null) {
+					if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fieldNew.FeeScheduleId,fieldNew.ClinicNum)!=null) {
 						listUpsert.Add(fieldNew);
 					}
 					idxNew++;
 					continue;
 				}
 				else if(fieldNew==null && fieldDB!=null) {//listDB has more items, listNew does not.
-					if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fieldDB.FeeSched,fieldDB.ClinicNum)!=null) {
+					if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fieldDB.FeeScheduleId,fieldDB.ClinicNum)!=null) {
 						listDel.Add(fieldDB);
 					}
 					idxDB++;
 					continue;
 				}
 				else if(fieldNew.FeeNum<fieldDB.FeeNum) {//newPK less than dbPK, newItem is 'next'
-					if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fieldNew.FeeSched,fieldNew.ClinicNum)!=null) {
+					if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fieldNew.FeeScheduleId,fieldNew.ClinicNum)!=null) {
 						listUpsert.Add(fieldNew);
 					}
 					idxNew++;
 					continue;
 				}
 				else if(fieldNew.FeeNum>fieldDB.FeeNum) {//dbPK less than newPK, dbItem is 'next'
-					if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fieldDB.FeeSched,fieldDB.ClinicNum)!=null) {
+					if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fieldDB.FeeScheduleId,fieldDB.ClinicNum)!=null) {
 						listDel.Add(fieldDB);
 					}
 					idxDB++;
 					continue;
 				}
 				//Both lists contain the 'next' item, update required
-				if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fieldNew.FeeSched,fieldNew.ClinicNum)!=null) {
+				if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fieldNew.FeeScheduleId,fieldNew.ClinicNum)!=null) {
 					listUpsert.Add(fieldNew);
 				}
 				idxNew++;
@@ -190,12 +190,12 @@ namespace OpenDentBusiness{
 				if(clinicNum==fee.ClinicNum) {
 					continue;
 				}
-				Fee feeToChange=Fees.GetFeeFromDb(fee.CodeNum,fee.FeeSched,clinicNum,fee.ProvNum,true);
+				Fee feeToChange=Fees.GetFeeFromDb(fee.CodeNum,fee.FeeScheduleId,clinicNum,fee.ProvNum,true);
 				//Couldn't find the fee in the Db, insert it.
 				if(feeToChange==null) {
 					Fee newFee=new Fee(){
 						Amount=fee.Amount,
-						FeeSched=fee.FeeSched,
+						FeeScheduleId=fee.FeeScheduleId,
 						CodeNum=fee.CodeNum,
 						ClinicNum=clinicNum,
 						ProvNum=fee.ProvNum,
@@ -205,7 +205,7 @@ namespace OpenDentBusiness{
 				}
 				//Found the fee, make it match the passed in fee.  All of these values are required to match to keep the group in sync.
 				feeToChange.Amount=fee.Amount;
-				feeToChange.FeeSched=fee.FeeSched;
+				feeToChange.FeeScheduleId=fee.FeeScheduleId;
 				feeToChange.CodeNum=fee.CodeNum;
 				feeToChange.ProvNum=fee.ProvNum;
 				//Don't call FeeSchedGroup logic or we'll be sucked into an infinite void.

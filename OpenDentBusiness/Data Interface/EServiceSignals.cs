@@ -1,4 +1,5 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -109,9 +110,9 @@ namespace OpenDentBusiness{
 				//Create an alert.
 				AlertItems.Insert(new AlertItem {
 					//Do not allow delete. The only way for this alert to be deleted is to open the eConnector form and ACK the error(s).
-					Actions=ActionType.MarkAsRead | ActionType.OpenForm,
+					Actions=AlertAction.MarkAsRead | AlertAction.OpenForm,
 					Description="eConnector has posted an error.",
-					Severity=SeverityType.Low,
+					Severity=AlertSeverityType.Low,
 					Type=AlertType.EConnectorError,
 					FormToOpen=FormType.FormEServicesEConnector,
 				});

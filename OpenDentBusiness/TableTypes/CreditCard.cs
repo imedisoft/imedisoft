@@ -1,48 +1,72 @@
-﻿using System;
-using System.Collections;
+﻿using Imedisoft.Data.Annotations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 
-namespace OpenDentBusiness {
-	///<summary>One credit card along with any recurring charge information.</summary>
-	[Serializable]
-	public class CreditCard:TableBase {
-		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+namespace OpenDentBusiness
+{
+    /// <summary>
+	/// One credit card along with any recurring charge information.
+	/// </summary>
+    [Table("creditcards")]
+	public class CreditCard : TableBase
+	{
+		[PrimaryKey]
 		public long CreditCardNum;
-		///<summary>FK to patient.PatNum.</summary>
-		public long PatNum;
-		///<summary>.</summary>
+
+		public long PatientId;
+
 		public string Address;
-		///<summary>Postal code.</summary>
+
 		public string Zip;
-		///<summary>Token for X-Charge. Alphanumeric, upper and lower case, about 15 char long.  Passed into Xcharge instead of the actual card number.</summary>
+
+		/// <summary>
+		/// Token for X-Charge. Alphanumeric, upper and lower case, about 15 char long. 
+		/// Passed into Xcharge instead of the actual card number.
+		/// </summary>
 		public string XChargeToken;
-		///<summary>Credit Card Number.  Will be stored masked: XXXXXXXXXXXX1234.</summary>
+
+		/// <summary>
+		/// Credit Card Number.  Will be stored masked: XXXXXXXXXXXX1234.
+		/// </summary>
 		public string CCNumberMasked;
+
 		///<summary>Only month and year are used, the day will usually be 1.</summary>
 		public DateTime CCExpiration;
-		///<summary>The order that multiple cards will show.  Zero-based.  First one will be default.</summary>
+
+		/// <summary>
+		/// The order that multiple cards will show.  Zero-based.  First one will be default.
+		/// </summary>
 		public int ItemOrder;
-		///<summary>Amount set for recurring charges.</summary>
-		public Double ChargeAmt;
+
+		/// <summary>
+		/// Amount set for recurring charges.
+		/// </summary>
+		public double ChargeAmt;
+
 		///<summary>Start date for recurring charges.</summary>
 		public DateTime DateStart;
+
 		///<summary>Stop date for recurring charges.</summary>
 		public DateTime DateStop;
+
 		///<summary>Any notes about the credit card or account goes here.</summary>
 		public string Note;
+
 		///<summary>FK to payplan.PayPlanNum.</summary>
 		public long PayPlanNum;
+
 		///<summary>Token for PayConnect.  PayConnect returns a token and token expiration, when requested by the merchant's system, to be used instead
 		///of actual credit card number in subsequent transactions.</summary>
 		public string PayConnectToken;
+
 		///<summary>Expiration for the PayConnect token.  Used with the PayConnect token instead of the actual credit card number and expiration.</summary>
 		public DateTime PayConnectTokenExp;
+
 		///<summary>What procedures will go on this card as a recurring charge.  Comma delimited list of ProcCodes.</summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.TextIsClob)]
+		[CrudColumn(SpecialType = CrudSpecialColType.TextIsClob)]
 		public string Procedures;
+
 		///<summary>Enum:CreditCardSource Indicates which application made this credit card and token.</summary>
 		public CreditCardSource CCSource;
 		///<summary>FK to clinic.ClinicNum. The clinic where this card was added. Each clinic could have a different AuthKey and different
@@ -68,45 +92,53 @@ namespace OpenDentBusiness {
 		///<summary>FK to definition.DefNum. Payment type override for recurring charges.</summary>
 		public long PaymentType;
 
-		public bool IsXWeb() {
-			return CCSource==CreditCardSource.XWeb || CCSource==CreditCardSource.XWebPortalLogin;
+		public bool IsXWeb()
+		{
+			return CCSource == CreditCardSource.XWeb || CCSource == CreditCardSource.XWebPortalLogin;
 		}
 
 		//TODO: hook this up to FormPayment for returns and voiding.
-		public bool IsPayConnectPortal() {
-			return CCSource==CreditCardSource.PayConnectPortal || CCSource==CreditCardSource.PayConnectPortalLogin;
+		public bool IsPayConnectPortal()
+		{
+			return CCSource == CreditCardSource.PayConnectPortal || CCSource == CreditCardSource.PayConnectPortalLogin;
 		}
 
 		///<summary>Gets a string of the companies the credit cards has tokens for.</summary>
-		public string GetTokenString() {
-			if(!Programs.HasMultipleCreditCardProgramsEnabled()
-				|| (string.IsNullOrEmpty(XChargeToken) && string.IsNullOrEmpty(PayConnectToken) && string.IsNullOrEmpty(PaySimpleToken))) 
+		public string GetTokenString()
+		{
+			if (!Programs.HasMultipleCreditCardProgramsEnabled()
+				|| (string.IsNullOrEmpty(XChargeToken) && string.IsNullOrEmpty(PayConnectToken) && string.IsNullOrEmpty(PaySimpleToken)))
 			{
-				if(CCSource==CreditCardSource.PaySimpleACH) {
+				if (CCSource == CreditCardSource.PaySimpleACH)
+				{
 					return "(ACH)";
 				}
 				return "";
 			}
-			List<string> listTokens=new List<string>();
-			if(!string.IsNullOrEmpty(XChargeToken)) {
+			List<string> listTokens = new List<string>();
+			if (!string.IsNullOrEmpty(XChargeToken))
+			{
 				listTokens.Add("XCharge");
 			}
-			if(!string.IsNullOrEmpty(PayConnectToken)) {
-				listTokens.Add("PayConnect"+(IsPayConnectPortal() ? " Portal" : ""));
+			if (!string.IsNullOrEmpty(PayConnectToken))
+			{
+				listTokens.Add("PayConnect" + (IsPayConnectPortal() ? " Portal" : ""));
 			}
-			if(!string.IsNullOrEmpty(PaySimpleToken)) {
-				listTokens.Add("PaySimple"+(CCSource==CreditCardSource.PaySimpleACH ? " ACH" : ""));
+			if (!string.IsNullOrEmpty(PaySimpleToken))
+			{
+				listTokens.Add("PaySimple" + (CCSource == CreditCardSource.PaySimpleACH ? " ACH" : ""));
 			}
-			return "("+string.Join(", ",listTokens)+")";
+			return "(" + string.Join(", ", listTokens) + ")";
 		}
 
-		///<summary></summary>
-		public CreditCard Clone() {
+		public CreditCard Clone()
+		{
 			return (CreditCard)this.MemberwiseClone();
 		}
 	}
 
-	public enum CreditCardSource {
+	public enum CreditCardSource
+	{
 		///<summary>0 - Storing the actual credit card number. Not recommended.</summary>
 		None,
 		///<summary>1 - Local installation of X-Charge</summary>
@@ -131,14 +163,16 @@ namespace OpenDentBusiness {
 		CareCredit,
 	}
 
-	public enum ChargeFrequencyType {
+	public enum ChargeFrequencyType
+	{
 		///<summary>0 - Charge occurs on a specific day or set of days.</summary>
 		FixedDayOfMonth,
 		///<summary>1 - Charge occurs on a specified weekday of every month. See DayOfWeekFrequency for how often on that day.</summary>
 		FixedWeekDay,
 	}
 
-	public enum DayOfWeekFrequency {
+	public enum DayOfWeekFrequency
+	{
 		///<summary>0 - Charge occurs on every specified weekday of every month.</summary>
 		Every,
 		///<summary>1 - Charge occurs on every other specified weekday of every month.</summary>

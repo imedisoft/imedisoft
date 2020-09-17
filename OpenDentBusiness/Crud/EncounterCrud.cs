@@ -45,8 +45,8 @@ namespace OpenDentBusiness.Crud{
 			foreach(DataRow row in table.Rows) {
 				encounter=new Encounter();
 				encounter.EncounterNum = PIn.Long  (row["EncounterNum"].ToString());
-				encounter.PatNum       = PIn.Long  (row["PatNum"].ToString());
-				encounter.ProvNum      = PIn.Long  (row["ProvNum"].ToString());
+				encounter.PatientId       = PIn.Long  (row["PatNum"].ToString());
+				encounter.ProviderId      = PIn.Long  (row["ProvNum"].ToString());
 				encounter.CodeValue    = PIn.String(row["CodeValue"].ToString());
 				encounter.CodeSystem   = PIn.String(row["CodeSystem"].ToString());
 				encounter.Note         = PIn.String(row["Note"].ToString());
@@ -72,8 +72,8 @@ namespace OpenDentBusiness.Crud{
 			foreach(Encounter encounter in listEncounters) {
 				table.Rows.Add(new object[] {
 					POut.Long  (encounter.EncounterNum),
-					POut.Long  (encounter.PatNum),
-					POut.Long  (encounter.ProvNum),
+					POut.Long  (encounter.PatientId),
+					POut.Long  (encounter.ProviderId),
 					            encounter.CodeValue,
 					            encounter.CodeSystem,
 					            encounter.Note,
@@ -102,8 +102,8 @@ namespace OpenDentBusiness.Crud{
 				command+=POut.Long(encounter.EncounterNum)+",";
 			}
 			command+=
-				     POut.Long  (encounter.PatNum)+","
-				+    POut.Long  (encounter.ProvNum)+","
+				     POut.Long  (encounter.PatientId)+","
+				+    POut.Long  (encounter.ProviderId)+","
 				+"'"+POut.String(encounter.CodeValue)+"',"
 				+"'"+POut.String(encounter.CodeSystem)+"',"
 				+    DbHelper.ParamChar+"paramNote,"
@@ -141,8 +141,8 @@ namespace OpenDentBusiness.Crud{
 				command+=POut.Long(encounter.EncounterNum)+",";
 			}
 			command+=
-				     POut.Long  (encounter.PatNum)+","
-				+    POut.Long  (encounter.ProvNum)+","
+				     POut.Long  (encounter.PatientId)+","
+				+    POut.Long  (encounter.ProviderId)+","
 				+"'"+POut.String(encounter.CodeValue)+"',"
 				+"'"+POut.String(encounter.CodeSystem)+"',"
 				+    DbHelper.ParamChar+"paramNote,"
@@ -163,8 +163,8 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one Encounter in the database.</summary>
 		public static void Update(Encounter encounter) {
 			string command="UPDATE encounter SET "
-				+"PatNum       =  "+POut.Long  (encounter.PatNum)+", "
-				+"ProvNum      =  "+POut.Long  (encounter.ProvNum)+", "
+				+"PatNum       =  "+POut.Long  (encounter.PatientId)+", "
+				+"ProvNum      =  "+POut.Long  (encounter.ProviderId)+", "
 				+"CodeValue    = '"+POut.String(encounter.CodeValue)+"', "
 				+"CodeSystem   = '"+POut.String(encounter.CodeSystem)+"', "
 				+"Note         =  "+DbHelper.ParamChar+"paramNote, "
@@ -180,13 +180,13 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one Encounter in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(Encounter encounter,Encounter oldEncounter) {
 			string command="";
-			if(encounter.PatNum != oldEncounter.PatNum) {
+			if(encounter.PatientId != oldEncounter.PatientId) {
 				if(command!="") { command+=",";}
-				command+="PatNum = "+POut.Long(encounter.PatNum)+"";
+				command+="PatNum = "+POut.Long(encounter.PatientId)+"";
 			}
-			if(encounter.ProvNum != oldEncounter.ProvNum) {
+			if(encounter.ProviderId != oldEncounter.ProviderId) {
 				if(command!="") { command+=",";}
-				command+="ProvNum = "+POut.Long(encounter.ProvNum)+"";
+				command+="ProvNum = "+POut.Long(encounter.ProviderId)+"";
 			}
 			if(encounter.CodeValue != oldEncounter.CodeValue) {
 				if(command!="") { command+=",";}
@@ -220,10 +220,10 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(Encounter,Encounter) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(Encounter encounter,Encounter oldEncounter) {
-			if(encounter.PatNum != oldEncounter.PatNum) {
+			if(encounter.PatientId != oldEncounter.PatientId) {
 				return true;
 			}
-			if(encounter.ProvNum != oldEncounter.ProvNum) {
+			if(encounter.ProviderId != oldEncounter.ProviderId) {
 				return true;
 			}
 			if(encounter.CodeValue != oldEncounter.CodeValue) {

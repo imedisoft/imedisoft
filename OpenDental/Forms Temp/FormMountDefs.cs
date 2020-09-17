@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Collections.Generic;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -173,10 +175,10 @@ namespace OpenDental{
 		private void FillList(){
 			MountDefs.RefreshCache();
 			listBoxMain.Items.Clear();
-			_listMountDefs=MountDefs.GetDeepCopy();
+			_listMountDefs=MountDefs.GetAll();
 			for(int i=0;i<_listMountDefs.Count;i++){
-				if(_listMountDefs[i].ItemOrder!=i){
-					_listMountDefs[i].ItemOrder=i;
+				if(_listMountDefs[i].SortOrder!=i){
+					_listMountDefs[i].SortOrder=i;
 					MountDefs.Update(_listMountDefs[i]);
 					changed=true;
 				}
@@ -186,12 +188,11 @@ namespace OpenDental{
 
 		private void butAdd_Click(object sender, System.EventArgs e) {
 			MountDef mountDef=new MountDef();
-			mountDef.IsNew=true;
 			mountDef.Description="Mount";
 			mountDef.Width=600;
 			mountDef.Height=400;
 			if(_listMountDefs.Count>0){
-				mountDef.ItemOrder=_listMountDefs.Count;
+				mountDef.SortOrder=_listMountDefs.Count;
 			}
 			MountDefs.Insert(mountDef);//Insert mount here instead of inside edit window so that we have an object to add items to
 			FormMountDefEdit formMountDefEdit=new FormMountDefEdit();
@@ -221,10 +222,10 @@ namespace OpenDental{
 				return;
 			}
 			MountDef mountDef=_listMountDefs[selectedIdx];
-			mountDef.ItemOrder--;
+			mountDef.SortOrder--;
 			MountDefs.Update(mountDef);
 			MountDef mountDefAbove=_listMountDefs[selectedIdx-1];
-			mountDefAbove.ItemOrder++;
+			mountDefAbove.SortOrder++;
 			MountDefs.Update(mountDefAbove);
 			FillList();
 			listBoxMain.SelectedIndex=selectedIdx-1;
@@ -240,10 +241,10 @@ namespace OpenDental{
 				return;
 			}
 			MountDef mountDef=_listMountDefs[selectedIdx];
-			mountDef.ItemOrder++;
+			mountDef.SortOrder++;
 			MountDefs.Update(mountDef);
 			MountDef mountDefBelow=_listMountDefs[selectedIdx+1];
-			mountDefBelow.ItemOrder--;
+			mountDefBelow.SortOrder--;
 			MountDefs.Update(mountDefBelow);
 			FillList();
 			listBoxMain.SelectedIndex=selectedIdx+1;

@@ -114,7 +114,7 @@ namespace OpenDental{
 		///<summary>Family for the patient of this payplan.  Used to display insurance info.</summary>
 		private Family FamCur;
 		///<summary>Used to display insurance info.</summary>
-		private List <InsPlan> InsPlanList;
+		private List <InsurancePlan> InsPlanList;
 		private double AmtPaid;
 		private double TotPrinc;
 		private double TotInt;
@@ -1522,7 +1522,7 @@ namespace OpenDental{
 			if(FormI.DialogResult==DialogResult.Cancel) {
 				return;
 			}
-			_payPlanCur.PlanNum=FormI.SelectedPlan.PlanNum;
+			_payPlanCur.PlanNum=FormI.SelectedPlan.Id;
 			_payPlanCur.InsSubNum=FormI.SelectedSub.InsSubNum;
 			textInsPlan.Text=InsPlans.GetDescript(_payPlanCur.PlanNum,Patients.GetFamily(_payPlanCur.PatNum),InsPlanList,_payPlanCur.InsSubNum,SubList);
 		}

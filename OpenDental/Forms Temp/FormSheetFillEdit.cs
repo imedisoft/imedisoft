@@ -1416,7 +1416,7 @@ namespace OpenDental {
 				}
 				Document doc=ImageStore.Import(_tempPdfFile,defNum,patCur);
 				//Update sheetCur with the docnum
-				SheetCur.DocNum=doc.DocNum;
+				SheetCur.DocNum=doc.Id;
 				Sheets.Update(SheetCur);
 			}
 			//now sync SigBoxes
@@ -1696,9 +1696,9 @@ namespace OpenDental {
 					MessageBox.Show("Error saving document.");
 					return;
 				}
-				docc.Description="PPArchive"+docc.DocNum+"_"+DateTime.Now.ToShortDateString();
+				docc.Description="PPArchive"+docc.Id+"_"+DateTime.Now.ToShortDateString();
 				docc.ImgType=ImageType.Document;
-				docc.DateCreated=DateTime.Now;
+				docc.AddedOnDate=DateTime.Now;
 				Documents.Update(docc);
 				//remove temp file---------------------------------------------------------------------------------
 				try {
@@ -1725,12 +1725,12 @@ namespace OpenDental {
 			foreach (Definition docCategory in listImageCatDefs)
 			{//usually only one, but do allow them to be saved once per image category.
 				OpenDentBusiness.Document docSave = new Document();
-				docSave.DocNum = Documents.Insert(docSave);
-				string fileName = genericFileName + docSave.DocNum;
+				docSave.Id = Documents.Insert(docSave);
+				string fileName = genericFileName + docSave.Id;
 				docSave.ImgType = ImageType.Document;
-				docSave.DateCreated = DateTime.Now;
-				docSave.PatNum = patCur.PatNum;
-				docSave.DocCategory = docCategory.Id;
+				docSave.AddedOnDate = DateTime.Now;
+				docSave.PatientId = patCur.PatNum;
+				docSave.Category = docCategory.Id;
 				docSave.Description = fileName;//no extension.
 
 				string filePath = ImageStore.GetPatientFolder(patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());

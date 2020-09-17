@@ -982,7 +982,7 @@ namespace OpenDental{
 				butEffectiveCommY.Visible=true;
 				butEffectiveCommN.Visible=true;
 				for(int i=0;i<ProcList.Count;i++){
-					if(ProcedureCodes.GetProcCodeFromDb(ProcList[i].CodeNum).IsProsth){
+					if(ProcedureCodes.GetProcCodeFromDb(ProcList[i].CodeNum).IsProsthesis){
 						labelRepair.Visible=true;
 						butRepairY.Visible=true;
 						butRepairN.Visible=true;
@@ -1383,7 +1383,7 @@ namespace OpenDental{
 
 		private void butRepairY_Click(object sender,EventArgs e) {
 			for(int i=0;i<OrionProcList.Count;i++){
-				if(ProcedureCodes.GetProcCodeFromDb(ProcList[i].CodeNum).IsProsth){//OrionProcList[i] corresponds to ProcList[i]
+				if(ProcedureCodes.GetProcCodeFromDb(ProcList[i].CodeNum).IsProsthesis){//OrionProcList[i] corresponds to ProcList[i]
 					OrionProcList[i].IsRepair=true;
 				}
 			}
@@ -1392,7 +1392,7 @@ namespace OpenDental{
 
 		private void butRepairN_Click(object sender,EventArgs e) {
 			for(int i=0;i<OrionProcList.Count;i++){
-				if(ProcedureCodes.GetProcCodeFromDb(ProcList[i].CodeNum).IsProsth){//OrionProcList[i] corresponds to ProcList[i]
+				if(ProcedureCodes.GetProcCodeFromDb(ProcList[i].CodeNum).IsProsthesis){//OrionProcList[i] corresponds to ProcList[i]
 					OrionProcList[i].IsRepair=false;
 				}
 			}

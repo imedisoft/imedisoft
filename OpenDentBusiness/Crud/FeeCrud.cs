@@ -47,7 +47,7 @@ namespace OpenDentBusiness.Crud{
 				fee.FeeNum         = PIn.Long  (row["FeeNum"].ToString());
 				fee.Amount         = PIn.Double(row["Amount"].ToString());
 				fee.OldCode        = PIn.String(row["OldCode"].ToString());
-				fee.FeeSched       = PIn.Long  (row["FeeSched"].ToString());
+				fee.FeeScheduleId       = PIn.Long  (row["FeeSched"].ToString());
 				fee.UseDefaultFee  = PIn.Bool  (row["UseDefaultFee"].ToString());
 				fee.UseDefaultCov  = PIn.Bool  (row["UseDefaultCov"].ToString());
 				fee.CodeNum        = PIn.Long  (row["CodeNum"].ToString());
@@ -84,7 +84,7 @@ namespace OpenDentBusiness.Crud{
 					POut.Long  (fee.FeeNum),
 					POut.Double(fee.Amount),
 					            fee.OldCode,
-					POut.Long  (fee.FeeSched),
+					POut.Long  (fee.FeeScheduleId),
 					POut.Bool  (fee.UseDefaultFee),
 					POut.Bool  (fee.UseDefaultCov),
 					POut.Long  (fee.CodeNum),
@@ -119,7 +119,7 @@ namespace OpenDentBusiness.Crud{
 			command+=
 				 "'"+POut.Double(fee.Amount)+"',"
 				+"'"+POut.String(fee.OldCode)+"',"
-				+    POut.Long  (fee.FeeSched)+","
+				+    POut.Long  (fee.FeeScheduleId)+","
 				+    POut.Bool  (fee.UseDefaultFee)+","
 				+    POut.Bool  (fee.UseDefaultCov)+","
 				+    POut.Long  (fee.CodeNum)+","
@@ -174,7 +174,7 @@ namespace OpenDentBusiness.Crud{
 					}
 					sbRow.Append("'"+POut.Double(fee.Amount)+"'"); sbRow.Append(",");
 					sbRow.Append("'"+POut.String(fee.OldCode)+"'"); sbRow.Append(",");
-					sbRow.Append(POut.Long(fee.FeeSched)); sbRow.Append(",");
+					sbRow.Append(POut.Long(fee.FeeScheduleId)); sbRow.Append(",");
 					sbRow.Append(POut.Bool(fee.UseDefaultFee)); sbRow.Append(",");
 					sbRow.Append(POut.Bool(fee.UseDefaultCov)); sbRow.Append(",");
 					sbRow.Append(POut.Long(fee.CodeNum)); sbRow.Append(",");
@@ -224,7 +224,7 @@ namespace OpenDentBusiness.Crud{
 			command+=
 				 "'"+POut.Double(fee.Amount)+"',"
 				+"'"+POut.String(fee.OldCode)+"',"
-				+    POut.Long  (fee.FeeSched)+","
+				+    POut.Long  (fee.FeeScheduleId)+","
 				+    POut.Bool  (fee.UseDefaultFee)+","
 				+    POut.Bool  (fee.UseDefaultCov)+","
 				+    POut.Long  (fee.CodeNum)+","
@@ -247,7 +247,7 @@ namespace OpenDentBusiness.Crud{
 			string command="UPDATE fee SET "
 				+"Amount         = '"+POut.Double(fee.Amount)+"', "
 				+"OldCode        = '"+POut.String(fee.OldCode)+"', "
-				+"FeeSched       =  "+POut.Long  (fee.FeeSched)+", "
+				+"FeeSched       =  "+POut.Long  (fee.FeeScheduleId)+", "
 				+"UseDefaultFee  =  "+POut.Bool  (fee.UseDefaultFee)+", "
 				+"UseDefaultCov  =  "+POut.Bool  (fee.UseDefaultCov)+", "
 				+"CodeNum        =  "+POut.Long  (fee.CodeNum)+", "
@@ -271,9 +271,9 @@ namespace OpenDentBusiness.Crud{
 				if(command!="") { command+=",";}
 				command+="OldCode = '"+POut.String(fee.OldCode)+"'";
 			}
-			if(fee.FeeSched != oldFee.FeeSched) {
+			if(fee.FeeScheduleId != oldFee.FeeScheduleId) {
 				if(command!="") { command+=",";}
-				command+="FeeSched = "+POut.Long(fee.FeeSched)+"";
+				command+="FeeSched = "+POut.Long(fee.FeeScheduleId)+"";
 			}
 			if(fee.UseDefaultFee != oldFee.UseDefaultFee) {
 				if(command!="") { command+=",";}
@@ -316,7 +316,7 @@ namespace OpenDentBusiness.Crud{
 			if(fee.OldCode != oldFee.OldCode) {
 				return true;
 			}
-			if(fee.FeeSched != oldFee.FeeSched) {
+			if(fee.FeeScheduleId != oldFee.FeeScheduleId) {
 				return true;
 			}
 			if(fee.UseDefaultFee != oldFee.UseDefaultFee) {

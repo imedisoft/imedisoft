@@ -128,7 +128,7 @@ namespace OpenDentBusiness{
 			}
 			//A provider specific procedure code note could not be found, use the default for the procedure code.
 			if(procStatus==ProcStat.TP) {
-					return ProcedureCodes.GetProcCode(codeNum).DefaultTPNote;
+					return ProcedureCodes.GetProcCode(codeNum).DefaultNoteForTreatmentPlan;
 				}
 			return ProcedureCodes.GetProcCode(codeNum).DefaultNote;
 		}
@@ -137,7 +137,7 @@ namespace OpenDentBusiness{
 		public static string GetTimePattern(long provNum,long codeNum) {
 			//No need to check RemotingRole; no call to db.
 			ProcCodeNote procCodeNote=GetFirstOrDefault(x => x.ProvNum==provNum && x.CodeNum==codeNum);
-			return (procCodeNote==null ? ProcedureCodes.GetProcCode(codeNum).ProcTime : procCodeNote.ProcTime);
+			return (procCodeNote==null ? ProcedureCodes.GetProcCode(codeNum).Time : procCodeNote.ProcTime);
 		}
 	}
 

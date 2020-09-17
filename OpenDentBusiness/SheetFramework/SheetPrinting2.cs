@@ -197,7 +197,7 @@ namespace OpenDentBusiness
 							break;
 						}
 						Document patDoc = Documents.GetByNum(PIn.Long(field.FieldValue));
-						List<string> paths = Documents.GetPaths(new List<long> { patDoc.DocNum }, FileAtoZ.GetPreferredAtoZpath());
+						List<string> paths = Documents.GetPaths(new List<long> { patDoc.Id }, FileAtoZ.GetPreferredAtoZpath());
 						if (paths.Count < 1)
 						{//No path was found so we cannot draw the image.
 							continue;
@@ -342,7 +342,7 @@ namespace OpenDentBusiness
 					{
 						procDummy.ToothNum = Tooth.FromInternat(procTP.ToothNumTP);
 					}
-					if (ProcedureCodes.GetProcCode(procTP.ProcCode).TreatArea == TreatmentArea.Surf)
+					if (ProcedureCodes.GetProcCode(procTP.ProcCode).TreatmentArea == ProcedureTreatmentArea.Surface)
 					{
 						procDummy.Surf = Tooth.SurfTidyFromDisplayToDb(procTP.Surf, procDummy.ToothNum);
 					}
@@ -355,7 +355,7 @@ namespace OpenDentBusiness
 						procDummy.ToothRange = "";
 					}
 					procDummy.ProcStatus = ProcStat.TP;
-					procDummy.CodeNum = ProcedureCodes.GetProcCode(procTP.ProcCode).CodeNum;
+					procDummy.CodeNum = ProcedureCodes.GetProcCode(procTP.ProcCode).Id;
 					listProceduresFiltered.Add(procDummy);
 				}
 			}

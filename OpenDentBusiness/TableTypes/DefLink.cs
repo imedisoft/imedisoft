@@ -1,14 +1,9 @@
 ﻿using Imedisoft.Data.Annotations;
 using Imedisoft.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenDentBusiness
 {
-	public class DefLink
+    public class DefLink
 	{
 		[PrimaryKey]
 		public long Id;

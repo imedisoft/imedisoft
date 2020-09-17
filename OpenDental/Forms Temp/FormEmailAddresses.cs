@@ -50,7 +50,7 @@ namespace OpenDental
 		{
 			if (IsSelectionMode)
 			{
-				EmailAddressNum = _listEmailAddresses[gridMain.GetSelectedIndex()].EmailAddressNum;
+				EmailAddressNum = _listEmailAddresses[gridMain.GetSelectedIndex()].Id;
 				DialogResult = DialogResult.OK;
 			}
 			else
@@ -105,11 +105,11 @@ namespace OpenDental
 			foreach (EmailAddress emailAddress in _listEmailAddresses)
 			{
 				row = new GridRow();
-				row.Cells.Add(emailAddress.EmailUsername);
+				row.Cells.Add(emailAddress.SmtpUsername);
 				row.Cells.Add(emailAddress.SenderAddress);
-				row.Cells.Add(Users.GetUserName(emailAddress.UserNum));
-				row.Cells.Add((emailAddress.EmailAddressNum == Preferences.GetLong(PreferenceName.EmailDefaultAddressNum)) ? "X" : "");
-				row.Cells.Add((emailAddress.EmailAddressNum == Preferences.GetLong(PreferenceName.EmailNotifyAddressNum)) ? "X" : "");
+				row.Cells.Add(Users.GetUserName(emailAddress.UserId??0));
+				row.Cells.Add((emailAddress.Id == Preferences.GetLong(PreferenceName.EmailDefaultAddressNum)) ? "X" : "");
+				row.Cells.Add((emailAddress.Id == Preferences.GetLong(PreferenceName.EmailNotifyAddressNum)) ? "X" : "");
 				row.Tag = emailAddress;
 				gridMain.Rows.Add(row);
 			}
@@ -123,12 +123,12 @@ namespace OpenDental
 				MessageBox.Show("Please select a row first.");
 				return;
 			}
-			if (gridMain.SelectedTag<EmailAddress>().UserNum > 0)
+			if (gridMain.SelectedTag<EmailAddress>().UserId > 0)
 			{
 				MessageBox.Show("User email address cannot be set as the default.");
 				return;
 			}
-			if (Preferences.Set(PreferenceName.EmailDefaultAddressNum, _listEmailAddresses[gridMain.GetSelectedIndex()].EmailAddressNum))
+			if (Preferences.Set(PreferenceName.EmailDefaultAddressNum, _listEmailAddresses[gridMain.GetSelectedIndex()].Id))
 			{
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
@@ -142,12 +142,12 @@ namespace OpenDental
 				MessageBox.Show("Please select a row first.");
 				return;
 			}
-			if (gridMain.SelectedTag<EmailAddress>().UserNum > 0)
+			if (gridMain.SelectedTag<EmailAddress>().UserId > 0)
 			{
 				MessageBox.Show("User email address cannot be set as WebMail Notify.");
 				return;
 			}
-			if (Preferences.Set(PreferenceName.EmailNotifyAddressNum, _listEmailAddresses[gridMain.GetSelectedIndex()].EmailAddressNum))
+			if (Preferences.Set(PreferenceName.EmailNotifyAddressNum, _listEmailAddresses[gridMain.GetSelectedIndex()].Id))
 			{
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
@@ -179,7 +179,7 @@ namespace OpenDental
 					MessageBox.Show("Please select an email address.");
 					return;
 				}
-				EmailAddressNum = _listEmailAddresses[gridMain.GetSelectedIndex()].EmailAddressNum;
+				EmailAddressNum = _listEmailAddresses[gridMain.GetSelectedIndex()].Id;
 			}
 			else
 			{//The following fields are only visible when not in selection mode.

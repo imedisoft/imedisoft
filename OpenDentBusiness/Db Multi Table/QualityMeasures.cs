@@ -3114,8 +3114,8 @@ namespace OpenDentBusiness {
 				bool isOneOf=false;
 				for(int j=0;j<listOneOfEncs.Count;j++) {
 					if(listEncs[i].CodeValue==listOneOfEncs[j].CodeValue && listEncs[i].CodeSystem==listOneOfEncs[j].CodeSystem) {
-						if(!listPatNums.Contains(listEncs[i].PatNum)) {
-							listPatNums.Add(listEncs[i].PatNum);
+						if(!listPatNums.Contains(listEncs[i].PatientId)) {
+							listPatNums.Add(listEncs[i].PatientId);
 						}
 						dictEncNumEhrCode.Add(listEncs[i].EncounterNum,listOneOfEncs[j]);
 						isOneOf=true;
@@ -3128,11 +3128,11 @@ namespace OpenDentBusiness {
 				bool isTwoOf=false;
 				for(int j=0;j<listTwoOfEncs.Count;j++) {
 					if(listEncs[i].CodeValue==listTwoOfEncs[j].CodeValue && listEncs[i].CodeSystem==listTwoOfEncs[j].CodeSystem) {
-						if(dictPatNumAndTwoOfCount.ContainsKey(listEncs[i].PatNum)) {
-							dictPatNumAndTwoOfCount[listEncs[i].PatNum]++;
+						if(dictPatNumAndTwoOfCount.ContainsKey(listEncs[i].PatientId)) {
+							dictPatNumAndTwoOfCount[listEncs[i].PatientId]++;
 						}
 						else {
-							dictPatNumAndTwoOfCount.Add(listEncs[i].PatNum,1);
+							dictPatNumAndTwoOfCount.Add(listEncs[i].PatientId,1);
 						}
 						dictEncNumEhrCode.Add(listEncs[i].EncounterNum,listTwoOfEncs[j]);
 						isTwoOf=true;
@@ -3154,7 +3154,7 @@ namespace OpenDentBusiness {
 			}
 			//remove any encounters from the list for patients who did not have a OneOf or two or more of the TwoOf encounters.
 			for(int i=listEncs.Count-1;i>-1;i--) {
-				if(!listPatNums.Contains(listEncs[i].PatNum)) {
+				if(!listPatNums.Contains(listEncs[i].PatientId)) {
 					listEncs.RemoveAt(i);
 				}
 			}
@@ -3164,8 +3164,8 @@ namespace OpenDentBusiness {
 			for(int i=0;i<listEncs.Count;i++) {
 				EhrCqmEncounter ehrEncCur=new EhrCqmEncounter();
 				ehrEncCur.EhrCqmEncounterNum=listEncs[i].EncounterNum;
-				ehrEncCur.PatNum=listEncs[i].PatNum;
-				ehrEncCur.ProvNum=listEncs[i].ProvNum;
+				ehrEncCur.PatNum=listEncs[i].PatientId;
+				ehrEncCur.ProvNum=listEncs[i].ProviderId;
 				ehrEncCur.CodeValue=listEncs[i].CodeValue;
 				ehrEncCur.CodeSystemName=listEncs[i].CodeSystem;
 				ehrEncCur.DateEncounter=listEncs[i].DateEncounter;
@@ -3178,7 +3178,7 @@ namespace OpenDentBusiness {
 				//to get description, first determine which table the code is from.  Encounter is only allowed to be a CDT, CPT, HCPCS, and SNOMEDCT.
 				switch(ehrEncCur.CodeSystemName) {
 					case "CDT":
-						descript=ProcedureCodes.GetProcCode(ehrEncCur.CodeValue).Descript;
+						descript=ProcedureCodes.GetProcCode(ehrEncCur.CodeValue).Description;
 						break;
 					case "CPT":
 						Cpt cptCur=Cpts.GetByCode(ehrEncCur.CodeValue);

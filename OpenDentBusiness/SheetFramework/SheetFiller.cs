@@ -184,50 +184,50 @@ namespace OpenDentBusiness {
 			,ref List<long> listTopicalFluorideProphyChild,ref List<long> listTopicalFluorideProphyAdult) 
 		{
 			List<long> listProcCodeNums=new List<long>();
-			listIntraoralComplete=ProcedureCodes.GetProcCodeStartsWith("D0210").Select(x => x.CodeNum).ToList();//intraoral - complete series (including bitewings)
+			listIntraoralComplete=ProcedureCodes.GetProcCodeStartsWith("D0210").Select(x => x.Id).ToList();//intraoral - complete series (including bitewings)
 			listProcCodeNums.AddRange(listIntraoralComplete);
 			listIntraoralAndBiteWings.AddRange(listIntraoralComplete);
-			listBiteWingSingle=ProcedureCodes.GetProcCodeStartsWith("D0270").Select(x => x.CodeNum).ToList();//bitewing - single film
+			listBiteWingSingle=ProcedureCodes.GetProcCodeStartsWith("D0270").Select(x => x.Id).ToList();//bitewing - single film
 			listProcCodeNums.AddRange(listBiteWingSingle);
 			listIntraoralAndBiteWings.AddRange(listBiteWingSingle);
-			listBiteWingsTwo=ProcedureCodes.GetProcCodeStartsWith("D0272").Select(x => x.CodeNum).ToList();//bitewings - two films
+			listBiteWingsTwo=ProcedureCodes.GetProcCodeStartsWith("D0272").Select(x => x.Id).ToList();//bitewings - two films
 			listProcCodeNums.AddRange(listBiteWingsTwo);
 			listIntraoralAndBiteWings.AddRange(listBiteWingsTwo);
-			listBiteWingsFour=ProcedureCodes.GetProcCodeStartsWith("D0274").Select(x => x.CodeNum).ToList();//bitewings - four films
+			listBiteWingsFour=ProcedureCodes.GetProcCodeStartsWith("D0274").Select(x => x.Id).ToList();//bitewings - four films
 			listProcCodeNums.AddRange(listBiteWingsFour);
 			listIntraoralAndBiteWings.AddRange(listBiteWingsFour);
-			listVertBiteWings7to8=ProcedureCodes.GetProcCodeStartsWith("D0277").Select(x => x.CodeNum).ToList();//vertical bitewings - 7 to 8 films
+			listVertBiteWings7to8=ProcedureCodes.GetProcCodeStartsWith("D0277").Select(x => x.Id).ToList();//vertical bitewings - 7 to 8 films
 			listProcCodeNums.AddRange(listVertBiteWings7to8);
 			listIntraoralAndBiteWings.AddRange(listVertBiteWings7to8);
-			listBiteWingsThree=ProcedureCodes.GetProcCodeStartsWith("D0273").Select(x => x.CodeNum).ToList();//bitewings - three films
+			listBiteWingsThree=ProcedureCodes.GetProcCodeStartsWith("D0273").Select(x => x.Id).ToList();//bitewings - three films
 			listProcCodeNums.AddRange(listBiteWingsThree);
 			listIntraoralAndBiteWings.AddRange(listBiteWingsThree);
-			listPerioOralEval=ProcedureCodes.GetProcCodeStartsWith("D0120").Select(x => x.CodeNum).ToList();//periodic oral evaluation - established patient
+			listPerioOralEval=ProcedureCodes.GetProcCodeStartsWith("D0120").Select(x => x.Id).ToList();//periodic oral evaluation - established patient
 			listProcCodeNums.AddRange(listPerioOralEval);
 			listOralEvals.AddRange(listPerioOralEval);
-			listLimitedOralEval=ProcedureCodes.GetProcCodeStartsWith("D0140").Select(x => x.CodeNum).ToList();//limited oral evaluation - problem focused
+			listLimitedOralEval=ProcedureCodes.GetProcCodeStartsWith("D0140").Select(x => x.Id).ToList();//limited oral evaluation - problem focused
 			listProcCodeNums.AddRange(listLimitedOralEval);
 			listOralEvals.AddRange(listLimitedOralEval);
-			listCompOralEval=ProcedureCodes.GetProcCodeStartsWith("D0150").Select(x => x.CodeNum).ToList();//comprehensive oral evaluation - new or established patient
+			listCompOralEval=ProcedureCodes.GetProcCodeStartsWith("D0150").Select(x => x.Id).ToList();//comprehensive oral evaluation - new or established patient
 			listProcCodeNums.AddRange(listCompOralEval);
 			listOralEvals.AddRange(listCompOralEval);
-			listDetailedExtensiveOralEval=ProcedureCodes.GetProcCodeStartsWith("D0160").Select(x => x.CodeNum).ToList();//detailed and extensive oral evaluation - problem focused, by report
+			listDetailedExtensiveOralEval=ProcedureCodes.GetProcCodeStartsWith("D0160").Select(x => x.Id).ToList();//detailed and extensive oral evaluation - problem focused, by report
 			listProcCodeNums.AddRange(listDetailedExtensiveOralEval);
 			listOralEvals.AddRange(listDetailedExtensiveOralEval);
-			listPerioMaintenance=ProcedureCodes.GetProcCodeStartsWith("D4910").Select(x => x.CodeNum).ToList();//Periodontal Maintenance
+			listPerioMaintenance=ProcedureCodes.GetProcCodeStartsWith("D4910").Select(x => x.Id).ToList();//Periodontal Maintenance
 			listProcCodeNums.AddRange(listPerioMaintenance); 
-			listPanoramicFilm=ProcedureCodes.GetProcCodeStartsWith("D0330").Select(x => x.CodeNum).ToList();//panoramic film
+			listPanoramicFilm=ProcedureCodes.GetProcCodeStartsWith("D0330").Select(x => x.Id).ToList();//panoramic film
 			listProcCodeNums.AddRange(listPanoramicFilm);
-			listProphylaxisAdult=ProcedureCodes.GetProcCodeStartsWith("D1110").Select(x => x.CodeNum).ToList();//prophylaxis - adult
+			listProphylaxisAdult=ProcedureCodes.GetProcCodeStartsWith("D1110").Select(x => x.Id).ToList();//prophylaxis - adult
 			listProcCodeNums.AddRange(listProphylaxisAdult);
 			listProphy.AddRange(listProphylaxisAdult);
-			listProphylaxisChild=ProcedureCodes.GetProcCodeStartsWith("D1120").Select(x => x.CodeNum).ToList();//prophylaxis - child
+			listProphylaxisChild=ProcedureCodes.GetProcCodeStartsWith("D1120").Select(x => x.Id).ToList();//prophylaxis - child
 			listProcCodeNums.AddRange(listProphylaxisChild);
 			listProphy.AddRange(listProphylaxisChild);
-			listTopicalFluorideProphyChild=ProcedureCodes.GetProcCodeStartsWith("D1201").Select(x => x.CodeNum).ToList();//Topical Fluoride Including Prophy-Child
+			listTopicalFluorideProphyChild=ProcedureCodes.GetProcCodeStartsWith("D1201").Select(x => x.Id).ToList();//Topical Fluoride Including Prophy-Child
 			listProcCodeNums.AddRange(listTopicalFluorideProphyChild);
 			listProphy.AddRange(listTopicalFluorideProphyChild);
-			listTopicalFluorideProphyAdult=ProcedureCodes.GetProcCodeStartsWith("D1205").Select(x => x.CodeNum).ToList();//Topical Fluoride Including Prophy-Adult
+			listTopicalFluorideProphyAdult=ProcedureCodes.GetProcCodeStartsWith("D1205").Select(x => x.Id).ToList();//Topical Fluoride Including Prophy-Adult
 			listProcCodeNums.AddRange(listTopicalFluorideProphyAdult);
 			listProphy.AddRange(listTopicalFluorideProphyAdult);
 			return listProcCodeNums;
@@ -531,7 +531,7 @@ namespace OpenDentBusiness {
 				//Insurance-------------------------------------------------------------------------------------------------------------------
 				List<PatPlan> listPatPlans=data.ListPatPlans;
 				List<InsSub> listInsSubs=data.ListInsSubs;
-				List<InsPlan> listInsPlans=data.ListInsPlans;
+				List<InsurancePlan> listInsPlans=data.ListInsPlans;
 				if(!PatPlans.IsPatPlanListValid(listPatPlans,listInsSubs:listInsSubs,listInsPlans:listInsPlans)) {
 					//need to validate due to call to GetHistList below
 					listPatPlans=PatPlans.Refresh(pat.PatNum);
@@ -556,7 +556,7 @@ namespace OpenDentBusiness {
 				if(subscriber!=null) {
 					insSubBirthDate=subscriber.Birthdate.ToShortDateString();
 				}
-				InsPlan plan=null;
+				InsurancePlan plan=null;
 				if(sub!=null) {
 					plan=InsPlans.GetPlan(sub.PlanNum,listInsPlans);
 					insSubNote=sub.SubscNote;
@@ -573,30 +573,30 @@ namespace OpenDentBusiness {
 				if(plan!=null) {
 					insFeeSchedule=FeeScheds.GetDescription(plan.FeeSched);
 					insPlanGroupName=plan.GroupName;
-					insPlanGroupNumber=plan.GroupNum;
+					insPlanGroupNumber=plan.GroupNumber;
 					insPlanNote=plan.PlanNote;
-					carrier=Carriers.GetCarrier(plan.CarrierNum);
-					carrierName=carrier.CarrierName;
-					carrierAddress=carrier.Address;
-					if(carrier.Address2!="") {
-						carrierAddress+=", "+carrier.Address2;
+					carrier=Carriers.GetCarrier(plan.CarrierId);
+					carrierName=carrier.Name;
+					carrierAddress=carrier.AddressLine1;
+					if(carrier.AddressLine2!="") {
+						carrierAddress+=", "+carrier.AddressLine2;
 					}
 					carrierCityStZip=carrier.City+", "+carrier.State+"  "+carrier.Zip;
 					subscriberId=sub.SubscriberID;
 					if(subscriber!=null) {
 						subscriberNameFL=subscriber.GetNameFL();
 					}
-					doubAnnualMax=Benefits.GetAnnualMaxDisplay(benefitList,plan.PlanNum,patPlanNum,false);
+					doubAnnualMax=Benefits.GetAnnualMaxDisplay(benefitList,plan.Id,patPlanNum,false);
 					doubRemain=-1;
 					if(doubAnnualMax!=-1) {
 						insAnnualMax=doubAnnualMax.ToString("c");
 						doubRemain=doubAnnualMax;
 					}
-					doubDeductible=Benefits.GetDeductGeneralDisplay(benefitList,plan.PlanNum,patPlanNum,BenefitCoverageLevel.Individual);
+					doubDeductible=Benefits.GetDeductGeneralDisplay(benefitList,plan.Id,patPlanNum,BenefitCoverageLevel.Individual);
 					if(doubDeductible!=-1) {
 						insDeductible=doubDeductible.ToString("c");
 					}
-					doubDeductibleUsed=InsPlans.GetDedUsedDisplay(histList,DateTime.Today,plan.PlanNum,patPlanNum,-1,listInsPlans,BenefitCoverageLevel.Individual,pat.PatNum);
+					doubDeductibleUsed=InsPlans.GetDedUsedDisplay(histList,DateTime.Today,plan.Id,patPlanNum,-1,listInsPlans,BenefitCoverageLevel.Individual,pat.PatNum);
 					if(doubDeductibleUsed!=-1) {
 						insDeductibleUsed=doubDeductibleUsed.ToString("c");
 					}
@@ -607,7 +607,7 @@ namespace OpenDentBusiness {
 							doubRemain-=doubPending;
 						}
 					}
-					doubUsed=InsPlans.GetInsUsedDisplay(histList,DateTime.Today,plan.PlanNum,patPlanNum,-1,listInsPlans,benefitList,pat.PatNum,subNum);
+					doubUsed=InsPlans.GetInsUsedDisplay(histList,DateTime.Today,plan.Id,patPlanNum,-1,listInsPlans,benefitList,pat.PatNum,subNum);
 					if(doubUsed!=-1) {
 						insUsed=doubUsed.ToString("c");
 						if(doubRemain!=-1) {
@@ -618,7 +618,7 @@ namespace OpenDentBusiness {
 						insRemaining=doubRemain.ToString("c");
 					}
 					for(int j=0;j<benefitList.Count;j++) {
-						if(benefitList[j].PlanNum != plan.PlanNum) {
+						if(benefitList[j].PlanNum != plan.Id) {
 							continue;
 						}
 						if(benefitList[j].BenefitType != InsBenefitType.CoInsurance) {
@@ -629,9 +629,9 @@ namespace OpenDentBusiness {
 						}
 						insPercentages+=CovCats.GetDesc(benefitList[j].CovCatNum)+" "+benefitList[j].Percent.ToString()+"%";
 					}
-					insFreqBW=Benefits.GetFrequencyDisplay(FrequencyType.BW,benefitList,plan.PlanNum);
-					insFreqExams=Benefits.GetFrequencyDisplay(FrequencyType.Exam,benefitList,plan.PlanNum);
-					insFreqPanoFMX=Benefits.GetFrequencyDisplay(FrequencyType.PanoFMX,benefitList,plan.PlanNum);
+					insFreqBW=Benefits.GetFrequencyDisplay(FrequencyType.BW,benefitList,plan.Id);
+					insFreqExams=Benefits.GetFrequencyDisplay(FrequencyType.Exam,benefitList,plan.Id);
+					insFreqPanoFMX=Benefits.GetFrequencyDisplay(FrequencyType.PanoFMX,benefitList,plan.Id);
 					switch(plan.PlanType) {//(ppo, etc)
 						case "p":
 							insType="PPO Percentage";
@@ -656,27 +656,27 @@ namespace OpenDentBusiness {
 				}
 				if(plan!=null) { //secondary insurance
 					ins2PlanGroupName=plan.GroupName;
-					ins2PlanGroupNumber=plan.GroupNum;
-					carrier=Carriers.GetCarrier(plan.CarrierNum);
-					carrier2Name=carrier.CarrierName;
-					carrier2Address=carrier.Address;
-					if(carrier.Address2!="") {
-						carrier2Address+=", "+carrier.Address2;
+					ins2PlanGroupNumber=plan.GroupNumber;
+					carrier=Carriers.GetCarrier(plan.CarrierId);
+					carrier2Name=carrier.Name;
+					carrier2Address=carrier.AddressLine1;
+					if(carrier.AddressLine2!="") {
+						carrier2Address+=", "+carrier.AddressLine2;
 					}
 					carrier2CityStZip=carrier.City+", "+carrier.State+"  "+carrier.Zip;
 					//subscriberId=plan.SubscriberID;
 					subscriber2NameFL=Patients.GetLim(sub.Subscriber).GetNameFL();
-					doubAnnualMax=Benefits.GetAnnualMaxDisplay(benefitList,plan.PlanNum,patPlanNum,false);
+					doubAnnualMax=Benefits.GetAnnualMaxDisplay(benefitList,plan.Id,patPlanNum,false);
 					doubRemain=-1;
 					if(doubAnnualMax!=-1) {
 						ins2AnnualMax=doubAnnualMax.ToString("c");
 						doubRemain=doubAnnualMax;
 					}
-					doubDeductible=Benefits.GetDeductGeneralDisplay(benefitList,plan.PlanNum,patPlanNum,BenefitCoverageLevel.Individual);
+					doubDeductible=Benefits.GetDeductGeneralDisplay(benefitList,plan.Id,patPlanNum,BenefitCoverageLevel.Individual);
 					if(doubDeductible!=-1) {
 						ins2Deductible=doubDeductible.ToString("c");
 					}
-					doubDeductibleUsed=InsPlans.GetDedUsedDisplay(histList,DateTime.Today,plan.PlanNum,patPlanNum,-1,listInsPlans,BenefitCoverageLevel.Individual,pat.PatNum);
+					doubDeductibleUsed=InsPlans.GetDedUsedDisplay(histList,DateTime.Today,plan.Id,patPlanNum,-1,listInsPlans,BenefitCoverageLevel.Individual,pat.PatNum);
 					if(doubDeductibleUsed!=-1) {
 						ins2DeductibleUsed=doubDeductibleUsed.ToString("c");
 					}
@@ -687,7 +687,7 @@ namespace OpenDentBusiness {
 							doubRemain-=doubPending;
 						}
 					}
-					doubUsed=InsPlans.GetInsUsedDisplay(histList,DateTime.Today,plan.PlanNum,patPlanNum,-1,listInsPlans,benefitList,pat.PatNum,subNum);
+					doubUsed=InsPlans.GetInsUsedDisplay(histList,DateTime.Today,plan.Id,patPlanNum,-1,listInsPlans,benefitList,pat.PatNum,subNum);
 					if(doubUsed!=-1) {
 						ins2Used=doubUsed.ToString("c");
 						if(doubRemain!=-1) {
@@ -698,7 +698,7 @@ namespace OpenDentBusiness {
 						ins2Remaining=doubRemain.ToString("c");
 					}
 					for(int j=0;j<benefitList.Count;j++) {
-						if(benefitList[j].PlanNum != plan.PlanNum) {
+						if(benefitList[j].PlanNum != plan.Id) {
 							continue;
 						}
 						if(benefitList[j].BenefitType != InsBenefitType.CoInsurance) {
@@ -708,9 +708,9 @@ namespace OpenDentBusiness {
 							ins2Percentages+=",  ";
 						}
 						ins2Percentages+=CovCats.GetDesc(benefitList[j].CovCatNum)+" "+benefitList[j].Percent.ToString()+"%";
-						ins2FreqBW=Benefits.GetFrequencyDisplay(FrequencyType.BW,benefitList,plan.PlanNum);
-						ins2FreqExams=Benefits.GetFrequencyDisplay(FrequencyType.Exam,benefitList,plan.PlanNum);
-						ins2FreqPanoFMX=Benefits.GetFrequencyDisplay(FrequencyType.PanoFMX,benefitList,plan.PlanNum);
+						ins2FreqBW=Benefits.GetFrequencyDisplay(FrequencyType.BW,benefitList,plan.Id);
+						ins2FreqExams=Benefits.GetFrequencyDisplay(FrequencyType.Exam,benefitList,plan.Id);
+						ins2FreqPanoFMX=Benefits.GetFrequencyDisplay(FrequencyType.PanoFMX,benefitList,plan.Id);
 					}
 					ins2Employer=Employers.GetEmployer(plan.EmployerNum).Name;//blank if no Employer listed
 				}
@@ -1256,11 +1256,11 @@ namespace OpenDentBusiness {
 				long categoryNum=PIn.Long(field.FieldName);
 				//iterate backwards to find most recent
 				for(int i=docList.Length-1;i>=0;i--) {
-					if(docList[i].DocCategory!=categoryNum) {
+					if(docList[i].Category!=categoryNum) {
 						continue;
 					}
 					//At this point we should have found the most recent document in the document category.
-					field.FieldValue=docList[i].DocNum.ToString();
+					field.FieldValue=docList[i].Id.ToString();
 					break;
 				}//end docList
 			}//end foreach field
@@ -1321,12 +1321,12 @@ namespace OpenDentBusiness {
 			foreach(SheetField field in sheet.SheetFields) {
 				switch(field.FieldName) {
 					case "CarrierName":
-						field.FieldValue=carrier.CarrierName;
+						field.FieldValue=carrier.Name;
 						break;
 					case "address":
-						field.FieldValue=carrier.Address;
-						if(carrier.Address2!="") {
-							field.FieldValue+="\r\n"+carrier.Address2;
+						field.FieldValue=carrier.AddressLine1;
+						if(carrier.AddressLine2!="") {
+							field.FieldValue+="\r\n"+carrier.AddressLine2;
 						}
 						break;
 					case "cityStateZip":
@@ -1571,7 +1571,7 @@ namespace OpenDentBusiness {
 			}
 			Procedure proc=Procedures.GetOneProc(rx.ProcNum,false);
 			ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
-			string retVal="Procedure Code:"+" "+procCode.ProcCode;
+			string retVal="Procedure Code:"+" "+procCode.Code;
 			if(proc.DiagnosticCode!="") {
 				retVal+="  "+"Diagnosis:"+" "+proc.DiagnosticCode;
 			}
@@ -1758,22 +1758,22 @@ namespace OpenDentBusiness {
 			Family fam=Patients.GetFamily(pat.PatNum);
 			List<PatPlan> patPlanList=PatPlans.Refresh(pat.PatNum);//Ordered by Ordinal
 			List<InsSub> subList=InsSubs.RefreshForFam(fam);
-			List<InsPlan> planList=InsPlans.RefreshForSubList(subList);
-			InsPlan insplan1=null;
+			List<InsurancePlan> planList=InsPlans.RefreshForSubList(subList);
+			InsurancePlan insplan1=null;
 			InsSub sub1=null;
 			Carrier carrier1=null;
 			if(patPlanList.Count>0) {
 				sub1=InsSubs.GetSub(patPlanList[0].InsSubNum,subList);
 				insplan1=InsPlans.GetPlan(sub1.PlanNum,planList);
-				carrier1=Carriers.GetCarrierDB(insplan1.CarrierNum);
+				carrier1=Carriers.GetCarrierDB(insplan1.CarrierId);
 			}
-			InsPlan insplan2=null;
+			InsurancePlan insplan2=null;
 			InsSub sub2=null;
 			Carrier carrier2=null;
 			if(patPlanList.Count>1) {
 				sub2=InsSubs.GetSub(patPlanList[1].InsSubNum,subList);
 				insplan2=InsPlans.GetPlan(sub2.PlanNum,planList);
-				carrier2=Carriers.GetCarrierDB(insplan2.CarrierNum);
+				carrier2=Carriers.GetCarrierDB(insplan2.CarrierId);
 			}
 			PatientNote patCurNote=PatientNotes.Refresh(pat.PatNum,pat.Guarantor);
 			foreach(SheetField field in sheet.SheetFields) {
@@ -1810,7 +1810,7 @@ namespace OpenDentBusiness {
 						break;
 					case "ins1CarrierName":
 						if(carrier1!=null) {
-							field.FieldValue=carrier1.CarrierName;
+							field.FieldValue=carrier1.Name;
 						}
 						break;
 					case "ins1CarrierPhone":
@@ -1830,7 +1830,7 @@ namespace OpenDentBusiness {
 						break;
 					case "ins1GroupNum":
 						if(insplan1!=null) {
-							field.FieldValue=insplan1.GroupNum;
+							field.FieldValue=insplan1.GroupNumber;
 						}
 						break;
 					case "ins1Relat":
@@ -1850,7 +1850,7 @@ namespace OpenDentBusiness {
 						break;
 					case "ins2CarrierName":
 						if(carrier2!=null) {
-							field.FieldValue=carrier2.CarrierName;
+							field.FieldValue=carrier2.Name;
 						}
 						break;
 					case "ins2CarrierPhone":
@@ -1870,7 +1870,7 @@ namespace OpenDentBusiness {
 						break;
 					case "ins2GroupNum":
 						if(insplan2!=null) {
-							field.FieldValue=insplan2.GroupNum;
+							field.FieldValue=insplan2.GroupNumber;
 						}
 						break;
 					case "ins2Relat":
@@ -2066,22 +2066,22 @@ namespace OpenDentBusiness {
 				patPlanList=PatPlans.Refresh(pat.PatNum);
 			}
 			List<InsSub> subList=InsSubs.RefreshForFam(fam);
-			List<InsPlan> planList=InsPlans.RefreshForSubList(subList);
-			InsPlan insplan1=null;
+			List<InsurancePlan> planList=InsPlans.RefreshForSubList(subList);
+			InsurancePlan insplan1=null;
 			InsSub sub1=null;
 			Carrier carrier1=null;
 			if(patPlanList.Count>0){
 				sub1=InsSubs.GetSub(patPlanList[0].InsSubNum,subList);
 				insplan1=InsPlans.GetPlan(sub1.PlanNum,planList);
-				carrier1=Carriers.GetCarrier(insplan1.CarrierNum);
+				carrier1=Carriers.GetCarrier(insplan1.CarrierId);
 			}
-			InsPlan insplan2=null;
+			InsurancePlan insplan2=null;
 			InsSub sub2=null;
 			Carrier carrier2=null;
 			if(patPlanList.Count>1) {
 				sub2=InsSubs.GetSub(patPlanList[1].InsSubNum,subList);
 				insplan2=InsPlans.GetPlan(sub2.PlanNum,planList);
-				carrier2=Carriers.GetCarrier(insplan2.CarrierNum);
+				carrier2=Carriers.GetCarrier(insplan2.CarrierId);
 			}
 			PatientNote patCurNote=PatientNotes.Refresh(pat.PatNum,pat.Guarantor);
 			foreach(SheetField field in sheet.SheetFields) {
@@ -2138,7 +2138,7 @@ namespace OpenDentBusiness {
 						break;
 					case "ins1CarrierName":
 						if(carrier1!=null){
-							field.FieldValue=carrier1.CarrierName;
+							field.FieldValue=carrier1.Name;
 						}
 						break;
 					case "ins1CarrierPhone":
@@ -2158,7 +2158,7 @@ namespace OpenDentBusiness {
 						break;
 					case "ins1GroupNum":
 						if(insplan1!=null) {
-							field.FieldValue=insplan1.GroupNum;
+							field.FieldValue=insplan1.GroupNumber;
 						}
 						break;
 					case "ins1Relat":
@@ -2178,7 +2178,7 @@ namespace OpenDentBusiness {
 						break;
 					case "ins2CarrierName":
 						if(carrier2!=null) {
-							field.FieldValue=carrier2.CarrierName;
+							field.FieldValue=carrier2.Name;
 						}
 						break;
 					case "ins2CarrierPhone":
@@ -2198,7 +2198,7 @@ namespace OpenDentBusiness {
 						break;
 					case "ins2GroupNum":
 						if(insplan2!=null) {
-							field.FieldValue=insplan2.GroupNum;
+							field.FieldValue=insplan2.GroupNumber;
 						}
 						break;
 					case "ins2Relat":
@@ -3179,7 +3179,7 @@ namespace OpenDentBusiness {
 							break;
 						}
 						Providers.RefreshCache();
-						List<Provider> listProviders=Providers.GetDeepCopy(true);
+						List<Provider> listProviders=Providers.GetAll(true);
 						field.FieldValue="PROVIDERS:"+"\r\n";
 						for(int i=0;i<listProviders.Count;i++) {//All non-hidden providers are added to the legend.
 							Provider prov=listProviders[i];

@@ -1,4 +1,5 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental;
 using OpenDentBusiness;
 using System;
@@ -175,12 +176,12 @@ namespace Imedisoft.Forms
 
 			foreach (var procedureCode in procedureCodes)
 			{
-				if (procedureCode.CodeNum == 0)
+				if (procedureCode.Id == 0)
 				{
 					continue;
 				}
 
-				procedureCodesListBox.Items.Add(procedureCode.ProcCode);
+				procedureCodesListBox.Items.Add(procedureCode.Code);
 			}
 		}
 
@@ -218,7 +219,7 @@ namespace Imedisoft.Forms
 
 			if (Prompt("Remove selected procedure(s)?") == DialogResult.Yes)
 			{
-				procedureCodes.RemoveAll(x => procedureCodesListBox.SelectedItems.Contains(x.ProcCode));
+				procedureCodes.RemoveAll(x => procedureCodesListBox.SelectedItems.Contains(x.Code));
 
 				RefreshListBoxProcCodes();
 			}
@@ -229,7 +230,7 @@ namespace Imedisoft.Forms
 			appointmentType.Name = nameTextBox.Text;
 			appointmentType.Color = colorButton.BackColor;
 			appointmentType.Hidden = hiddenCheckBox.Checked;
-			appointmentType.ProcedureCodes = String.Join(",", procedureCodes.Select(x => x.ProcCode));
+			appointmentType.ProcedureCodes = String.Join(",", procedureCodes.Select(x => x.Code));
 
 			if (timeStringBuilder.Length > 0)
 			{

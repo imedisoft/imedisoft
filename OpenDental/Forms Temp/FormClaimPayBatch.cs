@@ -1099,7 +1099,7 @@ namespace OpenDental{
 			if(formC.ShowDialog()!=DialogResult.OK) {
 				return;
 			}
-			textCarrier.Text=formC.SelectedCarrier.CarrierName;
+			textCarrier.Text=formC.SelectedCarrier.Name;
 			FillGrids();
 		}
 

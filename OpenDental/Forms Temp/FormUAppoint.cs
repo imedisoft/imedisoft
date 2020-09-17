@@ -568,7 +568,7 @@ namespace OpenDental{
 					schedsToSynch=Schedules.GetChangedSince(dateTimeLastUploaded);
 					opsToSynch=Operatories.GetChangedSince(dateTimeLastUploaded);
 					recallsToSynch=Recalls.GetChangedSince(dateTimeLastUploaded);
-					codesToSynch=ProcedureCodes.GetChangedSince(dateTimeLastUploaded);
+					codesToSynch=ProcedureCodes.GetChangedSince(dateTimeLastUploaded).ToList();
 				}
 				totalObjectsToSynch
 					=patientsToSynch.Count
@@ -902,17 +902,17 @@ namespace OpenDental{
 					}
 					code=codesToSynch[i];
 					writer.WriteStartElement("procedure-code");
-					if(Definitions.GetHidden(DefinitionCategory.ProcCodeCats,code.ProcCat)){
+					if(Definitions.GetHidden(DefinitionCategory.ProcCodeCats,code.ProcedureCategory)){
 						writer.WriteAttributeString("action","delete");
 					}
 					else{
 						writer.WriteAttributeString("action","");
 					}
-					writer.WriteAttributeString("id",code.CodeNum.ToString());
-					writer.WriteAttributeString("ada-code",code.ProcCode);
-					writer.WriteAttributeString("abbrev",code.AbbrDesc);
+					writer.WriteAttributeString("id",code.Id.ToString());
+					writer.WriteAttributeString("ada-code",code.Code);
+					writer.WriteAttributeString("abbrev",code.ShortDescription);
 					writer.WriteAttributeString("description",code.LaymanTerm);
-					writer.WriteAttributeString("long-description",code.Descript);
+					writer.WriteAttributeString("long-description",code.Description);
 					writer.WriteEndElement();
 					objectsInThisPost++;
 					codesInThisPost=i+1;

@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEtrans835ProcEdit:ODForm {
@@ -47,11 +48,11 @@ namespace OpenDental {
 			Text="Procedure Paid - Patient: "+_proc.ClaimPaid.PatientName;
 			textProcAdjudicated.Text=_proc.ProcCodeAdjudicated;
 			if(ProcedureCodes.IsValidCode(_proc.ProcCodeAdjudicated)) {
-				textProcAdjudicated.Text=_proc.ProcCodeAdjudicated+" - "+ProcedureCodes.GetProcCode(_proc.ProcCodeAdjudicated).AbbrDesc;
+				textProcAdjudicated.Text=_proc.ProcCodeAdjudicated+" - "+ProcedureCodes.GetProcCode(_proc.ProcCodeAdjudicated).ShortDescription;
 			}
 			textProcSubmitted.Text=_proc.ProcCodeBilled;
 			if(ProcedureCodes.IsValidCode(_proc.ProcCodeBilled)) {
-				textProcSubmitted.Text=_proc.ProcCodeBilled+" - "+ProcedureCodes.GetProcCode(_proc.ProcCodeBilled).AbbrDesc;
+				textProcSubmitted.Text=_proc.ProcCodeBilled+" - "+ProcedureCodes.GetProcCode(_proc.ProcCodeBilled).ShortDescription;
 			}
 			textDateService.Text=_proc.DateServiceStart.ToShortDateString();
 			if(_proc.DateServiceEnd>_proc.DateServiceStart) {

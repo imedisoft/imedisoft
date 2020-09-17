@@ -26,7 +26,7 @@ namespace OpenDentBusiness
 			public PatientNote PatNote;
 			public PatField[] ArrPatFields;
 			public List<InsSub> ListInsSubs;
-			public List<InsPlan> ListInsPlans;
+			public List<InsurancePlan> ListInsPlans;
 			public List<PatPlan> ListPatPlans;
 			public List<Benefit> ListBenefits;
 			public List<Claim> ListClaims;
@@ -121,7 +121,7 @@ namespace OpenDentBusiness
 					retVal.DictDateLastOrthoClaims = new SerializableDictionary<long, DateTime>();
 					foreach (PatPlan patPlan in retVal.ListPatPlans)
 					{
-						InsPlan plan = new InsPlan();
+						InsurancePlan plan = new InsurancePlan();
 						Logger.LogAction("InsPlans.GetPlan", () => plan = InsPlans.GetPlan(InsSubs.GetSub(patPlan.InsSubNum, retVal.ListInsSubs).PlanNum, retVal.ListInsPlans));
 						Logger.LogAction("DateLastOrthoClaims", () => retVal.DictDateLastOrthoClaims.Add(patPlan.PatPlanNum, Claims.GetDateLastOrthoClaim(patPlan, plan.OrthoType)));
 					}
@@ -3489,8 +3489,8 @@ namespace OpenDentBusiness
 		///					Claim: The claim that was created. Will be a new claim if success was not achieved.
 		///					string: Any errors from attempting to create the claim.</returns>
 		public static ODTuple<bool, Claim, string> CreateClaim(Claim ClaimCur, string claimType, List<PatPlan> PatPlanList,
-			List<InsPlan> planList, List<ClaimProc> ClaimProcList, List<Procedure> procsForPat, List<InsSub> subList,
-			Patient pat, PatientNote patNote, List<Procedure> listSelectedProcs, string claimError, InsPlan PlanCur,
+			List<InsurancePlan> planList, List<ClaimProc> ClaimProcList, List<Procedure> procsForPat, List<InsSub> subList,
+			Patient pat, PatientNote patNote, List<Procedure> listSelectedProcs, string claimError, InsurancePlan PlanCur,
 			InsSub SubCur, Relat relatOther, List<Fee> listFees = null)
 		{
 			Procedure proc;
@@ -3518,7 +3518,7 @@ namespace OpenDentBusiness
 			for (int i = 0; i < listProcs.Count; i++)
 			{
 				proc = listProcs[i];
-				if (Procedures.NoBillIns(proc, ClaimProcList, PlanCur.PlanNum))
+				if (Procedures.NoBillIns(proc, ClaimProcList, PlanCur.Id))
 				{
 					claimError = claimError.AppendLine("Not allowed to send procedures to insurance that are marked 'Do not bill to ins'.");
 					return new ODTuple<bool, Claim, string>(false, new Claim(), claimError);
@@ -3562,7 +3562,7 @@ namespace OpenDentBusiness
 			if (listInProcessProcs.Count > 0)
 			{
 				claimError = claimError.AppendLine("Not allowed to send procedures which are currently in process.\r\nProcs: "
-					+ String.Join(",", ProcedureCodes.GetCodesForCodeNums(listInProcessProcs.Select(x => x.CodeNum).ToList()).Select(x => x.ProcCode)));
+					+ String.Join(",", ProcedureCodes.GetCodesForCodeNums(listInProcessProcs.Select(x => x.CodeNum).ToList()).Select(x => x.Code)));
 				return new ODTuple<bool, Claim, string>(false, new Claim(), claimError);
 			}
 			ClaimProc[] claimProcs = new ClaimProc[listProcs.Count];//1:1 with listProcs
@@ -3668,7 +3668,7 @@ namespace OpenDentBusiness
 			//ClaimStatus does not change.  Set before calling this function.
 			//datereceived
 			InsSub sub;
-			ClaimCur.PlanNum = PlanCur.PlanNum;
+			ClaimCur.PlanNum = PlanCur.Id;
 			ClaimCur.InsSubNum = SubCur.InsSubNum;
 			switch (claimType)
 			{
@@ -3819,7 +3819,7 @@ namespace OpenDentBusiness
 				}
 				else
 				{
-					claimProcs[i].CodeSent = ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode;
+					claimProcs[i].CodeSent = ProcedureCodes.GetProcCode(proc.CodeNum).Code;
 					if (claimProcs[i].CodeSent.Length > 5 && claimProcs[i].CodeSent.Substring(0, 1) == "D")
 					{
 						claimProcs[i].CodeSent = claimProcs[i].CodeSent.Substring(0, 5);
@@ -3839,21 +3839,21 @@ namespace OpenDentBusiness
 				{
 					ClaimCur.ClaimNote = "";
 				}
-				if (!listCodeNums.Contains(procCodeCur.CodeNum))
+				if (!listCodeNums.Contains(procCodeCur.Id))
 				{
-					if (ClaimCur.ClaimNote.Length > 0 && !string.IsNullOrEmpty(procCodeCur.DefaultClaimNote))
+					if (ClaimCur.ClaimNote.Length > 0 && !string.IsNullOrEmpty(procCodeCur.DefaultNoteForClaim))
 					{
 						ClaimCur.ClaimNote += "\n";
 					}
-					ClaimCur.ClaimNote += procCodeCur.DefaultClaimNote;
-					listCodeNums.Add(procCodeCur.CodeNum);
+					ClaimCur.ClaimNote += procCodeCur.DefaultNoteForClaim;
+					listCodeNums.Add(procCodeCur.Id);
 				}
 				if (!ClaimCur.IsOrtho && Preferences.GetBool(PreferenceName.OrthoClaimMarkAsOrtho))
 				{//if it's already marked as Ortho (from a previous procedure), just skip this logic.
 					CovCat orthoCategory = CovCats.GetFirstOrDefault(x => x.EbenefitCat == EbenefitCategory.Orthodontics, true);
 					if (orthoCategory != null)
 					{
-						if (CovSpans.IsCodeInSpans(procCodeCur.ProcCode, CovSpans.GetWhere(x => x.CovCatNum == orthoCategory.Id).ToArray()))
+						if (CovSpans.IsCodeInSpans(procCodeCur.Code, CovSpans.GetWhere(x => x.CovCatNum == orthoCategory.Id).ToArray()))
 						{
 							ClaimCur.IsOrtho = true;
 							//ClaimCur.OrthoTotalM is a byte and patNote.OrthoMonthsTreatOverride is an integer so make sure it can fit.
@@ -3911,7 +3911,7 @@ namespace OpenDentBusiness
 		{
 			public List<PatPlan> ListPatPlans;
 			public List<InsSub> ListInsSubs;
-			public List<InsPlan> ListInsPlans;
+			public List<InsurancePlan> ListInsPlans;
 			public List<ClaimProc> ListClaimProcs;
 			public List<Procedure> ListProcs;
 			public PatientNote PatNote;

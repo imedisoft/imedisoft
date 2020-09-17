@@ -23,21 +23,21 @@ namespace Imedisoft.Data
 		public static List<AutoCodeCondition> GetAll()
 			=> cache.GetAll();
 
-		public static List<AutoCodeCondition> GetWhere(Predicate<AutoCodeCondition> predicate)
+		public static List<AutoCodeCondition> Find(Predicate<AutoCodeCondition> predicate)
 			=> cache.Find(predicate);
 
 		public static List<AutoCodeCondition> GetByAutoCodeItem(long autoCodeItemId)
-			=> GetWhere(x => x.AutoCodeItemId == autoCodeItemId);
+			=> Find(x => x.AutoCodeItemId == autoCodeItemId);
 
 		public static void DeleteForAutoCodeItemId(long autoCodeItemId)
 			=> Database.ExecuteNonQuery("DELETE FROM `auto_code_conditions` WHERE auto_code_item_id = " + autoCodeItemId);
 
-		public static void Save(AutoCodeCondition autoCodeCond)
+		public static void Save(AutoCodeCondition autoCodeCondition)
         {
-			if (autoCodeCond.Id == 0) ExecuteInsert(autoCodeCond);
+			if (autoCodeCondition.Id == 0) ExecuteInsert(autoCodeCondition);
             else
             {
-				ExecuteUpdate(autoCodeCond);
+				ExecuteUpdate(autoCodeCondition);
             }
         }
 

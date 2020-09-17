@@ -907,13 +907,13 @@ namespace OpenDental{
 			//}
 			//Carrier carrier;
 			Claim claim;
-			InsPlan plan;
+			InsurancePlan plan;
 			List<long> carrierNums=new List<long>();
 			foreach(GridRow row in gridMain.SelectedRows) {
 				ClaimSendQueueItem queueItem=(ClaimSendQueueItem)row.Tag;
 				claim=Claims.GetClaim(queueItem.ClaimNum);
-				plan=InsPlans.GetPlan(claim.PlanNum,new List <InsPlan> ());
-				carrierNums.Add(plan.CarrierNum);
+				plan=InsPlans.GetPlan(claim.PlanNum,new List <InsurancePlan> ());
+				carrierNums.Add(plan.CarrierId);
 			}
 			//carrier=Carriers.GetCarrier(plan.CarrierNum);
 			//LabelSingle label=new LabelSingle();

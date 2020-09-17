@@ -60,7 +60,7 @@ namespace OpenDental {
 			comboUnits.SelectedIndex=0;
 			for(int i=0;i<_listDrugUnits.Count;i++) {
 				comboUnits.Items.Add(_listDrugUnits[i].UnitIdentifier);
-				if(_listDrugUnits[i].DrugUnitNum==VaccinePatCur.DrugUnitNum) {
+				if(_listDrugUnits[i].Id==VaccinePatCur.DrugUnitNum) {
 					comboUnits.SelectedIndex=i+1;
 				}
 			}
@@ -109,7 +109,7 @@ namespace OpenDental {
 			}
 			_provNumSelectedOrdering=VaccinePatCur.ProvNumOrdering;
 			comboProvNumOrdering.Items.Clear();
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboProvNumOrdering.Items.Add(_listProviders[i].GetLongDesc());//Only visible provs added to combobox.
 				if(_listProviders[i].Id==VaccinePatCur.ProvNumOrdering) {
@@ -384,7 +384,7 @@ namespace OpenDental {
 				VaccinePatCur.DrugUnitNum=0;
 			}
 			else{
-				VaccinePatCur.DrugUnitNum=_listDrugUnits[comboUnits.SelectedIndex-1].DrugUnitNum;
+				VaccinePatCur.DrugUnitNum=_listDrugUnits[comboUnits.SelectedIndex-1].Id;
 			}
 			VaccinePatCur.LotNumber=textLotNum.Text;
 			VaccinePatCur.DateExpire=PIn.Date(textDateExpiration.Text);

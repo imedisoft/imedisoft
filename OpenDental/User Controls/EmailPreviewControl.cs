@@ -14,6 +14,7 @@ using Health.Direct.Common.Mime;
 using OpenDentBusiness.IO;
 using Imedisoft.UI;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class EmailPreviewControl:UserControl {
@@ -107,7 +108,7 @@ namespace OpenDental {
 				&& EmailAddressPreview.GetFrom()==fromAddressText)
 			{
 				//Sending email address should be set before loading this control.  This is the best approach to matching email account.
-				listMatchingEmailAddresses=_listEmailAddresses.FindAll(x => x.EmailAddressNum==EmailAddressPreview.EmailAddressNum);
+				listMatchingEmailAddresses=_listEmailAddresses.FindAll(x => x.Id==EmailAddressPreview.Id);
 			}
 			#endregion
 			#region Text based matching
@@ -115,7 +116,7 @@ namespace OpenDental {
 				foreach(EmailAddress emailAccount in _listEmailAddresses) {
 					//Less reliable, but works in most email account setups.
 					string senderAddress=emailAccount.SenderAddress.Trim().ToLower();
-					string emailUserName=emailAccount.EmailUsername.Trim().ToLower();
+					string emailUserName=emailAccount.SmtpUsername.Trim().ToLower();
 					string fromAddress=fromAddressText.Trim().ToLower();
 					if(((senderAddress!="" && fromAddress.Contains(senderAddress))
 						|| (emailUserName!="" && fromAddress.Contains(emailUserName))
@@ -322,8 +323,8 @@ namespace OpenDental {
         _listEmailAddresses.Add(emailAddressMe);
       }
 			foreach(EmailAddress emailCur in EmailAddresses.GetDeepCopy()) {
-        if((emailAddressDefault!=null && emailCur.EmailUsername==emailAddressDefault.EmailUsername)
-          || (emailAddressMe!=null && emailCur.EmailUsername==emailAddressMe.EmailUsername)) {
+        if((emailAddressDefault!=null && emailCur.SmtpUsername==emailAddressDefault.SmtpUsername)
+          || (emailAddressMe!=null && emailCur.SmtpUsername==emailAddressMe.SmtpUsername)) {
           continue;
         }
         _listEmailAddresses.Add(emailCur);
@@ -340,7 +341,7 @@ namespace OpenDental {
 				if(TryGetFromEmailAddress(out emailAddressSelected)==FromAddressMatchResult.Failed) {
 					return;
 				}
-				SetSig(EmailMessages.GetCertFromPrivateStore(emailAddressSelected.EmailUsername));
+				SetSig(EmailMessages.GetCertFromPrivateStore(emailAddressSelected.SmtpUsername));
 			}
 		}
 		
@@ -723,7 +724,7 @@ namespace OpenDental {
 			formEA.IsSelectionMode=true;
 			formEA.ShowDialog();
 			if(formEA.DialogResult==DialogResult.OK) {
-				EmailAddress emailAccountSelected=_listEmailAddresses.Find(x => x.EmailAddressNum==formEA.EmailAddressNum);
+				EmailAddress emailAccountSelected=_listEmailAddresses.Find(x => x.Id==formEA.EmailAddressNum);
 				if(emailAccountSelected!=null) {
 					EmailAddressPreview=emailAccountSelected;
 				}
@@ -735,7 +736,7 @@ namespace OpenDental {
 				if(!_isComposing || !_isSigningEnabled) {
 					return null;
 				}
-				SetSig(EmailMessages.GetCertFromPrivateStore(emailAccountSelected.EmailUsername));
+				SetSig(EmailMessages.GetCertFromPrivateStore(emailAccountSelected.SmtpUsername));
 			}
 			else {
 				EmailAddressPreview=null;

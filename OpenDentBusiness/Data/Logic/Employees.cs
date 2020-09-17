@@ -67,7 +67,7 @@ namespace Imedisoft.Data
 		public static List<Employee> GetAll(bool isShort = false) 
 			=> cache.GetAll();
 
-		public static List<Employee> GetWhere(Predicate<Employee> predicate, bool isShort = false) 
+		public static List<Employee> GetWhere(Predicate<Employee> predicate) 
 			=> cache.Find(predicate);
 
 		public static void RefreshCache() 

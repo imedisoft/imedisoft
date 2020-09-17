@@ -4,6 +4,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -36,14 +38,14 @@ namespace OpenDental {
 					return;
 				}
 			}
-			MountItemDefs.DeleteForMount(MountDefCur.MountDefNum);
+			MountItemDefs.DeleteForMount(MountDefCur.Id);
 			if(listType.SelectedIndex==0){//FMX
-				if(MountDefCur.IsNew){
+				if(MountDefCur.Id == 0){
 					MountDefCur.Description="FMX";
 				}
 				MountDefCur.Height=3*h;
 				MountDefCur.Width=w*4+h*3;
-				MountDefCur.ColorBack=Color.Black;
+				MountDefCur.BackColor=Color.Black;
 				//BWs first:
 				AddItem(1,0,h,w,h);
 				AddItem(2,w,h,w,h);
@@ -67,24 +69,24 @@ namespace OpenDental {
 				AddItem(18,2*w+2*h,3*h-w,h,w);
 			}
 			if(listType.SelectedIndex==1){//4BW
-				if(MountDefCur.IsNew){
+				if(MountDefCur.Id == 0){
 					MountDefCur.Description="4BW";
 				}
 				MountDefCur.Height=h;
 				MountDefCur.Width=w*4;
-				MountDefCur.ColorBack=Color.Black;
+				MountDefCur.BackColor=Color.Black;
 				AddItem(1,0,0,w,h);
 				AddItem(2,w,0,w,h);
 				AddItem(3,3*w,0,w,h);
 				AddItem(4,2*w,0,w,h);
 			}
 			if(listType.SelectedIndex==2){//Photos 3x2
-				if(MountDefCur.IsNew){
+				if(MountDefCur.Id == 0){
 					MountDefCur.Description="Photos";
 				}
 				MountDefCur.Height=h*2;
 				MountDefCur.Width=w*3;
-				MountDefCur.ColorBack=Color.White;
+				MountDefCur.BackColor=Color.White;
 				AddItem(1,0,0,w,h);
 				AddItem(2,w,0,w,h);
 				AddItem(3,2*w,0,w,h);
@@ -97,10 +99,10 @@ namespace OpenDental {
 
 		private void AddItem(int itemOrder,int x,int y,int w,int h){
 			MountItemDef mountItemDef=new MountItemDef();
-			mountItemDef.MountDefNum=MountDefCur.MountDefNum;
-			mountItemDef.ItemOrder=itemOrder;
-			mountItemDef.Xpos=x;
-			mountItemDef.Ypos=y;
+			mountItemDef.MountDefId=MountDefCur.Id;
+			mountItemDef.SortOrder=itemOrder;
+			mountItemDef.X=x;
+			mountItemDef.Y=y;
 			mountItemDef.Width=w;
 			mountItemDef.Height=h;
 			MountItemDefs.Insert(mountItemDef);

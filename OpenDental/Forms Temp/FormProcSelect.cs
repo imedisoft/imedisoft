@@ -8,6 +8,7 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.Linq;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental{
 	/// <summary></summary>
@@ -143,7 +144,7 @@ namespace OpenDental{
 				row=new GridRow();
 				row.Cells.Add(procCur.ProcDate.ToShortDateString());
 				row.Cells.Add(Providers.GetAbbr(entry.ProvNum));
-				row.Cells.Add(procCodeCur.ProcCode);
+				row.Cells.Add(procCodeCur.Code);
 				if(!Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 					row.Cells.Add(procCur.ToothNum=="" ? Tooth.SurfTidyFromDbToDisplay(procCur.Surf,procCur.ToothNum) : Tooth.ToInternat(procCur.ToothNum));
 				}
@@ -151,7 +152,7 @@ namespace OpenDental{
 				if(procCur.ProcStatus==ProcStat.TP) {
 					descriptionText="(TP) ";
 				}
-				descriptionText+=procCodeCur.Descript;
+				descriptionText+=procCodeCur.Description;
 				row.Cells.Add(descriptionText);
 				row.Cells.Add(entry.AmountOriginal.ToString("f"));
 				if(credCalc != CreditCalcType.ExcludeAll) {

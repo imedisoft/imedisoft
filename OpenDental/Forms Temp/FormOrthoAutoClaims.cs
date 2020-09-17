@@ -124,7 +124,7 @@ namespace OpenDental {
 				listPatPlanNums.Add(PIn.Long(rowCur["PatPlanNum"].ToString()));
 				listInsSubNums.Add(PIn.Long(rowCur["InsSubNum"].ToString()));
 			}
-			List<InsPlan> listSelectedInsPlans=InsPlans.GetPlans(listPlanNums);
+			List<InsurancePlan> listSelectedInsPlans=InsPlans.GetPlans(listPlanNums);
 			List<PatPlan> listSelectedPatPlans=PatPlans.GetPatPlans(listPatPlanNums);
 			List<InsSub> listSelectedInsSubs=InsSubs.GetMany(listInsSubNums);
 			List<DataRow> rowsSucceeded=new List<DataRow>();
@@ -148,13 +148,13 @@ namespace OpenDental {
 					//create a procedure
 					//Procedures.CreateProcForPat(patNumCur,codeNumCur,"","",ProcStat.C,provNumCur);
 					Procedure proc = Procedures.CreateOrthoAutoProcsForPat(patNumCur,codeNumCur,provNumCur,clinicNumCur,dateDue);
-					InsPlan insPlanCur = InsPlans.GetPlan(insPlanNumCur,listSelectedInsPlans);
+					InsurancePlan insPlanCur = InsPlans.GetPlan(insPlanNumCur,listSelectedInsPlans);
 					PatPlan patPlanCur = listSelectedPatPlans.FirstOrDefault(x => x.PatPlanNum == patPlanNumCur);
 					InsSub insSubCur = listSelectedInsSubs.FirstOrDefault(x => x.InsSubNum==insSubNumCur);
 					List<Benefit> benefitList=listBenefitsAll.FindAll(x => x.PatPlanNum==patPlanCur.PatPlanNum || x.PlanNum==insSubCur.PlanNum);
 					//create a claimproc
 					List<ClaimProc> listClaimProcs=new List<ClaimProc>();
-					Procedures.ComputeEstimates(proc,patNumCur,ref listClaimProcs,true,new List<InsPlan> { insPlanCur },
+					Procedures.ComputeEstimates(proc,patNumCur,ref listClaimProcs,true,new List<InsurancePlan> { insPlanCur },
 						new List<PatPlan> { patPlanCur },benefitList,null,null,true,patCur.Age,new List<InsSub> { insSubCur },isForOrtho:true);
 					//make the feebilled == the insplan feebilled or patplan feebilled
 					double feebilled = patPlanCur.OrthoAutoFeeBilledOverride == -1 ? insPlanCur.OrthoAutoFeeBilled : patPlanCur.OrthoAutoFeeBilledOverride;

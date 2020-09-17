@@ -633,7 +633,7 @@ namespace OpenDental{
 			_listApptViewItems=ApptViewItems.GetWhere(x => x.ApptViewNum==ApptViewCur.ApptViewNum);
 			_listApptViewItemDefs=_listApptViewItems.FindAll(x => x.OpNum==0 && x.ProvNum==0);
 			FillOperatories();
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				listProv.Items.Add(_listProviders[i].GetLongDesc());
 				if(_listApptViewItems.Select(x => x.ProvNum).Contains(_listProviders[i].Id)) {

@@ -453,7 +453,7 @@ Allergies
 						allergyDef=new AllergyDef();
 					}
 					else {
-						allergyDef=AllergyDefs.GetOne(allergy.AllergyDefId);
+						allergyDef=AllergyDefs.GetById(allergy.AllergyDefId);
 					}
 					Start("tr");
 					//if(allergyDef.SnomedAllergyTo!="") {//Is Snomed allergy.
@@ -497,7 +497,7 @@ Allergies
 					allergyDef=new AllergyDef();
 				}
 				else {
-					allergyDef=AllergyDefs.GetOne(allergy.AllergyDefId);
+					allergyDef=AllergyDefs.GetById(allergy.AllergyDefId);
 				}
 
 				string allergyType= allergyDef.SnomedCode ?? "";
@@ -680,11 +680,11 @@ Encounters
 				Start("tbody");
 				for(int i=0;i<listEncountersFiltered.Count;i++) {
 					Start("tr");
-					if(listEncountersFiltered[i].ProvNum==0) {
+					if(listEncountersFiltered[i].ProviderId==0) {
 						_w.WriteElementString("td","");
 					}
 					else {
-						_w.WriteElementString("td",Providers.GetById(listEncountersFiltered[i].ProvNum).GetFormalName());
+						_w.WriteElementString("td",Providers.GetById(listEncountersFiltered[i].ProviderId).GetFormalName());
 					}
 					Snomed snomedDiagnosis=Snomeds.GetByCode(listEncountersFiltered[i].CodeValue);
 					if(snomedDiagnosis==null) {//Could be null if the code was imported from another EHR.
@@ -726,22 +726,22 @@ Encounters
 				else {
 					StartAndEnd("effectiveTime","value",listEncountersFiltered[i].DateEncounter.ToString("yyyyMMdd"));
 				}
-				Provider prov=Providers.GetById(listEncountersFiltered[i].ProvNum);
+				Provider prov=Providers.GetById(listEncountersFiltered[i].ProviderId);
 				if(prov!=null && !prov.IsNotPerson) {
 					Start("performer");
 					Start("assignedEntity");
 					Guid();
 					_w.WriteComment("Performer Information");
-					if(listEncountersFiltered[i].ProvNum==0) {
+					if(listEncountersFiltered[i].ProviderId==0) {
 						StartAndEnd("code","nullFlavor","UNK");
 					}
 					else {
-						prov=Providers.GetById(listEncountersFiltered[i].ProvNum);
+						prov=Providers.GetById(listEncountersFiltered[i].ProviderId);
 						StartAndEnd("code","code",GetTaxonomy(prov),"codeSystem",strCodeSystemNucc,"codeSystemName",strCodeSystemNameNucc);
 					}
 					//The assignedPerson element might not be allowed here. If that is the case, then performer is useless, because it would only contain the specialty code. Our HTML output shows the prov name.
 					Start("assignedPerson");
-					if(listEncountersFiltered[i].ProvNum==0) {
+					if(listEncountersFiltered[i].ProviderId==0) {
 						StartAndEnd("name","nullFlavor","UNK");
 					}
 					else {
@@ -1651,14 +1651,14 @@ Procedures
 				for(int i=0;i<listProcsFiltered.Count;i++) {
 					ProcedureCode procCode=ProcedureCodes.GetProcCode(listProcsFiltered[i].CodeNum);
 					Start("tr");
-					if(Regex.IsMatch(procCode.ProcCode,"^D[0-9]{4}$")) {//CDT code (ADA code)
-						_w.WriteElementString("td",procCode.ProcCode+" - "+procCode.Descript);
+					if(Regex.IsMatch(procCode.Code,"^D[0-9]{4}$")) {//CDT code (ADA code)
+						_w.WriteElementString("td",procCode.Code+" - "+procCode.Description);
 					}
-					else if(Regex.IsMatch(procCode.ProcCode,"^[0-9]{5}$")) {//CPT-4 code (medical code)
-						_w.WriteElementString("td",procCode.ProcCode+" - "+procCode.Descript);
+					else if(Regex.IsMatch(procCode.Code,"^[0-9]{5}$")) {//CPT-4 code (medical code)
+						_w.WriteElementString("td",procCode.Code+" - "+procCode.Description);
 					}
-					else if(Snomeds.CodeExists(procCode.ProcCode)) {//The SNOMED CT code system contains numerical codes which are between 6 and 18 digits in length as far as we know. Should not overlap CPT codes.
-						Snomed snomed=Snomeds.GetByCode(procCode.ProcCode);
+					else if(Snomeds.CodeExists(procCode.Code)) {//The SNOMED CT code system contains numerical codes which are between 6 and 18 digits in length as far as we know. Should not overlap CPT codes.
+						Snomed snomed=Snomeds.GetByCode(procCode.Code);
 						_w.WriteElementString("td",snomed.Code+" - "+snomed.Description);
 					}
 					else {//Unknown code.  Output a "blank" procedure row as required by CCD standard.
@@ -1704,17 +1704,17 @@ Procedures
 				//ICD10 Procedure Coding System (CodeSystem: 2.16.840.1.113883.6.4) (CONF:7657)."
 				//In November of 2013, ONC addopted CDT into EHR certification. http://ehrintelligence.com/2013/11/05/ehr-adoption-may-be-easier-for-dentists-with-new-onc-ruling/
 				//The CDT OID is 2.16.840.1.113883.6.13 and the code system description is cdt-ADAcodes.
-				if(procCode.ProcCode==null) {//Happens when listProcsFiltered[i].CodeNum is invalid or 0 (we create a procedure with CodeNum=0 above this loop if the procedure list is empty).
+				if(procCode.Code==null) {//Happens when listProcsFiltered[i].CodeNum is invalid or 0 (we create a procedure with CodeNum=0 above this loop if the procedure list is empty).
 					StartAndEnd("code","nullFlavor","UNK");//Unknown code.  Output a "blank" procedure row as required by CCD standard.
 				}
-				else if(Regex.IsMatch(procCode.ProcCode,"^D[0-9]{4}$")) {//CDT code (ADA code)
-					StartAndEnd("code","code",procCode.ProcCode,"codeSystem",strCodeSystemCdt,"displayName",procCode.Descript,"codeSystemName",strCodeSystemNameCdt);
+				else if(Regex.IsMatch(procCode.Code,"^D[0-9]{4}$")) {//CDT code (ADA code)
+					StartAndEnd("code","code",procCode.Code,"codeSystem",strCodeSystemCdt,"displayName",procCode.Description,"codeSystemName",strCodeSystemNameCdt);
 				}
-				else if(Regex.IsMatch(procCode.ProcCode,"^[0-9]{5}$")) {//CPT-4 code (medical code)
-					StartAndEnd("code","code",procCode.ProcCode,"codeSystem",strCodeSystemCpt4,"displayName",procCode.Descript,"codeSystemName",strCodeSystemNameCpt4);
+				else if(Regex.IsMatch(procCode.Code,"^[0-9]{5}$")) {//CPT-4 code (medical code)
+					StartAndEnd("code","code",procCode.Code,"codeSystem",strCodeSystemCpt4,"displayName",procCode.Description,"codeSystemName",strCodeSystemNameCpt4);
 				}
-				else if(Snomeds.CodeExists(procCode.ProcCode)) {//The SNOMED CT code system contains numerical codes which are between 6 and 18 digits in length as far as we know. Should not overlap CPT codes.
-					Snomed snomed=Snomeds.GetByCode(procCode.ProcCode);
+				else if(Snomeds.CodeExists(procCode.Code)) {//The SNOMED CT code system contains numerical codes which are between 6 and 18 digits in length as far as we know. Should not overlap CPT codes.
+					Snomed snomed=Snomeds.GetByCode(procCode.Code);
 					StartAndEnd("code","code",snomed.Code,"codeSystem",strCodeSystemSnomed,"displayName",snomed.Description,"codeSystemName",strCodeSystemNameSnomed);
 				}
 				else {//Unknown code.  Output a "blank" procedure row as required by CCD standard.
@@ -2581,7 +2581,7 @@ Vital Signs
 			List<Allergy> listAllergiesAll=Allergies.GetByPatient(patCur.PatNum).ToList();
 			List<Allergy> listAllergiesFiltered=new List<Allergy>();
 			for(int i=0;i<listAllergiesAll.Count;i++) {
-				allergyDef=AllergyDefs.GetOne(listAllergiesAll[i].AllergyDefId);
+				allergyDef=AllergyDefs.GetById(listAllergiesAll[i].AllergyDefId);
 				bool isMedAllergy=false;
 				if(allergyDef.MedicationId.HasValue) {
 					Medication med=Medications.GetById(allergyDef.MedicationId.Value);

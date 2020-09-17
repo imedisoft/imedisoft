@@ -53,10 +53,10 @@ namespace OpenDentBusiness.Eclaims {
 			Clinic clinic;
 			Provider billProv;
 			Provider treatProv;
-			InsPlan insPlan;
+			InsurancePlan insPlan;
 			InsSub insSub;
 			Carrier carrier;
-			InsPlan insPlan2=null;
+			InsurancePlan insPlan2=null;
 			InsSub insSub2=null;
 			Carrier carrier2=null;
 			List <PatPlan> patPlansForPatient;
@@ -158,17 +158,17 @@ namespace OpenDentBusiness.Eclaims {
 			claim=Claims.GetClaim(claim.ClaimNum);
 			clinic=Clinics.GetById(claim.ClinicNum);
 			Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-			billProv=Providers.GetFirstOrDefault(x => x.Id==claim.ProvBill)??providerFirst;
-			treatProv=Providers.GetFirstOrDefault(x => x.Id==claim.ProvTreat)??providerFirst;
-			insPlan=InsPlans.GetPlan(planNum,new List <InsPlan> ());
+			billProv=Providers.FirstOrDefault(x => x.Id==claim.ProvBill)??providerFirst;
+			treatProv=Providers.FirstOrDefault(x => x.Id==claim.ProvTreat)??providerFirst;
+			insPlan=InsPlans.GetPlan(planNum,new List <InsurancePlan> ());
 			insSub=InsSubs.GetSub(insSubNum,new List<InsSub>());
 			if(planNum2>0) {
-				insPlan2=InsPlans.GetPlan(planNum2,new List<InsPlan>());
+				insPlan2=InsPlans.GetPlan(planNum2,new List<InsurancePlan>());
 				insSub2=InsSubs.GetSub(insSubNum2,new List<InsSub>());
-				carrier2=Carriers.GetCarrier(insPlan2.CarrierNum);
+				carrier2=Carriers.GetCarrier(insPlan2.CarrierId);
 				subscriber2=Patients.GetPat(insSub2.Subscriber);
 			}
-			carrier=Carriers.GetCarrier(insPlan.CarrierNum);
+			carrier=Carriers.GetCarrier(insPlan.CarrierId);
 			Carrier carrierReceiver=carrier;//This is the value used for primary eclaims and preauths.
 			if(carrierReceiver==null) {
 				throw new ODException("Invalid carrier associated to insurance plan.  Please run Database Maintenance to fix this.");
@@ -185,12 +185,12 @@ namespace OpenDentBusiness.Eclaims {
 			else if(claim.ClaimType=="PreAuth") {
 				if(!carrier.CanadianSupportedTypes.HasFlag(CanSupTransTypes.PredeterminationSinglePage_03) && 
 					!carrier.CanadianSupportedTypes.HasFlag(CanSupTransTypes.PredeterminationMultiPage_03)
-					&& carrier.ElectID!="610099")//ClaimSecure says to iTrans that they support PreAuths, iTrans has not reflected this in their carrier json.
+					&& carrier.ElectronicId!="610099")//ClaimSecure says to iTrans that they support PreAuths, iTrans has not reflected this in their carrier json.
 				{//We will consider removing carrier specific cases here in the future.
 					throw new ApplicationException("This carrier does not accept electronic Pre Authorizations (predeterminations).");
 				}
 			}
-			CanadianNetwork network=CanadianNetworks.GetNetwork(carrierReceiver.CanadianNetworkNum,clearinghouseClin);
+			CanadianNetwork network=CanadianNetworks.GetNetwork(carrierReceiver.CanadianNetworkId,clearinghouseClin);
 			patPlansForPatient=PatPlans.Refresh(claim.PatNum);
 			patient=Patients.GetPat(claim.PatNum);
 			subscriber=Patients.GetPat(insSub.Subscriber);
@@ -222,7 +222,7 @@ namespace OpenDentBusiness.Eclaims {
 				}
 			}
 			//A05 carrier id number 6 N
-			strb.Append(carrier.ElectID);//already validated as 6 digit number.  Must always be the primary carrier, even for secondary (COB) eclaims.
+			strb.Append(carrier.ElectronicId);//already validated as 6 digit number.  Must always be the primary carrier, even for secondary (COB) eclaims.
 			//A06 software system id 3 AN
 			strb.Append(SoftwareSystemId());
 			if(carrierReceiver.CDAnetVersion!="02") { //version 04
@@ -279,12 +279,12 @@ namespace OpenDentBusiness.Eclaims {
 			if(carrierReceiver.CDAnetVersion=="02") {
 				//C01 primary policy/plan number 8 AN
 				//only validated to ensure that it's not blank and is less than 8. Also that no spaces.
-				strb.Append(TidyAN(insPlan.GroupNum,8));
+				strb.Append(TidyAN(insPlan.GroupNumber,8));
 			}
 			else { //version 04
 				//C01 primary policy/plan number 12 AN
 				//only validated to ensure that it's not blank and is less than 12. Also that no spaces.
-				strb.Append(TidyAN(insPlan.GroupNum,12));
+				strb.Append(TidyAN(insPlan.GroupNumber,12));
 			}
 			//C11 primary division/section number 10 AN
 			strb.Append(TidyAN(insPlan.DivisionNo,10));
@@ -495,7 +495,7 @@ namespace OpenDentBusiness.Eclaims {
 				}
 				//E01 sec carrier id number 6 N
 				if(carrier2.IsCDA) {
-					strb.Append(carrier2.ElectID);//Validated as 6 digit number.  Must always be the secondary carrier, even for secondary (COB) eclaims.
+					strb.Append(carrier2.ElectronicId);//Validated as 6 digit number.  Must always be the secondary carrier, even for secondary (COB) eclaims.
 				}
 				else {
 					strb.Append("999999");//See page 74 in version 4.1 document, page 26 in version 2.4 document.
@@ -504,13 +504,13 @@ namespace OpenDentBusiness.Eclaims {
 					//E02 sec carrier policy/plan num 8 AN
 					//only validated to ensure that it's not blank and is less than 8. Also that no spaces.
 					//We might later allow 999999 if sec carrier is unlisted or unknown.
-					strb.Append(TidyAN(insPlan2.GroupNum,8));
+					strb.Append(TidyAN(insPlan2.GroupNumber,8));
 				}
 				else { //version 04
 					//E02 sec carrier policy/plan num 12 AN
 					//only validated to ensure that it's not blank and is less than 12. Also that no spaces.
 					//We might later allow 999999 if sec carrier is unlisted or unknown.
-					strb.Append(TidyAN(insPlan2.GroupNum,12));
+					strb.Append(TidyAN(insPlan2.GroupNumber,12));
 				}
 				//E05 sec division/section num 10 AN
 				strb.Append(TidyAN(insPlan2.DivisionNo,10));
@@ -769,7 +769,7 @@ namespace OpenDentBusiness.Eclaims {
 				strb.Append(GetToothQuadOrArch(proc,procCode));
 				//F11 tooth surface 5 A
 				//the SurfTidy function is very thorough, so it's OK to use TidyAN
-				if(procCode.TreatArea==TreatmentArea.Surf) {
+				if(procCode.TreatmentArea==ProcedureTreatmentArea.Surface) {
 #if DEBUG
 					//since the scripts use impossible surfaces, we need to just use raw database here
 					strb.Append(TidyAN(proc.Surf,5));
@@ -785,7 +785,7 @@ namespace OpenDentBusiness.Eclaims {
 				if(carrierReceiver.CDAnetVersion!="02") { //version 04
 					//F34 lab procedure code #1 5 AN
 					if(procListLabForOne.Count>0) {
-						strb.Append(TidyAN(ProcedureCodes.GetProcCode(procListLabForOne[0].CodeNum).ProcCode,5).Trim().PadLeft(5,'0'));
+						strb.Append(TidyAN(ProcedureCodes.GetProcCode(procListLabForOne[0].CodeNum).Code,5).Trim().PadLeft(5,'0'));
 					}
 					else {
 						strb.Append("     ");
@@ -810,7 +810,7 @@ namespace OpenDentBusiness.Eclaims {
 				else { //version 04
 					//F35 lab procedure code #2 5 AN
 					if(procListLabForOne.Count>1) {
-						strb.Append(TidyAN(ProcedureCodes.GetProcCode(procListLabForOne[1].CodeNum).ProcCode,5).Trim().PadLeft(5,'0'));
+						strb.Append(TidyAN(ProcedureCodes.GetProcCode(procListLabForOne[1].CodeNum).Code,5).Trim().PadLeft(5,'0'));
 					}
 					else {
 						strb.Append("     ");
@@ -901,7 +901,7 @@ namespace OpenDentBusiness.Eclaims {
 			Etranss.SetMessage(etrans.EtransNum,strb.ToString());//Save outgoing history.
 			Family fam=null;
 			List<InsSub> subList=null;
-			List<InsPlan> planList=null;
+			List<InsurancePlan> planList=null;
 			List<Benefit> benefitList=null;
 			if(errorMsg!="") {
 				throw new ApplicationException(errorMsg);
@@ -1027,7 +1027,7 @@ namespace OpenDentBusiness.Eclaims {
 		{
 			Family fam=Patients.GetFamily(claim.PatNum);
 			List<InsSub> listInsSubs=InsSubs.RefreshForFam(fam);
-			List<InsPlan> listInsPlans=InsPlans.RefreshForSubList(listInsSubs);
+			List<InsurancePlan> listInsPlans=InsPlans.RefreshForSubList(listInsSubs);
 			List<Benefit> listBenefits=Benefits.Refresh(PatPlans.Refresh(claim.PatNum),listInsSubs);
 			Canadian.EOBImportHelper(fieldInputter,listClaimProcsForClaim,listPatProcs,listClaimProcs,claim,isAutomatic,showProviderTransferWindow,eobBehavior,listInsPlans,listBenefits,listInsSubs,patient);
 		}
@@ -1038,7 +1038,7 @@ namespace OpenDentBusiness.Eclaims {
 		///For eraBehavior, do not pass in None.</summary>
 		public static void EOBImportHelper(CCDFieldInputter fieldInputter,List<ClaimProc> listClaimProcsForClaim,List<Procedure> listPatProcs,
 			List<ClaimProc> listClaimProcs,Claim claim,bool isAutomatic,ShowProviderTransferWindowDelegate showProviderTransferWindow,EraBehaviors eobBehavior,
-			List<InsPlan> listInsPlans,List<Benefit> listBenefits,List<InsSub> listInsSubs,Patient patient)//int patAge)
+			List<InsurancePlan> listInsPlans,List<Benefit> listBenefits,List<InsSub> listInsSubs,Patient patient)//int patAge)
 		{
 			if(!fieldInputter.MsgType.In("21","23") //Currently only supports EOB and predetermination EOBs.
 				|| (listClaimProcsForClaim.Exists(x => x.Status.In(ClaimProcStatus.Received,ClaimProcStatus.Supplemental,ClaimProcStatus.CapComplete) || x.ClaimPaymentNum!=0)))//Mimics FormClaimEdit.cs by proc button.
@@ -1835,7 +1835,7 @@ namespace OpenDentBusiness.Eclaims {
 			string payerid = "";
 			if (carrier != null)
 			{
-				payerid = carrier.ElectID;
+				payerid = carrier.ElectronicId;
 			
 			}
 
@@ -2164,8 +2164,8 @@ namespace OpenDentBusiness.Eclaims {
 		private static string GetToothQuadOrArch(Procedure proc,ProcedureCode procCode){
 			//See the ODA Suggested Fee Guide for General Practitioners for year 2017 page 71 for the
 			//Identification System for Arches, Quadrants, Sextants, Joints.
-			switch(procCode.TreatArea){
-				case TreatmentArea.Arch:
+			switch(procCode.TreatmentArea){
+				case ProcedureTreatmentArea.Arch:
 					if(proc.Surf.ToUpper()=="U"){
 						return "01";
 					}
@@ -2173,10 +2173,10 @@ namespace OpenDentBusiness.Eclaims {
 						return "02";
 					}
 					return "00";//Full mouth.
-				case TreatmentArea.Mouth:
-				case TreatmentArea.None:
+				case ProcedureTreatmentArea.Mouth:
+				case ProcedureTreatmentArea.None:
 					return "00";
-				case TreatmentArea.Quad:
+				case ProcedureTreatmentArea.Quad:
 					if(proc.Surf=="UR"){
 						return "10";
 					}
@@ -2189,12 +2189,12 @@ namespace OpenDentBusiness.Eclaims {
 					else{//LL
 						return "30";
 					}
-				case TreatmentArea.Sextant:
+				case ProcedureTreatmentArea.Sextant:
 					return Tooth.GetSextant(proc.Surf,ToothNumberingNomenclature.FDI);
-				case TreatmentArea.Surf:
-				case TreatmentArea.Tooth:
+				case ProcedureTreatmentArea.Surface:
+				case ProcedureTreatmentArea.Tooth:
 					return Tooth.ToInternat(proc.ToothNum);
-				case TreatmentArea.ToothRange:
+				case ProcedureTreatmentArea.ToothRange:
 					string[] range=proc.ToothRange.Split(',');
 					if(range.Length==0 || !Tooth.IsValidDB(range[0])){
 						return "00";
@@ -2212,12 +2212,12 @@ namespace OpenDentBusiness.Eclaims {
 			string retVal="";
 			Claim claim=Claims.GetClaim(queueItem.ClaimNum);
 			Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-			Provider billProv=Providers.GetFirstOrDefault(x => x.Id==claim.ProvBill)??providerFirst;
-			Provider treatProv=Providers.GetFirstOrDefault(x => x.Id==claim.ProvTreat)??providerFirst;
+			Provider billProv=Providers.FirstOrDefault(x => x.Id==claim.ProvBill)??providerFirst;
+			Provider treatProv=Providers.FirstOrDefault(x => x.Id==claim.ProvTreat)??providerFirst;
 			InsSub insSub=InsSubs.GetSub(claim.InsSubNum,new List<InsSub>());
-			InsPlan insPlan=InsPlans.GetPlan(claim.PlanNum,new List <InsPlan> ());
-			Carrier carrier=Carriers.GetCarrier(insPlan.CarrierNum);
-			if(carrier.CanadianNetworkNum==0) {
+			InsurancePlan insPlan=InsPlans.GetPlan(claim.PlanNum,new List <InsurancePlan> ());
+			Carrier carrier=Carriers.GetCarrier(insPlan.CarrierId);
+			if(carrier.CanadianNetworkId==0) {
 				if(retVal!="")
 					retVal+=", ";
 				retVal+="Primary carrier network not set";
@@ -2235,13 +2235,13 @@ namespace OpenDentBusiness.Eclaims {
 				}
 			}
 			InsSub insSub2=null;
-			InsPlan insPlan2=null;
+			InsurancePlan insPlan2=null;
 			Carrier carrier2=null;
 			Patient subscriber2=null;
 			if(claim.ClaimType!="S" && claim.PlanNum2>0) {//Is primary claim and the patient has secondary insurance.
 				insSub2=InsSubs.GetSub(claim.InsSubNum2,new List<InsSub>());
-				insPlan2=InsPlans.GetPlan(claim.PlanNum2,new List <InsPlan> ());
-				carrier2=Carriers.GetCarrier(insPlan2.CarrierNum);
+				insPlan2=InsPlans.GetPlan(claim.PlanNum2,new List <InsurancePlan> ());
+				carrier2=Carriers.GetCarrier(insPlan2.CarrierId);
 				subscriber2=Patients.GetPat(insSub2.Subscriber);
 			}
 			Patient patient=Patients.GetPat(claim.PatNum);
@@ -2252,7 +2252,7 @@ namespace OpenDentBusiness.Eclaims {
 			Procedure proc;
 			ProcedureCode procCode;
 			List<Procedure> extracted=Procedures.GetCanadianExtractedTeeth(procListAll);
-			if(!Regex.IsMatch(carrier.ElectID,@"^[0-9]{6}$")) {
+			if(!Regex.IsMatch(carrier.ElectronicId,@"^[0-9]{6}$")) {
 				if(retVal!="")
 					retVal+=", ";
 				retVal+="CarrierId 6 digits";
@@ -2277,7 +2277,7 @@ namespace OpenDentBusiness.Eclaims {
 					retVal+=", ";
 				retVal+="BillingProv office num 4 char";
 			}
-			if(insPlan.GroupNum.Length==0 || insPlan.GroupNum.Length>12 || insPlan.GroupNum.Contains(" ")) {
+			if(insPlan.GroupNumber.Length==0 || insPlan.GroupNumber.Length>12 || insPlan.GroupNumber.Contains(" ")) {
 				if(retVal!="")
 					retVal+=", ";
 				retVal+="Plan Number";
@@ -2369,7 +2369,7 @@ namespace OpenDentBusiness.Eclaims {
 					retVal+=",";
 				retVal+="Missing teeth not entered";
 			}*/
-			if(carrier.ElectID=="000064") { //Checks for Pacific Blue Cross (PBC) for primary as required for certification.
+			if(carrier.ElectronicId=="000064") { //Checks for Pacific Blue Cross (PBC) for primary as required for certification.
 				List<PatPlan> patPlansForPatient=PatPlans.Refresh(claim.PatNum);
 				for(int p=0;p<patPlansForPatient.Count;p++) {
 					if(patPlansForPatient[p].InsSubNum==claim.InsSubNum) {
@@ -2378,7 +2378,7 @@ namespace OpenDentBusiness.Eclaims {
 					}
 				}
 			}
-			if(carrier2!=null && carrier2.ElectID=="000064") { //Checks for Pacific Blue Cross (PBC) for secondary as required for certification.
+			if(carrier2!=null && carrier2.ElectronicId=="000064") { //Checks for Pacific Blue Cross (PBC) for secondary as required for certification.
 				List<PatPlan> patPlansForPatient=PatPlans.Refresh(claim.PatNum);
 				for(int p=0;p<patPlansForPatient.Count;p++) {
 					if(patPlansForPatient[p].InsSubNum==claim.InsSubNum2) {
@@ -2388,12 +2388,12 @@ namespace OpenDentBusiness.Eclaims {
 				}
 			}
 			if(claim.ClaimType!="S" && claim.PlanNum2>0){//Is primary claim and the patient has secondary insurance.
-				if(carrier2.IsCDA && !Regex.IsMatch(carrier2.ElectID,@"^[0-9]{6}$")) {//If not CDA, then we send "999999" as per specification.
+				if(carrier2.IsCDA && !Regex.IsMatch(carrier2.ElectronicId,@"^[0-9]{6}$")) {//If not CDA, then we send "999999" as per specification.
 					if(retVal!="")
 						retVal+=", ";
 					retVal+="Sec CarrierId 6 digits";
 				}
-				if(insPlan2.GroupNum.Length==0 || insPlan2.GroupNum.Length>12 || insPlan2.GroupNum.Contains(" ")) {
+				if(insPlan2.GroupNumber.Length==0 || insPlan2.GroupNumber.Length>12 || insPlan2.GroupNumber.Contains(" ")) {
 					if(retVal!="")
 						retVal+=", ";
 					retVal+="Sec Plan Number";
@@ -2551,27 +2551,27 @@ namespace OpenDentBusiness.Eclaims {
 						if(retVal!="") {
 							retVal+=", ";
 						}
-						retVal+="proc "+procCode.ProcCode+" procedure date";
+						retVal+="proc "+procCode.Code+" procedure date";
 					}
 				}
-				if(procCode.TreatArea==TreatmentArea.Arch && proc.Surf==""){
+				if(procCode.TreatmentArea==ProcedureTreatmentArea.Arch && proc.Surf==""){
 					if(retVal!="") {
 						retVal+=", ";
 					}
-					retVal+="proc "+procCode.ProcCode+" missing arch";
+					retVal+="proc "+procCode.Code+" missing arch";
 				}
-				if(procCode.TreatArea==TreatmentArea.ToothRange && proc.ToothRange==""){
+				if(procCode.TreatmentArea==ProcedureTreatmentArea.ToothRange && proc.ToothRange==""){
 					if(retVal!="") {
 						retVal+=", ";
 					}
-					retVal+="proc "+procCode.ProcCode+" tooth range";
+					retVal+="proc "+procCode.Code+" tooth range";
 				}
-				if((procCode.TreatArea==TreatmentArea.Tooth || procCode.TreatArea==TreatmentArea.Surf)
+				if((procCode.TreatmentArea==ProcedureTreatmentArea.Tooth || procCode.TreatmentArea==ProcedureTreatmentArea.Surface)
 					&& !Tooth.IsValidDB(proc.ToothNum)) {
 					if(retVal!="") {
 						retVal+=", ";
 					}
-					retVal+="proc "+procCode.ProcCode+" tooth number";
+					retVal+="proc "+procCode.Code+" tooth number";
 				}
 				if(claim.ClaimType!="PreAuth") {
 					List<Procedure> labFeesForProc=Procedures.GetCanadianLabFees(proc.ProcNum,procListAll);
@@ -2581,7 +2581,7 @@ namespace OpenDentBusiness.Eclaims {
 							if(retVal!="") {
 								retVal+=", ";
 							}
-							retVal+="proc "+procCode.ProcCode+" lab fee "+procCodeLab.ProcCode+" not complete";
+							retVal+="proc "+procCode.Code+" lab fee "+procCodeLab.Code+" not complete";
 						}
 					}
 				}
@@ -2595,7 +2595,7 @@ namespace OpenDentBusiness.Eclaims {
 		}
 
 		///<summary>Only call this function for a patPlan such that the carrier has an electid of 000064, which signified that it is for Pacific Blue Cross (PBC).</summary>
-		private static string GetMissingDataForPatPlanPacificBlueCross(PatPlan patPlan,InsPlan insPlan) {
+		private static string GetMissingDataForPatPlanPacificBlueCross(PatPlan patPlan,InsurancePlan insPlan) {
 			string retVal="";
 			//On 10/27/2015 we removed the Dependent Code requirements, based on customer feedback.  Some customers called PBC and were told that
 			//the dependent codes for children are no longer a requirement, and we take this as meaning that Dependent Codes in general are no longer
@@ -2643,7 +2643,7 @@ namespace OpenDentBusiness.Eclaims {
 		}
 
 		///<summary>Returns true if in Cananda and given plan is either percentage or a PPO and PrefName.CanadaCreatePpoLabEst is enabled.</summary>
-		public static bool IsValidForLabEstimates(InsPlan plan) {
+		public static bool IsValidForLabEstimates(InsurancePlan plan) {
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA")) {
 				return false;
 			}

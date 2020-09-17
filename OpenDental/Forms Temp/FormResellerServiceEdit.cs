@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormResellerServiceEdit:ODForm {

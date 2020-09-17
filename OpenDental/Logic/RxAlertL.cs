@@ -49,7 +49,7 @@ namespace OpenDental
 					{
 						if (alertList[i].NotificationMsg == "")
 						{
-							allergiesMatches.Add(AllergyDefs.GetOne(alertList[i].AllergyDefId).Description);
+							allergiesMatches.Add(AllergyDefs.GetById(alertList[i].AllergyDefId).Description);
 						}
 						else
 						{

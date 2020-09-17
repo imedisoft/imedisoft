@@ -27,7 +27,7 @@ namespace OpenDentBusiness
 			public Patient Pat;
 			public Family Fam;
 			public List<InsSub> ListInsSubs;
-			public List<InsPlan> ListInsPlans;
+			public List<InsurancePlan> ListInsPlans;
 			public List<PatPlan> ListPatPlans;
 			public List<Benefit> ListBenefits;
 			public List<ClaimProcHist> ListClaimProcHists;
@@ -65,7 +65,7 @@ namespace OpenDentBusiness
 				this.Pat = new Patient();
 				this.Fam = new Family();
 				this.ListInsSubs = new List<InsSub>();
-				this.ListInsPlans = new List<InsPlan>();
+				this.ListInsPlans = new List<InsurancePlan>();
 				this.ListPatPlans = new List<PatPlan>();
 				this.ListBenefits = new List<Benefit>();
 				this.ListClaimProcHists = new List<ClaimProcHist>();
@@ -295,7 +295,7 @@ namespace OpenDentBusiness
 				DataTable rawNotes = dcon.ExecuteDataTable(command);
 				Dictionary<string, List<DataRow>> dictNotes = rawNotes.Select().GroupBy(x => x["ProcNum"].ToString())
 					.ToDictionary(x => x.Key, x => x.OrderByDescending(y => PIn.Date(y["EntryDateTime"].ToString())).ToList());
-				Dictionary<string, ProcedureCode> dictProcCodes = ProcedureCodes.GetAllCodes().GroupBy(x => x.CodeNum)
+				Dictionary<string, ProcedureCode> dictProcCodes = ProcedureCodes.GetAllCodes().GroupBy(x => x.Id)
 					.ToDictionary(x => x.Key.ToString(), x => x.First());
 				foreach (DataRow rowProc in rawProcs.Rows)
 				{
@@ -544,19 +544,19 @@ namespace OpenDentBusiness
 					row["prov"] = rowProc["Abbr"].ToString();
 					row["ProvNum"] = rowProc["ProvNum"].ToString();
 					row["quadrant"] = "";
-					if (procCode.TreatArea == TreatmentArea.Tooth)
+					if (procCode.TreatmentArea == ProcedureTreatmentArea.Tooth)
 					{
 						row["quadrant"] = Tooth.GetQuadrant(rowProc["ToothNum"].ToString());
 					}
-					else if (procCode.TreatArea == TreatmentArea.Surf)
+					else if (procCode.TreatmentArea == ProcedureTreatmentArea.Surface)
 					{
 						row["quadrant"] = Tooth.GetQuadrant(rowProc["ToothNum"].ToString());
 					}
-					else if (procCode.TreatArea == TreatmentArea.Quad)
+					else if (procCode.TreatmentArea == ProcedureTreatmentArea.Quad)
 					{
 						row["quadrant"] = rowProc["Surf"].ToString();
 					}
-					else if (procCode.TreatArea == TreatmentArea.ToothRange)
+					else if (procCode.TreatmentArea == ProcedureTreatmentArea.ToothRange)
 					{
 						string[] toothNum = rowProc["ToothRange"].ToString().Split(',');
 						bool sameQuad = false;//Don't want true if length==0.
@@ -580,11 +580,11 @@ namespace OpenDentBusiness
 					row["RxNum"] = 0;
 					row["SheetNum"] = 0;
 					row["Surf"] = rowProc["Surf"].ToString();
-					if (procCode.TreatArea == TreatmentArea.Surf)
+					if (procCode.TreatmentArea == ProcedureTreatmentArea.Surface)
 					{
 						row["surf"] = Tooth.SurfTidyFromDbToDisplay(rowProc["Surf"].ToString(), rowProc["ToothNum"].ToString());
 					}
-					else if (procCode.TreatArea == TreatmentArea.Sextant)
+					else if (procCode.TreatmentArea == ProcedureTreatmentArea.Sextant)
 					{
 						row["surf"] = Tooth.GetSextant(rowProc["Surf"].ToString(),
 							(ToothNumberingNomenclature)PrefC.GetInt(PreferenceName.UseInternationalToothNumbers));

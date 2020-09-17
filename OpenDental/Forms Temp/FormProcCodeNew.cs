@@ -419,10 +419,10 @@ namespace OpenDental{
 				comboPaintType.Items.Add(Enum.GetNames(typeof(ToothPaintingType))[i]);
 			}
 			comboPaintType.SelectedIndex=(int)ToothPaintingType.None;
-			for(int i=1;i<Enum.GetNames(typeof(TreatmentArea)).Length;i++) {
-				comboTreatArea.Items.Add(Enum.GetNames(typeof(TreatmentArea))[i]);
+			for(int i=1;i<Enum.GetNames(typeof(ProcedureTreatmentArea)).Length;i++) {
+				comboTreatArea.Items.Add(Enum.GetNames(typeof(ProcedureTreatmentArea))[i]);
 			}
-			comboTreatArea.SelectedIndex=(int)TreatmentArea.Mouth-1;
+			comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Mouth-1;
 			_listProcCodeCatDefs=Definitions.GetDefsForCategory(DefinitionCategory.ProcCodeCats,true);
 			for(int i=0;i<_listProcCodeCatDefs.Count;i++) {
 				comboCategory.Items.Add(_listProcCodeCatDefs[i].Name);
@@ -454,7 +454,7 @@ namespace OpenDental{
 			checkIsHygiene.Checked=false;
 			checkIsProsth.Checked=false;
 			comboPaintType.SelectedIndex=(int)ToothPaintingType.None;
-			comboTreatArea.SelectedIndex=(int)TreatmentArea.Mouth-1;
+			comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Mouth-1;
 			comboCategory.SelectedIndex=0;
 			switch(listType.SelectedIndex){
 				case 0://none
@@ -487,56 +487,56 @@ namespace OpenDental{
 					textAbbreviation.Text="Seal";
 					checkIsHygiene.Checked=true;
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.Sealant;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Tooth-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Tooth-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Fillings");
 					break;
 				case 6://Amalgam
 					textDescription.Text="Amalgam-1 Surf";
 					textAbbreviation.Text="A1";
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.FillingDark;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Surf-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Surface-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Fillings");
 					break;
 				case 7://Composite, Anterior
 					textDescription.Text="Composite-1 Surf, Anterior";
 					textAbbreviation.Text="C1";
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.FillingLight;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Surf-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Surface-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Fillings");
 					break;
 				case 8://Composite, Posterior
 					textDescription.Text="Composite-1 Surf, Posterior";
 					textAbbreviation.Text="C1(P)";
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.FillingLight;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Surf-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Surface-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Fillings");
 					break;
 				case 9://Buildup/Post
 					textDescription.Text="Build Up";
 					textAbbreviation.Text="BU";
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.PostBU;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Tooth-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Tooth-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Fillings");
 					break;
 				case 10://Pulpotomy
 					textDescription.Text="Pulpotomy";
 					textAbbreviation.Text="Pulp";
 					checkNoBillIns.Checked=true;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Tooth-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Tooth-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Endo");
 					break;
 				case 11://RCT
 					textDescription.Text="Root Canal, Anterior";
 					textAbbreviation.Text="RCT-Ant";
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.RCT;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Tooth-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Tooth-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Endo");
 					break;
 				case 12://SRP
 					textDescription.Text="Scaling & Root Planing, Quadrant";
 					textAbbreviation.Text="SRP";
 					checkIsHygiene.Checked=true;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Quad-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Quad-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Perio");
 					break;
 				case 13://Denture
@@ -544,7 +544,7 @@ namespace OpenDental{
 					textAbbreviation.Text="MaxDent";
 					checkIsProsth.Checked=true;
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.DentureLight;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Arch-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Arch-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Dentures");
 					break;
 				case 14://RPD
@@ -552,7 +552,7 @@ namespace OpenDental{
 					textAbbreviation.Text="MaxRPD";
 					checkIsProsth.Checked=true;
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.DentureLight;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.ToothRange-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.ToothRange-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Dentures");
 					break;
 				case 15://Denture Repair
@@ -563,28 +563,28 @@ namespace OpenDental{
 				case 16://Reline
 					textDescription.Text="Reline Max Denture Chairside";
 					textAbbreviation.Text="RelMaxDntChair";
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Arch-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Arch-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Dentures");
 					break;
 				case 17://Ceramic Inlay
 					textDescription.Text="Ceramic Inlay-1 Surf";
 					textAbbreviation.Text="CerInlay1";
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.FillingLight;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Surf-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Surface-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Cosmetic");
 					break;
 				case 18://Metal Inlay
 					textDescription.Text="Metallic Inlay-1 Surf";
 					textAbbreviation.Text="MetInlay1";
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.FillingDark;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Surf-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Surface-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Fillings");
 					break;
 				case 19://Whitening
 					textDescription.Text="Whitening Tray";
 					textAbbreviation.Text="White";
 					checkNoBillIns.Checked=true;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Arch-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Arch-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Cosmetic");
 					break;
 				case 20://All-Ceramic Crown
@@ -592,7 +592,7 @@ namespace OpenDental{
 					textAbbreviation.Text="AllCerCrn";
 					checkIsProsth.Checked=true;
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.CrownLight;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Tooth-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Tooth-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Crown & Bridge");
 					break;
 				case 21://PFM Crown
@@ -600,7 +600,7 @@ namespace OpenDental{
 					textAbbreviation.Text="PFM";
 					checkIsProsth.Checked=true;
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.CrownLight;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Tooth-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Tooth-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Crown & Bridge");
 					break;
 				case 22://Full Gold Crown
@@ -608,7 +608,7 @@ namespace OpenDental{
 					textAbbreviation.Text="FGCrn";
 					checkIsProsth.Checked=true;
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.CrownDark;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Tooth-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Tooth-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Crown & Bridge");
 					break;
 				case 23://Bridge Pontic or Retainer - Ceramic
@@ -616,7 +616,7 @@ namespace OpenDental{
 					textAbbreviation.Text="PontCeram";
 					checkIsProsth.Checked=true;
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.BridgeLight;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Tooth-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Tooth-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Crown & Bridge");
 					break;
 				case 24://Bridge Pontic or Retainer - PFM
@@ -624,7 +624,7 @@ namespace OpenDental{
 					textAbbreviation.Text="PontPFM";
 					checkIsProsth.Checked=true;
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.BridgeLight;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Tooth-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Tooth-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Crown & Bridge");
 					break;
 				case 25://Bridge Pontic or Retainer - Metal
@@ -632,14 +632,14 @@ namespace OpenDental{
 					textAbbreviation.Text="PontCastNM";
 					checkIsProsth.Checked=true;
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.BridgeDark;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Tooth-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Tooth-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Crown & Bridge");
 					break;
 				case 26://Extraction
 					textDescription.Text="Extraction";
 					textAbbreviation.Text="Ext";
 					comboPaintType.SelectedIndex=(int)ToothPaintingType.Extraction;
-					comboTreatArea.SelectedIndex=(int)TreatmentArea.Tooth-1;
+					comboTreatArea.SelectedIndex=(int)ProcedureTreatmentArea.Tooth-1;
 					comboCategory.SelectedIndex=GetCategoryIndex("Oral Surgery");
 					break;
 				case 27://Ortho
@@ -684,21 +684,21 @@ namespace OpenDental{
 			}
 			//ok to add code-----------------------------------------------------------------------------------
 			ProcedureCode code=new ProcedureCode();
-			code.ProcCode=textNewCode.Text;
+			code.Code=textNewCode.Text;
 			//code.ProcTime="/X/";//moved to contructor.
 			//code.GraphicColor=Color.FromArgb(0);//moved to contructor.
-			code.Descript=textDescription.Text;
-			code.AbbrDesc=textAbbreviation.Text;
-			code.NoBillIns=checkNoBillIns.Checked;
+			code.Description=textDescription.Text;
+			code.ShortDescription=textAbbreviation.Text;
+			code.NoInsuranceBill=checkNoBillIns.Checked;
 			code.IsHygiene=checkIsHygiene.Checked;
-			code.IsProsth=checkIsProsth.Checked;
+			code.IsProsthesis=checkIsProsth.Checked;
 			code.PaintType=(ToothPaintingType)comboPaintType.SelectedIndex;
-			code.TreatArea=(TreatmentArea)comboTreatArea.SelectedIndex+1;
+			code.TreatmentArea=(ProcedureTreatmentArea)comboTreatArea.SelectedIndex+1;
 			//if(comboCategory.SelectedIndex!=-1)
-			code.ProcCat=_listProcCodeCatDefs[comboCategory.SelectedIndex].Id;
+			code.ProcedureCategory=_listProcCodeCatDefs[comboCategory.SelectedIndex].Id;
 			ProcedureCodes.Insert(code);
 			Changed=true;
-			SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Added Procedure Code: "+code.ProcCode);
+			SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Added Procedure Code: "+code.Code);
 			return true;
 		}
 

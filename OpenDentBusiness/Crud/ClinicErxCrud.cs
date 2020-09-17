@@ -41,7 +41,7 @@ namespace OpenDentBusiness.Crud{
 			ClinicErx clinicErx;
 			foreach(DataRow row in table.Rows) {
 				clinicErx=new ClinicErx();
-				clinicErx.ClinicErxNum      = PIn.Long  (row["ClinicErxNum"].ToString());
+				clinicErx.Id      = PIn.Long  (row["ClinicErxNum"].ToString());
 				clinicErx.PatNum            = PIn.Long  (row["PatNum"].ToString());
 				clinicErx.ClinicDesc        = PIn.String(row["ClinicDesc"].ToString());
 				clinicErx.ClinicNum         = PIn.Long  (row["ClinicNum"].ToString());
@@ -72,7 +72,7 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("RegistrationKeyNum");
 			foreach(ClinicErx clinicErx in listClinicErxs) {
 				table.Rows.Add(new object[] {
-					POut.Long  (clinicErx.ClinicErxNum),
+					POut.Long  (clinicErx.Id),
 					POut.Long  (clinicErx.PatNum),
 					            clinicErx.ClinicDesc,
 					POut.Long  (clinicErx.ClinicNum),
@@ -94,7 +94,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one ClinicErx into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(ClinicErx clinicErx,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				clinicErx.ClinicErxNum=ReplicationServers.GetKey("clinicerx","ClinicErxNum");
+				clinicErx.Id=ReplicationServers.GetKey("clinicerx","ClinicErxNum");
 			}
 			string command="INSERT INTO clinicerx (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -102,7 +102,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="PatNum,ClinicDesc,ClinicNum,EnabledStatus,ClinicId,ClinicKey,AccountId,RegistrationKeyNum) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(clinicErx.ClinicErxNum)+",";
+				command+=POut.Long(clinicErx.Id)+",";
 			}
 			command+=
 				     POut.Long  (clinicErx.PatNum)+","
@@ -117,9 +117,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				clinicErx.ClinicErxNum=Database.ExecuteInsert(command);
+				clinicErx.Id=Database.ExecuteInsert(command);
 			}
-			return clinicErx.ClinicErxNum;
+			return clinicErx.Id;
 		}
 
 		///<summary>Inserts one ClinicErx into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -132,14 +132,14 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO clinicerx (";
 			if(!useExistingPK) {
-				clinicErx.ClinicErxNum=ReplicationServers.GetKeyNoCache("clinicerx","ClinicErxNum");
+				clinicErx.Id=ReplicationServers.GetKeyNoCache("clinicerx","ClinicErxNum");
 			}
 			if(useExistingPK) {
 				command+="ClinicErxNum,";
 			}
 			command+="PatNum,ClinicDesc,ClinicNum,EnabledStatus,ClinicId,ClinicKey,AccountId,RegistrationKeyNum) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(clinicErx.ClinicErxNum)+",";
+				command+=POut.Long(clinicErx.Id)+",";
 			}
 			command+=
 				     POut.Long  (clinicErx.PatNum)+","
@@ -154,9 +154,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				clinicErx.ClinicErxNum=Database.ExecuteInsert(command);
+				clinicErx.Id=Database.ExecuteInsert(command);
 			}
-			return clinicErx.ClinicErxNum;
+			return clinicErx.Id;
 		}
 
 		///<summary>Updates one ClinicErx in the database.</summary>
@@ -170,7 +170,7 @@ namespace OpenDentBusiness.Crud{
 				+"ClinicKey         = '"+POut.String(clinicErx.ClinicKey)+"', "
 				+"AccountId         = '"+POut.String(clinicErx.AccountId)+"', "
 				+"RegistrationKeyNum=  "+POut.Long  (clinicErx.RegistrationKeyNum)+" "
-				+"WHERE ClinicErxNum = "+POut.Long(clinicErx.ClinicErxNum);
+				+"WHERE ClinicErxNum = "+POut.Long(clinicErx.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
@@ -213,7 +213,7 @@ namespace OpenDentBusiness.Crud{
 				return false;
 			}
 			command="UPDATE clinicerx SET "+command
-				+" WHERE ClinicErxNum = "+POut.Long(clinicErx.ClinicErxNum);
+				+" WHERE ClinicErxNum = "+POut.Long(clinicErx.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
@@ -262,8 +262,8 @@ namespace OpenDentBusiness.Crud{
 			List<ClinicErx> listUpdNew =new List<ClinicErx>();
 			List<ClinicErx> listUpdDB  =new List<ClinicErx>();
 			List<ClinicErx> listDel    =new List<ClinicErx>();
-			listNew.Sort((ClinicErx x,ClinicErx y) => { return x.ClinicErxNum.CompareTo(y.ClinicErxNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
-			listDB.Sort((ClinicErx x,ClinicErx y) => { return x.ClinicErxNum.CompareTo(y.ClinicErxNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listNew.Sort((ClinicErx x,ClinicErx y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listDB.Sort((ClinicErx x,ClinicErx y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
 			int idxNew=0;
 			int idxDB=0;
 			int rowsUpdatedCount=0;
@@ -291,12 +291,12 @@ namespace OpenDentBusiness.Crud{
 					idxDB++;
 					continue;
 				}
-				else if(fieldNew.ClinicErxNum<fieldDB.ClinicErxNum) {//newPK less than dbPK, newItem is 'next'
+				else if(fieldNew.Id<fieldDB.Id) {//newPK less than dbPK, newItem is 'next'
 					listIns.Add(fieldNew);
 					idxNew++;
 					continue;
 				}
-				else if(fieldNew.ClinicErxNum>fieldDB.ClinicErxNum) {//dbPK less than newPK, dbItem is 'next'
+				else if(fieldNew.Id>fieldDB.Id) {//dbPK less than newPK, dbItem is 'next'
 					listDel.Add(fieldDB);
 					idxDB++;
 					continue;
@@ -317,7 +317,7 @@ namespace OpenDentBusiness.Crud{
 				}
 			}
 			for(int i=0;i<listDel.Count;i++) {
-				Delete(listDel[i].ClinicErxNum);
+				Delete(listDel[i].Id);
 			}
 			if(rowsUpdatedCount>0 || listIns.Count>0 || listDel.Count>0) {
 				return true;

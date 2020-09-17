@@ -4,6 +4,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>

@@ -17,23 +17,23 @@ namespace OpenDentBusiness.Eclaims {
 
 		///<summary>The result is the etransNum of the response message.  Or it might throw an exception if invalid data.  
 		///This class is also responsible for saving the returned message to the etrans table, and for printing out the required form.</summary>
-		public static long SendElegibility(Clearinghouse clearinghouseClin,long patNum,InsPlan plan,DateTime date,Relat relat,string patID,bool doPrint,
+		public static long SendElegibility(Clearinghouse clearinghouseClin,long patNum,InsurancePlan plan,DateTime date,Relat relat,string patID,bool doPrint,
 			InsSub insSub,bool isAutomatic,PrintCCD printCCD) {
 			//string electID,long patNum,string groupNumber,string divisionNo,
 			//string subscriberID,string patID,Relat patRelat,long subscNum,string dentaideCardSequence)
 			//Note: This might be the only class of this kind that returns a string.  It's a special situation.
 			//We are simply not going to bother with language translation here.
-			Carrier carrier=Carriers.GetCarrier(plan.CarrierNum);
+			Carrier carrier=Carriers.GetCarrier(plan.CarrierId);
 			if(carrier==null) {
 				throw new ApplicationException("Invalid carrier.");
 			}
 			if((carrier.CanadianSupportedTypes&CanSupTransTypes.EligibilityTransaction_08)!=CanSupTransTypes.EligibilityTransaction_08) {
 				throw new ApplicationException("The carrier does not support eligibility transactions.");
 			}
-			if(carrier.CanadianNetworkNum==0) {
+			if(carrier.CanadianNetworkId==0) {
 				throw new ApplicationException("Carrier network not set.");
 			}
-			CanadianNetwork network=CanadianNetworks.GetNetwork(carrier.CanadianNetworkNum,clearinghouseClin);
+			CanadianNetwork network=CanadianNetworks.GetNetwork(carrier.CanadianNetworkId,clearinghouseClin);
 			Patient patient=Patients.GetPat(patNum);
 			Patient subscriber=Patients.GetPat(insSub.Subscriber);
 			Provider provDefaultTreat=Providers.GetById(Preferences.GetLong(PreferenceName.PracticeDefaultProv));
@@ -50,7 +50,7 @@ namespace OpenDentBusiness.Eclaims {
 			//	if(error!="") error+=", ";
 			//	error+="Carrier does not have network specified";
 			//}
-			if(!Regex.IsMatch(carrier.ElectID,@"^[0-9]{6}$")) {//not necessary, but nice
+			if(!Regex.IsMatch(carrier.ElectronicId,@"^[0-9]{6}$")) {//not necessary, but nice
 				if(error!="") error+=", ";
 				error+="CarrierId 6 digits";
 			}
@@ -112,8 +112,8 @@ namespace OpenDentBusiness.Eclaims {
 			if(error!="") {
 				throw new ApplicationException(error);
 			}
-			Etrans etrans=Etranss.CreateCanadianOutput(patNum,carrier.CarrierNum,0,
-				clearinghouseClin.HqClearinghouseNum,EtransType.Eligibility_CA,plan.PlanNum,insSub.InsSubNum,Security.CurrentUser.Id);
+			Etrans etrans=Etranss.CreateCanadianOutput(patNum,carrier.Id,0,
+				clearinghouseClin.HqClearinghouseNum,EtransType.Eligibility_CA,plan.Id,insSub.InsSubNum,Security.CurrentUser.Id);
 			StringBuilder strb=new StringBuilder();
 			//create message----------------------------------------------------------------------------------------------
 			//A01 transaction prefix 12 AN
@@ -130,7 +130,7 @@ namespace OpenDentBusiness.Eclaims {
 				strb.Append("08");//eligibility
 			}
 			//A05 carrier id number 6 N
-			strb.Append(carrier.ElectID);//already validated as 6 digit number.
+			strb.Append(carrier.ElectronicId);//already validated as 6 digit number.
 																	 //A06 software system id 3 AN
 			strb.Append(Canadian.SoftwareSystemId());
 			if(carrier.CDAnetVersion=="04") {
@@ -168,12 +168,12 @@ namespace OpenDentBusiness.Eclaims {
 			if(carrier.CDAnetVersion=="02") {
 				//C01 primary policy/plan number 8 AN (group number)
 				//No special validation for version 02
-				strb.Append(Canadian.TidyAN(plan.GroupNum,8));
+				strb.Append(Canadian.TidyAN(plan.GroupNumber,8));
 			}
 			else {
 				//C01 primary policy/plan number 12 AN (group number)
 				//only validated to ensure that it's not blank and is less than 12. Also that no spaces.
-				strb.Append(Canadian.TidyAN(plan.GroupNum,12));
+				strb.Append(Canadian.TidyAN(plan.GroupNumber,12));
 			}
 			//C11 primary division/section number 10 AN
 			strb.Append(Canadian.TidyAN(plan.DivisionNo,10));
@@ -318,9 +318,9 @@ namespace OpenDentBusiness.Eclaims {
 		}
 
 		///<summary></summary>
-		public static long SendClaimReversal(Clearinghouse clearinghouseClin,Claim claim,InsPlan plan,InsSub insSub,bool isAutomatic,PrintCCD printCCD) {
+		public static long SendClaimReversal(Clearinghouse clearinghouseClin,Claim claim,InsurancePlan plan,InsSub insSub,bool isAutomatic,PrintCCD printCCD) {
 			StringBuilder strb=new StringBuilder();
-			Carrier carrier=Carriers.GetCarrier(plan.CarrierNum);
+			Carrier carrier=Carriers.GetCarrier(plan.CarrierId);
 			if(clearinghouseClin==null) {
 				throw new ApplicationException("Canadian clearinghouse not found.");
 			}
@@ -331,12 +331,12 @@ namespace OpenDentBusiness.Eclaims {
 			if((carrier.CanadianSupportedTypes&CanSupTransTypes.ClaimReversal_02)!=CanSupTransTypes.ClaimReversal_02) {
 				throw new ApplicationException("The carrier does not support reversal transactions.");
 			}
-			if(carrier.CanadianNetworkNum==0) {
+			if(carrier.CanadianNetworkId==0) {
 				throw new ApplicationException("Carrier network not set.");
 			}
-			CanadianNetwork network=CanadianNetworks.GetNetwork(carrier.CanadianNetworkNum,clearinghouseClin);
-			Etrans etrans=Etranss.CreateCanadianOutput(claim.PatNum,carrier.CarrierNum,carrier.CanadianNetworkNum,
-				clearinghouseClin.HqClearinghouseNum,EtransType.ClaimReversal_CA,plan.PlanNum,insSub.InsSubNum,Security.CurrentUser.Id);
+			CanadianNetwork network=CanadianNetworks.GetNetwork(carrier.CanadianNetworkId,clearinghouseClin);
+			Etrans etrans=Etranss.CreateCanadianOutput(claim.PatNum,carrier.Id,carrier.CanadianNetworkId,
+				clearinghouseClin.HqClearinghouseNum,EtransType.ClaimReversal_CA,plan.Id,insSub.InsSubNum,Security.CurrentUser.Id);
 			etrans.ClaimNum=claim.ClaimNum;//We don't normally use a claim number with Etranss.CreateCanadianOutput(), but here we need the claim number so that we can show the claim reversal in the claim history.
 			Etranss.Update(etrans);
 			Patient patient=Patients.GetPat(claim.PatNum);
@@ -345,11 +345,11 @@ namespace OpenDentBusiness.Eclaims {
 				throw new ApplicationException("Treating provider is not setup to use CDANet.");
 			}
 			Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-			Provider billProv=Providers.GetFirstOrDefault(x => x.Id==claim.ProvBill)??providerFirst;
+			Provider billProv=Providers.FirstOrDefault(x => x.Id==claim.ProvBill)??providerFirst;
 			if(!billProv.IsCDAnet) {
 				throw new ApplicationException("Billing provider is not setup to use CDANet.");
 			}
-			InsPlan insPlan=InsPlans.GetPlan(claim.PlanNum,new List<InsPlan>());
+			InsurancePlan insPlan=InsPlans.GetPlan(claim.PlanNum,new List<InsurancePlan>());
 			Patient subscriber=Patients.GetPat(insSub.Subscriber);
 			//create message----------------------------------------------------------------------------------------------
 			//A01 transaction prefix 12 AN
@@ -384,7 +384,7 @@ namespace OpenDentBusiness.Eclaims {
 																				 //A04 transaction code 2 N
 			strb.Append("02");//Same for both versions 02 and 04.
 												//A05 carrier id number 6 N
-			strb.Append(carrier.ElectID);//already validated as 6 digit number.
+			strb.Append(carrier.ElectronicId);//already validated as 6 digit number.
 																	 //A06 software system id 3 AN
 			strb.Append(Canadian.SoftwareSystemId());
 			if(carrier.CDAnetVersion!="02") { //version 04
@@ -421,12 +421,12 @@ namespace OpenDentBusiness.Eclaims {
 			if(carrier.CDAnetVersion=="02") {
 				//C01 primary policy/plan number 8 AN
 				//only validated to ensure that it's not blank and is less than 8. Also that no spaces.
-				strb.Append(Canadian.TidyAN(insPlan.GroupNum,8));
+				strb.Append(Canadian.TidyAN(insPlan.GroupNumber,8));
 			}
 			else { //version 04
 						 //C01 primary policy/plan number 12 AN
 						 //only validated to ensure that it's not blank and is less than 12. Also that no spaces.
-				strb.Append(Canadian.TidyAN(insPlan.GroupNum,12));
+				strb.Append(Canadian.TidyAN(insPlan.GroupNumber,12));
 			}
 			//C11 primary division/section number 10 AN
 			strb.Append(Canadian.TidyAN(insPlan.DivisionNo,10));
@@ -537,11 +537,11 @@ namespace OpenDentBusiness.Eclaims {
 				if((carrier.CanadianSupportedTypes&CanSupTransTypes.RequestForPaymentReconciliation_06)!=CanSupTransTypes.RequestForPaymentReconciliation_06) {
 					throw new ApplicationException("The carrier does not support payment reconciliation transactions.");
 				}
-				if(carrier.CanadianNetworkNum==0) {
+				if(carrier.CanadianNetworkId==0) {
 					throw new ApplicationException("Carrier network not set.");
 				}
-				CanadianNetwork network=CanadianNetworks.GetNetwork(carrier.CanadianNetworkNum,clearinghouseClin);
-				Etrans etrans=Etranss.CreateCanadianOutput(0,carrier.CarrierNum,carrier.CanadianNetworkNum,
+				CanadianNetwork network=CanadianNetworks.GetNetwork(carrier.CanadianNetworkId,clearinghouseClin);
+				Etrans etrans=Etranss.CreateCanadianOutput(0,carrier.Id,carrier.CanadianNetworkId,
 					clearinghouseClin.HqClearinghouseNum,EtransType.RequestPay_CA,0,0,Security.CurrentUser.Id);
 				//A01 transaction prefix 12 AN
 				strb.Append(Canadian.TidyAN(network.TransactionPrefix,12));
@@ -556,7 +556,7 @@ namespace OpenDentBusiness.Eclaims {
 					strb.Append("999999");//Always 999999 if the network handles the RPR requests instead of the carriers in the network.
 				}
 				else {
-					strb.Append(carrier.ElectID);//already validated as 6 digit number.
+					strb.Append(carrier.ElectronicId);//already validated as 6 digit number.
 				}
 				//A06 software system id 3 AN
 				strb.Append(Canadian.SoftwareSystemId());
@@ -644,7 +644,7 @@ namespace OpenDentBusiness.Eclaims {
 				if((carrier.CanadianSupportedTypes&CanSupTransTypes.RequestForSummaryReconciliation_05)!=CanSupTransTypes.RequestForSummaryReconciliation_05) {
 					throw new ApplicationException("The carrier does not support summary reconciliation transactions.");
 				}
-				etrans=Etranss.CreateCanadianOutput(0,carrier.CarrierNum,carrier.CanadianNetworkNum,
+				etrans=Etranss.CreateCanadianOutput(0,carrier.Id,carrier.CanadianNetworkId,
 					clearinghouseClin.HqClearinghouseNum,EtransType.RequestSumm_CA,0,0,Security.CurrentUser.Id);
 			}
 			else {//Assume network!=null
@@ -661,7 +661,7 @@ namespace OpenDentBusiness.Eclaims {
 			strb.Append("05");//payment reconciliation request
 												//A05 carrier id number 6 N
 			if(carrier!=null) {
-				strb.Append(carrier.ElectID);//already validated as 6 digit number.
+				strb.Append(carrier.ElectronicId);//already validated as 6 digit number.
 			}
 			else { //Assume network!=null
 				strb.Append("999999");//Always 999999 when sending to a network.
@@ -754,7 +754,7 @@ namespace OpenDentBusiness.Eclaims {
 				if(carrier!=null && !carrier.CanadianSupportedTypes.HasFlag(CanSupTransTypes.RequestForOutstandingTrans_04)) {
 					throw new ApplicationException("The carrier does not support request for outstanding transactions.");
 				}					
-				Etrans etrans=Etranss.CreateCanadianOutput(0,(carrier==null)?0:carrier.CarrierNum,(network==null)?0:network.Id,
+				Etrans etrans=Etranss.CreateCanadianOutput(0,(carrier==null)?0:carrier.Id,(network==null)?0:network.Id,
 					clearinghouseClin.HqClearinghouseNum,EtransType.RequestOutstand_CA,0,0,Security.CurrentUser.Id);
 				//A01 transaction prefix 12 AN
 				if(network==null) {//iTrans will always hit this, or running for Version 2 or Version 4 for all carriers.
@@ -775,7 +775,7 @@ namespace OpenDentBusiness.Eclaims {
 						strb.Append("999999");
 					}
 					else {
-						strb.Append(carrier.ElectID);//already validated as 6 digit number.
+						strb.Append(carrier.ElectronicId);//already validated as 6 digit number.
 					}
 				}
 				//A06 software system id 3 AN
@@ -968,8 +968,8 @@ namespace OpenDentBusiness.Eclaims {
 			//If carrier is Alberta Blue Cross (ABC), then ClaimStream will be selected as the clearinghouseHq if the user has the recommended setup.
 			Clearinghouse clearinghouseHq=Canadian.GetCanadianClearinghouseHq(carrier);
 			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.Active.Id);
-			CanadianNetwork netTelusA=CanadianNetworks.GetFirstOrDefault(x => x.Abbr=="TELUS A");
-			CanadianNetwork netTelusB=CanadianNetworks.GetFirstOrDefault(x => x.Abbr=="TELUS B");
+			CanadianNetwork netTelusA=CanadianNetworks.FirstOrDefault(x => x.Abbr=="TELUS A");
+			CanadianNetwork netTelusB=CanadianNetworks.FirstOrDefault(x => x.Abbr=="TELUS B");
 			//Check version 04 reports first, in case there is an error.  Most carrier use version 04.
 			//If there is an error with version 02, then we would not want it to stop version 04 reports from running.
 			//Therefore, version 02 reports should come after version 04 reports.
@@ -986,7 +986,7 @@ namespace OpenDentBusiness.Eclaims {
 				}
 				else {//Version 04 request for a specific carrier.  Could be for either ITRANS or ClaimStream, depending on clearinghouse selected above.
 					//Alberta Blue Cross (ABC) always has to be checked this way.
-					CanadianNetwork net=CanadianNetworks.GetNetwork(carrier.CanadianNetworkNum,clearinghouseClin);//We always know which network if the carrier is specified.
+					CanadianNetwork net=CanadianNetworks.GetNetwork(carrier.CanadianNetworkId,clearinghouseClin);//We always know which network if the carrier is specified.
 					listEtrans.AddRange(CanadianOutput.GetOutstandingForClearinghouse(clearinghouseClin,prov,"04",carrier,net,printForm,printCCD));
 				}
 			}

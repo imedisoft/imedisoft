@@ -1,6 +1,7 @@
 using CodeBase;
 using Imedisoft.Data;
 using Imedisoft.Data.Cache;
+using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections;
@@ -56,6 +57,24 @@ namespace OpenDentBusiness
 
 			return Crud.EmployerCrud.Insert(Cur);
 		}
+
+		public static void Save(Employer employer)
+        {
+			if (employer.Id == 0)
+            {
+				InsEditLogs.MakeLogEntry(employer, null, InsEditLogType.Employer, Security.CurrentUser.Id);
+
+				employer.Id = Crud.EmployerCrud.Insert(employer);
+			}
+            else
+            {
+				var employerOld = Crud.EmployerCrud.SelectOne(employer.Id);
+
+				Crud.EmployerCrud.Update(employer, employerOld);
+
+				InsEditLogs.MakeLogEntry(employer, employerOld, InsEditLogType.Employer, Security.CurrentUser.Id);
+			}
+        }
 
 		/// <summary>
 		/// There MUST not be any dependencies before calling this or there will be invalid foreign keys.  
@@ -239,7 +258,7 @@ namespace OpenDentBusiness
 						Security.CurrentUser.Id, 
 						employerIds[i].ToString(), 
 						newEmployerId.ToString(),
-						InsEditLogType.InsPlan, insurancePlan.PlanNum, 0, insurancePlan.GroupNum + " - " + insurancePlan.GroupName);
+						InsEditLogType.InsPlan, insurancePlan.Id, 0, insurancePlan.GroupNumber + " - " + insurancePlan.GroupName);
 				}
 
 				Delete(GetEmployer(employerIds[i]));

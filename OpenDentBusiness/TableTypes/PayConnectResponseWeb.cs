@@ -85,7 +85,7 @@ namespace OpenDentBusiness {
 				//Pull out all of the field values we care about from the response string
 				var responseValues=JsonConvert.DeserializeAnonymousType(LastResponseStr,responseTypeParial);
 				return new CreditCard() {
-					PatNum=PatNum,
+					PatientId=PatNum,
 					PayConnectToken=PaymentToken,
 					CCNumberMasked=responseValues.CreditCardNumber,
 					CCExpiration=new DateTime(2000+int.Parse(responseValues.CreditCardExpireDate.Substring(2,2)),int.Parse(responseValues.CreditCardExpireDate.Substring(0,2)),1),//CCExpDate is stored as MMyy from PayConnect

@@ -255,7 +255,7 @@ namespace OpenDental{
 			Patient patCur=null;
 			List<PatPlan> listPatPlans=null;
 			List<InsSub> listInsSubs=null;
-			List<InsPlan> listInsPlans=null;
+			List<InsurancePlan> listInsPlans=null;
 			List<Procedure> listPatientProcs=null;
 			ProcNotBilled procNotBilled=new ProcNotBilled();//When automatically grouping,  this is used as the procedure to group by.
 			long patNumOld=0;
@@ -370,7 +370,7 @@ namespace OpenDental{
 		
 		///<summary>Mimics ContrAccount.CreateClaim(...).  Removes items from listProcs until unique diagnosis code count is low enough.</summary>
 		private void GetUniqueDiagnosticCodes(List<ProcNotBilled> listProcs,List<Procedure> listPatProcs,List <PatPlan> listPatPlans,
-			List<InsSub> listInsSubs,List<InsPlan> listInsPlans)
+			List<InsSub> listInsSubs,List<InsurancePlan> listInsPlans)
 		{
 			List<Procedure> listProcedures=new List<Procedure>();
 			for(int i=0;i<listProcs.Count;i++) {

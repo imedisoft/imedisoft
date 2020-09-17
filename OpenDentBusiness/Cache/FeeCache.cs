@@ -72,7 +72,7 @@ namespace OpenDentBusiness
 			{
 				FeeNum = f.FeeNum,
 				Amount = f.Amount,
-				FeeSched = f.FeeSched,
+				FeeScheduleId = f.FeeSched,
 				CodeNum = f.CodeNum,
 				ClinicNum = f.ClinicNum,
 				ProvNum = f.ProvNum,
@@ -90,7 +90,7 @@ namespace OpenDentBusiness
 			{
 				FeeNum = f.FeeNum,
 				Amount = f.Amount,
-				FeeSched = f.FeeSched,
+				FeeSched = f.FeeScheduleId,
 				CodeNum = f.CodeNum,
 				ClinicNum = f.ClinicNum,
 				ProvNum = f.ProvNum,

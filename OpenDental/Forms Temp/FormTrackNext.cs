@@ -330,7 +330,7 @@ namespace OpenDental{
 			comboOrder.SelectedIndex=0;
 			comboProv.Items.Add("All");
 			comboProv.SelectedIndex=0;
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboProv.Items.Add(_listProviders[i].GetLongDesc());
 			}
@@ -426,11 +426,11 @@ namespace OpenDental{
 						}
 						row.Cells.Add(Definitions.GetName(DefinitionCategory.RecallUnschedStatus,apt.UnschedStatus));
 						if(apt.IsHygiene) {
-							Provider provHyg=Providers.GetFirstOrDefault(x => x.Id==apt.ProvHyg);
+							Provider provHyg=Providers.FirstOrDefault(x => x.Id==apt.ProvHyg);
 							row.Cells.Add(provHyg==null?"INVALID":provHyg.Abbr);
 						}
 						else {
-							Provider prov=Providers.GetFirstOrDefault(x => x.Id==apt.ProvNum);
+							Provider prov=Providers.FirstOrDefault(x => x.Id==apt.ProvNum);
 							row.Cells.Add(prov==null?"INVALID":prov.Abbr);
 						}
 						row.Cells.Add(apt.ProcDescript);

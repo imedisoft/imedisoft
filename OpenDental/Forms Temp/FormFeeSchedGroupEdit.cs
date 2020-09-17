@@ -14,20 +14,20 @@ namespace OpenDental {
 	public partial class FormFeeSchedGroupEdit:ODForm {
 		///<summary>_feeSchedGroupCur is held by reference from the calling form when it is passed in.
 		///All changes to this variable are immediately available to the calling form, so we should only write to this when we are hitting OK.</summary>
-		private FeeSchedGroup _feeSchedGroupCur;
+		private FeeScheduleGroup _feeSchedGroupCur;
 		private List<Clinic> _listClinicsInGroup;
 		///<summary>Refresh list when the current group's fee schedule changes to quickly validate what clinics can be added to the current group.</summary>
-		private List<FeeSchedGroup> _listOtherGroupsWithFeeSched=new List<FeeSchedGroup>();
-		private List<FeeSched> _listFeeScheds;
+		private List<FeeScheduleGroup> _listOtherGroupsWithFeeSched=new List<FeeScheduleGroup>();
+		private List<FeeSchedule> _listFeeScheds;
 
-		public FormFeeSchedGroupEdit(FeeSchedGroup feeSchedGroupCur) {
+		public FormFeeSchedGroupEdit(FeeScheduleGroup feeSchedGroupCur) {
 			InitializeComponent();
 			
 			_feeSchedGroupCur=feeSchedGroupCur;
 			_listClinicsInGroup=Clinics.GetClinics(_feeSchedGroupCur.ListClinicNumsAll??new List<long>());
-			if(_feeSchedGroupCur.FeeSchedNum>0) {
-				_listOtherGroupsWithFeeSched=FeeSchedGroups.GetAllForFeeSched(_feeSchedGroupCur.FeeSchedNum)
-					.FindAll(x => x.FeeSchedGroupNum!=_feeSchedGroupCur.FeeSchedGroupNum);
+			if(_feeSchedGroupCur.FeeScheduleId>0) {
+				_listOtherGroupsWithFeeSched=FeeSchedGroups.GetAllForFeeSched(_feeSchedGroupCur.FeeScheduleId)
+					.FindAll(x => x.Id!=_feeSchedGroupCur.Id);
 			}
 			_listFeeScheds=FeeScheds.GetDeepCopy(true);
 			//Global fee schedules cannot be localized, so there can't be clinic overrides for them. This block also exists in FormFeeSchedEdit.cs
@@ -85,10 +85,10 @@ namespace OpenDental {
 
 		private void FillComboFeeScheds() {
 			comboFeeSched.Items.Clear();
-			foreach(FeeSched sched in _listFeeScheds) {
-				ODBoxItem<FeeSched> boxItemFeeSched=new ODBoxItem<FeeSched>(sched.Description+(sched.IsHidden?" (Hidden)":""),sched);
+			foreach(FeeSchedule sched in _listFeeScheds) {
+				ODBoxItem<FeeSchedule> boxItemFeeSched=new ODBoxItem<FeeSchedule>(sched.Description+(sched.IsHidden?" (Hidden)":""),sched);
 				comboFeeSched.Items.Add(boxItemFeeSched);
-				if(_feeSchedGroupCur.FeeSchedNum==sched.FeeSchedNum) {
+				if(_feeSchedGroupCur.FeeScheduleId==sched.Id) {
 					comboFeeSched.SelectedItem=boxItemFeeSched;
 				}
 			}
@@ -100,8 +100,8 @@ namespace OpenDental {
 			//Get list of Clinics in the current group.  Use in memory list to account for uncommitted changes.
 			List<long> listClinicNumsInUse=_listClinicsInGroup.Select(x => x.Id).ToList();
 			if(_listOtherGroupsWithFeeSched.Count>0) {
-				foreach(FeeSchedGroup feeGroup in _listOtherGroupsWithFeeSched) {
-					if(feeGroup.FeeSchedGroupNum==_feeSchedGroupCur.FeeSchedGroupNum) {
+				foreach(FeeScheduleGroup feeGroup in _listOtherGroupsWithFeeSched) {
+					if(feeGroup.Id==_feeSchedGroupCur.Id) {
 						continue;
 					}
 					listClinicNumsInUse.AddRange(feeGroup.ListClinicNumsAll);
@@ -153,8 +153,8 @@ namespace OpenDental {
 		}
 
 		private void comboFeeSched_SelectedIndexChanged(object sender,EventArgs e) {
-			_listOtherGroupsWithFeeSched=FeeSchedGroups.GetAllForFeeSched(((ODBoxItem<FeeSched>)comboFeeSched.SelectedItem).Tag.FeeSchedNum)
-				.FindAll(x => x.FeeSchedGroupNum!=_feeSchedGroupCur.FeeSchedGroupNum);
+			_listOtherGroupsWithFeeSched=FeeSchedGroups.GetAllForFeeSched(((ODBoxItem<FeeSchedule>)comboFeeSched.SelectedItem).Tag.Id)
+				.FindAll(x => x.Id!=_feeSchedGroupCur.Id);
 			RefreshAvailableClinics();
 		}
 
@@ -173,7 +173,7 @@ namespace OpenDental {
 			string gridTitle="Fee Schedules";
 			FormGridSelection form=new FormGridSelection(listColumnHeaders,listRowValues,formTitle,gridTitle);
 			if(form.ShowDialog()==DialogResult.OK) {
-				comboFeeSched.SelectedIndex=comboFeeSched.Items.IndexOf((comboFeeSched.Items.OfType<ODBoxItem<FeeSched>>().Where(x => x.Tag.FeeSchedNum==((FeeSched)form.ListSelectedTags[0]).FeeSchedNum).First()));
+				comboFeeSched.SelectedIndex=comboFeeSched.Items.IndexOf((comboFeeSched.Items.OfType<ODBoxItem<FeeSchedule>>().Where(x => x.Tag.Id==((FeeSchedule)form.ListSelectedTags[0]).Id).First()));
 			}
 		}
 
@@ -202,7 +202,7 @@ namespace OpenDental {
 		private void butDelete_Click(object sender,EventArgs e) {
 			//This button is hidden if the user is adding a new FeeSchedGroup.
 			if(MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you want to delete this Fee Schedule Group?")) {
-				FeeSchedGroups.Delete(_feeSchedGroupCur.FeeSchedGroupNum);
+				FeeSchedGroups.Delete(_feeSchedGroupCur.Id);
 			}
 			DialogResult=DialogResult.Cancel;
 			this.Close();
@@ -212,11 +212,11 @@ namespace OpenDental {
 			if(!ValidateUserInput()) {
 				return;
 			}
-			FeeSched feeSchedCur=((ODBoxItem<FeeSched>)comboFeeSched.SelectedItem).Tag;
+			FeeSchedule feeSchedCur=((ODBoxItem<FeeSchedule>)comboFeeSched.SelectedItem).Tag;
 			List<long> listClinicNumsNew=_listClinicsInGroup.Select(x => x.Id).ToList();
 			//Initial fee sync for new groups or groups that were created without any clinics in the group, or if we just changed the Fee Schedule for the group.
 			//If editing an existing fee schedule group that contains no clinic associations, treat it like a new group and set the initial fees.
-			if(_feeSchedGroupCur.IsNew || _feeSchedGroupCur.ListClinicNumsAll.Count()<1 || _feeSchedGroupCur.FeeSchedNum!=feeSchedCur.FeeSchedNum) {
+			if(_feeSchedGroupCur.IsNew || _feeSchedGroupCur.ListClinicNumsAll.Count()<1 || _feeSchedGroupCur.FeeScheduleId!=feeSchedCur.Id) {
 				if(MsgBox.Show(MsgBoxButtons.YesNo,"Would you like to set the initial group fees to a specific clinic's fees?"
 					+"  Answering no will result in the default fees for the fee schedule being used."))
 				{
@@ -280,7 +280,7 @@ namespace OpenDental {
 				}
 			}
 			_feeSchedGroupCur.Description=textDescription.Text;
-			_feeSchedGroupCur.FeeSchedNum=feeSchedCur.FeeSchedNum;
+			_feeSchedGroupCur.FeeScheduleId=feeSchedCur.Id;
 			_feeSchedGroupCur.ListClinicNumsAll=listClinicNumsNew;
 			DialogResult=DialogResult.OK;
 		}

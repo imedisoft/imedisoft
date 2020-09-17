@@ -24,9 +24,9 @@ namespace OpenDental{
 		private Patient PatCur;
 		private Family FamCur;
 		///<summary>After closing this form, this will contain the selected plan.</summary>
-		public InsPlan SelectedPlan;
+		public InsurancePlan SelectedPlan;
 		public InsSub SelectedSub;
-		private List <InsPlan> PlanList;
+		private List <InsurancePlan> PlanList;
 		private OpenDental.UI.ODGrid gridMain;
 		private long PatNum;
 		//public long ClaimFormNum;
@@ -210,10 +210,10 @@ namespace OpenDental{
 						row.Cells.Add("Other");
 					}					
 				}
-				InsPlan plan=InsPlans.GetPlan(SubList[i].PlanNum,PlanList);
+				InsurancePlan plan=InsPlans.GetPlan(SubList[i].PlanNum,PlanList);
 				row.Tag=SubList[i];
 				row.Cells.Add(FamCur.GetNameInFamLF(SubList[i].Subscriber));
-				row.Cells.Add(Carriers.GetName(plan.CarrierNum));
+				row.Cells.Add(Carriers.GetName(plan.CarrierId));
 				if(SubList[i].DateEffective.Year<1880) {
 					row.Cells.Add("");
 				}

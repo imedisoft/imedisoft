@@ -119,7 +119,7 @@ namespace OpenDental {
 					}
 					//payment rows skipped
 					Procedure proc=Procedures.GetProcFromList(createClaimDataWrapper.ClaimData.ListProcs,item.ProcNum);
-					ProcedureCode procCode=ProcedureCodes.GetFirstOrDefault(x => x.CodeNum==proc.CodeNum)??new ProcedureCode();
+					ProcedureCode procCode=ProcedureCodes.GetFirstOrDefault(x => x.Id==proc.CodeNum)??new ProcedureCode();
 					if(procCode.IsCanadianLab) {
 						continue;
 					}
@@ -323,7 +323,7 @@ namespace OpenDental {
 		///Returns a 'new' claim object (ClaimNum=0) to indicate that the user does not want to create the claim or there are validation issues..</summary>
 		public static Claim CreateClaim(Claim claimCur,string claimType,bool isVerbose,CreateClaimDataWrapper createClaimDataWrapper) {
 			Patient pat=createClaimDataWrapper.Pat;
-			InsPlan PlanCur=new InsPlan();
+			InsurancePlan PlanCur=new InsurancePlan();
 			InsSub SubCur=new InsSub();
 			Relat relatOther=Relat.Self;
 			string claimTypeDesc="";
@@ -365,7 +365,7 @@ namespace OpenDental {
 				.Where(x => x.IsSelected)
 				.Select(x => x.ProcNum).ToList();
 			List<Procedure> listSelectedProcs=createClaimDataWrapper.ClaimData.ListProcs.FindAll(x => x.ProcNum.In(listSelectedProcNums));
-			List<Procedure> listBillInsProcs=listSelectedProcs.FindAll(x => !Procedures.NoBillIns(x,createClaimDataWrapper.ClaimData.ListClaimProcs,PlanCur.PlanNum));
+			List<Procedure> listBillInsProcs=listSelectedProcs.FindAll(x => !Procedures.NoBillIns(x,createClaimDataWrapper.ClaimData.ListClaimProcs,PlanCur.Id));
 			List<Procedure> listNoBillInsProcs=listSelectedProcs.FindAll(x => !x.ProcNum.In(listBillInsProcs.Select(y => y.ProcNum)));
 			//If all the procedures are marked as NoBillIns, then warn the user that the primary/secondary claim will not get created and then return a new Claim.
 			if(listSelectedProcs.Count>0 && listBillInsProcs.Count==0) {
@@ -377,7 +377,7 @@ namespace OpenDental {
 				StringBuilder sbMsg=new StringBuilder($"The following procedures were marked as NoBillIns. They will be excluded from the {claimTypeDesc} claim.\r\n");
 				foreach(Procedure proc in listNoBillInsProcs) {
 					ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
-					sbMsg.AppendLine($"{procCode.ProcCode} {(string.IsNullOrEmpty(proc.ToothNum) ? "" : ($"Tth {proc.ToothNum} "))} - {procCode.Descript}");
+					sbMsg.AppendLine($"{procCode.Code} {(string.IsNullOrEmpty(proc.ToothNum) ? "" : ($"Tth {proc.ToothNum} "))} - {procCode.Description}");
 				}
 				MsgBox.Show(sbMsg.ToString());
 			}
@@ -474,13 +474,13 @@ namespace OpenDental {
 		///types.  isSupplementalPay=true causes claim to not be marked received because Supplemental payments can only be applied to previously 
 		///received claims, false allows the claim to be marked received if all ClaimProcs in listClaimProcsForClaim meet requirements.
 		public static void ReceiveEraPayment(Claim claim,Hx835_Claim claimPaid,List<ClaimProc> listClaimProcsForClaim,bool isIncludeWOPercCoPay,
-			bool isSupplementalPay,InsPlan insPlan=null) 
+			bool isSupplementalPay,InsurancePlan insPlan=null) 
 		{
 			//Recalculate insurance paid, deductible, and writeoff amounts for the claim based on the final claimproc values, then save the results to the database.
 			claim.InsPayAmt=0;
 			claim.DedApplied=0;
 			claim.WriteOff=0;
-			InsPlan insPlanCur=insPlan;
+			InsurancePlan insPlanCur=insPlan;
 			if(!isIncludeWOPercCoPay && insPlanCur==null) {//Might not want to include WOs, need to check plan type.
 				insPlanCur=InsPlans.RefreshOne(claim.PlanNum);
 			}
@@ -635,7 +635,7 @@ namespace OpenDental {
 		///Does NOT check for Canadian warnings.
 		///This should be called when there is a UI that the user can make changes to that might not be saved in the claim object.</summary>
 		public static ClaimIsValidState ClaimIsValid(string dateService,string claimType,bool isSentOrReceived,string claimDateSent,List<ClaimProc> listClaimProcsForClaim
-			,long claimPlanNum,List<InsPlan> listInsPlans,string claimNote,string claimUniformBillType,ClaimCorrectionType claimCorrectionType)
+			,long claimPlanNum,List<InsurancePlan> listInsPlans,string claimNote,string claimUniformBillType,ClaimCorrectionType claimCorrectionType)
 		{
 			if(dateService=="" && claimType!="PreAuth"){
 				MsgBox.Show("Please enter a date of service");
@@ -660,7 +660,7 @@ namespace OpenDental {
 				}
 			}
 			if(Preferences.GetBool(PreferenceName.ClaimsValidateACN)) {
-				InsPlan plan=InsPlans.GetPlan(claimPlanNum,listInsPlans);//Does a query if listInsPlans is null or if claimPlanNum is not in list.
+				InsurancePlan plan=InsPlans.GetPlan(claimPlanNum,listInsPlans);//Does a query if listInsPlans is null or if claimPlanNum is not in list.
 				if(plan!=null && plan.GroupName.Contains("ADDP")) {
 					if(!Regex.IsMatch(claimNote,"ACN[0-9]{5,}")) {//ACN with at least 5 digits following
 						MsgBox.Show("For an ADDP claim, there must be an ACN number in the note.  Example format: ACN12345");

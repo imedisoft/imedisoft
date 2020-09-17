@@ -709,7 +709,7 @@ namespace OpenDental{
 			string str;
 			for(int i=0;i<strArray.Length;i++){
 				str=strArray[i];
-				str+="- "+ProcedureCodes.GetLaymanTerm(ProcedureCodes.GetProcCode(str).CodeNum);
+				str+="- "+ProcedureCodes.GetLaymanTerm(ProcedureCodes.GetProcCode(str).Id);
 				listProcs.Items.Add(str);
 			}
 		}

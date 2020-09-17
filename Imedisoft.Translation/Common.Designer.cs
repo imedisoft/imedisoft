@@ -1053,6 +1053,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Quarter.
+        /// </summary>
+        public static string Quarter {
+            get {
+                return ResourceManager.GetString("Quarter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Re-Enter Password.
         /// </summary>
         public static string ReEnterPassword {

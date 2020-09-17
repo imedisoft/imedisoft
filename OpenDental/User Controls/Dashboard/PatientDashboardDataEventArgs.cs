@@ -13,7 +13,7 @@ namespace OpenDental {
 		public Patient Pat;
 		public PatientNote PatNote;
 		public List<InsSub> ListInsSubs;
-		public List<InsPlan> ListInsPlans;
+		public List<InsurancePlan> ListInsPlans;
 		public List<PatPlan> ListPatPlans;
 		public List<Benefit> ListBenefits;
 		public List<Recall> ListRecalls;

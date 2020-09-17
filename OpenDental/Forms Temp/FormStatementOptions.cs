@@ -1130,8 +1130,8 @@ namespace OpenDental{
 			}
 			//Some customers have wanted to sort their statements in the images module by date and time.  
 			//We would need to enhance DateSent to include the time portion.
-			docc.DateCreated=StmtCur.DateSent;
-			StmtCur.DocNum=docc.DocNum;//this signals the calling class that the pdf was created successfully.
+			docc.AddedOnDate=StmtCur.DateSent;
+			StmtCur.DocNum=docc.Id;//this signals the calling class that the pdf was created successfully.
 			Statements.AttachDoc(StmtCur.StatementNum,docc);
 			if(printSheet) {
 				//Actually print the statement.
@@ -1262,8 +1262,8 @@ namespace OpenDental{
 					docc.Description="Statement";
 				}
 			}
-			docc.DateCreated=StmtCur.DateSent;
-			StmtCur.DocNum=docc.DocNum;//this signals the calling class that the pdf was created successfully.
+			docc.AddedOnDate=StmtCur.DateSent;
+			StmtCur.DocNum=docc.Id;//this signals the calling class that the pdf was created successfully.
 			Statements.AttachDoc(StmtCur.StatementNum,docc);
 			checkIsSent.Checked=true;
 			return true;

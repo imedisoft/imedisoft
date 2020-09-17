@@ -307,7 +307,7 @@ namespace OpenDental.Bridges
 			Document doc = ImageStore.Import(saveImage, Definitions.GetDef(DefinitionCategory.ImageCats, PIn.Long(imageCat)).Id, ImageType.Photo,
 				patCur, GetMimeTypeForImageQuality());
 			doc.ToothNumbers = img.FormattedTeeth;
-			doc.DateCreated = img.AcquisitionDate;
+			doc.AddedOnDate = img.AcquisitionDate;
 			doc.Description = doc.ToothNumbers;
 			doc.ExternalGUID = img.Id.ToString();
 			doc.ExternalSource = ExternalSourceType.XVWeb;

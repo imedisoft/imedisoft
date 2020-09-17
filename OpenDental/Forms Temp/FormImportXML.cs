@@ -28,7 +28,7 @@ namespace OpenDental{
 		private Patient pat;
 		private Patient guar;
 		private Patient subsc;
-		private InsPlan plan;
+		private InsurancePlan plan;
 		private InsSub sub;
 		private Carrier carrier;
 		private string targetVersion="";
@@ -153,7 +153,7 @@ namespace OpenDental{
 			sub=new InsSub();
 			sub.ReleaseInfo=true;
 			sub.AssignBen=Preferences.GetBool(PreferenceName.InsDefaultAssignBen);
-			plan=new InsPlan();
+			plan=new InsurancePlan();
 			carrier=new Carrier();
 			insRelat="self";//this is the default if not included
 			guarRelat="self";
@@ -270,7 +270,7 @@ namespace OpenDental{
 				}
 			}
 			if(insPresent){
-				if(carrier.CarrierName==""){
+				if(carrier.Name==""){
 					warnings+="Insurance CompanyName is missing. No insurance info will be imported.\r\n";
 					insPresent=false;
 				}
@@ -423,10 +423,10 @@ namespace OpenDental{
 			carrier=Carriers.GetIdentical(carrier);//this automatically finds or creates a carrier
 			//plan------------------------------------------------------------------------------------------------------			
 			plan.EmployerNum=Employers.GetEmployerNum(InsEmp);
-			plan.CarrierNum=carrier.CarrierNum;
+			plan.CarrierId=carrier.Id;
 			InsPlans.Insert(plan);
 			//Attach plan to subscriber
-			sub.PlanNum=plan.PlanNum;
+			sub.PlanNum=plan.Id;
 			InsSubs.Insert(sub);
 			//Then attach plan
 			List <PatPlan> PatPlanList=PatPlans.Refresh(pat.PatNum);
@@ -455,7 +455,7 @@ namespace OpenDental{
 				ben.BenefitType=InsBenefitType.Limitations;
 				ben.CovCatNum=CovCats.GetFirst(true).Id;
 				ben.MonetaryAmt=annualMax;
-				ben.PlanNum=plan.PlanNum;
+				ben.PlanNum=plan.Id;
 				ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 				Benefits.Insert(ben);
 			}
@@ -464,7 +464,7 @@ namespace OpenDental{
 				ben.BenefitType=InsBenefitType.Deductible;
 				ben.CovCatNum=CovCats.GetFirst(true).Id;
 				ben.MonetaryAmt=deductible;
-				ben.PlanNum=plan.PlanNum;
+				ben.PlanNum=plan.Id;
 				ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 				Benefits.Insert(ben);
 			}
@@ -731,13 +731,13 @@ namespace OpenDental{
 			//MessageBox.Show("INS, "+field+", "+textValue);
 			switch(field){
 				case "CompanyName":
-					carrier.CarrierName=textValue;
+					carrier.Name=textValue;
 					break;
 				case "AddressStreet":
-					carrier.Address=textValue;
+					carrier.AddressLine1=textValue;
 					break;
 				case "AddressOtherDesignation":
-					carrier.Address2=textValue;
+					carrier.AddressLine2=textValue;
 					break;
 				case "AddressCity":
 					carrier.City=textValue;
@@ -752,7 +752,7 @@ namespace OpenDental{
 					carrier.Phone=TelephoneNumbers.ReFormat(textValue);
 					break;
 				case "GroupNumber":
-					plan.GroupNum=textValue;
+					plan.GroupNumber=textValue;
 					break;
 				case "GroupName":
 					plan.GroupName=textValue;

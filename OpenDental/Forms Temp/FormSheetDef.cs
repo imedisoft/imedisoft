@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
 using System.Linq;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormSheetDef:ODForm {

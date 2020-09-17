@@ -62,7 +62,7 @@ namespace OpenDental
 		private OpenDental.UI.ODGrid gridMain;
 		private OpenDental.UI.ODGrid gridPrint;
 		private OpenDental.UI.ODGrid gridPreAuth;
-		private List<InsPlan> InsPlanList;
+		private List<InsurancePlan> InsPlanList;
 		private List<SubstitutionLink> _listSubstLinks=null;
 		private List<InsSub> SubList;
 		private OpenDental.UI.ODGrid gridPlans;
@@ -1606,7 +1606,7 @@ namespace OpenDental
 		private bool HasSubstCodeForTpRow(TpRow row) {
 			//If any patient insplan allows subst codes (if !plan.CodeSubstNone) and the code has a valid substitution code, then indicate the substitution.
 			ProcedureCode procCode=ProcedureCodes.GetProcCode(row.Code);
-			if(!ProcedureCodes.IsValidCode(procCode.ProcCode)) {
+			if(!ProcedureCodes.IsValidCode(procCode.Code)) {
 				//TpRow is not a valid procedure. Return false.
 				return false;
 			}
@@ -1614,7 +1614,7 @@ namespace OpenDental
 			//Get all patient-specific InsSubs
 			List<InsSub> listPatInsSubs=SubList.FindAll(x => PatPlanList.Any(y => y.InsSubNum==x.InsSubNum));
 			//Get all patient-specific InsPlans
-			List<InsPlan> listPatInsPlans=InsPlanList.FindAll(x => listPatInsSubs.Any(y => y.PlanNum==x.PlanNum));
+			List<InsurancePlan> listPatInsPlans=InsPlanList.FindAll(x => listPatInsSubs.Any(y => y.PlanNum==x.Id));
 			return SubstitutionLinks.HasSubstCodeForProcCode(procCode,row.Tth.ToString(),_listSubstLinks,listPatInsPlans);
 		}
 
@@ -1645,7 +1645,7 @@ namespace OpenDental
       }
 			OpenDental.UI.GridRow row;
       for(int i=0;i<ALPreAuth.Count;i++){
-				InsPlan PlanCur=InsPlans.GetPlan(((Claim)ALPreAuth[i]).PlanNum,InsPlanList);
+				InsurancePlan PlanCur=InsPlans.GetPlan(((Claim)ALPreAuth[i]).PlanNum,InsPlanList);
 				row=new GridRow();
 				if(((Claim)ALPreAuth[i]).DateSent.Year<1880){
 					row.Cells.Add("");
@@ -1653,7 +1653,7 @@ namespace OpenDental
 				else{
 					row.Cells.Add(((Claim)ALPreAuth[i]).DateSent.ToShortDateString());
 				}
-				row.Cells.Add(Carriers.GetName(PlanCur.CarrierNum));
+				row.Cells.Add(Carriers.GetName(PlanCur.CarrierId));
 				row.Cells.Add(((Claim)ALPreAuth[i]).ClaimStatus.ToString());
 				gridPreAuth.Rows.Add(row);
       }
@@ -2221,20 +2221,20 @@ namespace OpenDental
 				InsPlanList,dateTimeTP.Value,SubList,Preferences.GetBool(PreferenceName.InsChecksFrequency),PrefC.IsTreatPlanSortByTooth,_listSubstLinks);
 			List<TreatPlanAttach> listTreatPlanAttaches=loadActiveData.ListTreatPlanAttaches;
 			List<Procedure> listProcForTP=loadActiveData.listProcForTP;
-			if(listProcForTP.Any(x => ProcedureCodes.GetWhereFromList(y => y.CodeNum==x.CodeNum).Count==0)) {
+			if(listProcForTP.Any(x => ProcedureCodes.GetWhereFromList(y => y.Id==x.CodeNum).Count==0)) {
 				MessageBox.Show($"Missing codenum. Please run database maintenance method {nameof(DatabaseMaintenances.ProcedurelogCodeNumInvalid)}.");
 				return new List<ProcTP>();//Show an empty TP
 			}
 			Lookup<FeeKey2,Fee> lookupFees=null;
 			if(loadActiveData.ListFees!=null){
-				lookupFees=(Lookup<FeeKey2,Fee>)loadActiveData.ListFees.ToLookup(x => new FeeKey2(x.CodeNum,x.FeeSched));
+				lookupFees=(Lookup<FeeKey2,Fee>)loadActiveData.ListFees.ToLookup(x => new FeeKey2(x.CodeNum,x.FeeScheduleId));
 			}
-			InsPlan priPlanCur=null;
+			InsurancePlan priPlanCur=null;
 			if(PatPlanList.Count>0) { //primary
 				InsSub priSubCur=InsSubs.GetSub(PatPlanList[0].InsSubNum,SubList);
 				priPlanCur=InsPlans.GetPlan(priSubCur.PlanNum,InsPlanList);
 			}
-			InsPlan secPlanCur=null;
+			InsurancePlan secPlanCur=null;
 			if(PatPlanList.Count>1) { //secondary
 				InsSub secSubCur=InsSubs.GetSub(PatPlanList[1].InsSubNum,SubList);
 				secPlanCur=InsPlans.GetPlan(secSubCur.PlanNum,InsPlanList);
@@ -2314,7 +2314,7 @@ namespace OpenDental
 			List<DisplayField> listFields=DisplayFields.GetForCategory(DisplayFieldCategory.TreatmentPlanModule);
 			bool doShowDiscountForCatPercent=listFields.Any(x => x.InternalName==DisplayFields.InternalNames.TreatmentPlanModule.CatPercUCR)
 				&& listFields.Any(x => x.InternalName==DisplayFields.InternalNames.TreatmentPlanModule.Fee);
-			InsPlan insPlanPrimary=null;
+			InsurancePlan insPlanPrimary=null;
 			if(PatPlanList.Count>0) {
 				InsSub insSubPrimary=InsSubs.GetSub(PatPlanList[0].InsSubNum,SubList);
 				insPlanPrimary=InsPlans.GetPlan(insSubPrimary.PlanNum,InsPlanList);
@@ -2327,23 +2327,23 @@ namespace OpenDental
 			for(int i=0;i<listProcForTP.Count;i++) {
 				ProcedureCode procCodeCur=ProcedureCodes.GetProcCode(listProcForTP[i].CodeNum);
 				TpRow row=new TpRow();
-				row.ProcAbbr=procCodeCur.AbbrDesc;
+				row.ProcAbbr=procCodeCur.ShortDescription;
 				row.ProvNum=listProcForTP[i].ProvNum;
 				row.DateTP=listProcForTP[i].DateTP;
 				row.ClinicNum=listProcForTP[i].ClinicNum;
 				row.Appt=FillApptCellForRow(listProcForTP[i].PlannedAptNum,listProcForTP[i].AptNum);
 				//Passing in empty lists to simulate what the fee would be if the patient did not have any insurance.
-				row.CatPercUCR=(decimal)Procedures.GetProcFee(PatCur,new List<PatPlan>(),new List<InsSub>(),new List<InsPlan>(),listProcForTP[i].CodeNum,
+				row.CatPercUCR=(decimal)Procedures.GetProcFee(PatCur,new List<PatPlan>(),new List<InsSub>(),new List<InsurancePlan>(),listProcForTP[i].CodeNum,
 					listProcForTP[i].ProvNum,listProcForTP[i].ClinicNum,listProcForTP[i].MedicalCode,listFees:loadActiveData.ListFees);
 				decimal fee=(decimal)listProcForTP[i].ProcFeeTotal;
 				if(PatCur.DiscountPlanNum!=0) {
-					Fee procFee=Fees.GetFee(procCodeCur.CodeNum,discountPlan.FeeSchedNum,listProcForTP[i].ClinicNum,listProcForTP[i].ProvNum,loadActiveData.ListFees);
+					Fee procFee=Fees.GetFee(procCodeCur.Id,discountPlan.FeeSchedNum,listProcForTP[i].ClinicNum,listProcForTP[i].ProvNum,loadActiveData.ListFees);
 					if(procFee==null) {//No fee for discount plan's feesched and proc's provider
 						Provider patProv=Providers.GetById(PatCur.PriProv);
-						procFee=Fees.GetFee(procCodeCur.CodeNum,patProv.FeeScheduleId,listProcForTP[i].ClinicNum,patProv.Id,loadActiveData.ListFees);
+						procFee=Fees.GetFee(procCodeCur.Id,patProv.FeeScheduleId,listProcForTP[i].ClinicNum,patProv.Id,loadActiveData.ListFees);
 						if(procFee==null) {//No fee for pat's pri prov feesched and pat's pri prov
 							patProv=Providers.GetById(Preferences.GetLong(PreferenceName.PracticeDefaultProv));
-							procFee=Fees.GetFee(procCodeCur.CodeNum,patProv.FeeScheduleId,listProcForTP[i].ClinicNum,patProv.Id,loadActiveData.ListFees);
+							procFee=Fees.GetFee(procCodeCur.Id,patProv.FeeScheduleId,listProcForTP[i].ClinicNum,patProv.Id,loadActiveData.ListFees);
 						}
 					}
 					decimal procFeeAmt=(procFee == null) ? fee : (decimal)procFee.Amount;
@@ -2362,7 +2362,7 @@ namespace OpenDental
 				string showSecDeduct="";
 				ClaimProc claimproc; //holds the estimate.
 				if(PatPlanList.Count>0) { //Primary
-					claimproc=ClaimProcs.GetEstimate(ClaimProcList,listProcForTP[i].ProcNum,priPlanCur.PlanNum,PatPlanList[0].InsSubNum);
+					claimproc=ClaimProcs.GetEstimate(ClaimProcList,listProcForTP[i].ProcNum,priPlanCur.Id,PatPlanList[0].InsSubNum);
 					if(claimproc==null || claimproc.EstimateNote.Contains("Frequency Limitation")) {
 						if(claimproc!=null && claimproc.InsEstTotalOverride!=-1) {
 							priIns=(decimal)claimproc.InsEstTotalOverride;
@@ -2383,7 +2383,7 @@ namespace OpenDental
 							priIns=(decimal)claimproc.BaseEst;
 						}
 					}
-					if((claimproc!=null && claimproc.NoBillIns) || (claimproc==null && procCodeCur.NoBillIns)) {
+					if((claimproc!=null && claimproc.NoBillIns) || (claimproc==null && procCodeCur.NoInsuranceBill)) {
 						allowed=-1;
 					}
 					else {
@@ -2394,7 +2394,7 @@ namespace OpenDental
 					priIns=0;
 				}
 				if(PatPlanList.Count>1) { //Secondary
-					claimproc=ClaimProcs.GetEstimate(ClaimProcList,listProcForTP[i].ProcNum,secPlanCur.PlanNum,PatPlanList[1].InsSubNum);
+					claimproc=ClaimProcs.GetEstimate(ClaimProcList,listProcForTP[i].ProcNum,secPlanCur.Id,PatPlanList[1].InsSubNum);
 					if(claimproc==null) {
 						secIns=0;
 					}
@@ -2448,16 +2448,16 @@ namespace OpenDental
 				//Fill TpRow object with information.
 				row.Priority=Definitions.GetName(DefinitionCategory.TxPriorities,listTreatPlanAttaches.FirstOrDefault(x => x.ProcNum==listProcForTP[i].ProcNum).Priority);//(Defs.GetName(DefinitionCategory.TxPriorities,listProcForTP[i].Priority));
 				row.Tth=(Tooth.ToInternat(listProcForTP[i].ToothNum));
-				if(ProcedureCodes.GetProcCode(listProcForTP[i].CodeNum).TreatArea==TreatmentArea.Surf) {
+				if(ProcedureCodes.GetProcCode(listProcForTP[i].CodeNum).TreatmentArea==ProcedureTreatmentArea.Surface) {
 					row.Surf=(Tooth.SurfTidyFromDbToDisplay(listProcForTP[i].Surf,listProcForTP[i].ToothNum));
 				}
-				else if(ProcedureCodes.GetProcCode(listProcForTP[i].CodeNum).TreatArea==TreatmentArea.Sextant) {
+				else if(ProcedureCodes.GetProcCode(listProcForTP[i].CodeNum).TreatmentArea==ProcedureTreatmentArea.Sextant) {
 					row.Surf=Tooth.GetSextant(listProcForTP[i].Surf,(ToothNumberingNomenclature)PrefC.GetInt(PreferenceName.UseInternationalToothNumbers));
 				}
 				else {
 					row.Surf=(listProcForTP[i].Surf); //I think this will properly allow UR, L, etc.
 				}
-				row.Code=procCodeCur.ProcCode;
+				row.Code=procCodeCur.Code;
 				string descript=ProcedureCodes.GetLaymanTerm(listProcForTP[i].CodeNum);
 				if(listProcForTP[i].ToothRange!="") {
 					descript+=" #"+Tooth.FormatRangeForDisplay(listProcForTP[i].ToothRange);
@@ -2498,7 +2498,7 @@ namespace OpenDental
 				procTP.ItemOrder=i;
 				procTP.Priority=listTreatPlanAttaches.FirstOrDefault(x => x.ProcNum==proc.ProcNum).Priority;//proc.Priority;
 				procTP.ToothNumTP=Tooth.ToInternat(proc.ToothNum);
-				if(ProcedureCodes.GetProcCode(proc.CodeNum).TreatArea==TreatmentArea.Surf) {
+				if(ProcedureCodes.GetProcCode(proc.CodeNum).TreatmentArea==ProcedureTreatmentArea.Surface) {
 					procTP.Surf=Tooth.SurfTidyFromDbToDisplay(proc.Surf,proc.ToothNum);
 				}
 				else {
@@ -2655,7 +2655,7 @@ namespace OpenDental
 				procTP.ItemOrder=itemNo;
 				procTP.Priority=proc.Priority;
 				procTP.ToothNumTP=Tooth.ToInternat(proc.ToothNum);
-				if(ProcedureCodes.GetProcCode(proc.CodeNum).TreatArea==TreatmentArea.Surf) {
+				if(ProcedureCodes.GetProcCode(proc.CodeNum).TreatmentArea==ProcedureTreatmentArea.Surface) {
 					procTP.Surf=Tooth.SurfTidyFromDbToDisplay(proc.Surf,proc.ToothNum);
 				}
 				else {
@@ -2992,7 +2992,7 @@ namespace OpenDental
 				if(Tooth.IsValidEntry(ProcTPSelectList[i].ToothNumTP)) {
 					procDummy.ToothNum=Tooth.FromInternat(ProcTPSelectList[i].ToothNumTP);
 				}
-				if(ProcedureCodes.GetProcCode(ProcTPSelectList[i].ProcCode).TreatArea==TreatmentArea.Surf) {
+				if(ProcedureCodes.GetProcCode(ProcTPSelectList[i].ProcCode).TreatmentArea==ProcedureTreatmentArea.Surface) {
 					procDummy.Surf=Tooth.SurfTidyFromDisplayToDb(ProcTPSelectList[i].Surf,procDummy.ToothNum);
 				}
 				else {
@@ -3003,7 +3003,7 @@ namespace OpenDental
 				}
 				//procDummy.HideGraphical??
 				procDummy.ProcStatus=ProcStat.TP;
-				procDummy.CodeNum=ProcedureCodes.GetProcCode(ProcTPSelectList[i].ProcCode).CodeNum;
+				procDummy.CodeNum=ProcedureCodes.GetProcCode(ProcTPSelectList[i].ProcCode).Id;
 				ProcListFiltered.Add(procDummy);
 			}
 			ProcListFiltered.Sort(CompareProcListFiltered);
@@ -3344,7 +3344,7 @@ namespace OpenDental
 					procTP.Priority=tpAttach.Priority;
 				}
 				procTP.ToothNumTP=Tooth.ToInternat(proc.ToothNum);
-				if(ProcedureCodes.GetProcCode(proc.CodeNum).TreatArea==TreatmentArea.Surf){
+				if(ProcedureCodes.GetProcCode(proc.CodeNum).TreatmentArea==ProcedureTreatmentArea.Surface){
 					procTP.Surf=Tooth.SurfTidyFromDbToDisplay(proc.Surf,proc.ToothNum);
 				}
 				else{
@@ -3505,12 +3505,12 @@ namespace OpenDental
 
 			foreach(long docCategory in categories) {//usually only one, but do allow them to be saved once per image category.
 				OpenDentBusiness.Document docSave=new Document();
-				docSave.DocNum=Documents.Insert(docSave);
-				string fileName="TPArchive"+docSave.DocNum;
+				docSave.Id=Documents.Insert(docSave);
+				string fileName="TPArchive"+docSave.Id;
 				docSave.ImgType=ImageType.Document;
-				docSave.DateCreated=DateTime.Now;
-				docSave.PatNum=PatCur.PatNum;
-				docSave.DocCategory=docCategory;
+				docSave.AddedOnDate=DateTime.Now;
+				docSave.PatientId=PatCur.PatNum;
+				docSave.Category=docCategory;
 				docSave.Description=fileName;//no extension.
 
 					string filePath=ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
@@ -3605,7 +3605,7 @@ namespace OpenDental
 			ClaimCur.ClaimStatus="W";
 			ClaimCur.DateSent=DateTimeOD.Today;
 			ClaimCur.DateSentOrig=DateTime.MinValue;
-			ClaimCur.PlanNum=FormIPS.SelectedPlan.PlanNum;
+			ClaimCur.PlanNum=FormIPS.SelectedPlan.Id;
 			ClaimCur.InsSubNum=FormIPS.SelectedSub.InsSubNum;
 			ClaimCur.ProvTreat=0;
 			ClaimCur.ClaimForm=FormIPS.SelectedPlan.ClaimFormNum;
@@ -3638,7 +3638,7 @@ namespace OpenDental
 				if(!ClaimCur.IsOrtho && Preferences.GetBool(PreferenceName.OrthoClaimMarkAsOrtho)) {//If it's already marked as Ortho (from a previous procedure), skip this
 					CovCat orthoCategory=CovCats.GetFirstOrDefault(x => x.EbenefitCat==EbenefitCategory.Orthodontics,true);
 					if(orthoCategory!=null) {
-						if(CovSpans.IsCodeInSpans(procCode.ProcCode,CovSpans.GetWhere(x => x.CovCatNum==orthoCategory.Id).ToArray()))	{
+						if(CovSpans.IsCodeInSpans(procCode.Code,CovSpans.GetWhere(x => x.CovCatNum==orthoCategory.Id).ToArray()))	{
 							ClaimCur.IsOrtho=true;
 						}
 					}
@@ -3705,7 +3705,7 @@ namespace OpenDental
 			List<ClaimProc> listClaimProcs=new List<ClaimProc>();
 			List<long> listCodeNums=new List<long>();//List of codeNums that have had their default note added to the claim.
 			foreach(Procedure procCur in listProcsSelected){
-				cpExisting=ClaimProcs.GetEstimate(ClaimProcList,procCur.ProcNum,FormIPS.SelectedPlan.PlanNum,FormIPS.SelectedSub.InsSubNum);
+				cpExisting=ClaimProcs.GetEstimate(ClaimProcList,procCur.ProcNum,FormIPS.SelectedPlan.Id,FormIPS.SelectedSub.InsSubNum);
 				double insPayEst=0;
 				if(cpExisting!=null) {
 					insPayEst=cpExisting.InsPayEst;
@@ -3741,12 +3741,12 @@ namespace OpenDental
 				if(ClaimCur.ClaimNote==null) {
 					ClaimCur.ClaimNote="";
 				}
-				if(!listCodeNums.Contains(procCodeCur.CodeNum)) {
-					if(ClaimCur.ClaimNote.Length > 0 && !string.IsNullOrEmpty(procCodeCur.DefaultClaimNote)) {
+				if(!listCodeNums.Contains(procCodeCur.Id)) {
+					if(ClaimCur.ClaimNote.Length > 0 && !string.IsNullOrEmpty(procCodeCur.DefaultNoteForClaim)) {
 						ClaimCur.ClaimNote+="\n";
 					}
-					ClaimCur.ClaimNote+=procCodeCur.DefaultClaimNote;
-					listCodeNums.Add(procCodeCur.CodeNum);
+					ClaimCur.ClaimNote+=procCodeCur.DefaultNoteForClaim;
+					listCodeNums.Add(procCodeCur.Id);
 				}
 				//ProcCur.Update(ProcOld);
 			}
@@ -3942,7 +3942,7 @@ namespace OpenDental
 								checkShowIns.Checked=true;
 							}
 							InsSub sub=InsSubs.GetSub(PatPlanList[0].InsSubNum,SubList);
-							InsPlan plan=InsPlans.GetPlan(sub.PlanNum,InsPlanList);
+							InsurancePlan plan=InsPlans.GetPlan(sub.PlanNum,InsPlanList);
 						}
 					}
 				}

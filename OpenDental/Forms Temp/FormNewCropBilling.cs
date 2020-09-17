@@ -1,4 +1,5 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
 using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -252,12 +253,12 @@ namespace OpenDental {
 			long codeNum=ProcedureCodes.GetCodeNum(procCode);
 			if(codeNum==0) {//The selected code does not exist, so we must add it.
 				ProcedureCode code=new ProcedureCode();
-				code.ProcCode=procCode;
-				code.Descript="Electronic Rx";
-				code.AbbrDesc="eRx";
-				code.ProcTime="/X/";
-				code.ProcCat=162;//Software
-				code.TreatArea=TreatmentArea.Mouth;
+				code.Code=procCode;
+				code.Description="Electronic Rx";
+				code.ShortDescription="eRx";
+				code.Time="/X/";
+				code.ProcedureCategory=162;//Software
+				code.TreatmentArea=ProcedureTreatmentArea.Mouth;
 				ProcedureCodes.Insert(code);
 				ProcedureCodes.RefreshCache();
 			}

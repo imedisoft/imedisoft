@@ -187,7 +187,7 @@ namespace OpenDental
 			{
 				get
 				{
-					var providers = Providers.GetDeepCopy(true);
+					var providers = Providers.GetAll(true);
 					if (providers.Count == 0)
 					{
 						return ODSetupStatus.NotStarted;
@@ -362,7 +362,7 @@ namespace OpenDental
 
 					foreach (var feeSchedule in feeSchedules)
 					{
-						if (Fees.GetCountByFeeSchedNum(feeSchedule.FeeSchedNum) <= 0)
+						if (Fees.GetCountByFeeSchedNum(feeSchedule.Id) <= 0)
 						{
 							return ODSetupStatus.NeedsAttention;
 						}
@@ -423,7 +423,7 @@ namespace OpenDental
 						return ODSetupStatus.NotStarted;
 					}
 
-					var providers = Providers.GetWhere(x => !x.IsNotPerson, true).ToList();
+					var providers = Providers.FindAll(x => !x.IsNotPerson, true).ToList();
 					foreach (var provider in providers)
 					{
 						if (!schedules.Select(x => x.ProvNum).Contains(provider.Id))

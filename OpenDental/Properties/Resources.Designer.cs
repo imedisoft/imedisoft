@@ -779,6 +779,16 @@ namespace Imedisoft.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Icon32Bug {
+            get {
+                object obj = ResourceManager.GetObject("Icon32Bug", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Icon32CalendarAlt {
             get {
                 object obj = ResourceManager.GetObject("Icon32CalendarAlt", resourceCulture);
@@ -999,6 +1009,16 @@ namespace Imedisoft.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap IconBug {
+            get {
+                object obj = ResourceManager.GetObject("IconBug", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap IconCheckGreen {
             get {
                 object obj = ResourceManager.GetObject("IconCheckGreen", resourceCulture);
@@ -1062,6 +1082,16 @@ namespace Imedisoft.Properties {
         public static System.Drawing.Bitmap IconCopy {
             get {
                 object obj = ResourceManager.GetObject("IconCopy", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconCopyGreen {
+            get {
+                object obj = ResourceManager.GetObject("IconCopyGreen", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1502,6 +1532,16 @@ namespace Imedisoft.Properties {
         public static System.Drawing.Bitmap IconSyncAlt {
             get {
                 object obj = ResourceManager.GetObject("IconSyncAlt", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconTable {
+            get {
+                object obj = ResourceManager.GetObject("IconTable", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

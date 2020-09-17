@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -27,7 +28,7 @@ namespace OpenDental {
 		private long _verifyCode;
 		private List<PatPlan> _listPatPlans;
 		private List<InsSub> _listInsSubs;
-		private List<InsPlan> _listInsPlans;
+		private List<InsurancePlan> _listInsPlans;
 		private List<Benefit> _listBenefits;
 		private List<ClaimProc> _listClaimProcs;
 		private string _teethText;
@@ -40,7 +41,7 @@ namespace OpenDental {
 
 		///<summary></summary>
 		public FormAutoCodeLessIntrusive(Patient pat,Procedure proc,ProcedureCode procCode,long verifyCode,List<PatPlan> listPatPlans,
-			List<InsSub> listInsSubs,List<InsPlan> listInsPlans,List<Benefit> listBenefits,List<ClaimProc> listClaimProcs,string teethText=null)
+			List<InsSub> listInsSubs,List<InsurancePlan> listInsPlans,List<Benefit> listBenefits,List<ClaimProc> listClaimProcs,string teethText=null)
 		{
 			_patCur=pat;
 			_procCur=proc;
@@ -144,8 +145,8 @@ namespace OpenDental {
 
 		private void FormAutoCodeLessIntrusive_Load(object sender, System.EventArgs e) {
 			//Moved from FormProcEdit.SaveAndClose() in version 16.3+
-			labelMain.Text=ProcedureCodes.GetProcCode(_verifyCode).ProcCode
-				+" ("+ProcedureCodes.GetProcCode(_verifyCode).Descript+") "
+			labelMain.Text=ProcedureCodes.GetProcCode(_verifyCode).Code
+				+" ("+ProcedureCodes.GetProcCode(_verifyCode).Description+") "
 				+"is the recommended procedure code for this procedure.  Change procedure code and fee?";
 			if(Preferences.GetBool(PreferenceName.ProcEditRequireAutoCodes)) {
 				butNo.Text="Edit Proc";//Button will otherwise say 'No'.
@@ -166,7 +167,7 @@ namespace OpenDental {
 					+"Error: "+ae.Message+"\r\n"
 					+"_verifyCode: "+_verifyCode.ToString()+"\r\n"
 					+"_procCur.CodeNum: "+(_procCur==null ? "NULL" : _procCur.CodeNum.ToString())+"\r\n"
-					+"_procCodeCur.CodeNum: "+(_procCodeCur==null ? "NULL" : _procCodeCur.CodeNum.ToString())+"\r\n"
+					+"_procCodeCur.CodeNum: "+(_procCodeCur==null ? "NULL" : _procCodeCur.Id.ToString())+"\r\n"
 					+"\r\n"
 					+"StackTrace:\r\n"+ae.StackTrace;
 				MsgBoxCopyPaste MsgBCP=new MsgBoxCopyPaste(error);
@@ -184,7 +185,7 @@ namespace OpenDental {
 			_procCur.CodeNum=_verifyCode;
 			if(new[] { ProcStat.TP,ProcStat.C,ProcStat.TPi,ProcStat.Cn }.Contains(_procCur.ProcStatus)) {//Only change the fee if Complete, TP, TPi, or Cn.
 				InsSub prisub=null;
-				InsPlan priplan=null;
+				InsurancePlan priplan=null;
 				if(_listPatPlans.Count>0) {
 					prisub=InsSubs.GetSub(_listPatPlans[0].InsSubNum,_listInsSubs);
 					priplan=InsPlans.GetPlan(prisub.PlanNum,_listInsPlans);
@@ -202,11 +203,11 @@ namespace OpenDental {
 			Procedures.ComputeEstimates(_procCur,_patCur.PatNum,_listClaimProcs,true,_listInsPlans,_listPatPlans,_listBenefits,_patCur.Age,_listInsSubs);
 			Recalls.Synch(_procCur.PatNum);
 			if(_procCur.ProcStatus.In(ProcStat.C,ProcStat.EO,ProcStat.EC)) {
-				string logText=_procCodeCur.ProcCode+" ("+_procCur.ProcStatus+"), ";
+				string logText=_procCodeCur.Code+" ("+_procCur.ProcStatus+"), ";
 				if(_teethText!=null && _teethText.Trim()!="") {
 					logText+="Teeth"+": "+_teethText+", ";
 				}
-				logText+="Fee"+": "+_procCur.ProcFee.ToString("F")+", "+_procCodeCur.Descript;
+				logText+="Fee"+": "+_procCur.ProcFee.ToString("F")+", "+_procCodeCur.Description;
 				Permissions perm=Permissions.ProcCompleteEdit;
 				if(_procCur.ProcStatus.In(ProcStat.EO,ProcStat.EC)) {
 					perm=Permissions.ProcExistingEdit;

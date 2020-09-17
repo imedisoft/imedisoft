@@ -394,7 +394,7 @@ namespace OpenDental{
 			}
 
 			comboProv.Items.AddProvNone();
-			comboProv.Items.AddProvsAbbr(Providers.GetDeepCopy(true));
+			comboProv.Items.AddProvsAbbr(Providers.GetAll(true));
 			comboProv.SetSelectedProvNum(SiteCur.ProvNum);
 			textAddress.Text=SiteCur.Address;
 			textAddress2.Text=SiteCur.Address2;

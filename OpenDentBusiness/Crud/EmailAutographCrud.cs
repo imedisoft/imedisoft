@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 			EmailAutograph emailAutograph;
 			foreach(DataRow row in table.Rows) {
 				emailAutograph=new EmailAutograph();
-				emailAutograph.EmailAutographNum= PIn.Long  (row["EmailAutographNum"].ToString());
+				emailAutograph.Id= PIn.Long  (row["EmailAutographNum"].ToString());
 				emailAutograph.Description      = PIn.String(row["Description"].ToString());
 				emailAutograph.EmailAddress     = PIn.String(row["EmailAddress"].ToString());
 				emailAutograph.AutographText    = PIn.String(row["AutographText"].ToString());
@@ -65,7 +65,7 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("AutographText");
 			foreach(EmailAutograph emailAutograph in listEmailAutographs) {
 				table.Rows.Add(new object[] {
-					POut.Long  (emailAutograph.EmailAutographNum),
+					POut.Long  (emailAutograph.Id),
 					            emailAutograph.Description,
 					            emailAutograph.EmailAddress,
 					            emailAutograph.AutographText,
@@ -82,7 +82,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one EmailAutograph into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(EmailAutograph emailAutograph,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				emailAutograph.EmailAutographNum=ReplicationServers.GetKey("emailautograph","EmailAutographNum");
+				emailAutograph.Id=ReplicationServers.GetKey("emailautograph","EmailAutographNum");
 			}
 			string command="INSERT INTO emailautograph (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -90,7 +90,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="Description,EmailAddress,AutographText) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(emailAutograph.EmailAutographNum)+",";
+				command+=POut.Long(emailAutograph.Id)+",";
 			}
 			command+=
 				     DbHelper.ParamChar+"paramDescription,"
@@ -108,9 +108,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramDescription,paramAutographText);
 			}
 			else {
-				emailAutograph.EmailAutographNum=Database.ExecuteInsert(command,paramDescription,paramAutographText);
+				emailAutograph.Id=Database.ExecuteInsert(command,paramDescription,paramAutographText);
 			}
-			return emailAutograph.EmailAutographNum;
+			return emailAutograph.Id;
 		}
 
 		///<summary>Inserts one EmailAutograph into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -123,14 +123,14 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO emailautograph (";
 			if(!useExistingPK) {
-				emailAutograph.EmailAutographNum=ReplicationServers.GetKeyNoCache("emailautograph","EmailAutographNum");
+				emailAutograph.Id=ReplicationServers.GetKeyNoCache("emailautograph","EmailAutographNum");
 			}
 			if(useExistingPK) {
 				command+="EmailAutographNum,";
 			}
 			command+="Description,EmailAddress,AutographText) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(emailAutograph.EmailAutographNum)+",";
+				command+=POut.Long(emailAutograph.Id)+",";
 			}
 			command+=
 				     DbHelper.ParamChar+"paramDescription,"
@@ -148,9 +148,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramDescription,paramAutographText);
 			}
 			else {
-				emailAutograph.EmailAutographNum=Database.ExecuteInsert(command,paramDescription,paramAutographText);
+				emailAutograph.Id=Database.ExecuteInsert(command,paramDescription,paramAutographText);
 			}
-			return emailAutograph.EmailAutographNum;
+			return emailAutograph.Id;
 		}
 
 		///<summary>Updates one EmailAutograph in the database.</summary>
@@ -159,7 +159,7 @@ namespace OpenDentBusiness.Crud{
 				+"Description      =  "+DbHelper.ParamChar+"paramDescription, "
 				+"EmailAddress     = '"+POut.String(emailAutograph.EmailAddress)+"', "
 				+"AutographText    =  "+DbHelper.ParamChar+"paramAutographText "
-				+"WHERE EmailAutographNum = "+POut.Long(emailAutograph.EmailAutographNum);
+				+"WHERE EmailAutographNum = "+POut.Long(emailAutograph.Id);
 			if(emailAutograph.Description==null) {
 				emailAutograph.Description="";
 			}
@@ -198,7 +198,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			var paramAutographText = new MySqlParameter("paramAutographText", POut.StringParam(emailAutograph.AutographText));
 			command="UPDATE emailautograph SET "+command
-				+" WHERE EmailAutographNum = "+POut.Long(emailAutograph.EmailAutographNum);
+				+" WHERE EmailAutographNum = "+POut.Long(emailAutograph.Id);
 			Database.ExecuteNonQuery(command,paramDescription,paramAutographText);
 			return true;
 		}

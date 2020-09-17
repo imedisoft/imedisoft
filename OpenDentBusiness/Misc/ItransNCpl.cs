@@ -96,7 +96,7 @@ namespace OpenDentBusiness
 			{
 				return "Failed to import json.";
 			}
-			List<CanadianNetwork> listCanadianNetworks = CanadianNetworks.GetDeepCopy();
+			List<CanadianNetwork> listCanadianNetworks = CanadianNetworks.GetAll();
 			//List of carriers from json file that were matched by electId to multiple internal carriers
 			List<Carrier> listUnmatchedJsonCarriers = new List<Carrier>();
 			List<long> listMatchedDbCarrierNums = new List<long>();
@@ -140,22 +140,22 @@ namespace OpenDentBusiness
 					OpenDentBusiness.Carrier carrierNew = new OpenDentBusiness.Carrier();
 					carrierNew.CanadianEncryptionMethod = 1;//Default.  Deprecated for all Canadian carriers and will never be any other value.
 					TrySetCanadianNetworkNum(jsonCarrier, carrierNew, listCanadianNetworks);
-					carrierNew.ElectID = jsonCarrier.Bin;
+					carrierNew.ElectronicId = jsonCarrier.Bin;
 					carrierNew.IsCDA = true;
-					carrierNew.CarrierName = jsonCarrier.Name.En;
+					carrierNew.Name = jsonCarrier.Name.En;
 					carrierNew.Phone = TelephoneNumbers.AutoFormat(jsonCarrierPhone);
 					if (jsonCarrier.Address.Count() > 0)
 					{
 						Address add = jsonCarrier.Address.First();
-						carrierNew.Address = add.Street1;
-						carrierNew.Address2 = add.Street2;
+						carrierNew.AddressLine1 = add.Street1;
+						carrierNew.AddressLine2 = add.Street2;
 						carrierNew.City = add.City;
 						carrierNew.State = add.Province;
 						carrierNew.Zip = add.Postal_Code;
 					}
 					carrierNew.CanadianSupportedTypes = GetSupportedTypes(jsonCarrier);
 					carrierNew.CDAnetVersion = POut.Int(jsonCarrier.Versions.Max(x => PIn.Int(x))).PadLeft(2, '0');//Version must be in 2 digit format. ex. 02.
-					carrierNew.CarrierName = jsonCarrier.Name.En;
+					carrierNew.Name = jsonCarrier.Name.En;
 					try
 					{
 						Carriers.Insert(carrierNew);
@@ -166,13 +166,13 @@ namespace OpenDentBusiness
 					#endregion
 					continue;
 				}
-				listMatchedDbCarrierNums.Add(carrierInDb.CarrierNum);
+				listMatchedDbCarrierNums.Add(carrierInDb.Id);
 				UpdateCarrierInDb(carrierInDb, jsonCarrier, listCanadianNetworks, fieldsToImport, jsonCarrierPhone, isAutomatic);
 			}
 			foreach (Carrier jsonCarrier in listUnmatchedJsonCarriers)
 			{
 				List<OpenDentBusiness.Carrier> listDbCarriers = Carriers.GetWhere(x => x.IsCDA
-					  && x.ElectID == jsonCarrier.Bin && !listMatchedDbCarrierNums.Contains(x.CarrierNum)
+					  && x.ElectronicId == jsonCarrier.Bin && !listMatchedDbCarrierNums.Contains(x.Id)
 				);
 				if (listDbCarriers.Count != 1)
 				{//Either 0 or multiple matches, either way do not update any carriers.
@@ -214,15 +214,15 @@ namespace OpenDentBusiness
 						if (jsonCarrier.Address.Count() > 0)
 						{
 							Address add = jsonCarrier.Address.First();
-							odCarrier.Address = add.Street1;
-							odCarrier.Address2 = add.Street2;
+							odCarrier.AddressLine1 = add.Street1;
+							odCarrier.AddressLine2 = add.Street2;
 							odCarrier.City = add.City;
 							odCarrier.State = add.Province;
 							odCarrier.Zip = add.Postal_Code;
 						}
 						break;
 					case ItransImportFields.Name:
-						odCarrier.CarrierName = jsonCarrier.Name.En;
+						odCarrier.Name = jsonCarrier.Name.En;
 						break;
 				}
 			}
@@ -283,7 +283,7 @@ namespace OpenDentBusiness
 			CanadianNetwork network = listCanadianNetworks.FirstOrDefault(x => x.Abbr == odAbbr);
 			if (network != null)
 			{
-				odCarrier.CanadianNetworkNum = network.Id;
+				odCarrier.CanadianNetworkId = network.Id;
 			}
 		}
 

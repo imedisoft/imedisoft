@@ -138,12 +138,12 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the ordinal (1-based) for the patplan matching the given PriSecMed. Returns 0 if no match.  
 		///You must pass ALL plans for the patient into this method.</summary>
-		public static int GetOrdinal(PriSecMed priSecMed,List<PatPlan> PatPlanList,List<InsPlan> planList,List<InsSub> subList) {
+		public static int GetOrdinal(PriSecMed priSecMed,List<PatPlan> PatPlanList,List<InsurancePlan> planList,List<InsSub> subList) {
 			//No need to check RemotingRole; no call to db.
 			int dentalOrdinal=0;
 			for(int i=0;i<PatPlanList.Count;i++) {
 				InsSub sub=InsSubs.GetSub(PatPlanList[i].InsSubNum,subList);
-				InsPlan plan=InsPlans.GetPlan(sub.PlanNum,planList);
+				InsurancePlan plan=InsPlans.GetPlan(sub.PlanNum,planList);
 				if(plan.IsMedical) {
 					if(priSecMed==PriSecMed.Medical) {
 						return PatPlanList[i].Ordinal;
@@ -202,7 +202,7 @@ namespace OpenDentBusiness{
 		}
 
 
-		public static void IncrementOrthoNextClaimDates(PatPlan patPlan, InsPlan insPlan,int monthsTreat, PatientNote patNoteCur) {
+		public static void IncrementOrthoNextClaimDates(PatPlan patPlan, InsurancePlan insPlan,int monthsTreat, PatientNote patNoteCur) {
 			patPlan.OrthoAutoNextClaimDate=GetOrthoNextClaimDate(patPlan.OrthoAutoNextClaimDate,patNoteCur,insPlan.OrthoAutoProcFreq,monthsTreat);
 			Update(patPlan);
 		}
@@ -385,13 +385,13 @@ namespace OpenDentBusiness{
 				if(patPlanCur!=null) {
 					inssub=InsSubs.GetOne(patPlanCur.InsSubNum);
 				}
-				InsPlan insPlan=null;
+				InsurancePlan insPlan=null;
 				if(inssub!=null) {
 					insPlan=InsPlans.RefreshOne(inssub.PlanNum);
 				}
 				if(insPlan!=null) {
 					//Get the insVerify for the insplan associated to the patplan we are about to delete.
-					InsVerify insVerifyForInsPlan=InsVerifies.GetOneByFKey(insPlan.PlanNum,VerifyTypes.InsuranceBenefit);
+					InsVerify insVerifyForInsPlan=InsVerifies.GetOneByFKey(insPlan.Id,VerifyTypes.InsuranceBenefit);
 					//Only unassign the user for the insplan if it matches the user for the patplan being dropped
 					if(insVerifyForInsPlan!=null && insVerifyForInsPlan.UserNum==insVerifyForPatPlan.UserNum) {
 						//Remove user and set DateLastVerified to MinValue.
@@ -492,7 +492,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Checks all attached inssubs to make sure they have valid insplans. returns true if list is valid</summary>
 		public static bool IsPatPlanListValid(List<PatPlan> listPatPlan,bool doFixIfInvalid=true,List<InsSub> listInsSubs=null
-			,List<InsPlan> listInsPlans=null) 
+			,List<InsurancePlan> listInsPlans=null) 
 		{
 			//No need to check RemotingRole; no call to db.
 			bool isValid=true;

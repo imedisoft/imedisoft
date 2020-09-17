@@ -138,7 +138,7 @@ namespace OpenDentBusiness.HL7 {
 				prov=new Provider();
 				prov.Abbr=eID;//They can manually change this later.
 				prov.EcwID=eID;
-				prov.FeeScheduleId=FeeScheds.GetFirst(true).FeeSchedNum;
+				prov.FeeScheduleId=FeeScheds.GetFirst(true).Id;
 			}
 			if(field.Components.Count==4) {//PV1 segment in format UPIN^LastName^FirstName^MI
 				if(prov.LastName!=field.GetComponentVal(1)) {
@@ -407,11 +407,11 @@ namespace OpenDentBusiness.HL7 {
 			if(str=="") {
 				return 0;
 			}
-			FeeSched feeSched=FeeScheds.GetByExactName(str,FeeScheduleType.Normal);
+			FeeSchedule feeSched=FeeScheds.GetByExactName(str,FeeScheduleType.Normal);
 			if(feeSched==null) {
 				return 0;
 			}
-			return feeSched.FeeSchedNum;
+			return feeSched.Id;
 		}
 
 		///<summary>A string supplied with new line escape commands (\.br\) will be converted to a string with \r\n in it.  The escapeChar supplied will have been retrieved from the escape characters defined in the message, usually "\".  Example: string supplied - line 1\.br\line2\.br\line3; string returned - line 1\r\nline2\r\nline3.</summary>

@@ -67,7 +67,7 @@ namespace OpenDental
 						{//no current fee
 							fee = new Fee();
 							fee.Amount = PIn.Double(fields[1]);
-							fee.FeeSched = feeSchedNum;
+							fee.FeeScheduleId = feeSchedNum;
 							fee.CodeNum = codeNum;
 							fee.ClinicNum = clinicNum;//Either 0 because you're importing on an HQ schedule or local clinic because the feesched is localizable.
 							fee.ProvNum = provNum;
@@ -100,7 +100,7 @@ namespace OpenDental
 		/// Returns true if current user can edit the given feeSched, otherwise false.
 		/// Shows a MessageBox if user is not allowed to edit.
 		/// </summary>
-		public static bool CanEditFee(FeeSched feeSched, long provNum, long clinicNum)
+		public static bool CanEditFee(FeeSchedule feeSched, long provNum, long clinicNum)
 		{
 			//User doesn't have permission
 			if (!Security.IsAuthorized(Permissions.FeeSchedEdit))

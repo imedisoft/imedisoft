@@ -1312,7 +1312,7 @@ namespace OpenDental {
 			comboProviderFilter.Items.Clear();
 			comboProviderFilter.IncludeAll=true;
 			comboProviderFilter.Items.AddProvNone();
-			List<Provider> listProviders=_listAccountCharges.Select(x => Providers.GetFirstOrDefault(y => y.Id==x.ProvNum))
+			List<Provider> listProviders=_listAccountCharges.Select(x => Providers.FirstOrDefault(y => y.Id==x.ProvNum))
 				.Where(x => x!=null)
 				.DistinctBy(x => x.Id)
 				.ToList();
@@ -3435,7 +3435,7 @@ namespace OpenDental {
 							cc=new CreditCard();
 							List<CreditCard> itemOrderCount=CreditCards.Refresh(_patCur.PatNum);
 							cc.ItemOrder=itemOrderCount.Count;
-							cc.PatNum=_patCur.PatNum;
+							cc.PatientId=_patCur.PatNum;
 							cc.CCExpiration=new DateTime(Convert.ToInt32("20"+expiration.Substring(2,2)),Convert.ToInt32(expiration.Substring(0,2)),1);
 							cc.XChargeToken=xChargeToken;
 							cc.CCNumberMasked=accountMasked;

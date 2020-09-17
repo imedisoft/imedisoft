@@ -75,6 +75,10 @@
   <ItemGroup>
     <Compile Include="Account.cs" />
     <Compile Include="AccountingAutoPay.cs" />
+    <Compile Include="AlertCategory.cs" />
+    <Compile Include="AlertCategoryLink.cs" />
+    <Compile Include="AlertItem.cs" />
+    <Compile Include="AlertType.cs" />
     <Compile Include="Allergy.cs" />
     <Compile Include="AllergyDef.cs" />
     <Compile Include="AppointmentFieldDefinition.cs" />
@@ -98,10 +102,16 @@
     <Compile Include="DentalSchools\EvaluationCriterion.cs" />
     <Compile Include="DentalSchools\EvaluationCriterionDef.cs" />
     <Compile Include="DentalSchools\EvaluationDef.cs" />
+    <Compile Include="EmailAddress.cs" />
     <Compile Include="Employee.cs" />
     <Compile Include="DentalSchools\GradingScale.cs" />
     <Compile Include="DentalSchools\GradingScaleItem.cs" />
+    <Compile Include="Employer.cs" />
     <Compile Include="Medication.cs" />
+    <Compile Include="Mount.cs" />
+    <Compile Include="MountDef.cs" />
+    <Compile Include="MountItem.cs" />
+    <Compile Include="MountItemDef.cs" />
     <Compile Include="PatientStatus.cs" />
     <Compile Include="PerioExam.cs" />
     <Compile Include="PerioMeasure.cs" />
@@ -110,6 +120,7 @@
     <Compile Include="Icd10.cs" />
     <Compile Include="Icd9.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="ProcedureCode.cs" />
     <Compile Include="ProgramProperty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DentalSchools\SchoolCourseRequirement.cs" />

@@ -1,4 +1,5 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 using System;
@@ -27,7 +28,7 @@ namespace Imedisoft.Forms
 		private void FillGrid()
 		{
 			var clinicIds = Clinics.GetByCurrentUser().Select(x => x.Id).ToList();
-			var fees = Fees.GetFeesForCode(procedureCode.CodeNum, clinicIds);
+			var fees = Fees.GetFeesForCode(procedureCode.Id, clinicIds);
 
 			feesGrid.BeginUpdate();
 			feesGrid.Columns.Clear();
@@ -41,11 +42,11 @@ namespace Imedisoft.Forms
 			foreach (var fee in fees)
 			{
 				var gridRow = new GridRow();
-				if (fee.FeeSched != lastFeeScheduleId)
+				if (fee.FeeScheduleId != lastFeeScheduleId)
 				{
-					lastFeeScheduleId = fee.FeeSched;
+					lastFeeScheduleId = fee.FeeScheduleId;
 
-					gridRow.Cells.Add(FeeScheds.GetDescription(fee.FeeSched));
+					gridRow.Cells.Add(FeeScheds.GetDescription(fee.FeeScheduleId));
 					gridRow.Bold = true;
 					gridRow.BackColor = Color.LightBlue;
 
@@ -56,7 +57,7 @@ namespace Imedisoft.Forms
 						gridRow.Cells.Add("");
 						gridRow.Tag = new Fee
 						{
-							FeeSched = fee.FeeSched
+							FeeScheduleId = fee.FeeScheduleId
 						};
 
 						feesGrid.Rows.Add(gridRow);
@@ -86,7 +87,7 @@ namespace Imedisoft.Forms
 			var fee = feesGrid.SelectedTag<Fee>();
 			if (fee.FeeNum == 0)
 			{
-				fee.CodeNum = procedureCode.CodeNum;
+				fee.CodeNum = procedureCode.Id;
 			}
 
 			using var formFeeEdit = new FormFeeEdit(fee);

@@ -8,6 +8,8 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormOrthoCase:ODForm {
@@ -340,7 +342,7 @@ namespace OpenDental {
 				return;
 			}
 			ProcedureCode procCode=ProcedureCodes.GetProcCode(_bandingProc.CodeNum);
-			textBandingProc.Text=procCode.ProcCode+" - "+procCode.AbbrDesc;
+			textBandingProc.Text=procCode.Code+" - "+procCode.ShortDescription;
 		}
 
 		private void CheckIsTransfer_CheckedChanged(object sender,EventArgs e) {

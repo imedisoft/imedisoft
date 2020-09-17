@@ -606,7 +606,7 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.ProviderAlphabetize,true)) {
 				butAlphabetize.Enabled=false;
 			}
-			_listProvs=Providers.GetDeepCopy();
+			_listProvs=Providers.GetAll();
 			if(Security.IsAuthorized(Permissions.SecurityAdmin,true)){
 				_listUserGroups=UserGroups.GetAll();
 				for(int i=0;i<_listUserGroups.Count;i++){
@@ -854,7 +854,7 @@ namespace OpenDental{
 			Providers.MoveDownBelow(provCur);//safe to run even if none selected.
 			_hasChanged=true;
 			Cache.Refresh(InvalidType.Providers);
-			_listProvs=Providers.GetDeepCopy();
+			_listProvs=Providers.GetAll();
 			FillGrid();
 			gridMain.ScrollToEnd();//should change this to scroll to the same place as before.
 			for(int i=0;i<gridMain.Rows.Count;i++) {//Providers.ListShallow.Count;i++) {
@@ -972,7 +972,7 @@ namespace OpenDental{
 			}
 			_hasChanged=true;
 			Cache.Refresh(InvalidType.Providers);
-			_listProvs=Providers.GetDeepCopy();
+			_listProvs=Providers.GetAll();
 			FillGrid();
 		}
 

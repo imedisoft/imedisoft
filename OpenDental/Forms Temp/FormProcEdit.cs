@@ -36,7 +36,7 @@ namespace OpenDental {
 		private ArrayList _adjustmentsForProc;
 		private Patient _patCur;
 		private Family _famCur;
-		private List<InsPlan> _listInsPlans;
+		private List<InsurancePlan> _listInsPlans;
 		///<summary>Lazy loaded, do not directly use this variable, use the property instead.</summary>
 		private List<SubstitutionLink> _listSubstLinks=null;
 		///<summary>List of all payments (not paysplits) that this procedure is attached to.</summary>
@@ -108,7 +108,7 @@ namespace OpenDental {
 			_listFees=Fees.GetListFromObjects(listProcedureCodes,listProcedures.Select(x=>x.MedicalCode).ToList(),listProcedures.Select(x=>x.ProvNum).ToList(),
 				_patCur.PriProv,_patCur.SecProv,_patCur.FeeSched,_listInsPlans,listProcedures.Select(x=>x.ClinicNum).ToList(),null,//appts not needed
 				ListSubstLinks,_patCur.DiscountPlanNum);
-			_lookupFees=(Lookup<FeeKey2,Fee>)_listFees.ToLookup(x => new FeeKey2(x.CodeNum,x.FeeSched));
+			_lookupFees=(Lookup<FeeKey2,Fee>)_listFees.ToLookup(x => new FeeKey2(x.CodeNum,x.FeeScheduleId));
 		}
 
 		private List<Fee> ListFees {
@@ -623,7 +623,7 @@ namespace OpenDental {
 				}
 			}
 			else{
-				if(_procedureCode2.IsProsth){
+				if(_procedureCode2.IsProsthesis){
 					listProsth.Items.Add("No");
 					listProsth.Items.Add("Initial");
 					listProsth.Items.Add("Replacement");
@@ -733,7 +733,7 @@ namespace OpenDental {
 				comboStatus.Items.Add("A-alternative");
 				comboStatus.SelectedIndex=0;
 				ProcedureCode pc=ProcedureCodes.GetProcCodeFromDb(_procCur.CodeNum);
-				checkIsRepair.Visible=pc.IsProsth;
+				checkIsRepair.Visible=pc.IsProsthesis;
 				if(_procCur.DateTP.Year<1880) {
 					textDateTP.Text="";
 				}
@@ -873,11 +873,11 @@ namespace OpenDental {
 					}
 				}
 			}
-			textProc.Text=_procedureCode2.ProcCode;
-			textDesc.Text=_procedureCode2.Descript;
+			textProc.Text=_procedureCode2.Code;
+			textDesc.Text=_procedureCode2.Description;
 			textDrugNDC.Text=_procedureCode2.DrugNDC;
-			switch (_procedureCode2.TreatArea){
-				case TreatmentArea.Surf:
+			switch (_procedureCode2.TreatmentArea){
+				case ProcedureTreatmentArea.Surface:
 					this.textTooth.Visible=true;
 					this.labelTooth.Visible=true;
 					this.textSurfaces.Visible=true;
@@ -899,7 +899,7 @@ namespace OpenDental {
 					else
 						errorProvider2.SetError(textSurfaces,"");
 					break;
-				case TreatmentArea.Tooth:
+				case ProcedureTreatmentArea.Tooth:
 					this.textTooth.Visible=true;
 					this.labelTooth.Visible=true;
 					if(Tooth.IsValidDB(_procCur.ToothNum)){
@@ -911,9 +911,9 @@ namespace OpenDental {
 						textTooth.Text=_procCur.ToothNum;
 					}
 					break;
-				case TreatmentArea.Mouth:
+				case ProcedureTreatmentArea.Mouth:
 						break;
-				case TreatmentArea.Quad:
+				case ProcedureTreatmentArea.Quad:
 					this.groupQuadrant.Visible=true;
 					switch (_procCur.Surf){
 						case "UR": this.radioUR.Checked=true; break;
@@ -923,7 +923,7 @@ namespace OpenDental {
 						//default : 
 					}
 					break;
-				case TreatmentArea.Sextant:
+				case ProcedureTreatmentArea.Sextant:
 					this.groupSextant.Visible=true;
 					switch (_procCur.Surf){
 						case "1": this.radioS1.Checked=true; break;
@@ -941,7 +941,7 @@ namespace OpenDental {
 						errorProvider2.SetError(groupSextant,"Please select a sextant treatment area.");
 					}
 					break;
-				case TreatmentArea.Arch:
+				case ProcedureTreatmentArea.Arch:
 					this.groupArch.Visible=true;
 					switch (_procCur.Surf){
 						case "U": this.radioU.Checked=true; break;
@@ -954,7 +954,7 @@ namespace OpenDental {
 						errorProvider2.SetError(groupArch,"Please select a arch treatment area.");
 					}
 					break;
-				case TreatmentArea.ToothRange:
+				case ProcedureTreatmentArea.ToothRange:
 					this.labelRange.Visible=true;
 					this.listBoxTeeth.Visible=true;
 					this.listBoxTeeth2.Visible=true;
@@ -1177,7 +1177,7 @@ namespace OpenDental {
 			GridRow row;
 			checkNoBillIns.CheckState=CheckState.Unchecked;
 			bool allNoBillIns=true;
-			InsPlan plan;
+			InsurancePlan plan;
 			//ODGridCell cell;
 			for(int i=0;i<_listClaimProcsForProc.Count;i++) {
 				if(_listClaimProcsForProc[i].NoBillIns){
@@ -1323,11 +1323,11 @@ namespace OpenDental {
 					return;
 				}
 			}
-			InsPlan plan=FormIS.SelectedPlan;
+			InsurancePlan plan=FormIS.SelectedPlan;
 			InsSub sub=FormIS.SelectedSub;
 			_listClaimProcsForProc=ClaimProcs.RefreshForProc(_procCur.ProcNum);
 			ClaimProc claimProcForProcInsPlan=_listClaimProcsForProc
-				.Where(x => x.PlanNum == plan.PlanNum)
+				.Where(x => x.PlanNum == plan.Id)
 				.Where(x => x.Status != ClaimProcStatus.Preauth)
 				.FirstOrDefault();
 			ClaimProc cp = new ClaimProc();
@@ -1344,7 +1344,7 @@ namespace OpenDental {
 					cp.BaseEst=allowed;
 					cp.InsEstTotal=allowed;
 					cp.CopayAmt=InsPlans.GetCopay(_procCur.CodeNum,plan.FeeSched,plan.CopayFeeSched,
-						!SubstitutionLinks.HasSubstCodeForPlan(plan,_procCur.CodeNum,ListSubstLinks),_procCur.ToothNum,_procCur.ClinicNum,_procCur.ProvNum,plan.PlanNum,
+						!SubstitutionLinks.HasSubstCodeForPlan(plan,_procCur.CodeNum,ListSubstLinks),_procCur.ToothNum,_procCur.ClinicNum,_procCur.ProvNum,plan.Id,
 						ListSubstLinks,LookupFees);
 					if(cp.CopayAmt > allowed) {//if the copay is greater than the allowed fee calculated above
 						cp.CopayAmt=allowed;//reduce the copay
@@ -1641,21 +1641,21 @@ namespace OpenDental {
 			Procedure procOld=_procCur.Copy();
 			ProcedureCode procCodeOld=ProcedureCodes.GetProcCode(_procCur.CodeNum);
 			ProcedureCode procCodeNew=ProcedureCodes.GetProcCode(FormP.SelectedCodeNum);
-			if(procCodeOld.TreatArea != procCodeNew.TreatArea) {
+			if(procCodeOld.TreatmentArea != procCodeNew.TreatmentArea) {
 				MessageBox.Show("Not allowed due to treatment area mismatch.");
 				return;
 			}
       _procCur.CodeNum=FormP.SelectedCodeNum;
 			_procCur.ProcFee=Procedures.GetProcFee(_patCur,_listPatPlans,_listInsSubs,_listInsPlans,_procCur.CodeNum,_procCur.ProvNum,_procCur.ClinicNum
 				,_procCur.MedicalCode,listFees:ListFees);
-			switch(procCodeNew.TreatArea){ 
-				case TreatmentArea.Quad:
+			switch(procCodeNew.TreatmentArea){ 
+				case ProcedureTreatmentArea.Quad:
 					_procCur.Surf="UR";
 					break;
-				case TreatmentArea.Sextant:
+				case ProcedureTreatmentArea.Sextant:
 					_procCur.Surf="1";
 					break;
-				case TreatmentArea.Arch:
+				case ProcedureTreatmentArea.Arch:
 					_procCur.Surf="U";
 					break;
 			}
@@ -1700,16 +1700,16 @@ namespace OpenDental {
 			}
 			#endregion
 			_procedureCode2=ProcedureCodes.GetProcCode(_procCur.CodeNum);
-			textDesc.Text=_procedureCode2.Descript;
+			textDesc.Text=_procedureCode2.Description;
 			//Update the UI now that we know the procedure code change is fine
-			switch(_procedureCode2.TreatArea){ 
-				case TreatmentArea.Quad:
+			switch(_procedureCode2.TreatmentArea){ 
+				case ProcedureTreatmentArea.Quad:
 					radioUR.Checked=true;
 					break;
-				case TreatmentArea.Sextant:
+				case ProcedureTreatmentArea.Sextant:
 					radioS1.Checked=true;
 					break;
-				case TreatmentArea.Arch:
+				case ProcedureTreatmentArea.Arch:
 					radioU.Checked=true;
 					break;
 			}
@@ -2602,7 +2602,7 @@ namespace OpenDental {
 						break;
 				}
 				SecurityLogs.MakeLogEntry(perm,_procOld.PatNum,
-					ProcedureCodes.GetProcCode(_procOld.CodeNum).ProcCode+" ("+_procOld.ProcStatus+"), "+_procOld.ProcFee.ToString("c")+tag);
+					ProcedureCodes.GetProcCode(_procOld.CodeNum).Code+" ("+_procOld.ProcStatus+"), "+_procOld.ProcFee.ToString("c")+tag);
 				DialogResult=DialogResult.OK;
 				Plugins.HookAddCode(this,"FormProcEdit.butDelete_Click_end",_procCur);
 			}
@@ -2738,7 +2738,7 @@ namespace OpenDental {
 						return false;
 					}
 				}
-				if(_procedureCode2.IsProsth
+				if(_procedureCode2.IsProsthesis
 					&& !checkTypeCodeA.Checked
 					&& !checkTypeCodeB.Checked
 					&& !checkTypeCodeC.Checked
@@ -2757,7 +2757,7 @@ namespace OpenDental {
 				}
 			}
 			else {
-				if(_procedureCode2.IsProsth) {
+				if(_procedureCode2.IsProsthesis) {
 					if(listProsth.SelectedIndex==0
 					|| (listProsth.SelectedIndex==2 && textDateOriginalProsth.Text=="")) {
 						if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Prosthesis date not entered. Continue anyway?")){
@@ -2785,7 +2785,7 @@ namespace OpenDental {
 			}
 			#endregion
 			#region Quadrant UI
-			if(_procedureCode2.TreatArea==TreatmentArea.Quad) {
+			if(_procedureCode2.TreatmentArea==ProcedureTreatmentArea.Quad) {
 				if(!radioUL.Checked && !radioUR.Checked && !radioLL.Checked && !radioLR.Checked) {
 					MessageBox.Show("Please select a quadrant.");
 					return false;
@@ -2807,7 +2807,7 @@ namespace OpenDental {
 			//Customers have been complaining about procedurelog entries changing their CodeNum column to 0.
 			//Based on a security log provided by a customer, we were able to determine that this is one of two potential violators.
 			//The following code is here simply to try and get the user to call us so that we can have proof and hopefully find the core of the issue.
-			long verifyCode=ProcedureCodes.GetProcCode(textProc.Text).CodeNum;
+			long verifyCode=ProcedureCodes.GetProcCode(textProc.Text).Id;
 			try {
 				if(verifyCode < 1) {
 					throw new ApplicationException("Invalid Procedure Text");
@@ -2820,7 +2820,7 @@ namespace OpenDental {
 					+"textProc.Text: "+textProc.Text+"\r\n"
 					+"ProcOld.CodeNum: "+(_procOld==null ? "NULL" : _procOld.CodeNum.ToString())+"\r\n"
 					+"ProcCur.CodeNum: "+(_procCur==null ? "NULL" : _procCur.CodeNum.ToString())+"\r\n"
-					+"ProcedureCode2.CodeNum: "+(_procedureCode2==null ? "NULL" : _procedureCode2.CodeNum.ToString())+"\r\n"
+					+"ProcedureCode2.CodeNum: "+(_procedureCode2==null ? "NULL" : _procedureCode2.Id.ToString())+"\r\n"
 					+"\r\n"
 					+"StackTrace:\r\n"+ae.StackTrace;
 				MsgBoxCopyPaste MsgBCP=new MsgBoxCopyPaste(error);
@@ -2839,7 +2839,7 @@ namespace OpenDental {
 			_procCur.PatNum=_patCur.PatNum;
 			//ProcCur.Code=this.textProc.Text;
 			_procedureCode2=ProcedureCodes.GetProcCode(textProc.Text);
-			_procCur.CodeNum=_procedureCode2.CodeNum;
+			_procCur.CodeNum=_procedureCode2.Id;
 			_procCur.MedicalCode=textMedicalCode.Text;
 			_procCur.Discount=PIn.Double(textDiscount.Text);
 			if(_snomedBodySite==null) {
@@ -2973,33 +2973,33 @@ namespace OpenDental {
 			//ProcCur.LabProcCode=textLabCode.Text;
 			//MessageBox.Show(ProcCur.ProcFee.ToString());
 			//Dx taken care of when radio pushed
-			switch(_procedureCode2.TreatArea){
-				case TreatmentArea.Surf:
+			switch(_procedureCode2.TreatmentArea){
+				case ProcedureTreatmentArea.Surface:
 					_procCur.ToothNum=Tooth.FromInternat(textTooth.Text);
 					_procCur.Surf=Tooth.SurfTidyFromDisplayToDb(textSurfaces.Text,_procCur.ToothNum);
 					break;
-				case TreatmentArea.Tooth:
+				case ProcedureTreatmentArea.Tooth:
 					_procCur.Surf="";
 					_procCur.ToothNum=Tooth.FromInternat(textTooth.Text);
 					break;
-				case TreatmentArea.Mouth:
+				case ProcedureTreatmentArea.Mouth:
 					_procCur.Surf="";
 					_procCur.ToothNum="";	
 					break;
-				case TreatmentArea.Quad:
+				case ProcedureTreatmentArea.Quad:
 					//surf set when radio pushed
 					_procCur.ToothNum="";	
 					break;
-				case TreatmentArea.Sextant:
+				case ProcedureTreatmentArea.Sextant:
 					//surf taken care of when radio pushed
 					_procCur.ToothNum="";	
 					break;
-				case TreatmentArea.Arch:
+				case ProcedureTreatmentArea.Arch:
 					//don't HAVE to select arch
 					//taken care of when radio pushed
 					_procCur.ToothNum="";	
 					break;
-				case TreatmentArea.ToothRange:
+				case ProcedureTreatmentArea.ToothRange:
 					//Deselect empty tooth selections in Maxillary/Upper Arch.
 					for(int j=0;j<listBoxTeeth.Items.Count;j++) {
 						if(listBoxTeeth.Items[j].ToString()=="") {//Can be blank when the tooth is flagged as primary when it is an adult tooth.
@@ -3163,12 +3163,12 @@ namespace OpenDental {
 						if(labFee1.CodeNum==0) { //Code does not exist.
 							ProcedureCode code99111=new ProcedureCode();
 							code99111.IsCanadianLab=true;
-							code99111.ProcCode="99111";
-							code99111.Descript="+L Commercial Laboratory Procedures";
-							code99111.AbbrDesc="Lab Fee";
-							code99111.ProcCat=Definitions.GetByExactNameNeverZero(DefinitionCategory.ProcCodeCats,"Adjunctive General Services");
+							code99111.Code="99111";
+							code99111.Description="+L Commercial Laboratory Procedures";
+							code99111.ShortDescription="Lab Fee";
+							code99111.ProcedureCategory=Definitions.GetByExactNameNeverZero(DefinitionCategory.ProcCodeCats,"Adjunctive General Services");
 							ProcedureCodes.Insert(code99111);
-							labFee1.CodeNum=code99111.CodeNum;
+							labFee1.CodeNum=code99111.Id;
 							ProcedureCodes.RefreshCache();
 						}
 						Procedures.Insert(labFee1);
@@ -3205,12 +3205,12 @@ namespace OpenDental {
 						if(labFee2.CodeNum==0) { //Code does not exist.
 							ProcedureCode code99111=new ProcedureCode();
 							code99111.IsCanadianLab=true;
-							code99111.ProcCode="99111";
-							code99111.Descript="+L Commercial Laboratory Procedures";
-							code99111.AbbrDesc="Lab Fee";
-							code99111.ProcCat=Definitions.GetByExactNameNeverZero(DefinitionCategory.ProcCodeCats,"Adjunctive General Services");
+							code99111.Code="99111";
+							code99111.Description="+L Commercial Laboratory Procedures";
+							code99111.ShortDescription="Lab Fee";
+							code99111.ProcedureCategory=Definitions.GetByExactNameNeverZero(DefinitionCategory.ProcCodeCats,"Adjunctive General Services");
 							ProcedureCodes.Insert(code99111);
-							labFee2.CodeNum=code99111.CodeNum;
+							labFee2.CodeNum=code99111.Id;
 							ProcedureCodes.RefreshCache();
 						}
 						Procedures.Insert(labFee2);
@@ -3218,7 +3218,7 @@ namespace OpenDental {
 				}
 			}
 			else {
-				if(_procedureCode2.IsProsth) {
+				if(_procedureCode2.IsProsthesis) {
 					switch(listProsth.SelectedIndex) {
 						case 0:
 							_procCur.Prosthesis="";
@@ -3431,7 +3431,7 @@ namespace OpenDental {
 				//There's a possibility that we are making a second, unnecessary call to the database here but it is worth it to help meet EHR measures.
 				Procedures.UpdateCpoeForProc(_procCur.ProcNum,true);
 				//Make a log that we edited this procedure's CPOE flag.
-				SecurityLogs.MakeLogEntry(Permissions.ProcEdit,_procCur.PatNum,ProcedureCodes.GetProcCode(_procCur.CodeNum).ProcCode
+				SecurityLogs.MakeLogEntry(Permissions.ProcEdit,_procCur.PatNum,ProcedureCodes.GetProcCode(_procCur.CodeNum).Code
 					+", "+_procCur.ProcFee.ToString("c")+", "+"automatically flagged as CPOE.");
 			}
 			if(DialogResult==DialogResult.OK) {

@@ -350,7 +350,7 @@ namespace OpenDental{
 			comboOrder.SelectedIndex=0;
 			comboProv.Items.Add("All");
 			comboProv.SelectedIndex=0;
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboProv.Items.Add(_listProviders[i].GetLongDesc());
 			}

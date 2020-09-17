@@ -113,8 +113,8 @@ namespace OpenDentBusiness
 			int parentSubsc=0;//the HL sequence # of the current subscriber.
 			string hasSubord="";//0 if no subordinate, 1 if at least one subordinate
 			Claim claim;
-			InsPlan insPlan;
-			InsPlan otherPlan=null;
+			InsurancePlan insPlan;
+			InsurancePlan otherPlan=null;
 			InsSub sub;
 			InsSub otherSub=new InsSub();
 			Patient patient;
@@ -217,19 +217,19 @@ namespace OpenDentBusiness
 			for(int i=0;i<queueItems.Count;i++) {
 				#region Initialize Variables
 				claim=Claims.GetClaim(queueItems[i].ClaimNum);
-				insPlan=InsPlans.GetPlan(claim.PlanNum,new List<InsPlan>());
+				insPlan=InsPlans.GetPlan(claim.PlanNum,new List<InsurancePlan>());
 				sub=InsSubs.GetSub(claim.InsSubNum,null);
 				//insPlan could be null if db corruption. No error checking for that
 				otherPlan=null;//Must be reset each time through because if otherPlan!=null below then we assume the current claim has a secondary plan.
 				if(claim.PlanNum2>0) {
-					otherPlan=InsPlans.GetPlan(claim.PlanNum2,new List<InsPlan>());
+					otherPlan=InsPlans.GetPlan(claim.PlanNum2,new List<InsurancePlan>());
 					otherSub=InsSubs.GetSub(claim.InsSubNum2,null);
 					otherSubsc=Patients.GetPat(otherSub.Subscriber);
-					otherCarrier=Carriers.GetCarrier(otherPlan.CarrierNum);//Returns empty Carrier if not found.
+					otherCarrier=Carriers.GetCarrier(otherPlan.CarrierId);//Returns empty Carrier if not found.
 				}
 				patient=Patients.GetPat(claim.PatNum);
 				subscriber=Patients.GetPat(sub.Subscriber);
-				carrier=Carriers.GetCarrier(insPlan.CarrierNum);
+				carrier=Carriers.GetCarrier(insPlan.CarrierId);
 				claimProcList=ClaimProcs.Refresh(patient.PatNum);
 				claimProcs=ClaimProcs.GetForSendClaim(claimProcList,claim.ClaimNum);
 				procList=Procedures.Refresh(claim.PatNum);
@@ -358,7 +358,7 @@ namespace OpenDentBusiness
 					}
 					//2010AA REF G5 (dental) Site Identification Number: NOT IN X12 5010 STANDARD DOCUMENTATION. Only required by Emdeon.
 					if(IsEmdeonDental(clearinghouseClin)) {
-						Write2010AASiteIDforEmdeon(sw,billProv,carrier.ElectID);
+						Write2010AASiteIDforEmdeon(sw,billProv,carrier.ElectronicId);
 					}
 				}
 				//2010AA PER: IC (medical,institutional,dental) Billing Provider Contact Information: Probably required by a number of carriers and by Emdeon.
@@ -491,9 +491,9 @@ namespace OpenDentBusiness
 					relationshipCode="18";
 				}
 				sw.Write(relationshipCode+s//SBR02 2/2 Individual Relationship Code: 18=Self (The only option besides blank).
-					+Sout(insPlan.GroupNum,50)+s);//SBR03 1/50 Reference Identification: Does not need to be validated because group number is optional.
+					+Sout(insPlan.GroupNumber,50)+s);//SBR03 1/50 Reference Identification: Does not need to be validated because group number is optional.
 				//SBR04 1/60 Name: Situational. Required when SBR03 is not used. Does not need to be validated because group name is optional.
-				if(insPlan.GroupNum!="") {
+				if(insPlan.GroupNumber!="") {
 					sw.Write(s);
 				} 
 				else {
@@ -566,13 +566,13 @@ namespace OpenDentBusiness
 				//NM103 1/60 Name Last or Organization Name:
 				if(IsEMS(clearinghouseClin)) {
 					//This is a special situation requested by EMS.  This tacks the employer onto the end of the carrier.
-					sw.Write(Sout(carrier.CarrierName,30)+"|"+Sout(Employers.GetName(insPlan.EmployerNum),30)+s);
+					sw.Write(Sout(carrier.Name,30)+"|"+Sout(Employers.GetName(insPlan.EmployerNum),30)+s);
 				}
 				else if(IsDentiCal(clearinghouseClin)) {
 					sw.Write("DENTICAL"+s);
 				}
 				else {
-					sw.Write(Sout(carrier.CarrierName,60)+s);
+					sw.Write(Sout(carrier.Name,60)+s);
 				}
 				sw.Write(s//NM104 1/35 Name First: Not used.
 					+s//NM105 1/25 Name Middle: Not used.
@@ -582,9 +582,9 @@ namespace OpenDentBusiness
 				sw.Write(Sout(GetCarrierElectID(carrier,clearinghouseClin),80,2));//NM109 2/80 Identification Code: PayorID.
 				EndSegment(sw);//NM110 through NM112 Not Used.
 				//2010BB N3: (medical,institutional,dental) Payer Address.
-				sw.Write("N3"+s+Sout(carrier.Address,55));//N301 1/55 Address Information:
-				if(carrier.Address2!="") {
-					sw.Write(s+Sout(carrier.Address2,55));//N302 1/55 Address Information: Required when there is a second address line.
+				sw.Write("N3"+s+Sout(carrier.AddressLine1,55));//N301 1/55 Address Information:
+				if(carrier.AddressLine2!="") {
+					sw.Write(s+Sout(carrier.AddressLine2,55));//N302 1/55 Address Information: Required when there is a second address line.
 				}
 				EndSegment(sw);
 				//2010BB N4: (medical,institutional,dental) Payer City, State, Zip Code.
@@ -597,7 +597,7 @@ namespace OpenDentBusiness
 				//2010BB REF G2,LU Billing Provider Secondary Identification. Situational. Not required because we always send NPI.
 				if(!IsDentiCal(clearinghouseClin)){//DentiCal complained that they don't usually want this (except for non-subparted NPIs, which we don't handle).  So far, nobody else has complained.
 					//Always required by Emdeon Dental.
-					WriteProv_REFG2orLU(sw,billProv,carrier.ElectID);
+					WriteProv_REFG2orLU(sw,billProv,carrier.ElectronicId);
 				}
 				parentSubsc=HLcount;
 				HLcount++;
@@ -1282,7 +1282,7 @@ namespace OpenDentBusiness
 							}
 						}
 						if(IsEmdeonDental(clearinghouseClin)) { //Always required by Emdeon Dental.
-							WriteProv_REFG2orLU(sw,provTreat,carrier.ElectID);
+							WriteProv_REFG2orLU(sw,provTreat,carrier.ElectronicId);
 						}
 					}
 					//2310C NM1: 77 (dental) Service Facility Location Name. Conditions different than 4010.  
@@ -1334,9 +1334,9 @@ namespace OpenDentBusiness
 					sw.Write("SBR"+s);
 					sw.Write((claimIsPrimary?"S":"P")+s);//SBR01 1/1 Payer Responsibility Sequence Number Code: When the claim is primary then the other insurance is secondary, and vice versa.
 					sw.Write(GetRelat(claim.PatRelat2)+s//SBR02 2/2 Individual Relationship Code:
-						+Sout(otherPlan.GroupNum,50)+s);//SBR03 1/50 Reference Identification:
+						+Sout(otherPlan.GroupNumber,50)+s);//SBR03 1/50 Reference Identification:
 					//SBR04 1/60 Name: Situational. Required when SBR03 is not specified.
-					if(otherPlan.GroupNum!="") {
+					if(otherPlan.GroupNumber!="") {
 						sw.Write(s);
 					}
 					else {
@@ -1486,13 +1486,13 @@ namespace OpenDentBusiness
 							employerNum=otherPlan.EmployerNum;
 						}
 						//This is a special situation requested by EMS.  This tacks the employer onto the end of the carrier.
-						sw.Write(Sout(otherCarrier.CarrierName,30)+"|"+Sout(Employers.GetName(employerNum),30)+s);
+						sw.Write(Sout(otherCarrier.Name,30)+"|"+Sout(Employers.GetName(employerNum),30)+s);
 					}
 					else if(IsDentiCal(clearinghouseClin)) {
 						sw.Write("DENTICAL"+s);
 					}
 					else {
-						sw.Write(Sout(otherCarrier.CarrierName,60)+s);
+						sw.Write(Sout(otherCarrier.Name,60)+s);
 					}
 					sw.Write(s//NM104 1/35 Name First: Not used.
 						+s//NM105 1/25 Name Middle: Not used.
@@ -1502,9 +1502,9 @@ namespace OpenDentBusiness
 					sw.Write(Sout(GetCarrierElectID(otherCarrier,clearinghouseClin),80,2));//NM109 2/80 Identification Code:
 					EndSegment(sw);//NM110 through NM112 not used.
 					//2230B N3: (medical,institutional,dental) Other Payer Address. Situational.
-					sw.Write("N3"+s+Sout(otherCarrier.Address,55));//N301 1/55 Address Information:
-					if(otherCarrier.Address2!="") {
-						sw.Write(s+Sout(otherCarrier.Address2,55));//N302 1/55 Address Information: Required when there is a second address line.
+					sw.Write("N3"+s+Sout(otherCarrier.AddressLine1,55));//N301 1/55 Address Information:
+					if(otherCarrier.AddressLine2!="") {
+						sw.Write(s+Sout(otherCarrier.AddressLine2,55));//N302 1/55 Address Information: Required when there is a second address line.
 					}
 					EndSegment(sw);
 					//2330B N4: (medical,institutional,dental) Other Payer City, State, Zip Code. Situational.
@@ -1769,13 +1769,13 @@ namespace OpenDentBusiness
 						}
 						EndSegment(sw);
 						//2400 TOO: Tooth Information. Number/Surface. Multiple iterations of the TOO segment are allowed only when the quantity reported in Loop ID-2400 SV306 is equal to one.
-						if(procCode.TreatArea==TreatmentArea.Tooth) {
+						if(procCode.TreatmentArea==ProcedureTreatmentArea.Tooth) {
 							sw.Write("TOO"+s
 								+"JP"+s//TOO01 1/3 Code List Qualifier Code: JP=Universal National Tooth Designation System.
 								+proc.ToothNum);//TOO02 1/30 Industry Code: Tooth number.
 							EndSegment(sw);//TOO03 Tooth Surface: Situational. Not applicable.
 						}
-						else if(procCode.TreatArea==TreatmentArea.Surf) {
+						else if(procCode.TreatmentArea==ProcedureTreatmentArea.Surface) {
 							sw.Write("TOO"+s
 								+"JP"+s//TOO01 1/3 Code List Qualifier Code: JP=Universal National Tooth Designation System.
 								+proc.ToothNum+s);//TOO02 1/30 Industry Code: Tooth number.
@@ -1788,7 +1788,7 @@ namespace OpenDentBusiness
 							}
 							EndSegment(sw);
 						}
-						else if(procCode.TreatArea==TreatmentArea.ToothRange) {
+						else if(procCode.TreatmentArea==ProcedureTreatmentArea.ToothRange) {
 							string[] individTeeth=proc.ToothRange.Split(',');
 							for(int t=0;t<individTeeth.Length;t++) {
 								sw.Write("TOO"+s
@@ -1867,13 +1867,13 @@ namespace OpenDentBusiness
 					//2400 REF: 6R (medical,institutional,dental) Line Item Control Number (ProcNum). Used in 835s (electronic EOBs) to match payment to the claimproc.
 					//In older versions of OD, we did not send the REF*6R segment, and for these claims, the Line Item Control Number that will show on the 835 is the Service Line Number from LX01 above.
 					int ordinal=PatPlans.GetOrdinal(claim.InsSubNum,patPlans);
-					string ref02=("x"+proc.ProcNum.ToString()+"/"+ordinal+"/"+insPlan.PlanNum);//Version 3:
+					string ref02=("x"+proc.ProcNum.ToString()+"/"+ordinal+"/"+insPlan.Id);//Version 3:
 					if(ref02.Length>30) {
 						//Even though the field allows 1-50 characters the 837 5010 documentation states:
 						//"... the HIPAA maximum requirements to be supported by any reciving system is '30'.
 						//Characters beyond 30 are not required to be stored nor returned by any 837-receiving system." page 438 in 837 standard.
 						int overflowCount=(ref02.Length-30);
-						string insPlanRightMost=insPlan.PlanNum.ToString().Substring(overflowCount);//Remove the leading digits, returns right most digits.
+						string insPlanRightMost=insPlan.Id.ToString().Substring(overflowCount);//Remove the leading digits, returns right most digits.
 						ref02=("y"+proc.ProcNum.ToString()+"/"+ordinal+"/"+insPlanRightMost);
 						//Version 4: Implemented in 19.1,18.4,18.3
 					}
@@ -2066,7 +2066,7 @@ namespace OpenDentBusiness
 								+Sout(GetCarrierElectID(otherCarrier,clearinghouseClin),80,2)+s//SVD01 2/80 Identification Code.  Other payer primary identifier.
 								+AmountToStrNoLeading(claimProcOther.InsPayAmt)+s//SVD02 1/18 Monetary Amount: Service line paid amount.
 								+"AD"+isa16//SVD03-1 2/2 Product/Service ID Qualifier.  Required.
-								+procCode.ProcCode+s//SVD03-2 1/48 Product/Service ID.  Procedure Code.  Required.
+								+procCode.Code+s//SVD03-2 1/48 Product/Service ID.  Procedure Code.  Required.
 								//SVD03-3 2/2 Procedure Modifier.  Situational.  We do not use.
 								//SVD03-4 2/2 Procedure Modifier.  Situational.  We do not use.
 								//SVD03-5 2/2 Procedure Modifier.  Situational.  We do not use.
@@ -2219,7 +2219,7 @@ namespace OpenDentBusiness
 		///<summary>Contact information for this carrier is: (800)578-0775, P.O. BOX 7114 London Kentucky 40742-7114.
 		///Pass in either a clinic or HQ-level clearinghouse.</summary>
 		private static bool IsPassportHealthMedicaid(Clearinghouse clearinghouse,Carrier carrier) {
-			return (clearinghouse.ISA08=="61129" || carrier.ElectID=="61129");
+			return (clearinghouse.ISA08=="61129" || carrier.ElectronicId=="61129");
 		}
 
 		///<summary>Pass in either a clinic or HQ-level clearinghouse.</summary>
@@ -2229,7 +2229,7 @@ namespace OpenDentBusiness
 
 		///<summary>Pass in either a clinic or HQ-level clearinghouse.</summary>
 		private static bool IsWashingtonMedicaid(Clearinghouse clearinghouse,Carrier carrier) {
-			return ((clearinghouse.ISA08=="77045" && clearinghouse.ISA02=="00") || carrier.ElectID=="CKWA1" || carrier.ElectID=="77045");
+			return ((clearinghouse.ISA08=="77045" && clearinghouse.ISA02=="00") || carrier.ElectronicId=="CKWA1" || carrier.ElectronicId=="77045");
 		}
 
 		///<summary>Sometimes writes the name information for Open Dental. Sometimes it writes practice info.</summary>
@@ -2382,7 +2382,7 @@ namespace OpenDentBusiness
 
 		///<summary>Pass in either a clinic or HQ-level clearinghouse.</summary>
 		private static string GetCarrierElectID(Carrier carrier,Clearinghouse clearinghouse) {
-			string electid=carrier.ElectID;
+			string electid=carrier.ElectronicId;
 			if(electid=="" && IsApex(clearinghouse)) {//only for Apex
 				return "PAPRM";//paper claims
 			}
@@ -2477,7 +2477,7 @@ namespace OpenDentBusiness
 		}		
 
 		///<summary>This used to be an enumeration.</summary>
-		private static string GetFilingCode(InsPlan plan) {
+		private static string GetFilingCode(InsurancePlan plan) {
 			string filingcode=InsFilingCodes.GetEclaimCode(plan.FilingCode);
 			//must be one or two char in length.
 			if(filingcode=="" || filingcode.Length>2) {
@@ -2545,7 +2545,7 @@ namespace OpenDentBusiness
 			//Report individual tooth numbers in one or more TOO segments.
 			//Do not use this element for reporting of individual teeth.
 			//If it is necessary to report one or more individual teeth, use the Tooth Information (TOO) segment in this loop."
-			if(procCode.TreatArea==TreatmentArea.Arch) {
+			if(procCode.TreatmentArea==ProcedureTreatmentArea.Arch) {
 				if(proc.Surf=="U") {
 					return "01";
 				}
@@ -2553,10 +2553,10 @@ namespace OpenDentBusiness
 					return "02";
 				}
 			}
-			if(procCode.TreatArea==TreatmentArea.Mouth) {
+			if(procCode.TreatmentArea==ProcedureTreatmentArea.Mouth) {
 				return "";
 			}
-			if(procCode.TreatArea==TreatmentArea.Quad) {
+			if(procCode.TreatmentArea==ProcedureTreatmentArea.Quad) {
 				if(proc.Surf=="UR") {
 					return "10";
 				}
@@ -2570,16 +2570,16 @@ namespace OpenDentBusiness
 					return "30";
 				}
 			}
-			if(procCode.TreatArea==TreatmentArea.Sextant) {
+			if(procCode.TreatmentArea==ProcedureTreatmentArea.Sextant) {
 				return "";
 			}
-			if(procCode.TreatArea==TreatmentArea.Surf) {
+			if(procCode.TreatmentArea==ProcedureTreatmentArea.Surface) {
 				return "";
 			}
-			if(procCode.TreatArea==TreatmentArea.Tooth) {
+			if(procCode.TreatmentArea==ProcedureTreatmentArea.Tooth) {
 				return "";
 			}
-			if(procCode.TreatArea==TreatmentArea.ToothRange) {
+			if(procCode.TreatmentArea==ProcedureTreatmentArea.ToothRange) {
 				return "";
 			}
 			return "";
@@ -2718,11 +2718,11 @@ namespace OpenDentBusiness
 				return;
 			}
 			Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-			Provider billProv=Providers.GetFirstOrDefault(x => x.Id==claimItems[0].ProvBill1)??providerFirst;
-			Provider treatProv=Providers.GetFirstOrDefault(x => x.Id==claim.ProvTreat)??providerFirst;
+			Provider billProv=Providers.FirstOrDefault(x => x.Id==claimItems[0].ProvBill1)??providerFirst;
+			Provider treatProv=Providers.FirstOrDefault(x => x.Id==claim.ProvTreat)??providerFirst;
 			Referral referral;
 			Referrals.TryGetReferral(claim.ReferringProv,out referral);
-			InsPlan insPlan=InsPlans.GetPlan(claim.PlanNum,null);
+			InsurancePlan insPlan=InsPlans.GetPlan(claim.PlanNum,null);
 			InsSub sub=InsSubs.GetSub(claim.InsSubNum,null);
 			List<PatPlan> patPlans=PatPlans.Refresh(claim.PatNum);
 			if(claim.MedType==EnumClaimMedType.Medical) {
@@ -2890,7 +2890,7 @@ namespace OpenDentBusiness
 				Comma(strb);
 				strb.Append("InsPlan Release of Info");
 			}
-			Carrier carrier=Carriers.GetCarrier(insPlan.CarrierNum);
+			Carrier carrier=Carriers.GetCarrier(insPlan.CarrierId);
 			PatPlan patPlan=PatPlans.GetFromList(patPlans,claim.InsSubNum);//can be null
 			if(patPlan!=null && patPlan.PatID!="") {
 				Comma(strb);
@@ -2918,14 +2918,14 @@ namespace OpenDentBusiness
 				//}
 			}
 			X12Validate.Carrier(carrier,strb);
-			ElectID electID=ElectIDs.GetID(carrier.ElectID);
+			ElectID electID=ElectIDs.GetID(carrier.ElectronicId);
 			if(electID!=null && electID.IsMedicaid && billProv.MedicaidID=="") {
 				Comma(strb);
 				strb.Append("BillProv Medicaid ID");
 			}
 			Patient patient=Patients.GetPat(claim.PatNum);
 			if(claim.PlanNum2>0) {
-				InsPlan insPlan2=InsPlans.GetPlan(claim.PlanNum2,new List<InsPlan>());
+				InsurancePlan insPlan2=InsPlans.GetPlan(claim.PlanNum2,new List<InsurancePlan>());
 				InsSub sub2=InsSubs.GetSub(claim.InsSubNum2,null);
 				if(sub2.SubscriberID.Length<2) {
 					Comma(strb);
@@ -2939,7 +2939,7 @@ namespace OpenDentBusiness
 					Comma(strb);
 					strb.Append("Other Insurance Subscriber Birthdate");
 				}
-				Carrier otherCarrier=Carriers.GetCarrier(insPlan2.CarrierNum);
+				Carrier otherCarrier=Carriers.GetCarrier(insPlan2.CarrierId);
 				X12Validate.Carrier(otherCarrier,strb,"Other Insurance ");//Carrier 2 validation
 				if(claim.PatNum != sub2.Subscriber//if patient is not subscriber
 					&& claim.PatRelat2==Relat.Self//and relat is self
@@ -3144,7 +3144,7 @@ namespace OpenDentBusiness
 					//However, it is possible to create a claim when the procedures are complete,
 					//then to change the status of a procedure in the group to revert the attached procedure back into In Process status.
 					//This is our last line of defense to block the user from sending an incomplete claim.
-					strb.Append(procCode.AbbrDesc+" is In Process");
+					strb.Append(procCode.ShortDescription+" is In Process");
 				}				
 				if(claim.MedType==EnumClaimMedType.Medical) {
 					if(proc.IcdVersion!=9 && proc.IsPrincDiag && proc.DiagnosticCode!="") {
@@ -3152,23 +3152,23 @@ namespace OpenDentBusiness
 					}
 					if(proc.CodeMod1.Length!=0 && proc.CodeMod1.Length!=2) {
 						Comma(strb);
-						strb.Append(procCode.AbbrDesc+" mod1");
+						strb.Append(procCode.ShortDescription+" mod1");
 					}
 					if(proc.CodeMod2.Length!=0 && proc.CodeMod2.Length!=2) {
 						Comma(strb);
-						strb.Append(procCode.AbbrDesc+" mod2");
+						strb.Append(procCode.ShortDescription+" mod2");
 					}
 					if(proc.CodeMod3.Length!=0 && proc.CodeMod3.Length!=2) {
 						Comma(strb);
-						strb.Append(procCode.AbbrDesc+" mod3");
+						strb.Append(procCode.ShortDescription+" mod3");
 					}
 					if(proc.CodeMod4.Length!=0 && proc.CodeMod4.Length!=2) {
 						Comma(strb);
-						strb.Append(procCode.AbbrDesc+" mod4");
+						strb.Append(procCode.ShortDescription+" mod4");
 					}
 					if(Regex.IsMatch(claimProcs[i].CodeSent,"^[0-9]{3}99$") && proc.ClaimNote.Trim()=="") { //CPT codes ending in 99.
 						Comma(strb);
-						strb.Append(procCode.AbbrDesc+" proc e-claim note missing");
+						strb.Append(procCode.ShortDescription+" proc e-claim note missing");
 					}
 				}
 				else if(claim.MedType==EnumClaimMedType.Institutional) {
@@ -3178,58 +3178,58 @@ namespace OpenDentBusiness
 					}
 					if(proc.CodeMod1.Length!=0 && proc.CodeMod1.Length!=2){
 						Comma(strb);
-						strb.Append(procCode.AbbrDesc+" mod1");
+						strb.Append(procCode.ShortDescription+" mod1");
 					}
 					if(proc.CodeMod2.Length!=0 && proc.CodeMod2.Length!=2){
 						Comma(strb);
-						strb.Append(procCode.AbbrDesc+" mod2");
+						strb.Append(procCode.ShortDescription+" mod2");
 					}
 					if(proc.CodeMod3.Length!=0 && proc.CodeMod3.Length!=2){
 						Comma(strb);
-						strb.Append(procCode.AbbrDesc+" mod3");
+						strb.Append(procCode.ShortDescription+" mod3");
 					}
 					if(proc.CodeMod4.Length!=0 && proc.CodeMod4.Length!=2){
 						Comma(strb);
-						strb.Append(procCode.AbbrDesc+" mod4");
+						strb.Append(procCode.ShortDescription+" mod4");
 					}
 					if(procCode.DrugNDC!="" && proc.DrugQty>0){
 						if(proc.DrugUnit==EnumProcDrugUnit.None){
 							Comma(strb);
-							strb.Append(procCode.AbbrDesc+" drug unit");
+							strb.Append(procCode.ShortDescription+" drug unit");
 						}
 					}
 				}
 				else if(claim.MedType==EnumClaimMedType.Dental) {
-					if(procCode.TreatArea==TreatmentArea.Arch && proc.Surf=="") {
+					if(procCode.TreatmentArea==ProcedureTreatmentArea.Arch && proc.Surf=="") {
 						Comma(strb);
-						strb.Append(procCode.AbbrDesc+" missing arch");
+						strb.Append(procCode.ShortDescription+" missing arch");
 					}
-					if(procCode.TreatArea==TreatmentArea.ToothRange && proc.ToothRange=="") {
+					if(procCode.TreatmentArea==ProcedureTreatmentArea.ToothRange && proc.ToothRange=="") {
 						Comma(strb);
-						strb.Append(procCode.AbbrDesc+" tooth range");
+						strb.Append(procCode.ShortDescription+" tooth range");
 					}
-					if(procCode.TreatArea==TreatmentArea.ToothRange && proc.UnitQty>1) {
+					if(procCode.TreatmentArea==ProcedureTreatmentArea.ToothRange && proc.UnitQty>1) {
 						Comma(strb);
-						strb.Append(procCode.AbbrDesc+" unit quantity must be 1 since area is tooth range");
+						strb.Append(procCode.ShortDescription+" unit quantity must be 1 since area is tooth range");
 					}
-					if((procCode.TreatArea==TreatmentArea.Tooth || procCode.TreatArea==TreatmentArea.Surf)
+					if((procCode.TreatmentArea==ProcedureTreatmentArea.Tooth || procCode.TreatmentArea==ProcedureTreatmentArea.Surface)
 						&& !Tooth.IsValidDB(proc.ToothNum)) 
 					{
 						Comma(strb);
-						strb.Append(procCode.AbbrDesc+" tooth number");
+						strb.Append(procCode.ShortDescription+" tooth number");
 					}
-					if(procCode.TreatArea==TreatmentArea.Surf && proc.Surf=="") {
+					if(procCode.TreatmentArea==ProcedureTreatmentArea.Surface && proc.Surf=="") {
 						Comma(strb);
-						strb.Append(procCode.AbbrDesc+" surface missing");
+						strb.Append(procCode.ShortDescription+" surface missing");
 					}
-					if(procCode.IsProsth) {
+					if(procCode.IsProsthesis) {
 						if(proc.Prosthesis=="") {//they didn't enter whether Initial or Replacement
 							Comma(strb);
-							strb.Append("procedure "+procCode.ProcCode+" must indicate prosthesis Initial or Replacement");
+							strb.Append("procedure "+procCode.Code+" must indicate prosthesis Initial or Replacement");
 						}
 						if(proc.Prosthesis=="R"	&& proc.DateOriginalProsth.Year<1880) {//if a replacement, they didn't enter a date
 							Comma(strb);
-							strb.Append("procedure "+procCode.ProcCode+" must indicate prosthesis Original Date");
+							strb.Append("procedure "+procCode.Code+" must indicate prosthesis Original Date");
 						}
 					}
 				}
@@ -3240,29 +3240,29 @@ namespace OpenDentBusiness
 				//Providers
 				Provider provTreatProc=treatProv;
 				if(claim.ProvTreat!=proc.ProvNum && Preferences.GetBool(PreferenceName.EclaimsSeparateTreatProv)) {
-					provTreatProc=Providers.GetFirstOrDefault(x => x.Id==proc.ProvNum)??providerFirst;
+					provTreatProc=Providers.FirstOrDefault(x => x.Id==proc.ProvNum)??providerFirst;
 					if(provTreatProc.LastName=="") {
 						Comma(strb);
-						strb.Append("Treat Prov LName for proc "+procCode.ProcCode);
+						strb.Append("Treat Prov LName for proc "+procCode.Code);
 					}
 					if(provTreatProc.FirstName=="" && !provTreatProc.IsNotPerson) {
 						Comma(strb);
-						strb.Append("Treat Prov FName for proc "+procCode.ProcCode);
+						strb.Append("Treat Prov FName for proc "+procCode.Code);
 					}
 					if(provTreatProc.NationalProviderID.Length<2) {
 						Comma(strb);
-						strb.Append("Treat Prov NPI for proc "+procCode.ProcCode);
+						strb.Append("Treat Prov NPI for proc "+procCode.Code);
 					}
 					if(claim.MedType!=EnumClaimMedType.Institutional) { //Medical and Dental only. No where to send taxonomy code for instituational procedures.
 						if(provTreatProc.TaxonomyCodeOverride.Length>0 && provTreatProc.TaxonomyCodeOverride.Length!=10) {
 							Comma(strb);
-							strb.Append("Treating Prov Taxonomy Code for proc "+procCode.ProcCode+" must be 10 characters");
+							strb.Append("Treating Prov Taxonomy Code for proc "+procCode.Code+" must be 10 characters");
 						}
 					}
 					//Treating prov SSN/TIN is not sent on paper or eclaims. Do not verify or block.
 					if(!Regex.IsMatch(provTreatProc.NationalProviderID,"^(80840)?[0-9]{10}$")) {
 						Comma(strb);
-						strb.Append("Treat Prov NPI for proc "+procCode.ProcCode+" must be a 10 digit number with an optional prefix of 80840");
+						strb.Append("Treat Prov NPI for proc "+procCode.Code+" must be a 10 digit number with an optional prefix of 80840");
 					}
 					//will add any other checks as needed. Can't think of any others at the moment.
 				}
@@ -3274,15 +3274,15 @@ namespace OpenDentBusiness
 					{
 						if(provOrderProc.LastName=="") {
 							Comma(strb);
-							strb.Append("Ordering prov "+provOrderProc.Abbr+" LName for proc "+procCode.ProcCode);
+							strb.Append("Ordering prov "+provOrderProc.Abbr+" LName for proc "+procCode.Code);
 						}
 						if(provOrderProc.FirstName=="") {
 							Comma(strb);
-							strb.Append("Ordering prov "+provOrderProc.Abbr+" FName for proc "+procCode.ProcCode);
+							strb.Append("Ordering prov "+provOrderProc.Abbr+" FName for proc "+procCode.Code);
 						}
 						if(!Regex.IsMatch(provOrderProc.NationalProviderID,"^(80840)?[0-9]{10}$")) {
 							Comma(strb);
-							strb.Append("Ordering Prov "+provOrderProc.Abbr+" NPI for proc "+procCode.ProcCode+" must be a 10 digit number with an optional prefix of 80840");
+							strb.Append("Ordering Prov "+provOrderProc.Abbr+" NPI for proc "+procCode.Code+" must be a 10 digit number with an optional prefix of 80840");
 						}
 					}
 				}
@@ -3294,29 +3294,29 @@ namespace OpenDentBusiness
 						Provider provFacility=Providers.GetFirst(x => x.Id==site.ProvNum);
 						if(provFacility.LastName=="") {
 							Comma(strb);
-							strb.Append("Site prov "+provFacility.Abbr+" LName for proc "+procCode.ProcCode);
+							strb.Append("Site prov "+provFacility.Abbr+" LName for proc "+procCode.Code);
 						}
 						if(!Regex.IsMatch(provFacility.NationalProviderID,"^(80840)?[0-9]{10}$")) {
 							Comma(strb);
-							strb.Append("Site prov "+provFacility.Abbr+" NPI for proc "+procCode.ProcCode
+							strb.Append("Site prov "+provFacility.Abbr+" NPI for proc "+procCode.Code
 								+" must be a 10 digit number with an optional prefix of 80840");
 						}
 						//Address
 						if(site.Address.Trim()=="") {
 							Comma(strb);
-							strb.Append("Site address for proc "+procCode.ProcCode);
+							strb.Append("Site address for proc "+procCode.Code);
 						}
 						if(site.City.Trim().Length<2) {
 							Comma(strb);
-							strb.Append("Site city for proc "+procCode.ProcCode);
+							strb.Append("Site city for proc "+procCode.Code);
 						}
 						if(site.State.Trim().Length!=2) {
 							Comma(strb);
-							strb.Append("Site state for proc "+procCode.ProcCode);
+							strb.Append("Site state for proc "+procCode.Code);
 						}
 						if(!Regex.IsMatch(site.Zip.Trim(),"^[0-9]{5}\\-?([0-9]{4})?$")) {//#####, or #####-, or #####-####, or #########. Dashes are removed when X12 is generated.
 							Comma(strb);
-							strb.Append("Site zip for proc "+procCode.ProcCode);
+							strb.Append("Site zip for proc "+procCode.Code);
 						}
 					}
 				}

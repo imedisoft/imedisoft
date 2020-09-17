@@ -385,7 +385,7 @@ namespace OpenDental {
 				_listProviders=_listProviders.FindAll(x => x.Id==Security.CurrentUser.ProviderId);
 				Provider prov=_listProviders.FirstOrDefault();
 				if(prov!=null) {
-					_listProviders.AddRange(Providers.GetWhere(x => x.FirstName == prov.FirstName && x.LastName == prov.LastName && x.Id != prov.Id));
+					_listProviders.AddRange(Providers.FindAll(x => x.FirstName == prov.FirstName && x.LastName == prov.LastName && x.Id != prov.Id));
 				}
 				checkAllProv.Checked=false;
 				checkAllProv.Enabled=false;

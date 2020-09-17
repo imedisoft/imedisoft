@@ -707,12 +707,12 @@ namespace OpenDental{
 				return new Document();
 			}
 			Document docSave=new Document();
-			docSave.DocNum=Documents.Insert(docSave);
+			docSave.Id=Documents.Insert(docSave);
 			docSave.ImgType=ImageType.Document;
-			docSave.DateCreated=DateTime.Now;
-			docSave.PatNum=PatCur.PatNum;
-			docSave.DocCategory=letterCur.ImageFolder;
-			docSave.Description=letterCur.Description+docSave.DocNum;//no extension.
+			docSave.AddedOnDate=DateTime.Now;
+			docSave.PatientId=PatCur.PatNum;
+			docSave.Category=letterCur.ImageFolder;
+			docSave.Description=letterCur.Description+docSave.Id;//no extension.
 			docSave.FileName=ODFileUtils.CleanFileName(docSave.Description)+GetFileExtensionForWordDoc(fileSourcePath);
 			string fileDestPath=ImageStore.GetFilePath(docSave,ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()));
 			Storage.Copy(fileSourcePath,fileDestPath);

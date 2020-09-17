@@ -1753,33 +1753,33 @@ namespace OpenDentBusiness
 				if(!string.IsNullOrEmpty(apt.ProcDescript)) {
 					apt.ProcDescript+=", ";
 				}
-				switch(procCode.TreatArea) {
-					case TreatmentArea.Surf:
+				switch(procCode.TreatmentArea) {
+					case ProcedureTreatmentArea.Surface:
 						procDescOne+="#"+Tooth.GetToothLabel(proc.ToothNum)+"-"
 							+proc.Surf+"-";//""#12-MOD-"
 						break;
-					case TreatmentArea.Tooth:
+					case ProcedureTreatmentArea.Tooth:
 						procDescOne+="#"+Tooth.GetToothLabel(proc.ToothNum)+"-";//"#12-"
 						break;
 					default://area 3 or 0 (mouth)
 						break;
-					case TreatmentArea.Quad:
+					case ProcedureTreatmentArea.Quad:
 						procDescOne+=proc.Surf+"-";//"UL-"
 						break;
-					case TreatmentArea.Sextant:
+					case ProcedureTreatmentArea.Sextant:
 						procDescOne+="S"+proc.Surf+"-";//"S2-"
 						break;
-					case TreatmentArea.Arch:
+					case ProcedureTreatmentArea.Arch:
 						procDescOne+=proc.Surf+"-";//"U-"
 						break;
-					case TreatmentArea.ToothRange:
+					case ProcedureTreatmentArea.ToothRange:
 						//strLine+=table.Rows[j][13].ToString()+" ";//don't show range
 						break;
 				}
-				procDescOne+=procCode.AbbrDesc;
+				procDescOne+=procCode.ShortDescription;
 				apt.ProcDescript+=procDescOne;
 				//Color and previous date are determined by ProcApptColor object
-				ProcApptColor pac = ProcApptColors.GetMatch(procCode.ProcCode);
+				ProcApptColor pac = ProcApptColors.GetMatch(procCode.Code);
 				System.Drawing.Color pColor = System.Drawing.Color.Black;
 				string prevDateString = "";
 				if(pac!=null) {
@@ -2384,7 +2384,7 @@ namespace OpenDentBusiness
 		///The appointment will be inserted into the database in this method so it's important to delete it if the appointment doesn't get scheduled.  
 		///Returns the list of procedures that were created for the appointment so that they can be displayed to Orion users.</summary>
 		public static List<Procedure> FillAppointmentForRecall(Appointment aptCur,Recall recallCur,List<Recall> listRecalls,Patient patCur
-			,List<string> listProcStrs,List<InsPlan> listPlans,List<InsSub> listSubs) 
+			,List<string> listProcStrs,List<InsurancePlan> listPlans,List<InsSub> listSubs) 
 		{
 			//No need to check RemotingRole; no call to db.
 			aptCur.PatNum=patCur.PatNum;
@@ -2418,7 +2418,7 @@ namespace OpenDentBusiness
 				procCur.PatNum=patCur.PatNum;
 				procCur.AptNum=aptCur.AptNum;
 				ProcedureCode procCodeCur=ProcedureCodes.GetProcCode(listProcStrs[i]);
-				procCur.CodeNum=procCodeCur.CodeNum;
+				procCur.CodeNum=procCodeCur.Id;
 				procCur.ProcDate=(aptCur.AptDateTime.Year>1800 ? aptCur.AptDateTime : DateTime.Now);
 				procCur.DateTP=DateTime.Now;
 				procCur.ProvNum=patCur.PriProv;
@@ -2610,7 +2610,7 @@ namespace OpenDentBusiness
 			Family fam=Patients.GetFamily(patNum);
 			List<PatPlan> listPatPlans=PatPlans.Refresh(patNum);
 			List<InsSub> listInsSubs=InsSubs.RefreshForFam(fam);
-			List<InsPlan> listInsPlans=InsPlans.RefreshForSubList(listInsSubs);
+			List<InsurancePlan> listInsPlans=InsPlans.RefreshForSubList(listInsSubs);
 			InsSub sub1=InsSubs.GetSub(PatPlans.GetInsSubNum(listPatPlans,PatPlans.GetOrdinal(PriSecMed.Primary,listPatPlans,listInsPlans,listInsSubs)),listInsSubs);
 			InsSub sub2=InsSubs.GetSub(PatPlans.GetInsSubNum(listPatPlans,PatPlans.GetOrdinal(PriSecMed.Secondary,listPatPlans,listInsPlans,listInsSubs)),listInsSubs);
 			Appointments.UpdateInsPlansForPatHelper(patNum,sub1.PlanNum,sub2.PlanNum);
@@ -2678,7 +2678,7 @@ namespace OpenDentBusiness
 		///<exception cref="ApplicationException" />
 		public static ApptSaveHelperResult ApptSaveHelper(Appointment aptCur,Appointment aptOld,bool isInsertRequired,List<Procedure> listProcsForAppt,
 			List<Appointment> listAppointments,List<int> listSelectedIndices,List<long> listProcNumsAttachedStart,bool isPlanned,
-			List<InsPlan> listInsPlans,List<InsSub> listInsSubs,long selectedProvNum,long selectedProvHygNum,List<Procedure> listProcsSelected,bool isNew,
+			List<InsurancePlan> listInsPlans,List<InsSub> listInsSubs,long selectedProvNum,long selectedProvHygNum,List<Procedure> listProcsSelected,bool isNew,
 			Patient pat,Family fam,bool doUpdateProcFees,bool doRemoveCompleteProcs,bool doCreateSecLog,bool doInsertHL7) 
 		{
 			ApptSaveHelperResult retVal=new ApptSaveHelperResult();
@@ -3857,7 +3857,7 @@ namespace OpenDentBusiness
 			List<Procedure> listProcsForApptEdit=Procedures.GetProcsForApptEdit(appt);//List of all procedures that would show in FormApptEdit.cs
 			List<PatPlan> listPatPlans=PatPlans.GetPatPlansForPat(pat.PatNum);
 			List<InsSub> listInsSubs=new List<InsSub>();
-			List<InsPlan> listInsPlans=new List<InsPlan>();
+			List<InsurancePlan> listInsPlans=new List<InsurancePlan>();
 			if(listPatPlans.Count>0) {
 				listInsSubs=InsSubs.GetMany(listPatPlans.Select(x => x.InsSubNum).ToList());
 				listInsPlans=InsPlans.GetByInsSubs(listInsSubs.Select(x => x.InsSubNum).ToList());
@@ -3889,8 +3889,8 @@ namespace OpenDentBusiness
 			#endregion
 			if(appt.IsNew) {
 				#region Set Appt fields
-				appt.InsPlan1=(listInsPlans.Count>=1 ? listInsPlans[0].PlanNum:0);
-				appt.InsPlan2=(listInsPlans.Count>=2 ? listInsPlans[1].PlanNum:0);
+				appt.InsPlan1=(listInsPlans.Count>=1 ? listInsPlans[0].Id:0);
+				appt.InsPlan2=(listInsPlans.Count>=2 ? listInsPlans[1].Id:0);
 				appt.DateTimeArrived=appt.AptDateTime.Date;
 				appt.DateTimeSeated=appt.AptDateTime.Date;
 				appt.DateTimeDismissed=appt.AptDateTime.Date;
@@ -3983,7 +3983,7 @@ namespace OpenDentBusiness
 		///Added procedures are reflected in listProcsForAppt, also returns subset procedures that will need to be associated to the given appt.
 		///Dynamically charted procs do not have their aptNum set.</summary>
 		public static List<Procedure> ApptTypeMissingProcHelper(Appointment appt,AppointmentType apptType,List<Procedure> listProcsForAppt,Patient pat=null,bool canUpdateApptPattern=true,
-			List<PatPlan> listPatPlans=null,List<InsSub> listInsSubs=null,List<InsPlan> listInsPlans=null,List<Benefit>listBenefits=null)
+			List<PatPlan> listPatPlans=null,List<InsSub> listInsSubs=null,List<InsurancePlan> listInsPlans=null,List<Benefit>listBenefits=null)
 		{
 			List<Procedure> retList=new List<Procedure>();
 			if(appt.AptStatus.In(ApptStatus.PtNote,ApptStatus.PtNoteCompleted)) {
@@ -4015,7 +4015,7 @@ namespace OpenDentBusiness
 				foreach(ProcedureCode procCodeCur in listAptTypeProcs) {
 					bool existsInAppt=false;
 					foreach(Procedure proc in listProcsForAppt) {
-						if(proc.CodeNum==procCodeCur.CodeNum
+						if(proc.CodeNum==procCodeCur.Id
 							//The procedure has not already been added to the return list. 
 							&& !retList.Any(x => x.ProcNum==proc.ProcNum)) 
 						{
@@ -4030,7 +4030,7 @@ namespace OpenDentBusiness
 						}
 					}
 					if(!existsInAppt) { //if the procedure doesn't already exist in the appointment
-						Procedure proc=Procedures.ConstructProcedureForAppt(procCodeCur.CodeNum,appt,pat,listPatPlans,listInsPlans,listInsSubs,listFees);
+						Procedure proc=Procedures.ConstructProcedureForAppt(procCodeCur.Id,appt,pat,listPatPlans,listInsPlans,listInsSubs,listFees);
 						Procedures.Insert(proc);
 						List<ClaimProc> listClaimProcs=new List<ClaimProc>();
 						Procedures.ComputeEstimates(proc,pat.PatNum,ref listClaimProcs,true,listInsPlans,listPatPlans,listBenefits,
@@ -4160,7 +4160,7 @@ namespace OpenDentBusiness
 				for(int i=0;i<listProcs.Count;i++) {
 					procCode=ProcedureCodes.GetProcCode(listProcs[i].CodeNum);
 					if(procCode.LaymanTerm=="") {
-						procDescript=procCode.Descript;
+						procDescript=procCode.Description;
 					}
 					else {
 						procDescript=procCode.LaymanTerm;
@@ -4168,7 +4168,7 @@ namespace OpenDentBusiness
 					if(i>0) {
 						strProcs.Append("\n");
 					}
-					strProcs.Append(listProcs[i].ProcDate.ToShortDateString()+" "+procCode.ProcCode+" "+procDescript);
+					strProcs.Append(listProcs[i].ProcDate.ToShortDateString()+" "+procCode.Code+" "+procDescript);
 				}
 				ReplaceTags.ReplaceOneTag(template,"[ApptProcsList]",strProcs.ToString(),isHtmlEmail);
 			}
@@ -4221,7 +4221,7 @@ namespace OpenDentBusiness
 			Family fam=Patients.GetFamily(apt.PatNum);
 			Patient pat=fam.GetPatient(apt.PatNum);
 			List<InsSub> SubList=InsSubs.RefreshForFam(fam);
-			List<InsPlan> PlanList=InsPlans.RefreshForSubList(SubList);
+			List<InsurancePlan> PlanList=InsPlans.RefreshForSubList(SubList);
 			List<PatPlan> PatPlanList=PatPlans.Refresh(apt.PatNum);
 			DateTime datePrevious=apt.DateTStamp;
 			if(apt.AptStatus==ApptStatus.PtNote) {

@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Drawing.Drawing2D;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class DashToothChart:PictureBox,IDashWidgetField {
@@ -74,7 +76,7 @@ namespace OpenDental {
 				procTP.ProcNumOrig=proc.ProcNum;
 				procTP.ToothNumTP=Tooth.ToInternat(proc.ToothNum);
 				procTP.ProcCode=ProcedureCodes.GetStringProcCode(proc.CodeNum);
-				if(ProcedureCodes.GetProcCode(proc.CodeNum).TreatArea==TreatmentArea.Surf) {
+				if(ProcedureCodes.GetProcCode(proc.CodeNum).TreatmentArea==ProcedureTreatmentArea.Surface) {
 					procTP.Surf=Tooth.SurfTidyFromDbToDisplay(proc.Surf,proc.ToothNum);
 				}
 				else {

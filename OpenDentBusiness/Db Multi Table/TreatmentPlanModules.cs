@@ -1,4 +1,5 @@
 ﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace OpenDentBusiness {
 		///<summary>Gets most of the data needed to load the active treatment plan.</summary>
 		///<param name="doFillHistList">If false, then LoadActiveTPData.HistList will be null.</param>
 		public static LoadActiveTPData GetLoadActiveTpData(Patient pat,long treatPlanNum,List<Benefit> listBenefits,List<PatPlan> listPatPlans,
-			List<InsPlan> listInsPlans,DateTime dateTimeTP,List<InsSub> listInsSubs,bool doFillHistList,bool isTreatPlanSortByTooth,
+			List<InsurancePlan> listInsPlans,DateTime dateTimeTP,List<InsSub> listInsSubs,bool doFillHistList,bool isTreatPlanSortByTooth,
 			List<SubstitutionLink> listSubstLinks) 
 		{
 			LoadActiveTPData data=new LoadActiveTPData();
@@ -70,7 +71,7 @@ namespace OpenDentBusiness {
 		public Family Fam;
 		public Patient Pat;
 		public List<InsSub> SubList;
-		public List<InsPlan> InsPlanList;
+		public List<InsurancePlan> InsPlanList;
 		public List<PatPlan> PatPlanList;
 		public List<Benefit> BenefitList;
 		public List<Claim> ClaimList;

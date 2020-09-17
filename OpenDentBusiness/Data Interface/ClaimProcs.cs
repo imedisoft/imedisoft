@@ -523,21 +523,21 @@ namespace OpenDentBusiness
 			#region Create Dummy Procedure Code
 			ProcedureCode fixCode;
 			string code = "ZZZFIX";
-			fixCode = ProcedureCodes.GetFirstOrDefault(x => x.ProcCode == code);
+			fixCode = ProcedureCodes.GetFirstOrDefault(x => x.Code == code);
 			if (fixCode == null)
 			{
 				fixCode = new ProcedureCode();
-				fixCode.ProcCode = code;
-				fixCode.AbbrDesc = code;
-				fixCode.Descript = "ClaimPayAsTotalFix";
-				fixCode.ProcCat = Definitions.GetByExactName(DefinitionCategory.ProcCodeCats, "Obsolete");
-				if (fixCode.ProcCat == 0)
+				fixCode.Code = code;
+				fixCode.ShortDescription = code;
+				fixCode.Description = "ClaimPayAsTotalFix";
+				fixCode.ProcedureCategory = Definitions.GetByExactName(DefinitionCategory.ProcCodeCats, "Obsolete");
+				if (fixCode.ProcedureCategory == 0)
 				{//There is no Obsolete category so just get the first non-hidden one in the cache.
-					fixCode.ProcCat = Definitions.GetDefsForCategory(DefinitionCategory.ProcCodeCats, true).First().Id;
+					fixCode.ProcedureCategory = Definitions.GetDefsForCategory(DefinitionCategory.ProcCodeCats, true).First().Id;
 				}
 				ProcedureCodes.Insert(fixCode);
 				SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Income Transfer Manager automatically added Procedure Code:"
-					+ " " + fixCode.ProcCode);
+					+ " " + fixCode.Code);
 				Signalods.SetInvalid(InvalidType.ProcCodes);
 				Cache.Refresh(InvalidType.ProcCodes);
 			}
@@ -545,7 +545,7 @@ namespace OpenDentBusiness
 			//Group all of the as totals into Pat/Prov/Clinic specific buckets (most accurate transfer ATM).
 			var groupClaimProcs = listAsTotals.GroupBy(x => new { x.PatNum, x.ProvNum, x.ClinicNum });
 			string logText = "Income Transfer Manager automatically added" +
-				$" {fixCode.ProcCode}, {"Fee"}: {0.ToString("F")}, {fixCode.Descript}";
+				$" {fixCode.Code}, {"Fee"}: {0.ToString("F")}, {fixCode.Description}";
 			//Make a unique dummy procedure and claimproc for each Pat/Prov/Clinic combination to accurately transfer the money. 
 			foreach (var group in groupClaimProcs)
 			{
@@ -560,7 +560,7 @@ namespace OpenDentBusiness
 				dummyProcedure.ProcStatus = ProcStat.C;
 				dummyProcedure.ProvNum = claimProcFirst.ProvNum;
 				dummyProcedure.ClinicNum = claimProcFirst.ClinicNum;
-				dummyProcedure.CodeNum = fixCode.CodeNum;
+				dummyProcedure.CodeNum = fixCode.Id;
 				dummyProcedure.ProcDate = claimProcFirst.DateCP;
 				dummyProcedure.DateComplete = claimProcFirst.DateCP;
 				dummyProcedure.DateEntryC = claimProcFirst.DateCP;
@@ -572,7 +572,7 @@ namespace OpenDentBusiness
 				dummyClaimProc.ClaimNum = claim.ClaimNum;
 				dummyClaimProc.ClinicNum = dummyProcedure.ClinicNum;
 				dummyClaimProc.DateCP = claimProcFirst.DateCP;
-				dummyClaimProc.CodeSent = fixCode.ProcCode;
+				dummyClaimProc.CodeSent = fixCode.Code;
 				dummyClaimProc.InsPayAmt = 0;
 				dummyClaimProc.InsPayEst = 0;
 				dummyClaimProc.InsSubNum = claim.InsSubNum;
@@ -930,7 +930,7 @@ namespace OpenDentBusiness
 		}
 
 		///<summary>Used when creating a claim to create any missing claimProcs. Also used in FormProcEdit if click button to add Estimate.  Inserts it into db. It will still be altered after this to fill in the fields that actually attach it to the claim.</summary>
-		public static void CreateEst(ClaimProc cp, Procedure proc, InsPlan plan, InsSub sub, double baseEstAmt = 0, double insEstTotalAmt = 0,
+		public static void CreateEst(ClaimProc cp, Procedure proc, InsurancePlan plan, InsSub sub, double baseEstAmt = 0, double insEstTotalAmt = 0,
 			bool isInsertNeeded = true, bool isPreauth = false)
 		{
 			//No need to check RemotingRole; no call to db.
@@ -957,14 +957,14 @@ namespace OpenDentBusiness
 			{
 				cp.Status = ClaimProcStatus.Estimate;
 			}
-			cp.PlanNum = plan.PlanNum;
+			cp.PlanNum = plan.Id;
 			cp.InsSubNum = sub.InsSubNum;
 			//Writeoff=0
 			cp.AllowedOverride = -1;
 			cp.Percentage = -1;
 			cp.PercentOverride = -1;
 			cp.CopayAmt = -1;
-			cp.NoBillIns = ProcedureCodes.GetProcCode(proc.CodeNum).NoBillIns;
+			cp.NoBillIns = ProcedureCodes.GetProcCode(proc.CodeNum).NoInsuranceBill;
 			cp.PaidOtherIns = -1;
 			cp.BaseEst = baseEstAmt;
 			cp.DedEst = -1;
@@ -1572,9 +1572,9 @@ namespace OpenDentBusiness
 		///There is a chance that this function will create new claimprocs for labs associated to the procedure passed in if they do not already exist.
 		///Set doCheckCanadianLabs to false when simply making in memory changes to given cp (like in FormClaimProc).
 		///Otherwise duplicate lab claimprocs can be created if cp.Status was only changed in memory.</summary>
-		public static void ComputeBaseEst(ClaimProc cp, Procedure proc, InsPlan plan, long patPlanNum, List<Benefit> benList, List<ClaimProcHist> histList
+		public static void ComputeBaseEst(ClaimProc cp, Procedure proc, InsurancePlan plan, long patPlanNum, List<Benefit> benList, List<ClaimProcHist> histList
 			, List<ClaimProcHist> loopList, List<PatPlan> patPlanList, double paidOtherInsTot, double paidOtherInsBase, int patientAge, double writeOffOtherIns
-			, List<InsPlan> listInsPlans, List<InsSub> listInsSubs, List<SubstitutionLink> listSubstLinks, bool useProcDateOnProc,//=false,List<Fee> listFees=null) 
+			, List<InsurancePlan> listInsPlans, List<InsSub> listInsSubs, List<SubstitutionLink> listSubstLinks, bool useProcDateOnProc,//=false,List<Fee> listFees=null) 
 			Lookup<FeeKey2, Fee> lookupFees, bool doCheckCanadianLabs = true)
 		//
 		{
@@ -1672,8 +1672,8 @@ namespace OpenDentBusiness
 			{
 				//no point in wasting time calculating this unless it's needed.
 				//List<Fee> listFee=lookupFees[new FeeKey2(codeNum,feeSched)].ToList();
-				double carrierAllowed = InsPlans.GetAllowed(ProcedureCodes.GetProcCode(codeNum).ProcCode, plan.FeeSched, plan.AllowedFeeSched,
-					codeSubstNone, plan.PlanType, toothNum, proc.ProvNum, proc.ClinicNum, plan.PlanNum, listSubstLinks, lookupFees);//lookupFees can be null
+				double carrierAllowed = InsPlans.GetAllowed(ProcedureCodes.GetProcCode(codeNum).Code, plan.FeeSched, plan.AllowedFeeSched,
+					codeSubstNone, plan.PlanType, toothNum, proc.ProvNum, proc.ClinicNum, plan.Id, listSubstLinks, lookupFees);//lookupFees can be null
 				if (carrierAllowed != -1)
 				{
 					carrierAllowed = carrierAllowed * proc.Quantity;
@@ -1692,22 +1692,22 @@ namespace OpenDentBusiness
 				}
 			}
 			//Copay----------------------------------------------------------------------------------------------
-			FeeSched feeSchedCopay = FeeScheds.GetFirstOrDefault(x => x.FeeSchedNum == plan.CopayFeeSched);
-			if (plan.PlanType == "p" && feeSchedCopay != null && feeSchedCopay.FeeSchedType == FeeScheduleType.FixedBenefit)
+			FeeSchedule feeSchedCopay = FeeScheds.GetFirstOrDefault(x => x.Id == plan.CopayFeeSched);
+			if (plan.PlanType == "p" && feeSchedCopay != null && feeSchedCopay.Type == FeeScheduleType.FixedBenefit)
 			{
 				long codeNumFixedBen = codeNum;
 				if (!codeSubstNone)
 				{//Has substitution code
-					codeNumFixedBen = ProcedureCodes.GetSubstituteCodeNum(ProcedureCodes.GetStringProcCode(codeNum), toothNum, plan.PlanNum, listSubstLinks);
+					codeNumFixedBen = ProcedureCodes.GetSubstituteCodeNum(ProcedureCodes.GetStringProcCode(codeNum), toothNum, plan.Id, listSubstLinks);
 				}
 				Fee feeFixedBenefit = null;
 				Fee feePpo = null;
 				List<Fee> listFees = null;
 				if (lookupFees != null)
 				{
-					listFees = lookupFees[new FeeKey2(codeNumFixedBen, feeSchedCopay.FeeSchedNum)].ToList();
+					listFees = lookupFees[new FeeKey2(codeNumFixedBen, feeSchedCopay.Id)].ToList();
 				}
-				feeFixedBenefit = Fees.GetFee(codeNumFixedBen, feeSchedCopay.FeeSchedNum, proc.ClinicNum, proc.ProvNum, listFees);
+				feeFixedBenefit = Fees.GetFee(codeNumFixedBen, feeSchedCopay.Id, proc.ClinicNum, proc.ProvNum, listFees);
 				if (lookupFees != null)
 				{
 					listFees = lookupFees[new FeeKey2(codeNumFixedBen, plan.FeeSched)].ToList();
@@ -1733,7 +1733,7 @@ namespace OpenDentBusiness
 			}
 			else
 			{
-				cp.CopayAmt = InsPlans.GetCopay(codeNum, plan.FeeSched, plan.CopayFeeSched, codeSubstNone, toothNum, proc.ClinicNum, proc.ProvNum, plan.PlanNum,
+				cp.CopayAmt = InsPlans.GetCopay(codeNum, plan.FeeSched, plan.CopayFeeSched, codeSubstNone, toothNum, proc.ClinicNum, proc.ProvNum, plan.Id,
 					listSubstLinks, lookupFees);
 			}
 			if (cp.CopayAmt != -1)
@@ -1756,8 +1756,8 @@ namespace OpenDentBusiness
 				{
 					cp.CopayAmt = 0;
 				}
-				if (InsPlans.UsesUcrFeeForExclusions(plan) && (Benefits.IsExcluded(ProcedureCodes.GetStringProcCode(codeNum), benList, plan.PlanNum, patPlanNum)
-					|| Benefits.GetPercent(ProcedureCodes.GetStringProcCode(codeNum), plan.PlanType, plan.PlanNum, patPlanNum, benList) == 0))
+				if (InsPlans.UsesUcrFeeForExclusions(plan) && (Benefits.IsExcluded(ProcedureCodes.GetStringProcCode(codeNum), benList, plan.Id, patPlanNum)
+					|| Benefits.GetPercent(ProcedureCodes.GetStringProcCode(codeNum), plan.PlanType, plan.Id, patPlanNum, benList) == 0))
 				{
 					cp.WriteOffEst = 0;//Never any writeoff for excluded procedures in this case.
 				}
@@ -1809,10 +1809,10 @@ namespace OpenDentBusiness
 			}
 			if (loopList != null && histList != null)
 			{
-				cp.DedEst = Benefits.GetDeductibleByCode(benList, plan.PlanNum, patPlanNum, procDate, ProcedureCodes.GetStringProcCode(codeNum)
+				cp.DedEst = Benefits.GetDeductibleByCode(benList, plan.Id, patPlanNum, procDate, ProcedureCodes.GetStringProcCode(codeNum)
 					, histList, loopList, plan, cp.PatNum);
 			}
-			if (Benefits.GetPercent(ProcedureCodes.GetProcCode(codeNum).ProcCode, plan.PlanType, plan.PlanNum, patPlanNum, benList) == 0)
+			if (Benefits.GetPercent(ProcedureCodes.GetProcCode(codeNum).Code, plan.PlanType, plan.Id, patPlanNum, benList) == 0)
 			{//this is binary
 				cp.DedEst = 0;//Procedure is not covered. Do not apply deductible. This does not take into account percent override.
 			}
@@ -1833,13 +1833,13 @@ namespace OpenDentBusiness
 				cp.InsEstTotal -= cp.DedEst;
 			}
 			//Percentage----------------------------------------------------------------------------------------
-			if (plan.PlanType == "p" && feeSchedCopay != null && feeSchedCopay.FeeSchedType == FeeScheduleType.FixedBenefit)
+			if (plan.PlanType == "p" && feeSchedCopay != null && feeSchedCopay.Type == FeeScheduleType.FixedBenefit)
 			{
 				cp.Percentage = 100;
 			}
 			else
 			{
-				cp.Percentage = Benefits.GetPercent(ProcedureCodes.GetProcCode(codeNum).ProcCode, plan.PlanType, plan.PlanNum, patPlanNum, benList);//will never =-1
+				cp.Percentage = Benefits.GetPercent(ProcedureCodes.GetProcCode(codeNum).Code, plan.PlanType, plan.Id, patPlanNum, benList);//will never =-1
 			}
 			if (cp.PercentOverride != -1)
 			{//override, so use PercentOverride
@@ -1955,7 +1955,7 @@ namespace OpenDentBusiness
 			}
 			//Exclusions---------------------------------------------------------------------------------------
 			//We are not going to consider date of proc.  Just simple exclusions
-			if (Benefits.IsExcluded(ProcedureCodes.GetStringProcCode(codeNum), benList, plan.PlanNum, patPlanNum))
+			if (Benefits.IsExcluded(ProcedureCodes.GetStringProcCode(codeNum), benList, plan.Id, patPlanNum))
 			{
 				cp.BaseEst = 0;
 				cp.InsEstTotal = 0;
@@ -1974,7 +1974,7 @@ namespace OpenDentBusiness
 			if (loopList != null && histList != null)
 			{
 				string note = "";
-				cp.InsEstTotal = Benefits.GetLimitationByCode(benList, plan.PlanNum, patPlanNum, procDate
+				cp.InsEstTotal = Benefits.GetLimitationByCode(benList, plan.Id, patPlanNum, procDate
 					, ProcedureCodes.GetStringProcCode(codeNum), histList, loopList, plan, cp.PatNum, out note, cp.InsEstTotal, patientAge
 					, cp.InsSubNum, cp.InsEstTotalOverride);
 				if (note != "")
@@ -1988,8 +1988,8 @@ namespace OpenDentBusiness
 			}
 			//procDate;//was already calculated in the deductible section.
 			//Writeoff Estimate------------------------------------------------------------------------------------------
-			if (InsPlans.UsesUcrFeeForExclusions(plan) && (Benefits.IsExcluded(ProcedureCodes.GetStringProcCode(codeNum), benList, plan.PlanNum, patPlanNum)
-				|| Benefits.GetPercent(ProcedureCodes.GetStringProcCode(codeNum), plan.PlanType, plan.PlanNum, patPlanNum, benList) == 0))
+			if (InsPlans.UsesUcrFeeForExclusions(plan) && (Benefits.IsExcluded(ProcedureCodes.GetStringProcCode(codeNum), benList, plan.Id, patPlanNum)
+				|| Benefits.GetPercent(ProcedureCodes.GetStringProcCode(codeNum), plan.PlanType, plan.Id, patPlanNum, benList) == 0))
 			{
 				switch (plan.PlanType)
 				{
@@ -2010,7 +2010,7 @@ namespace OpenDentBusiness
 			else if (plan.PlanType == "p"//PPO
 										 //and this is a substituted code that doesn't calculate writeoffs
 				&& !codeSubstNone && !plan.HasPpoSubstWriteoffs
-				&& ProcedureCodes.GetSubstituteCodeNum(ProcedureCodes.GetProcCode(codeNum).ProcCode, toothNum, plan.PlanNum, listSubstLinks) != codeNum)//there is a substitution for this code
+				&& ProcedureCodes.GetSubstituteCodeNum(ProcedureCodes.GetProcCode(codeNum).Code, toothNum, plan.Id, listSubstLinks) != codeNum)//there is a substitution for this code
 			{
 				//Using -1 will cause the estimate to show as blank in the edit claim procedure (FormClaimProc) window.
 				//If we used 0, then the 0 would show, which might give the user the impression that we are calculating writeoffs.
@@ -2021,8 +2021,8 @@ namespace OpenDentBusiness
 			 //we can't use the allowed previously calculated, because it might be the allowed of a substituted code.
 			 //so we will calculate the allowed all over again, but this time, without using a substitution code.
 			 //AllowedFeeSched and toothNum do not need to be passed in.  codeSubstNone is set to true to not subst.
-				double carrierAllowedNoSubst = InsPlans.GetAllowed(ProcedureCodes.GetProcCode(codeNum).ProcCode, plan.FeeSched, 0,
-					true, "p", "", proc.ProvNum, proc.ClinicNum, plan.PlanNum, listSubstLinks, lookupFees);
+				double carrierAllowedNoSubst = InsPlans.GetAllowed(ProcedureCodes.GetProcCode(codeNum).Code, plan.FeeSched, 0,
+					true, "p", "", proc.ProvNum, proc.ClinicNum, plan.Id, listSubstLinks, lookupFees);
 				double allowedNoSubst = procFee;
 				if (carrierAllowedNoSubst != -1)
 				{
@@ -2132,7 +2132,7 @@ namespace OpenDentBusiness
 		///<summary>Update or create a claimProc for the given Canadian lab procedure (procLab).
 		///Calculations are based on the percentage from the parent claim procs percentage (procParent).
 		///Optionally pass in a list of claimprocs that will be manipulated if a new claimproc is created by this method.</summary>
-		private static void CanadianLabBaseEstHelper(ClaimProc claimProcParent, Procedure procLab, InsPlan plan, long insSubNum,
+		private static void CanadianLabBaseEstHelper(ClaimProc claimProcParent, Procedure procLab, InsurancePlan plan, long insSubNum,
 			Procedure procParent, List<Benefit> listBenefits, long patPlanNum, List<ClaimProcHist> histList, List<ClaimProcHist> loopList,
 			int patientAge, bool useProcDateOnProc)
 		{
@@ -2187,7 +2187,7 @@ namespace OpenDentBusiness
 						claimProcForLab.PercentOverride = claimProcParent.PercentOverride;
 						claimProcForLab.EstimateNote = "";//Cannot be edited by user, no risk of deleting user input.
 						note = "";
-						claimProcForLab.InsEstTotal = Benefits.GetLimitationByCode(listBenefits, plan.PlanNum, patPlanNum//Consider annual/lifetime max, benefits, etc
+						claimProcForLab.InsEstTotal = Benefits.GetLimitationByCode(listBenefits, plan.Id, patPlanNum//Consider annual/lifetime max, benefits, etc
 							, GetProcDate(procParent, claimProcParent, useProcDateOnProc), claimProcForLab.CodeSent, histList
 							, loopList, plan, claimProcForLab.PatNum, out note, claimProcForLab.InsEstTotal, patientAge
 							, claimProcForLab.InsSubNum, claimProcForLab.InsEstTotalOverride);
@@ -2223,7 +2223,7 @@ namespace OpenDentBusiness
 				claimProcLab.PercentOverride = claimProcParent.PercentOverride;
 				claimProcLab.EstimateNote = "";//Cannot be edited by user, no risk of deleting user input.
 				note = "";
-				claimProcLab.InsEstTotal = Benefits.GetLimitationByCode(listBenefits, plan.PlanNum, patPlanNum
+				claimProcLab.InsEstTotal = Benefits.GetLimitationByCode(listBenefits, plan.Id, patPlanNum
 					, GetProcDate(procParent, claimProcParent, useProcDateOnProc), claimProcLab.CodeSent, histList
 					, loopList, plan, claimProcLab.PatNum, out note, claimProcLab.InsEstTotal, patientAge
 					, claimProcLab.InsSubNum, claimProcLab.InsEstTotalOverride);
@@ -2247,7 +2247,7 @@ namespace OpenDentBusiness
 		///<summary>Updates pertinent lab claimproc statuses for given parentClaimProc.
 		///Only updates the statuses for claimprocs associated to the same plan as given parentClaimProc.
 		///Simply returns if given insPlan is not valid for lab estimates.</summary>
-		public static void UpdatePertinentLabStatuses(ClaimProc parentClaimProc, InsPlan insPlan)
+		public static void UpdatePertinentLabStatuses(ClaimProc parentClaimProc, InsurancePlan insPlan)
 		{
 			//No need to check RemotingRole; no call to db.
 			if (!Canadian.IsValidForLabEstimates(insPlan))
@@ -2697,7 +2697,7 @@ namespace OpenDentBusiness
 			return retVal;
 		}
 
-		public static List<ClaimProcHist> GetHistList(long patNum, List<Benefit> benList, List<PatPlan> patPlanList, List<InsPlan> planList, DateTime procDate, List<InsSub> subList)
+		public static List<ClaimProcHist> GetHistList(long patNum, List<Benefit> benList, List<PatPlan> patPlanList, List<InsurancePlan> planList, DateTime procDate, List<InsSub> subList)
 		{
 			//No need to check RemotingRole; no call to db.
 			return GetHistList(patNum, benList, patPlanList, planList, -1, procDate, subList);
@@ -2709,12 +2709,12 @@ namespace OpenDentBusiness
 		///For some plans, the benefits will indicate entire family, but not for other plans.  And the date ranges can be different as well.
 		///When this list is processed later, it is again filtered, but it can't have missing information.  Use excludeClaimNum=-1 to not exclude a claim.
 		///A claim is excluded if editing from inside that claim.</summary>
-		public static List<ClaimProcHist> GetHistList(long patNum, List<Benefit> benList, List<PatPlan> patPlanList, List<InsPlan> planList
+		public static List<ClaimProcHist> GetHistList(long patNum, List<Benefit> benList, List<PatPlan> patPlanList, List<InsurancePlan> planList
 			, long excludeClaimNum, DateTime procDate, List<InsSub> subList)
 		{
 			List<ClaimProcHist> retVal = new List<ClaimProcHist>();
 			InsSub sub;
-			InsPlan plan;
+			InsurancePlan plan;
 			bool isFam;
 			bool isLife;
 			DateTime dateStart;
@@ -2739,7 +2739,7 @@ namespace OpenDentBusiness
 					{
 						continue;
 					}
-					if (benList[i].PatPlanNum == 0 && benList[i].PlanNum != plan.PlanNum)
+					if (benList[i].PatPlanNum == 0 && benList[i].PlanNum != plan.Id)
 					{
 						continue;
 					}
@@ -2845,7 +2845,7 @@ namespace OpenDentBusiness
 					cph.ClaimNum = PIn.Long(table.Rows[i]["ClaimNum"].ToString());
 					cph.InsSubNum = PIn.Long(table.Rows[i]["InsSubNum"].ToString());
 					cph.ProcNum = PIn.Long(table.Rows[i]["ProcNum"].ToString());
-					cph.PlanNum = plan.PlanNum;
+					cph.PlanNum = plan.Id;
 					cph.Surf = PIn.String(table.Rows[i]["Surf"].ToString());
 					cph.ToothRange = PIn.String(table.Rows[i]["ToothRange"].ToString());
 					cph.ToothNum = PIn.String(table.Rows[i]["ToothNum"].ToString());

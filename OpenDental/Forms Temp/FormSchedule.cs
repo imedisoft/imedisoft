@@ -564,7 +564,7 @@ namespace OpenDental{
 			}
 			else {//Not using clinics
 				_listEmps.AddRange(Employees.GetAll(true));
-				_listProviders.AddRange(Providers.GetDeepCopy(true));
+				_listProviders.AddRange(Providers.GetAll(true));
 			}
 			List<long> listPreviouslySelectedEmpNums=listBoxEmps.GetListSelected<Employee>().Select(x => x.Id).ToList();
 			listBoxEmps.Items.Clear();

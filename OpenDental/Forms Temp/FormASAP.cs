@@ -780,7 +780,7 @@ namespace OpenDental {
 			CheckClinicsSignedUpForWebSched();
 			comboProv.Items.Add("All");
 			comboProv.SelectedIndex=0;
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboProv.Items.Add(_listProviders[i].GetLongDesc());
 			}
@@ -1224,7 +1224,7 @@ namespace OpenDental {
 				}
 				Family fam=Patients.GetFamily(patCur.PatNum);
 				List<InsSub> subList=InsSubs.RefreshForFam(fam);
-				List<InsPlan> planList=InsPlans.RefreshForSubList(subList);
+				List<InsurancePlan> planList=InsPlans.RefreshForSubList(subList);
 				Appointment aptCur=AppointmentL.CreateRecallApt(patCur,planList,recall.RecallNum,subList);
 				GotoModule.PinToAppt(new List<long>() { aptCur.AptNum },patCur.PatNum);
 			}

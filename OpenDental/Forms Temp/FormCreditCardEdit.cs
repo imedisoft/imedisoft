@@ -143,7 +143,7 @@ namespace OpenDental {
 			}
 			string[] arrayProcCodes=CreditCardCur.Procedures.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries);
 			for(int i=0;i<arrayProcCodes.Length;i++) {
-				listProcs.Items.Add(arrayProcCodes[i]+"- "+ProcedureCodes.GetLaymanTerm(ProcedureCodes.GetProcCode(arrayProcCodes[i]).CodeNum));
+				listProcs.Items.Add(arrayProcCodes[i]+"- "+ProcedureCodes.GetLaymanTerm(ProcedureCodes.GetProcCode(arrayProcCodes[i]).Id));
 			}
 		}
 
@@ -347,7 +347,7 @@ namespace OpenDental {
 				return;
 			}
 			//Warn if attached to a different active card for this patient
-			if(CreditCards.ProcLinkedToCard(CreditCardCur.PatNum,procCode,CreditCardCur.CreditCardNum)) {
+			if(CreditCards.ProcLinkedToCard(CreditCardCur.PatientId,procCode,CreditCardCur.CreditCardNum)) {
 				if(!MsgBox.Show(MsgBoxButtons.YesNo,"This procedure is already linked with another credit card on this patient's "
 					+"account. Adding the procedure to this card will result in the patient being charged twice for this procedure. Add this procedure?")) {
 					return;
@@ -518,7 +518,7 @@ namespace OpenDental {
 			CreditCardCur.ExcludeProcSync=checkExcludeProcSync.Checked;
 			CreditCardCur.Address=textAddress.Text;
 			CreditCardCur.CCNumberMasked=textCardNumber.Text;
-			CreditCardCur.PatNum=PatCur.PatNum;
+			CreditCardCur.PatientId=PatCur.PatNum;
 			CreditCardCur.Zip=textZip.Text;
 			CreditCardCur.PaymentType=comboPaymentType.GetSelectedDefNum();
 			//Create an Audit Trail whenever CanChargeWhenNoBal changes

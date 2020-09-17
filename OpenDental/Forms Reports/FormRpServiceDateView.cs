@@ -111,12 +111,12 @@ namespace OpenDental {
 			Patient patCur=_fam.GetPatient(PatNum);
 
 			Document docSave=new Document();
-			docSave.DocNum=Documents.Insert(docSave);
+			docSave.Id=Documents.Insert(docSave);
 			docSave.ImgType=ImageType.Document;
-			docSave.DateCreated=DateTime.Now;
-			docSave.PatNum=PatNum;
-			docSave.DocCategory=listImageCatDefs.FirstOrDefault().Id;
-			docSave.Description=$"ServiceDateView"+docSave.DocNum+$"{docSave.DateCreated.Year}_{docSave.DateCreated.Month}_{docSave.DateCreated.Day}";
+			docSave.AddedOnDate=DateTime.Now;
+			docSave.PatientId=PatNum;
+			docSave.Category=listImageCatDefs.FirstOrDefault().Id;
+			docSave.Description=$"ServiceDateView"+docSave.Id+$"{docSave.AddedOnDate.Year}_{docSave.AddedOnDate.Month}_{docSave.AddedOnDate.Day}";
 
 			string fileName=ODFileUtils.CleanFileName(docSave.Description);
 			string filePath=ImageStore.GetPatientFolder(patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());

@@ -596,7 +596,7 @@ namespace OpenDental{
 			{
 				List<Document> docs=SaveDocDelegate(true,SheetTP);
 				if(docs.Count>0) {
-					TPcur.DocNum=docs[0].DocNum;//attach first Doc to TP.
+					TPcur.DocNum=docs[0].Id;//attach first Doc to TP.
 					TreatPlans.Update(TPcur); //update docnum. must be called after signature is updated.
 				}
 			}

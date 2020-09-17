@@ -374,11 +374,11 @@ namespace OpenDental {
 				new GridColumn("Abbreviation",90,HorizontalAlignment.Center),
 				new GridColumn("Description",100,HorizontalAlignment.Right){ IsWidthDynamic=true }
 			};
-			List<ProcedureCode> listMouthProcCodes=ProcedureCodes.GetProcCodesByTreatmentArea(false,TreatmentArea.Mouth,TreatmentArea.None)
-				.OrderBy(x => x.ProcCode).ToList();
+			List<ProcedureCode> listMouthProcCodes=ProcedureCodes.GetProcCodesByTreatmentArea(false,ProcedureTreatmentArea.Mouth,ProcedureTreatmentArea.None)
+				.OrderBy(x => x.Code).ToList();
 			List<GridRow> listGridRows=new List<GridRow>();
 			listMouthProcCodes.ForEach(x => {
-				GridRow row=new GridRow (x.ProcCode,x.AbbrDesc,x.Descript);
+				GridRow row=new GridRow (x.Code,x.ShortDescription,x.Description);
 				row.Tag=x;
 				listGridRows.Add(row);
 			});
@@ -387,7 +387,7 @@ namespace OpenDental {
 				return;
 			}
 			foreach(object tag in formGridSelect.ListSelectedTags) {
-				string fieldName="Proc:"+((ProcedureCode)tag).ProcCode;
+				string fieldName="Proc:"+((ProcedureCode)tag).Code;
 				listBoxFields.Items.Add(new ODBoxItem<SheetFieldDef>(fieldName,SheetFieldDef.NewCheckBox(fieldName,0,0,0,0)));
 				listBoxFields.SetSelected(listBoxFields.Items.Count-1,true);
 			}

@@ -44,7 +44,7 @@ namespace Imedisoft.Forms
 
 			var providerId = StudentResults.GetByAppt(apptId).FirstOrDefault()?.ProviderId;
 
-			foreach (var provider in Providers.GetDeepCopy(true))
+			foreach (var provider in Providers.GetAll(true))
 			{
 				instructorComboBox.Items.Add(provider);
 				if (provider.Id == providerId)

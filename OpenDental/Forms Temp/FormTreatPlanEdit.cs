@@ -421,13 +421,13 @@ namespace OpenDental{
 			}
 			if(PlanCur.DocNum>0) {//Was set at some point in the past.
 				Document doc=Documents.GetByNum(PlanCur.DocNum);
-				if(doc.DocNum==0) {
+				if(doc.Id==0) {
 					textDocument.Text="("+"Missing Document"+")";//Invalid Fkey to document.DocNum
 					butDocumentView.Enabled=false;
 				}
 				else {
 					textDocument.Text=doc.Description;
-					if(!Documents.DocExists(doc.DocNum)) {
+					if(!Documents.DocExists(doc.Id)) {
 						textDocument.Text+=" ("+"Unreachable File"+")";//Document points to unreachable file
 						butDocumentView.Enabled=false;
 					}
@@ -459,15 +459,15 @@ namespace OpenDental{
 
 		private void butDocumentView_Click(object sender,EventArgs e) {
 			Document doc=Documents.GetByNum(PlanCur.DocNum);
-			if(doc.DocNum==0) {
+			if(doc.Id==0) {
 				MessageBox.Show("Error locating document.");
 				return;
 			}
-			if(!Documents.DocExists(doc.DocNum)) {
+			if(!Documents.DocExists(doc.Id)) {
 				MessageBox.Show("Unable to open document.");
 				return;
 			}
-			Documents.OpenDoc(doc.DocNum);
+			Documents.OpenDoc(doc.Id);
 		}
 
 		private void butDocumentDetach_Click(object sender,EventArgs e) {

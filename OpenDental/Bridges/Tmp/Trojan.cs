@@ -137,14 +137,14 @@ namespace OpenDental.Bridges
 				{
 					try
 					{
-						InsPlan[] insplans = InsPlans.GetByTrojanID(records[i][0]);
+						InsurancePlan[] insplans = InsPlans.GetByTrojanID(records[i][0]);
 						for (int j = 0; j < insplans.Length; j++)
 						{
-							InsPlan planOld = insplans[j].Copy();
+							InsurancePlan planOld = insplans[j].Copy();
 							insplans[j].PlanNote = "PLAN DROPPED BY TROJAN" + Environment.NewLine + insplans[j].PlanNote;
 							insplans[j].TrojanID = "";
 							InsPlans.Update(insplans[j], planOld);
-							PatPlan[] patplans = PatPlans.GetByPlanNum(insplans[j].PlanNum);
+							PatPlan[] patplans = PatPlans.GetByPlanNum(insplans[j].Id);
 							for (int k = 0; k < patplans.Length; k++)
 							{
 								PatPlans.Delete(patplans[k].PatPlanNum);
@@ -488,31 +488,31 @@ namespace OpenDental.Bridges
             Carrier carrier = new Carrier
             {
                 Phone = troj.ELIGPHONE,
-                ElectID = troj.PAYERID,
-                CarrierName = troj.MAILTO,
-                Address = troj.MAILTOST,
+                ElectronicId = troj.PAYERID,
+                Name = troj.MAILTO,
+                AddressLine1 = troj.MAILTOST,
                 City = troj.MAILCITYONLY,
                 State = troj.MAILSTATEONLY,
                 Zip = troj.MAILZIPONLY,
                 NoSendElect = NoSendElectType.SendElect//regardless of what Trojan says.  Nobody sends paper anymore.
             };
 
-            if (carrier.CarrierName == null || carrier.CarrierName == "")
+            if (carrier.Name == null || carrier.Name == "")
 			{
 				//if, for some reason, carrier is absent from the file, we can't do a thing with it.
 				return 0;
 			}
 			carrier = Carriers.GetIdentical(carrier);
 			//now, save this all to the database.
-			troj.CarrierNum = carrier.CarrierNum;
-			InsPlan plan = TrojanQueries.GetPlanWithTrojanID(troj.TROJANID);
+			troj.CarrierNum = carrier.Id;
+			InsurancePlan plan = TrojanQueries.GetPlanWithTrojanID(troj.TROJANID);
 			if (plan == null)
 			{
 				return 0;
 			}
-			TrojanQueries.UpdatePlan(troj, plan.PlanNum, updateBenefits);
-			plan = InsPlans.RefreshOne(plan.PlanNum);
-			InsPlan planOld = plan.Copy();
+			TrojanQueries.UpdatePlan(troj, plan.Id, updateBenefits);
+			plan = InsPlans.RefreshOne(plan.Id);
+			InsurancePlan planOld = plan.Copy();
 			if (updateNoteAutomatic)
 			{
 				if (plan.PlanNote != troj.PlanNote)

@@ -261,13 +261,13 @@ namespace OpenDental {
 					allergyDefNums.Add(_listAllergyCur[h].AllergyDefId);
 				}
 			}
-			_listAllergyDefCur=AllergyDefs.GetMultAllergyDefs(allergyDefNums);
+			_listAllergyDefCur=AllergyDefs.GetByIds(allergyDefNums).ToList();
 			GridRow row;
 			AllergyDef ald;
 			for(int i=0;i<_listAllergyCur.Count;i++) {
 				row=new GridRow();
 				ald=new AllergyDef();
-				ald=AllergyDefs.GetOne(_listAllergyCur[i].AllergyDefId,_listAllergyDefCur);
+				ald=AllergyDefs.GetById(_listAllergyCur[i].AllergyDefId,_listAllergyDefCur);
 				row.Cells.Add(_listAllergyCur[i].LastModifiedDate.ToShortDateString());
 				if(ald.Description==null) {
 					row.Cells.Add("");
@@ -366,7 +366,7 @@ namespace OpenDental {
 						alDR=ListAllergyDefNew[ListAllergyNew.IndexOf(_listAllergyReconcile[j])];
 					}
 					else {
-						alDR=AllergyDefs.GetOne(_listAllergyReconcile[j].AllergyDefId);
+						alDR=AllergyDefs.GetById(_listAllergyReconcile[j].AllergyDefId);
 					}
 					if(alDR==null) {
 						continue;
@@ -405,7 +405,7 @@ namespace OpenDental {
 				isValid=true;
 				//Since gridAllergyExisting and _listAllergyCur are a 1:1 list we can use the selected index position to get our allergy
 				al=_listAllergyCur[gridAllergyExisting.SelectedIndices[i]];
-				alD=AllergyDefs.GetOne(al.AllergyDefId,_listAllergyDefCur);
+				alD=AllergyDefs.GetById(al.AllergyDefId,_listAllergyDefCur);
 				if(_listAllergyReconcile.Count==0) {
 					_listAllergyReconcile.Add(al);
 					continue;
@@ -475,9 +475,9 @@ namespace OpenDental {
 			for(int i=0;i<_listAllergyCur.Count;i++) {//Start looping through all current allergies
 				isActive=false;
 				al=_listAllergyCur[i];
-				alD=AllergyDefs.GetOne(al.AllergyDefId,_listAllergyDefCur);
+				alD=AllergyDefs.GetById(al.AllergyDefId,_listAllergyDefCur);
 				for(int j=0;j<_listAllergyReconcile.Count;j++) {//Compare each reconcile allergy to the current allergy
-					AllergyDef alDR=AllergyDefs.GetOne(_listAllergyReconcile[j].AllergyDefId,_listAllergyDefCur);
+					AllergyDef alDR=AllergyDefs.GetById(_listAllergyReconcile[j].AllergyDefId,_listAllergyDefCur);
 					if(_listAllergyReconcile[j].AllergyDefId==_listAllergyCur[i].AllergyDefId) {//Has identical AllergyDefNums
 						isActive=true;
 						break;
@@ -515,7 +515,7 @@ namespace OpenDental {
 				}
 				//Insert the AllergyDef and Allergy if needed.
 				if(ListAllergyDefNew[index].MedicationId.HasValue) {
-					alDU=AllergyDefs.GetAllergyDefFromMedication(ListAllergyDefNew[index].MedicationId.Value);
+					alDU=AllergyDefs.GetByMedication(ListAllergyDefNew[index].MedicationId.Value);
 				}
 				else {
 					alDU=null;//remove once UNII is implemented
@@ -538,7 +538,7 @@ namespace OpenDental {
 			//EhrMeasureEvents.Insert(newMeasureEvent);
 			for(int inter=0;inter<_listAllergyReconcile.Count;inter++) {
 				if(CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowCDS && CdsPermissions.GetByUser(Security.CurrentUser.Id).AllergyCDS) {
-					AllergyDef alDInter=AllergyDefs.GetOne(_listAllergyReconcile[inter].AllergyDefId);
+					AllergyDef alDInter=AllergyDefs.GetById(_listAllergyReconcile[inter].AllergyDefId);
 					FormCdsIntervention.ShowIfRequired(EhrTriggers.TriggerMatch(alDInter, _patCur), false);
 				}
 			}

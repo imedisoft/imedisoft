@@ -29,9 +29,5 @@ namespace OpenDentBusiness
 		/// Notes to display to user. Examples: "CDT codes distributed via program updates.", "CPT codes require purchase and download from www.ama.com"
 		/// </summary>
 		public string Note;
-
-		public CodeSystem()
-		{
-		}
 	}
 }

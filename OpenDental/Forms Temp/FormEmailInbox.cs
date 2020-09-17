@@ -12,6 +12,7 @@ using OpenDental.UI;
 using OpenDentBusiness.IO;
 using Imedisoft.Forms;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormEmailInbox:ODForm {
@@ -148,25 +149,25 @@ namespace OpenDental {
 			//Default Clinic
 			//Me
 			//All other email addresses not tied to a user 
-			long previousSelectedEmailAddressNum=(AddressCur==null)?0:AddressCur.EmailAddressNum;
+			long previousSelectedEmailAddressNum=(AddressCur==null)?0:AddressCur.Id;
 			List<EmailAddress> listAddresses=EmailAddresses.GetDeepCopy();//Does not include user specific email addresses.
 																								 //Exclude any email addresses which are associated to clinics.
 			if(PrefC.HasClinicsEnabled) {
 				List<Clinic> listClinicsAll=Clinics.GetAll(true);
 				for(int i=0;i<listClinicsAll.Count;i++) {
-					listAddresses.RemoveAll(x => x.EmailAddressNum==listClinicsAll[i].EmailAddressId);
+					listAddresses.RemoveAll(x => x.Id==listClinicsAll[i].EmailAddressId);
 				}
 			}
 			//Exclude default practice email address, since it is added on another line below.
-			listAddresses.RemoveAll(x => x.EmailAddressNum==Preferences.GetLong(PreferenceName.EmailDefaultAddressNum));
+			listAddresses.RemoveAll(x => x.Id==Preferences.GetLong(PreferenceName.EmailDefaultAddressNum));
 			//Exclude web mail notification email address.
-			listAddresses.RemoveAll(x => x.EmailAddressNum==Preferences.GetLong(PreferenceName.EmailNotifyAddressNum));
+			listAddresses.RemoveAll(x => x.Id==Preferences.GetLong(PreferenceName.EmailNotifyAddressNum));
 			//Add clinic defaults that the user has access to.  Do not add duplicates.
 			if(PrefC.HasClinicsEnabled) {
 				List<Clinic> listClinicForUser=Clinics.GetByUser(Security.CurrentUser);
 				for(int i=0;i<listClinicForUser.Count;i++) {
 					EmailAddress emailClinic=EmailAddresses.GetByClinic(listClinicForUser[i].Id);
-					if(listAddresses.Any(x => x.EmailAddressNum == emailClinic.EmailAddressNum)) {
+					if(listAddresses.Any(x => x.Id == emailClinic.Id)) {
 						continue;
 					}
 					listAddresses.Insert(0,emailClinic);
@@ -178,21 +179,21 @@ namespace OpenDental {
 			_listEmailAddresses=new List<EmailAddress>();
 			comboEmailAddress.Items.Clear();
 			for(int i=0;i<listAddresses.Count();i++) {
-				if((emailAddressPractice!=null && listAddresses[i].EmailUsername.Trim().ToLower() == emailAddressPractice.EmailUsername.Trim().ToLower())
-				  || (emailAddressMe != null && listAddresses[i].EmailUsername.Trim().ToLower() == emailAddressMe.EmailUsername.Trim().ToLower())) {
+				if((emailAddressPractice!=null && listAddresses[i].SmtpUsername.Trim().ToLower() == emailAddressPractice.SmtpUsername.Trim().ToLower())
+				  || (emailAddressMe != null && listAddresses[i].SmtpUsername.Trim().ToLower() == emailAddressMe.SmtpUsername.Trim().ToLower())) {
 					continue;
 				}
-				comboEmailAddress.Items.Add(listAddresses[i].EmailUsername);
+				comboEmailAddress.Items.Add(listAddresses[i].SmtpUsername);
 				_listEmailAddresses.Add(listAddresses[i]);
 			}
 			//Add the practice default.
 			if(emailAddressPractice!=null) {
-				comboEmailAddress.Items.Insert(0,"Default <"+emailAddressPractice.EmailUsername+">");
+				comboEmailAddress.Items.Insert(0,"Default <"+emailAddressPractice.SmtpUsername+">");
 				_listEmailAddresses.Insert(0,emailAddressPractice);//Practice Default
 			}
 			//Add the personal email address for the current user.
 			if(emailAddressMe!=null) {
-				comboEmailAddress.Items.Insert(0,"Me <"+emailAddressMe.EmailUsername+">");
+				comboEmailAddress.Items.Insert(0,"Me <"+emailAddressMe.SmtpUsername+">");
 				_listEmailAddresses.Insert(0,emailAddressMe);//"Me"
 			}
 			if(comboEmailAddress.Items.Count > 0) {
@@ -201,13 +202,13 @@ namespace OpenDental {
 			if(Security.CurrentUser.ProviderId.HasValue) { //If the first item in the combobox is selected, make checks to see if the current user has a provnum.
 				comboEmailAddress.Items.Insert(0,"WebMail");//Only providers have access to see Webmail messages.
 				_listEmailAddresses.Insert(0,new EmailAddress {
-					EmailUsername="WebMail",
-					WebmailProvNum=Security.CurrentUser.ProviderId.Value
+					SmtpUsername="WebMail",
+					WebmailProviderId=Security.CurrentUser.ProviderId.Value
 				});
 			}
 			for(int i=0;i<_listEmailAddresses.Count;i++) {
 				EmailAddress addressCur=_listEmailAddresses[i];
-				if(addressCur.EmailAddressNum==previousSelectedEmailAddressNum) {
+				if(addressCur.Id==previousSelectedEmailAddressNum) {
 					comboEmailAddress.SelectedIndex=i;
 				}
 			}
@@ -229,12 +230,12 @@ namespace OpenDental {
 			if(comboEmailAddress.SelectedIndex==0 && Security.CurrentUser.ProviderId!=0) { //WebMail is selected
 				return 0;//Webmail messages are in the database, so we will not need to receive email from the email server.
 			}
-			if(AddressCur.EmailUsername=="" || AddressCur.Pop3ServerIncoming=="") {//Email address not setup.
+			if(AddressCur.SmtpUsername=="" || AddressCur.Pop3Server=="") {//Email address not setup.
 				return 0;
 			}
 			Application.DoEvents();//So that something is showing while the page is loading.
 			int emailMessagesTotalCount=0;
-			Text="Email Inbox for "+AddressCur.EmailUsername+" - Receiving new email...";
+			Text="Email Inbox for "+AddressCur.SmtpUsername+" - Receiving new email...";
 			bool hasMoreEmail=true;
 			List<string> listSkipMsgUids=new List<string>();
 			while(hasMoreEmail) {
@@ -258,9 +259,9 @@ namespace OpenDental {
 					Application.DoEvents();
 				}
 			}
-			Text="Email Inbox for "+AddressCur.EmailUsername+" - Resending any acknowledgments which previously failed...";
+			Text="Email Inbox for "+AddressCur.SmtpUsername+" - Resending any acknowledgments which previously failed...";
 			EmailMessages.SendOldestUnsentAck(AddressCur);
-			Text="Email Inbox for "+AddressCur.EmailUsername;
+			Text="Email Inbox for "+AddressCur.SmtpUsername;
 			return emailMessagesTotalCount;
 		}
 
@@ -305,14 +306,14 @@ namespace OpenDental {
 			gridInbox.Columns[gridInbox.Columns.Count-1].SortingStrategy=UI.GridSortingStrategy.StringCompare;
 			List<EmailMessage> listEmailsFiltered;
 			if(_isSearching) { //if searching, use the search list. Should already be filled.
-				listEmailsFiltered=_listInboxSearched.Where(x => EmailMessages.GetAddressSimple(x.RecipientAddress).ToLower().Contains(AddressCur.EmailUsername.ToLower())).ToList();
+				listEmailsFiltered=_listInboxSearched.Where(x => EmailMessages.GetAddressSimple(x.RecipientAddress).ToLower().Contains(AddressCur.SmtpUsername.ToLower())).ToList();
 			}
 			else {
-				if(AddressCur.EmailUsername=="WebMail") {
+				if(AddressCur.SmtpUsername=="WebMail") {
 					listEmailsFiltered=_listInboxEmails.Where(x => x.ProvNumWebMail==Security.CurrentUser.ProviderId).ToList();
 				}
 				else {
-					listEmailsFiltered=_listInboxEmails.Where(x => EmailMessages.GetAddressSimple(x.RecipientAddress).ToLower().Contains(AddressCur.EmailUsername.ToLower())).ToList();
+					listEmailsFiltered=_listInboxEmails.Where(x => EmailMessages.GetAddressSimple(x.RecipientAddress).ToLower().Contains(AddressCur.SmtpUsername.ToLower())).ToList();
 				}
 			}
 			//Refresh the local dictionary of patient names with all of the patients in the filtered email list.
@@ -426,14 +427,14 @@ namespace OpenDental {
 			gridSent.Rows.Clear();
 			List<EmailMessage> listEmailsFiltered;
 			if(_isSearching) { //if searching, use the search list. Should be prefilled.
-				listEmailsFiltered=_listSentMessagesSearched.Where(x => AddressCur.EmailUsername.ToLower() == EmailMessages.GetAddressSimple(x.FromAddress).ToLower()).ToList();
+				listEmailsFiltered=_listSentMessagesSearched.Where(x => AddressCur.SmtpUsername.ToLower() == EmailMessages.GetAddressSimple(x.FromAddress).ToLower()).ToList();
 			}
 			else {
-				if(AddressCur.EmailUsername=="WebMail") {
+				if(AddressCur.SmtpUsername=="WebMail") {
 					listEmailsFiltered=_listSentEmails.Where(x => x.ProvNumWebMail==Security.CurrentUser.ProviderId).ToList();
 				}
 				else {
-					listEmailsFiltered=_listSentEmails.Where(x => AddressCur.EmailUsername.ToLower() == EmailMessages.GetAddressSimple(x.FromAddress).ToLower()).ToList();
+					listEmailsFiltered=_listSentEmails.Where(x => AddressCur.SmtpUsername.ToLower() == EmailMessages.GetAddressSimple(x.FromAddress).ToLower()).ToList();
 				}
 			}
 			//Refresh the local dictionary of patient names with all of the patients in the filtered email list.
@@ -972,12 +973,12 @@ namespace OpenDental {
 		}
 
 		private void comboEmailAddress_SelectionChangeCommitted(object sender,EventArgs e) {
-			Text="Email Inbox for "+AddressCur.EmailUsername;
-			if(AddressCur.EmailUsername==""||AddressCur.Pop3ServerIncoming=="") {//Email address not setup.
+			Text="Email Inbox for "+AddressCur.SmtpUsername;
+			if(AddressCur.SmtpUsername==""||AddressCur.Pop3Server=="") {//Email address not setup.
 				Text="Email Inbox - The currently selected email address is not setup to receive email.";
 			}
 			if(comboEmailAddress.SelectedIndex==0&&Security.CurrentUser.ProviderId!=0) { //WebMail is selected
-				Text="Email Inbox for "+AddressCur.EmailUsername;
+				Text="Email Inbox for "+AddressCur.SmtpUsername;
 			}
 			Cursor=Cursors.WaitCursor;
 			RefreshLists();

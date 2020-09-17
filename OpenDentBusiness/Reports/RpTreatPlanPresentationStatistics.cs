@@ -110,14 +110,14 @@ namespace OpenDentBusiness
 				{ //radioEntryUser
 					userPresenter = listUserods.FirstOrDefault(x => x.Id == treatPlanCur.SecUserNumEntry);
 				}
-				ProcedureCode procCode = listProcCodes.First(x => x.CodeNum == procCur.CodeNum);
+				ProcedureCode procCode = listProcCodes.First(x => x.Id == procCur.CodeNum);
 				Appointment aptCur = listApts.FirstOrDefault(x => x.AptNum == procCur.AptNum);
 				listTreatPlanPresenterEntries.Add(new TreatPlanPresenterEntry()
 				{
 					Presenter = userPresenter == null ? "" : userPresenter.UserName,
 					DatePresented = treatPlanCur.DateTP,
 					DateCompleted = procCur.ProcDate,
-					ProcDescript = procCode.Descript,
+					ProcDescript = procCode.Description,
 					GrossProd = grossProd,
 					Adjustments = adjustments,
 					WriteOffs = writeOffs,

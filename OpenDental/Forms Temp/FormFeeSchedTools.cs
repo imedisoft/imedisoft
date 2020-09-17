@@ -57,7 +57,7 @@ namespace OpenDental {
 		private ComboBox comboFeeSched;
 		///<summary>The defNum of the fee schedule that is currently displayed in the main window.</summary>
 		private long _schedNum;
-		private List<FeeSched> _listFeeScheds;
+		private List<FeeSchedule> _listFeeScheds;
 		private List<Provider> _listProvs;
 		private List<Clinic> _listClinics;
 		private Label label12;
@@ -85,7 +85,7 @@ namespace OpenDental {
 		private List<string> _listSecurityLogEntries=new List<string>();
 
 		///<summary>Supply the fee schedule num(DefNum) to which all these changes will apply</summary>
-		public FormFeeSchedTools(long schedNum,List<FeeSched> listFeeScheds,List<Provider> listProvs,List<Clinic> listClinics) {
+		public FormFeeSchedTools(long schedNum,List<FeeSchedule> listFeeScheds,List<Provider> listProvs,List<Clinic> listClinics) {
 			// Required for Windows Form Designer support
 			InitializeComponent();
 			
@@ -715,17 +715,17 @@ namespace OpenDental {
 		private void FillComboBoxes() {
 			long feeSchedNum1Selected=0;//Default to the first 
 			if(comboFeeSched.SelectedIndex > -1) {
-				feeSchedNum1Selected=_listFeeScheds[comboFeeSched.SelectedIndex].FeeSchedNum;
+				feeSchedNum1Selected=_listFeeScheds[comboFeeSched.SelectedIndex].Id;
 			}
 			long feeSchedNum2Selected=0;//Default to the first
 			if(comboFeeSchedTo.SelectedIndex > -1) {
-				feeSchedNum2Selected=_listFeeScheds[comboFeeSchedTo.SelectedIndex].FeeSchedNum;
+				feeSchedNum2Selected=_listFeeScheds[comboFeeSchedTo.SelectedIndex].Id;
 			}
 			//The number of clinics and providers cannot change while inside this window.  Always reselect exactly what the user had before.
 			int comboProvIdx=comboProvider.SelectedIndex;
 			int comboProvToIdx=comboProviderTo.SelectedIndex;
-			long feeSchedGroupNum=comboGroup.GetSelected<FeeSchedGroup>()?.FeeSchedGroupNum??0;
-			long feeSchedGroupToNum=comboGroupTo.GetSelected<FeeSchedGroup>()?.FeeSchedGroupNum??0;
+			long feeSchedGroupNum=comboGroup.GetSelected<FeeScheduleGroup>()?.Id??0;
+			long feeSchedGroupToNum=comboGroupTo.GetSelected<FeeScheduleGroup>()?.Id??0;
 			comboFeeSched.Items.Clear();
 			comboFeeSchedTo.Items.Clear();
 			comboGroup.Items.Clear();
@@ -736,15 +736,15 @@ namespace OpenDental {
 			string str;
 			for(int i=0;i<_listFeeScheds.Count;i++) {
 				str=_listFeeScheds[i].Description;
-				if(_listFeeScheds[i].FeeSchedType!=FeeScheduleType.Normal) {
-					str+=" ("+_listFeeScheds[i].FeeSchedType.ToString()+")";
+				if(_listFeeScheds[i].Type!=FeeScheduleType.Normal) {
+					str+=" ("+_listFeeScheds[i].Type.ToString()+")";
 				}
 				comboFeeSched.Items.Add(str);
 				comboFeeSchedTo.Items.Add(str);
-				if(_listFeeScheds[i].FeeSchedNum==feeSchedNum1Selected) {
+				if(_listFeeScheds[i].Id==feeSchedNum1Selected) {
 					comboFeeSched.SelectedIndex=i;
 				}
-				if(_listFeeScheds[i].FeeSchedNum==feeSchedNum2Selected) {
+				if(_listFeeScheds[i].Id==feeSchedNum2Selected) {
 					comboFeeSchedTo.SelectedIndex=i;
 				}
 			}
@@ -765,8 +765,8 @@ namespace OpenDental {
 			}
 			//Fee Sched Groups
 			if(checkShowGroups.Visible) {//Always run the fill logic if they are using the groups feaure, not just if the combobox is showing.
-				FillFeeSchedGroupComboBox(comboGroup,_listFeeScheds[comboFeeSched.SelectedIndex].FeeSchedNum,feeSchedGroupNum);
-				FillFeeSchedGroupComboBox(comboGroupTo,_listFeeScheds[comboFeeSchedTo.SelectedIndex].FeeSchedNum,feeSchedGroupToNum);
+				FillFeeSchedGroupComboBox(comboGroup,_listFeeScheds[comboFeeSched.SelectedIndex].Id,feeSchedGroupNum);
+				FillFeeSchedGroupComboBox(comboGroupTo,_listFeeScheds[comboFeeSchedTo.SelectedIndex].Id,feeSchedGroupToNum);
 			}
 			//Providers
 			comboProvider.Items.Add("None");
@@ -825,14 +825,14 @@ namespace OpenDental {
 
 		private void FillFeeSchedGroupComboBox(ComboBox comboFeeSchedGroup,long feeSchedNumSelected,long feeSchedGroupNum) {
 			List<long> listComboGroupNums=new List<long>();
-			List<FeeSchedGroup> listGroups=FeeSchedGroups.GetAllForFeeSched(feeSchedNumSelected);
-			foreach(FeeSchedGroup feeSchedGroupCur in listGroups) {
-				if(!listComboGroupNums.Contains(feeSchedGroupCur.FeeSchedGroupNum) && feeSchedGroupCur.ListClinicNumsAll.Count>0) {//Skip duplicate/empty groups.
-					ODBoxItem<FeeSchedGroup> boxItemFeeSchedGroup=new ODBoxItem<FeeSchedGroup>(feeSchedGroupCur.Description,feeSchedGroupCur);
+			List<FeeScheduleGroup> listGroups=FeeSchedGroups.GetAllForFeeSched(feeSchedNumSelected);
+			foreach(FeeScheduleGroup feeSchedGroupCur in listGroups) {
+				if(!listComboGroupNums.Contains(feeSchedGroupCur.Id) && feeSchedGroupCur.ListClinicNumsAll.Count>0) {//Skip duplicate/empty groups.
+					ODBoxItem<FeeScheduleGroup> boxItemFeeSchedGroup=new ODBoxItem<FeeScheduleGroup>(feeSchedGroupCur.Description,feeSchedGroupCur);
 					comboFeeSchedGroup.Items.Add(boxItemFeeSchedGroup);
-					listComboGroupNums.Add(feeSchedGroupCur.FeeSchedGroupNum);
+					listComboGroupNums.Add(feeSchedGroupCur.Id);
 					//Set this fee sched group as the selection if it matches the previous selection before refreshing
-					if(boxItemFeeSchedGroup.Tag.FeeSchedGroupNum==feeSchedGroupNum) {
+					if(boxItemFeeSchedGroup.Tag.Id==feeSchedGroupNum) {
 						comboFeeSchedGroup.SelectedItem=boxItemFeeSchedGroup;
 					}
 				}
@@ -852,9 +852,9 @@ namespace OpenDental {
 			if(PrefC.HasClinicsEnabled && !comboClinic.IsUnassignedSelected){
 				listClinicNums.Add(comboClinic.SelectedClinicNum);
 			}
-			long feeSchedNum=_listFeeScheds[comboFeeSched.SelectedIndex].FeeSchedNum;
+			long feeSchedNum=_listFeeScheds[comboFeeSched.SelectedIndex].Id;
 			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
-				FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSchedNum,comboClinic.SelectedClinicNum);//get the selected clinic num
+				FeeScheduleGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSchedNum,comboClinic.SelectedClinicNum);//get the selected clinic num
 				if(groupCur!=null) {
 					MsgBox.Show("Selected clinic is a member of Fee Schedule Group: "+groupCur.Description
 						+" and must be cleared at the group level.");
@@ -867,7 +867,7 @@ namespace OpenDental {
 					return;
 				}
 				//Fees.ImportFees() will update the rest of the group.
-				listClinicNums.AddRange(comboGroup.GetSelected<FeeSchedGroup>().ListClinicNumsAll);
+				listClinicNums.AddRange(comboGroup.GetSelected<FeeScheduleGroup>().ListClinicNumsAll);
 			}
 			if(listClinicNums.IsNullOrEmpty()) {
 				listClinicNums.Add(0);
@@ -903,7 +903,7 @@ namespace OpenDental {
 					MessageBox.Show("Please select a Fee Schedule group.");
 					return;
 				}
-				listClinicNumsTo=comboGroupTo.GetSelected<FeeSchedGroup>().ListClinicNumsAll;
+				listClinicNumsTo=comboGroupTo.GetSelected<FeeScheduleGroup>().ListClinicNumsAll;
 			}
 			if(PrefC.HasClinicsEnabled && listClinicNumsTo.Count==0) {
 				MessageBox.Show("At least one \"Clinic To\" clinic must be selected.");
@@ -913,7 +913,7 @@ namespace OpenDental {
 			if(comboProviderTo.SelectedIndex!=0) {
 				toProvNum=_listProvs[comboProviderTo.SelectedIndex-1].Id;
 			}
-			FeeSched toFeeSched=_listFeeScheds[comboFeeSchedTo.SelectedIndex];
+			FeeSchedule toFeeSched=_listFeeScheds[comboFeeSchedTo.SelectedIndex];
 			long fromClinicNum=0;
 			if(PrefC.HasClinicsEnabled && !comboClinic.IsUnassignedSelected){
 				fromClinicNum=comboClinic.SelectedClinicNum;//get the current clinic num if it is not unassigned
@@ -924,15 +924,15 @@ namespace OpenDental {
 			}
 			if(checkShowGroups.Checked) {
 				//verify we aren't copying the same group into itself
-				if(comboGroup.GetSelected<FeeSchedGroup>().FeeSchedGroupNum==comboGroupTo.GetSelected<FeeSchedGroup>().FeeSchedGroupNum && fromProvNum==toProvNum) {
+				if(comboGroup.GetSelected<FeeScheduleGroup>().Id==comboGroupTo.GetSelected<FeeScheduleGroup>().Id && fromProvNum==toProvNum) {
 					MessageBox.Show("Fee Schedule Groups are not allowed to be copied into themselves. Please choose another fee schedule group to copy.");
 					return;
 				}
 				//Get fromclinicnum from list of group clinics.
-				fromClinicNum=comboGroup.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
+				fromClinicNum=comboGroup.GetSelected<FeeScheduleGroup>().ListClinicNumsAll.FirstOrDefault();
 			}
-			FeeSched fromFeeSched=_listFeeScheds[comboFeeSched.SelectedIndex];
-			if(fromFeeSched.FeeSchedNum==toFeeSched.FeeSchedNum
+			FeeSchedule fromFeeSched=_listFeeScheds[comboFeeSched.SelectedIndex];
+			if(fromFeeSched.Id==toFeeSched.Id
 				&& fromProvNum==toProvNum
 				&& (!PrefC.HasClinicsEnabled || fromClinicNum.In(listClinicNumsTo)))//If clinics disabled, can cause false negative so shortcircuit
 			{
@@ -942,7 +942,7 @@ namespace OpenDental {
 			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
 				//Pref is on but we are copying clinics.
 				foreach(long clinicNumTo in listClinicNumsTo) {
-					FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(toFeeSched.FeeSchedNum,clinicNumTo);
+					FeeScheduleGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(toFeeSched.Id,clinicNumTo);
 					if(groupCur!=null) {
 						Clinic clinicCur=Clinics.GetById(clinicNumTo);
 						MessageBox.Show("Clinic: "+clinicCur.Abbr+" is a member of Fee Schedule Group: "+groupCur.Description
@@ -963,9 +963,9 @@ namespace OpenDental {
 			comboFeeSchedTo.SelectedIndex=0;
 			comboClinicTo.IsNothingSelected=true;
 			comboProviderTo.SelectedIndex=0;
-			long feeSchedGroupToNum=comboGroupTo.GetSelected<FeeSchedGroup>()?.FeeSchedGroupNum??0;
+			long feeSchedGroupToNum=comboGroupTo.GetSelected<FeeScheduleGroup>()?.Id??0;
 			comboGroupTo.Items.Clear();
-			FillFeeSchedGroupComboBox(comboGroupTo,_listFeeScheds[comboFeeSchedTo.SelectedIndex].FeeSchedNum,feeSchedGroupToNum);
+			FillFeeSchedGroupComboBox(comboGroupTo,_listFeeScheds[comboFeeSchedTo.SelectedIndex].Id,feeSchedGroupToNum);
 			MessageBox.Show("Done.");
 		}
 
@@ -996,9 +996,9 @@ namespace OpenDental {
 			if(PrefC.HasClinicsEnabled && !comboClinic.IsUnassignedSelected){
 				clinicNum=comboClinic.SelectedClinicNum;
 			}
-			long feeSchedNum=_listFeeScheds[comboFeeSched.SelectedIndex].FeeSchedNum;
+			long feeSchedNum=_listFeeScheds[comboFeeSched.SelectedIndex].Id;
 			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
-				FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSchedNum,clinicNum);
+				FeeScheduleGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSchedNum,clinicNum);
 				if(groupCur!=null) {
 					MsgBox.Show("Selected clinic is a member of Fee Schedule Group: "+groupCur.Description
 						+" and must be increased at the group level.");
@@ -1011,7 +1011,7 @@ namespace OpenDental {
 					return;
 				}
 				//Fees.ImportFees() will update the rest of the group.
-				clinicNum=comboGroup.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
+				clinicNum=comboGroup.GetSelected<FeeScheduleGroup>().ListClinicNumsAll.FirstOrDefault();
 			}
 			long provNum=0;
 			if(comboProvider.SelectedIndex>0){
@@ -1045,7 +1045,7 @@ namespace OpenDental {
 						Fees.Update(listFees[i]);//only a few hundred calls, max
 						string logText="Procedure: "+procCode+", "
 							+"Fee: "+listFees[i].Amount.ToString("c")+", "
-							+"Fee Schedule: "+FeeScheds.GetDescription(listFees[i].FeeSched);
+							+"Fee Schedule: "+FeeScheds.GetDescription(listFees[i].FeeScheduleId);
 						if(PrefC.HasClinicsEnabled) {
 							if(Clinics.GetAbbr(clinicNum)=="") {
 								logText+=", at Headquarters";
@@ -1079,7 +1079,7 @@ namespace OpenDental {
 			string msgText="";
 			string clinicName=Clinics.GetAbbr(clinicNum);
 			string provName=Providers.GetAbbr(provNum);
-			string feeSchedDesc=_listFeeScheds.FirstOrDefault(x => x.FeeSchedNum==feeSchedNum).Description;
+			string feeSchedDesc=_listFeeScheds.FirstOrDefault(x => x.Id==feeSchedNum).Description;
 			if(clinicNum==0 && provNum==0){
 				return true;
 			}
@@ -1110,7 +1110,7 @@ namespace OpenDental {
 				if(listFees.Count!=countTotalFeesForSched) {
 					if(checkShowGroups.Checked){
 						//We know at this point we already selected a valid feeschedgroup and don't need a null check.
-						FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSchedNum,clinicNum);
+						FeeScheduleGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSchedNum,clinicNum);
 						msgText="There are "+listFees.Count+" override fees for group '"+groupCur.Description+"' and there are"
 							+" "+countTotalFeesForSched+" total fees for fee schedule '"+feeSchedDesc+"'. Only the "
 							+listFees.Count+" fees will be increased. Cancel if you want to review first.";
@@ -1150,11 +1150,11 @@ namespace OpenDental {
 		}
 
 		private void butExport_Click(object sender,EventArgs e) {
-			long feeSchedNum=_listFeeScheds[comboFeeSched.SelectedIndex].FeeSchedNum;
+			long feeSchedNum=_listFeeScheds[comboFeeSched.SelectedIndex].Id;
 			string feeSchedDesc=FeeScheds.GetDescription(feeSchedNum);
 			//scrub out any non-AlphaNumeric characters.
 			feeSchedDesc=Regex.Replace(feeSchedDesc,"(?:[^a-z0-9 ]|(?<=['\"])s)","",RegexOptions.IgnoreCase|RegexOptions.CultureInvariant);
-			FeeSched feeSched=_listFeeScheds[comboFeeSched.SelectedIndex];
+			FeeSchedule feeSched=_listFeeScheds[comboFeeSched.SelectedIndex];
 			long clinicNum=0;
 			if(!comboClinic.IsUnassignedSelected) {
 				clinicNum=comboClinic.SelectedClinicNum;
@@ -1164,7 +1164,7 @@ namespace OpenDental {
 					MessageBox.Show("Please select a Fee Schedule Group.");
 					return;
 				}
-				clinicNum=comboGroup.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
+				clinicNum=comboGroup.GetSelected<FeeScheduleGroup>().ListClinicNumsAll.FirstOrDefault();
 			}
 			long provNum=0;
 			if(comboProvider.SelectedIndex!=0) {
@@ -1190,7 +1190,7 @@ namespace OpenDental {
 			
 			ODProgress.ShowAction(
 				() => {
-					FeeScheds.ExportFeeSchedule(feeSched.FeeSchedNum,clinicNum,provNum,filePath);
+					FeeScheds.ExportFeeSchedule(feeSched.Id,clinicNum,provNum,filePath);
 				},
 				startingMessage:"Preparing to export fees"+"...",
 				progStyle:ProgressBarStyle.Continuous,
@@ -1227,9 +1227,9 @@ namespace OpenDental {
 			if(!comboClinic.IsUnassignedSelected) {
 				clinicNum=comboClinic.SelectedClinicNum;
 			}
-			FeeSched feeSched=_listFeeScheds[comboFeeSched.SelectedIndex];
+			FeeSchedule feeSched=_listFeeScheds[comboFeeSched.SelectedIndex];
 			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
-				FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSched.FeeSchedNum,clinicNum);
+				FeeScheduleGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSched.Id,clinicNum);
 				if(groupCur!=null) {
 					MsgBox.Show("Selected clinic is a member of Fee Schedule Group: "+groupCur.Description
 						+" and must be imported at the group level.");
@@ -1242,7 +1242,7 @@ namespace OpenDental {
 					return;
 				}
 				//Fees.ImportFees() will update the rest of the group.
-				clinicNum=comboGroup.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
+				clinicNum=comboGroup.GetSelected<FeeScheduleGroup>().ListClinicNumsAll.FirstOrDefault();
 			}
 			long provNum=0;
 			if(comboProvider.SelectedIndex!=0) {
@@ -1252,7 +1252,7 @@ namespace OpenDental {
 			ODProgress.ShowAction(
 				() => {
 					try {
-						FeeL.ImportFees(Dlg.FileName,feeSched.FeeSchedNum,clinicNum,provNum);
+						FeeL.ImportFees(Dlg.FileName,feeSched.Id,clinicNum,provNum);
 					}
 					catch(Exception ex) {
 						FriendlyException.Show("Error importing fees.",ex);
@@ -1393,9 +1393,9 @@ namespace OpenDental {
 			if(!comboClinic.IsUnassignedSelected) {
 				clinicNum=comboClinic.SelectedClinicNum;
 			}
-			FeeSched feeSched=_listFeeScheds[comboFeeSched.SelectedIndex];
+			FeeSchedule feeSched=_listFeeScheds[comboFeeSched.SelectedIndex];
 			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
-				FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSched.FeeSchedNum,clinicNum);
+				FeeScheduleGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSched.Id,clinicNum);
 				if(groupCur!=null) {
 					MsgBox.Show("Selected clinic is a member of Fee Schedule Group: "+groupCur.Description
 						+" and must be imported at the group level.");
@@ -1408,7 +1408,7 @@ namespace OpenDental {
 					return;
 				}
 				//Fees.ImportFees() will update the rest of the group.
-				clinicNum=comboGroup.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
+				clinicNum=comboGroup.GetSelected<FeeScheduleGroup>().ListClinicNumsAll.FirstOrDefault();
 			}
 			long provNum=0;
 			if(comboProvider.SelectedIndex!=0) {
@@ -1566,7 +1566,7 @@ namespace OpenDental {
 			//No need to check security because we are launching the form in selection mode.
 			FormFeeScheds FormFS=new FormFeeScheds(true);
 			FormFS.ShowDialog();
-			int selectedIndex= _listFeeScheds.FindIndex(x => x.FeeSchedNum==FormFS.SelectedFeeSchedNum);//Returns index of the found element or -1.
+			int selectedIndex= _listFeeScheds.FindIndex(x => x.Id==FormFS.SelectedFeeSchedNum);//Returns index of the found element or -1.
 			//If the selectedIndex is -1, simply return and do not do anything.  There is no such thing as picking 'None' from the picker window.
 			if(selectedIndex==-1) {
 				return;
@@ -1583,7 +1583,7 @@ namespace OpenDental {
 
 		private void butPickGroup_Click(object sender,EventArgs e){
 			if(checkShowGroups.Checked) {
-				List<FeeSchedGroup> listGroupsToShow= comboGroup.Items.OfType<ODBoxItem<FeeSchedGroup>>().Select(x => x.Tag).ToList(); ;
+				List<FeeScheduleGroup> listGroupsToShow= comboGroup.Items.OfType<ODBoxItem<FeeScheduleGroup>>().Select(x => x.Tag).ToList(); ;
 				List<GridColumn> listColumnHeaders=new List<GridColumn>() {
 					new GridColumn("Description",50){ IsWidthDynamic=true }
 				};
@@ -1597,7 +1597,7 @@ namespace OpenDental {
 				string gridTitle="Fee Schedule Groups";
 				FormGridSelection form=new FormGridSelection(listColumnHeaders,listRowValues,formTitle,gridTitle);
 				if(form.ShowDialog()==DialogResult.OK) {
-					comboGroup.SelectedIndex=listGroupsToShow.FindIndex((x => x.FeeSchedGroupNum==((FeeSchedGroup)form.ListSelectedTags[0]).FeeSchedGroupNum));
+					comboGroup.SelectedIndex=listGroupsToShow.FindIndex((x => x.Id==((FeeScheduleGroup)form.ListSelectedTags[0]).Id));
 					return;
 				}
 				//Nothing was selected. This matches what happens with GetClinicIndexFromPicker.
@@ -1607,7 +1607,7 @@ namespace OpenDental {
 
 		private void butPickGroupTo_Click(object sender,EventArgs e) {
 			if(checkShowGroups.Checked) {
-				List<FeeSchedGroup> listGroupsToShow=(comboGroupTo.Items.OfType<ODBoxItem<FeeSchedGroup>>()).Select(x => x.Tag).ToList();
+				List<FeeScheduleGroup> listGroupsToShow=(comboGroupTo.Items.OfType<ODBoxItem<FeeScheduleGroup>>()).Select(x => x.Tag).ToList();
 				List<GridColumn> listColumnHeaders=new List<GridColumn>() {
 					new GridColumn("Description",50){ IsWidthDynamic=true }
 				};
@@ -1621,7 +1621,7 @@ namespace OpenDental {
 				string gridTitle="Fee Schedule Groups";
 				FormGridSelection form=new FormGridSelection(listColumnHeaders,listRowValues,formTitle,gridTitle);
 				if(form.ShowDialog()==DialogResult.OK) {
-					comboGroupTo.SelectedIndex=listGroupsToShow.FindIndex((x => x.FeeSchedGroupNum==((FeeSchedGroup)form.ListSelectedTags[0]).FeeSchedGroupNum));
+					comboGroupTo.SelectedIndex=listGroupsToShow.FindIndex((x => x.Id==((FeeScheduleGroup)form.ListSelectedTags[0]).Id));
 					return;
 				}
 				//Nothing was selected. This matches what happens with GetClinicIndexFromPicker.

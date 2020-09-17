@@ -740,7 +740,7 @@ namespace OpenDentBusiness {
 				PaySimple.ApiResponse response=PaySimple.MakePaymentByToken(patCur,new CreditCard() {
 					CreditCardNum=chargeData.RecurringCharge.CreditCardNum,
 					PaySimpleToken=paySimpleAccountId,
-					PatNum=patCur.PatNum,
+					PatientId=patCur.PatNum,
 					CCSource=chargeData.CCSource,
 				},amt,clinicNumCur);
 				if(response==null) {

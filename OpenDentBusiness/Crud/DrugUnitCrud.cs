@@ -43,7 +43,7 @@ namespace OpenDentBusiness.Crud{
 			DrugUnit drugUnit;
 			foreach(DataRow row in table.Rows) {
 				drugUnit=new DrugUnit();
-				drugUnit.DrugUnitNum   = PIn.Long  (row["DrugUnitNum"].ToString());
+				drugUnit.Id   = PIn.Long  (row["DrugUnitNum"].ToString());
 				drugUnit.UnitIdentifier= PIn.String(row["UnitIdentifier"].ToString());
 				drugUnit.UnitText      = PIn.String(row["UnitText"].ToString());
 				retVal.Add(drugUnit);
@@ -62,7 +62,7 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("UnitText");
 			foreach(DrugUnit drugUnit in listDrugUnits) {
 				table.Rows.Add(new object[] {
-					POut.Long  (drugUnit.DrugUnitNum),
+					POut.Long  (drugUnit.Id),
 					            drugUnit.UnitIdentifier,
 					            drugUnit.UnitText,
 				});
@@ -78,7 +78,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one DrugUnit into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(DrugUnit drugUnit,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				drugUnit.DrugUnitNum=ReplicationServers.GetKey("drugunit","DrugUnitNum");
+				drugUnit.Id=ReplicationServers.GetKey("drugunit","DrugUnitNum");
 			}
 			string command="INSERT INTO drugunit (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -86,7 +86,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="UnitIdentifier,UnitText) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(drugUnit.DrugUnitNum)+",";
+				command+=POut.Long(drugUnit.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(drugUnit.UnitIdentifier)+"',"
@@ -95,9 +95,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				drugUnit.DrugUnitNum=Database.ExecuteInsert(command);
+				drugUnit.Id=Database.ExecuteInsert(command);
 			}
-			return drugUnit.DrugUnitNum;
+			return drugUnit.Id;
 		}
 
 		///<summary>Inserts one DrugUnit into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -110,14 +110,14 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO drugunit (";
 			if(!useExistingPK) {
-				drugUnit.DrugUnitNum=ReplicationServers.GetKeyNoCache("drugunit","DrugUnitNum");
+				drugUnit.Id=ReplicationServers.GetKeyNoCache("drugunit","DrugUnitNum");
 			}
 			if(useExistingPK) {
 				command+="DrugUnitNum,";
 			}
 			command+="UnitIdentifier,UnitText) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(drugUnit.DrugUnitNum)+",";
+				command+=POut.Long(drugUnit.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(drugUnit.UnitIdentifier)+"',"
@@ -126,9 +126,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				drugUnit.DrugUnitNum=Database.ExecuteInsert(command);
+				drugUnit.Id=Database.ExecuteInsert(command);
 			}
-			return drugUnit.DrugUnitNum;
+			return drugUnit.Id;
 		}
 
 		///<summary>Updates one DrugUnit in the database.</summary>
@@ -136,7 +136,7 @@ namespace OpenDentBusiness.Crud{
 			string command="UPDATE drugunit SET "
 				+"UnitIdentifier= '"+POut.String(drugUnit.UnitIdentifier)+"', "
 				+"UnitText      = '"+POut.String(drugUnit.UnitText)+"' "
-				+"WHERE DrugUnitNum = "+POut.Long(drugUnit.DrugUnitNum);
+				+"WHERE DrugUnitNum = "+POut.Long(drugUnit.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
@@ -155,7 +155,7 @@ namespace OpenDentBusiness.Crud{
 				return false;
 			}
 			command="UPDATE drugunit SET "+command
-				+" WHERE DrugUnitNum = "+POut.Long(drugUnit.DrugUnitNum);
+				+" WHERE DrugUnitNum = "+POut.Long(drugUnit.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}

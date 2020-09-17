@@ -1,5 +1,6 @@
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.X12.Codes;
 using System;
 using System.Collections;
@@ -131,7 +132,7 @@ namespace OpenDentBusiness {
 				List<RepeatCharge> listRepeatingCharges=RepeatCharges.Refresh(0).ToList();
 				//Must contain all procedures that affect the date range, safe to contain too many, bad to contain too few.
 				List<Procedure> listExistingProcs=Procedures.GetCompletedForDateRange(dateRun.AddMonths(-3),dateRun.AddDays(1),
-					listRepeatingCharges.Select(x => x.ProcCode).Distinct().Select(x => ProcedureCodes.GetProcCode(x).CodeNum).ToList());
+					listRepeatingCharges.Select(x => x.ProcCode).Distinct().Select(x => ProcedureCodes.GetProcCode(x).Id).ToList());
 				DateTime startedUsingFKs=UpdateHistories.GetDateForVersion(new Version("16.1.0.0"));//We started using FKs from procs to repeat charges in 16.1.
 				List<long> listAddedPatNums=new List<long>();
 				OrthoCaseProcLinkingData orthoCaseProcLinkingData=new OrthoCaseProcLinkingData(listRepeatingCharges.Select(x => x.PatNum).ToList());
@@ -179,7 +180,7 @@ namespace OpenDentBusiness {
 							continue;
 						}
 						List<Claim> listClaimsAdded=new List<Claim>();
-						if(repeatCharge.CreatesClaim && !ProcedureCodes.GetProcCode(repeatCharge.ProcCode).NoBillIns) {
+						if(repeatCharge.CreatesClaim && !ProcedureCodes.GetProcCode(repeatCharge.ProcCode).NoInsuranceBill) {
 							listClaimsAdded=AddClaimsHelper(repeatCharge,procAdded,orthoCaseProcLinkingData);
 						}
 						AllocateUnearned(repeatCharge,procAdded,billingDate);
@@ -243,7 +244,7 @@ namespace OpenDentBusiness {
 			//No remoting role check; no call to db
 			List<PatPlan> patPlanList=PatPlans.Refresh(repeateCharge.PatNum);
 			List<InsSub> subList=InsSubs.RefreshForFam(Patients.GetFamily(repeateCharge.PatNum));
-			List<InsPlan> insPlanList=InsPlans.RefreshForSubList(subList);
+			List<InsurancePlan> insPlanList=InsPlans.RefreshForSubList(subList);
 			List<Benefit> benefitList=Benefits.Refresh(patPlanList,subList);
 			List<Claim> retVal=new List<Claim>();
 			Claim claimCur;
@@ -346,7 +347,7 @@ namespace OpenDentBusiness {
 			Procedure procedure=new Procedure();
 			ProcedureCode procCode=ProcedureCodes.GetProcCode(repeatCharge.ProcCode);
 			Patient pat=Patients.GetPat(repeatCharge.PatNum);
-			procedure.CodeNum=procCode.CodeNum;
+			procedure.CodeNum=procCode.Id;
 			procedure.ClinicNum=pat.ClinicNum;
 			procedure.DateEntryC=dateNow;
 			procedure.PatNum=repeatCharge.PatNum;
@@ -354,11 +355,11 @@ namespace OpenDentBusiness {
 			procedure.DateTP=billingDate;
 			procedure.ProcFee=repeatCharge.ChargeAmt;
 			procedure.ProcStatus=ProcStat.C;
-			if(procCode.ProvNumDefault==0) {
+			if(procCode.DefaultProviderId==null) {
 				procedure.ProvNum=pat.PriProv;
 			}
 			else {
-				procedure.ProvNum=procCode.ProvNumDefault;
+				procedure.ProvNum=procCode.DefaultProviderId.Value;
 			}
 			procedure.MedicalCode=ProcedureCodes.GetProcCode(procedure.CodeNum).MedicalCode;
 			procedure.BaseUnits=ProcedureCodes.GetProcCode(procedure.CodeNum).BaseUnits;

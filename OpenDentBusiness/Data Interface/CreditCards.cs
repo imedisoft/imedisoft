@@ -91,7 +91,7 @@ namespace OpenDentBusiness{
 				throw new Exception("XCharge token already exists: "+xWebResponse.Alias);
 			}
 			return Insert(new CreditCard() {
-				PatNum=xWebResponse.PatNum,
+				PatientId=xWebResponse.PatNum,
 				XChargeToken=xWebResponse.Alias,
 				CCNumberMasked=xWebResponse.MaskedAcctNum,
 				CCExpiration=xWebResponse.AccountExpirationDate,

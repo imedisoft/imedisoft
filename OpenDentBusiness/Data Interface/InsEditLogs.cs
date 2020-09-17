@@ -7,6 +7,7 @@ using System.Text;
 using System.Linq;
 using Imedisoft.Data;
 using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness {
 	///<summary></summary>
@@ -106,9 +107,9 @@ namespace OpenDentBusiness {
 				&& x.OldValue != "NEW" && x.NewValue != "DELETED").ToList();
 			foreach(InsEditLog editLogCur in listInsPlanChangedLogs) {
 				if(editLogCur.FieldName == "PlanNum") {
-					InsPlan oldPlan = InsPlans.GetPlan(PIn.Long(editLogCur.OldValue),null);					
+					InsurancePlan oldPlan = InsPlans.GetPlan(PIn.Long(editLogCur.OldValue),null);					
 					if(oldPlan!=null) {
-						listLogs.AddRange(GetLinkedLogs(oldPlan.CarrierNum,InsEditLogType.Carrier,editLogCur,listLogs));
+						listLogs.AddRange(GetLinkedLogs(oldPlan.CarrierId,InsEditLogType.Carrier,editLogCur,listLogs));
 					}
 					listLogs.AddRange(GetLinkedLogs(PIn.Long(editLogCur.OldValue),InsEditLogType.InsPlan,editLogCur,listLogs));
 				}
@@ -161,10 +162,10 @@ namespace OpenDentBusiness {
 			string descript = "";
 			switch(logType) { //always default the descript to the priKeyItem (preferring current unless deleted).
 				case InsEditLogType.InsPlan:
-					descript = priKeyItem is InsPlan ? ((priKeyItem as InsPlan).GroupNum + " - " + (priKeyItem as InsPlan).GroupName) : "";
+					descript = priKeyItem is InsurancePlan ? ((priKeyItem as InsurancePlan).GroupNumber + " - " + (priKeyItem as InsurancePlan).GroupName) : "";
 					break;
 				case InsEditLogType.Carrier:
-					descript = priKeyItem is Carrier ? ((priKeyItem as Carrier).CarrierNum + " - " + (priKeyItem as Carrier).CarrierName) : "";
+					descript = priKeyItem is Carrier ? ((priKeyItem as Carrier).Id + " - " + (priKeyItem as Carrier).Name) : "";
 					break;
 				case InsEditLogType.Benefit:
 					descript = priKeyItem is Benefit ? Benefits.GetCategoryString(priKeyItem as Benefit) : "";

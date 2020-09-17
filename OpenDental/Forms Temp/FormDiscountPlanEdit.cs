@@ -13,7 +13,7 @@ namespace OpenDental {
 	public partial class FormDiscountPlanEdit:ODForm {
 		public DiscountPlan DiscountPlanCur;
 		///<summary>FeeSched for the current DiscountPlan.  May be null if the DiscountPlan is new.</summary>
-		private FeeSched _feeSchedCur;
+		private FeeSchedule _feeSchedCur;
 		private List<Definition> _listAdjTypeDefs;
 		private List<string> _listPatNames;
 		///<summary>IsSelectionMode is true if this window is opened with the intent of selecting a plan for a user</summary>
@@ -27,7 +27,7 @@ namespace OpenDental {
 
 		private void FormDiscountPlanEdit_Load(object sender,EventArgs e) {
 			textDescript.Text=DiscountPlanCur.Description;
-			_feeSchedCur=FeeScheds.GetFirstOrDefault(x => x.FeeSchedNum==DiscountPlanCur.FeeSchedNum,true);
+			_feeSchedCur=FeeScheds.GetFirstOrDefault(x => x.Id==DiscountPlanCur.FeeSchedNum,true);
 			textFeeSched.Text=_feeSchedCur!=null ? _feeSchedCur.Description : "";
 			_listAdjTypeDefs=Definitions.GetDiscountPlanAdjTypes().ToList();
 			for(int i=0;i<_listAdjTypeDefs.Count;i++) {
@@ -73,11 +73,11 @@ namespace OpenDental {
 		private void butFeeSched_Click(object sender,EventArgs e) {
 			//No need to check security because we are launching the form in selection mode.
 			FormFeeScheds FormFS=new FormFeeScheds(true);
-			FormFS.SelectedFeeSchedNum=(_feeSchedCur==null ? 0 : _feeSchedCur.FeeSchedNum);
+			FormFS.SelectedFeeSchedNum=(_feeSchedCur==null ? 0 : _feeSchedCur.Id);
 			if(FormFS.ShowDialog()!=DialogResult.OK) {
 				return;
 			}
-			_feeSchedCur=FeeScheds.GetFirstOrDefault(x => x.FeeSchedNum==FormFS.SelectedFeeSchedNum,true);//Hidden FeeSched are invalid selections.
+			_feeSchedCur=FeeScheds.GetFirstOrDefault(x => x.Id==FormFS.SelectedFeeSchedNum,true);//Hidden FeeSched are invalid selections.
 			textFeeSched.Text=(_feeSchedCur?.Description??"");//Null check on OK click will force the user to make a FeeSched selection if null.
 		}
 		
@@ -114,7 +114,7 @@ namespace OpenDental {
 				return;
 			}
 			DiscountPlanCur.Description=textDescript.Text;
-			DiscountPlanCur.FeeSchedNum=_feeSchedCur.FeeSchedNum;
+			DiscountPlanCur.FeeSchedNum=_feeSchedCur.Id;
 			DiscountPlanCur.DefNum=_listAdjTypeDefs[comboBoxAdjType.SelectedIndex].Id;
 			DiscountPlanCur.IsHidden=checkHidden.Checked;
 			if(DiscountPlanCur.IsNew) {

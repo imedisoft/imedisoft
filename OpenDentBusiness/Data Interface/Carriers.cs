@@ -1,328 +1,288 @@
 using CodeBase;
-using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Cache;
+using MySql.Data.MySqlClient;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
-using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace OpenDentBusiness{
-	///<summary></summary>
-	public class Carriers{
+namespace OpenDentBusiness
+{
+    public class Carriers
+	{
+		[CacheGroup(nameof(InvalidType.Carriers))]
+        private class CarrierCache : ListCache<Carrier>
+        {
+            protected override IEnumerable<Carrier> Load() 
+				=> Crud.CarrierCrud.SelectMany("SELECT * FROM `carriers` ORDER BY `name`");
+        }
 
-		#region Get Methods
-		#endregion
+        private static readonly CarrierCache cache = new CarrierCache();
 
-		#region Modification Methods
+		public static bool GetContainsKey(long carrierId) 
+			=> cache.Any(carrier => carrier.Id == carrierId);
 
-		#region Insert
-		#endregion
+		public static Carrier GetOne(long carrierId) 
+			=> cache.FirstOrDefault(carrier => carrier.Id == carrierId);
 
-		#region Update
-		#endregion
+		public static Carrier GetFirstOrDefault(Predicate<Carrier> predicate) 
+			=> cache.FirstOrDefault(predicate);
 
-		#region Delete
-		#endregion
+		public static List<Carrier> GetWhere(Predicate<Carrier> predicate) 
+			=> cache.Find(predicate);
 
-		#endregion
+		public static void RefreshCache() 
+			=> cache.Refresh();
 
-		#region Misc Methods
-		#endregion
 
-		#region Cache Pattern
 
-		private class CarrierCache : CacheDictAbs<Carrier,long,Carrier> {
-			protected override List<Carrier> GetCacheFromDb() {
-				string command="SELECT * FROM carrier ORDER BY CarrierName";
-				return Crud.CarrierCrud.SelectMany(command);
-			}
-			protected override List<Carrier> TableToList(DataTable table) {
-				return Crud.CarrierCrud.TableToList(table);
-			}
-			protected override Carrier Copy(Carrier carrier) {
-				return carrier.Copy();
-			}
-			protected override DataTable DictToTable(Dictionary<long,Carrier> dictCarriers) {
-				return Crud.CarrierCrud.ListToTable(dictCarriers.Values.Cast<Carrier>().ToList(),"Carrier");
-			}
-			protected override void FillCacheIfNeeded() {
-				Carriers.GetTableFromCache(false);
-			}
-			protected override bool IsInDictShort(Carrier carrier) {
-				return !carrier.IsHidden;
-			}
-			protected override long GetDictKey(Carrier carrier) {
-				return carrier.CarrierNum;
-			}
-			protected override Carrier GetDictValue(Carrier carrier) {
-				return carrier;
-			}
-			protected override Carrier CopyDictValue(Carrier carrier) {
-				return carrier.Copy();
-			}
-		}
-		
-		///<summary>The object that accesses the cache in a thread-safe manner.</summary>
-		private static CarrierCache _carrierCache=new CarrierCache();
-
-		public static bool GetContainsKey(long key,bool isShort=false) {
-			return _carrierCache.GetContainsKey(key,isShort);
+		public class CarrierSummary
+        {
+			public long CarrierId;
+			public string AddressLine1;
+			public string AddressLine2;
+			public string Name;
+			public string City;
+			public string State;
+			public string Zip;
+			public string ElectronicId;
+			public string Phone;
+			public bool IsCDA;
+			public bool IsHidden;
+			public long InsurancePlans;
 		}
 
-		public static Carrier GetOne(long codeNum) {
-			return _carrierCache.GetOne(codeNum);
-		}
+		private static CarrierSummary CarrierSummaryFromReader(MySqlDataReader dataReader)
+        {
+			return new CarrierSummary
+			{
+				CarrierId = (long)dataReader["id"],
+				AddressLine1 = (string)dataReader["address_line1"],
+				AddressLine2 = (string)dataReader["address_line2"],
+				Name = (string)dataReader["name"],
+				City = (string)dataReader["city"],
+				State = (string)dataReader["state"],
+				Zip = (string)dataReader["zip"],
+				ElectronicId = (string)dataReader["electronic_id"],
+				Phone = (string)dataReader["phone"],
+				IsCDA = Convert.ToInt32(dataReader["is_cda"]) == 1,
+				IsHidden = Convert.ToInt32(dataReader["is_hidden"]) == 1,
+				InsurancePlans = (long)dataReader["ins_plans"]
+			};
+        }
 
-		public static Carrier GetFirstOrDefault(Func<Carrier,bool> match,bool isShort=false) {
-			return _carrierCache.GetFirstOrDefault(match,isShort);
-		}
+		public static IEnumerable<CarrierSummary> GetBigList(bool isCanadian, bool showHidden, string carrierName, string carrierPhone)
+		{
+			if (!string.IsNullOrEmpty(carrierName))
+			{
+				carrierName = '%' + carrierName + '%';
+			}
+			else
+			{
+				carrierName = "%";
+			}
 
-		public static List<Carrier> GetWhere(Func<Carrier,bool> match,bool isShort=false) {
-			return _carrierCache.GetWhere(match,isShort);
-		}
+			var digits = "";
+			foreach (var c in carrierPhone)
+            {
+				if (c >= '0' && c <= '9')
+                {
+					digits += c;
+                }
+            }
 
-		///<summary>Refreshes the cache and returns it as a DataTable. This will refresh the ClientWeb's cache and the ServerWeb's cache.</summary>
-		public static DataTable RefreshCache() {
-			return GetTableFromCache(true);
-		}
-
-		///<summary>Fills the local cache with the passed in DataTable.</summary>
-		public static void FillCacheFromTable(DataTable table) {
-			_carrierCache.FillCacheFromTable(table);
-		}
-
-		///<summary>Always refreshes the ClientWeb's cache.</summary>
-		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			
-			return _carrierCache.GetTableFromCache(doRefreshCache);
-		}
-
-		#endregion Cache Pattern
-
-		///<summary>Used to get a list of carriers to display in the FormCarriers window.</summary>
-		public static DataTable GetBigList(bool isCanadian,bool showHidden,string carrierName,string carrierPhone){
-			
-			DataTable tableRaw;
-			DataTable table;
-			string command;
-			//if(isCanadian){
-			//Strip out the digits from the phone number.
-			string phonedigits="";
-			for(int i=0;i<carrierPhone.Length;i++) {
-				if(Regex.IsMatch(carrierPhone[i].ToString(),"[0-9]")) {
-					phonedigits=phonedigits+carrierPhone[i];
+			string regexp = "";
+			for (int i = 0; i < digits.Length; i++)
+			{
+				if (i != 0)
+				{
+					regexp += "[^0-9]*"; // zero or more intervening digits that are not numbers
 				}
+
+				regexp += digits[i];
 			}
-			//Create a regular expression so that the phone search uses only numbers.
-			string regexp="";
-			for(int i=0;i<phonedigits.Length;i++) {
-				if(i!=0) {
-					regexp+="[^0-9]*";//zero or more intervening digits that are not numbers
-				}
-				regexp+=phonedigits[i];
-			}
-			command="SELECT Address,Address2,canadiannetwork.Abbrev,carrier.CarrierNum,"
-				+"CarrierName,CDAnetVersion,City,ElectID,"
-				+"COUNT(insplan.PlanNum) insPlanCount,IsCDA,"
-				+"carrier.IsHidden,Phone,State,Zip "
-				+"FROM carrier "
-				+"LEFT JOIN canadiannetwork ON canadiannetwork.CanadianNetworkNum=carrier.CanadianNetworkNum "
-				+"LEFT JOIN insplan ON insplan.CarrierNum=carrier.CarrierNum "
-				+"WHERE "
-				+"CarrierName LIKE '%"+POut.String(carrierName)+"%' ";
+
+            var parameters = new List<MySqlParameter>
+            {
+                new MySqlParameter("name", carrierName)
+            };
+
+            var command =
+				"SELECT " +
+					"c.`id`, `address_line1`, `address_line2`, c.`name`, " +
+					"`city`, `state`, `zip`, `electronic_id`, `phone`, " +
+					"`is_cda`, `is_hidden`, " +
+					"COUNT(ip.`PlanNum`) AS `ins_plans` " +
+				"FROM `carriers` c " +
+				"LEFT JOIN `insplan` ip ON ip.`CarrierNum` = c.id " +
+				"WHERE c.`name` LIKE @name";
+
 			if (regexp != "")
 			{
+				command += " AND `phone` REGEXP @phone";
 
-				command += "AND Phone REGEXP '" + POut.String(regexp) + "' ";
+				parameters.Add(new MySqlParameter("phone", regexp));
+			}
 
+			if (isCanadian)
+			{
+				command += " AND `is_cda` = 1";
 			}
-			if(isCanadian){
-				command+="AND IsCDA=1 ";
+
+			if (!showHidden)
+			{
+				command += " AND c.`is_hidden` = 0";
 			}
-			if(!showHidden){
-				command+="AND carrier.IsHidden=0 ";
-			}
-			command+="GROUP BY carrier.CarrierNum ";
-			command+="ORDER BY CarrierName";
-			tableRaw=Database.ExecuteDataTable(command);
-			table=new DataTable();
-			table.Columns.Add("Address");
-			table.Columns.Add("Address2");
-			table.Columns.Add("CarrierNum");
-			table.Columns.Add("CarrierName");
-			table.Columns.Add("City");
-			table.Columns.Add("ElectID");
-			table.Columns.Add("insPlanCount");
-			table.Columns.Add("isCDA");
-			table.Columns.Add("isHidden");
-			table.Columns.Add("Phone");
-			//table.Columns.Add("pMP");
-			//table.Columns.Add("network");
-			table.Columns.Add("State");
-			//table.Columns.Add("version");
-			table.Columns.Add("Zip");
-			DataRow row;
-			for(int i=0;i<tableRaw.Rows.Count;i++){
-				row=table.NewRow();
-				row["Address"]=tableRaw.Rows[i]["Address"].ToString();
-				row["Address2"]=tableRaw.Rows[i]["Address2"].ToString();
-				row["CarrierNum"]=tableRaw.Rows[i]["CarrierNum"].ToString();
-				row["CarrierName"]=tableRaw.Rows[i]["CarrierName"].ToString();
-				row["City"]=tableRaw.Rows[i]["City"].ToString();
-				row["ElectID"]=tableRaw.Rows[i]["ElectID"].ToString();
-				if(PIn.Bool(tableRaw.Rows[i]["IsCDA"].ToString())) {
-					row["isCDA"]="X";
-				}
-				else {
-					row["isCDA"]="";
-				}
-				if(PIn.Bool(tableRaw.Rows[i]["IsHidden"].ToString())){
-					row["isHidden"]="X";
-				}
-				else{
-					row["isHidden"]="";
-				}
-				row["insPlanCount"]=tableRaw.Rows[i]["insPlanCount"].ToString();
-				row["Phone"]=tableRaw.Rows[i]["Phone"].ToString();
-				//if(PIn.Bool(tableRaw.Rows[i]["IsPMP"].ToString())){
-				//	row["pMP"]="X";
-				//}
-				//else{
-				//	row["pMP"]="";
-				//}
-				//row["network"]=tableRaw.Rows[i]["Abbrev"].ToString();
-				row["State"]=tableRaw.Rows[i]["State"].ToString();
-				//row["version"]=tableRaw.Rows[i]["CDAnetVersion"].ToString();
-				row["Zip"]=tableRaw.Rows[i]["Zip"].ToString();
-				table.Rows.Add(row);
-			}
-			return table;
+
+			command += " GROUP BY c.`id` ORDER BY c.`name`";
+
+			return Database.SelectMany(command, CarrierSummaryFromReader, parameters.ToArray());
 		}
 
-		///<summary>Surround with try/catch.</summary>
-		public static void Update(Carrier carrier,Carrier oldCarrier) {
-			Update(carrier,oldCarrier,Security.CurrentUser.Id);
-		}
 
-		///<summary>Surround with try/catch.
-		///No need to pass in usernum, it is set before the remoting role and passed in for logging.</summary>
-		public static void Update(Carrier carrier,Carrier oldCarrier,long userNum) {
-			
-			string command;
-			DataTable table;
-			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-				if(carrier.IsCDA) {
-					if(carrier.ElectID=="") {
-						throw new ApplicationException("Carrier Identification Number required.");
-					}
-					if(!Regex.IsMatch(carrier.ElectID,"^[0-9]{6}$")) {
-						throw new ApplicationException("Carrier Identification Number must be exactly 6 numbers.");
-					}
-				}
-				//so the edited carrier looks good, but now we need to make sure that the original was allowed to be changed.
-				command="SELECT ElectID,IsCDA FROM carrier WHERE CarrierNum = '"+POut.Long(carrier.CarrierNum)+"'";
-				table=Database.ExecuteDataTable(command);
-				if(PIn.Bool(table.Rows[0]["IsCDA"].ToString())//if original carrier IsCDA
-					&& PIn.String(table.Rows[0]["ElectID"].ToString()).Trim()!="" //and the ElectID was already set
-					&& PIn.String(table.Rows[0]["ElectID"].ToString())!=carrier.ElectID)//and the ElectID was changed
+		/// <summary>
+		/// Validates the specified <paramref name="carrier"/>.
+		/// </summary>
+		/// <param name="carrier">The carrier to validate.</param>
+		/// <exception cref="Exception">If the carrier is not valid.</exception>
+		private static void Validate(Carrier carrier)
+        {
+			if (carrier.IsCDA)
+			{
+				if (string.IsNullOrEmpty(carrier.ElectronicId))
 				{
-					command="SELECT COUNT(*) FROM etrans WHERE CarrierNum= "+POut.Long(carrier.CarrierNum)
-						+" OR CarrierNum2="+POut.Long(carrier.CarrierNum);
-					if(Database.ExecuteString(command)!="0"){
-						throw new ApplicationException("Not allowed to change Carrier Identification Number because it's in use in the claim history.");
-					}
+					throw new Exception("Carrier Identification Number required.");
+				}
+
+				if (!Regex.IsMatch(carrier.ElectronicId, "^[0-9]{6}$"))
+				{
+					throw new Exception("Carrier Identification Number must be exactly 6 numbers.");
 				}
 			}
-			Crud.CarrierCrud.Update(carrier,oldCarrier);
-			InsEditLogs.MakeLogEntry(carrier,oldCarrier,InsEditLogType.Carrier,userNum);
-		}
 
-		///<summary>Surround with try/catch if possibly adding a Canadian carrier.</summary>
-		public static long Insert(Carrier carrier, Carrier carrierOld=null,bool useExistingPriKey=false) {
-			
-			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			carrier.SecUserNumEntry=Security.CurrentUser.Id;
-			//string command;
-			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-				if(carrier.IsCDA){
-					if(carrier.ElectID==""){
-						throw new ApplicationException("Carrier Identification Number required.");
-					}
-					if(!Regex.IsMatch(carrier.ElectID,"^[0-9]{6}$")) {
-						throw new ApplicationException("Carrier Identification Number must be exactly 6 numbers.");
-					}
+			if (carrier.Id == 0) return;
+
+			(string electId, bool isCda) = Database.SelectOne(
+				"SELECT `elect_id`, `is_cda` FROM `carriers` WHERE `id` = " + carrier.Id,
+					dataReader => ((string)dataReader["elect_id"], Convert.ToInt32(dataReader["is_cda"]) > 0));
+
+			if (isCda && !string.IsNullOrEmpty(electId) && !electId.Equals(carrier.ElectronicId))
+			{
+				var count = Database.ExecuteLong("SELECT COUNT(*) FROM etrans WHERE CarrierNum= " + carrier.Id + " OR CarrierNum2=" + POut.Long(carrier.Id));
+				if (count > 0)
+				{
+					throw new Exception("Not allowed to change Carrier Identification Number because it's in use in the claim history.");
 				}
 			}
-			if(carrierOld==null) {
-				carrierOld=carrier.Copy();
-			}
-			Crud.CarrierCrud.Insert(carrier,useExistingPriKey);
-			if(carrierOld.CarrierNum != 0) {
-				InsEditLogs.MakeLogEntry(carrier,carrierOld,InsEditLogType.Carrier,carrier.SecUserNumEntry);
-			}
-			else {
-				InsEditLogs.MakeLogEntry(carrier,null,InsEditLogType.Carrier,carrier.SecUserNumEntry);
-			}
-			return carrier.CarrierNum;
 		}
 
-		///<summary>Surround with try/catch.  If there are any dependencies, then this will throw an exception.  
-		///This is currently only called from FormCarrierEdit.</summary>
-		public static void Delete(Carrier Cur) {
-			
+		public static void Update(Carrier carrier)
+		{
+			var oldCarrier = Crud.CarrierCrud.SelectOne(carrier.Id);
+
+			Update(carrier, oldCarrier, Security.CurrentUser.Id);
+		}
+
+		public static void Update(Carrier carrier, Carrier oldCarrier, long userId)
+		{
+			Validate(carrier);
+
+			Crud.CarrierCrud.Update(carrier, oldCarrier);
+
+			InsEditLogs.MakeLogEntry(carrier, oldCarrier, InsEditLogType.Carrier, userId);
+
+			if (oldCarrier.Name != carrier.Name)
+			{
+				SecurityLogs.Write(Permissions.InsPlanChangeCarrierName, 
+					"Carrier name changed in Edit Carrier window from " + oldCarrier.Name + " to " + carrier.Name);
+			}
+		}
+
+		public static long Insert(Carrier carrier, Carrier carrierOld = null, bool useExistingPriKey = false)
+		{
+			carrier.AddedByUserId = Security.CurrentUser.Id;
+
+			Validate(carrier);
+
+			if (carrierOld == null)
+			{
+				carrierOld = carrier.Copy();
+			}
+
+			Crud.CarrierCrud.Insert(carrier, useExistingPriKey);
+			if (carrierOld.Id != 0)
+			{
+				InsEditLogs.MakeLogEntry(carrier, carrierOld, InsEditLogType.Carrier, carrier.AddedByUserId);
+			}
+			else
+			{
+				InsEditLogs.MakeLogEntry(carrier, null, InsEditLogType.Carrier, carrier.AddedByUserId);
+			}
+
+			return carrier.Id;
+		}
+
+		public static void Delete(Carrier Cur)
+		{
+
 			//look for dependencies in insplan table.
-			string command="SELECT insplan.PlanNum,CONCAT(CONCAT(LName,', '),FName) FROM insplan "
-				+"LEFT JOIN inssub ON insplan.PlanNum=inssub.PlanNum "
-				+"LEFT JOIN patient ON inssub.Subscriber=patient.PatNum " 
-				+"WHERE insplan.CarrierNum = "+POut.Long(Cur.CarrierNum)+" "
-				+"ORDER BY LName,FName";
-			DataTable table=Database.ExecuteDataTable(command);
+			string command = "SELECT insplan.PlanNum,CONCAT(CONCAT(LName,', '),FName) FROM insplan "
+				+ "LEFT JOIN inssub ON insplan.PlanNum=inssub.PlanNum "
+				+ "LEFT JOIN patient ON inssub.Subscriber=patient.PatNum "
+				+ "WHERE insplan.CarrierNum = " + POut.Long(Cur.Id) + " "
+				+ "ORDER BY LName,FName";
+			DataTable table = Database.ExecuteDataTable(command);
 			string strInUse;
-			if(table.Rows.Count>0){
-				strInUse="";//new string[table.Rows.Count];
-				for(int i=0;i<table.Rows.Count;i++) {
-					if(i>0){
-						strInUse+="; ";
+			if (table.Rows.Count > 0)
+			{
+				strInUse = "";//new string[table.Rows.Count];
+				for (int i = 0; i < table.Rows.Count; i++)
+				{
+					if (i > 0)
+					{
+						strInUse += "; ";
 					}
-					strInUse+=PIn.String(table.Rows[i][1].ToString());
+					strInUse += PIn.String(table.Rows[i][1].ToString());
 				}
-				throw new ApplicationException("Not allowed to delete carrier because it is in use.  Subscribers using this carrier include "+strInUse);
+				throw new ApplicationException("Not allowed to delete carrier because it is in use.  Subscribers using this carrier include " + strInUse);
 			}
 			//look for dependencies in etrans table.
-			command="SELECT DateTimeTrans FROM etrans WHERE CarrierNum="+POut.Long(Cur.CarrierNum)
-				+" OR CarrierNum2="+POut.Long(Cur.CarrierNum);
-			table=Database.ExecuteDataTable(command);
-			if(table.Rows.Count>0){
-				strInUse="";
-				for(int i=0;i<table.Rows.Count;i++) {
-					if(i>0) {
-						strInUse+=", ";
+			command = "SELECT DateTimeTrans FROM etrans WHERE CarrierNum=" + POut.Long(Cur.Id)
+				+ " OR CarrierNum2=" + POut.Long(Cur.Id);
+			table = Database.ExecuteDataTable(command);
+			if (table.Rows.Count > 0)
+			{
+				strInUse = "";
+				for (int i = 0; i < table.Rows.Count; i++)
+				{
+					if (i > 0)
+					{
+						strInUse += ", ";
 					}
-					strInUse+=PIn.Date(table.Rows[i][0].ToString()).ToShortDateString();
+					strInUse += PIn.Date(table.Rows[i][0].ToString()).ToShortDateString();
 				}
-				throw new ApplicationException("Not allowed to delete carrier because it is in use in the etrans table.  Dates of claim sent history include "+strInUse);
+				throw new ApplicationException("Not allowed to delete carrier because it is in use in the etrans table.  Dates of claim sent history include " + strInUse);
 			}
-			command="DELETE from carrier WHERE CarrierNum = "+POut.Long(Cur.CarrierNum);
+			command = "DELETE from carrier WHERE CarrierNum = " + POut.Long(Cur.Id);
 			Database.ExecuteNonQuery(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			InsEditLogs.MakeLogEntry(null,Cur,InsEditLogType.Carrier,Security.CurrentUser.Id);
+			InsEditLogs.MakeLogEntry(null, Cur, InsEditLogType.Carrier, Security.CurrentUser.Id);
 		}
 
 		///<summary>Returns a list of insplans that are dependent on the Cur carrier. Used to display in carrier edit.</summary>
-		public static List<string> DependentPlans(Carrier Cur){
-			
-			string command="SELECT CONCAT(CONCAT(LName,', '),FName) FROM patient,insplan,inssub" 
-				+" WHERE patient.PatNum=inssub.Subscriber"
-				+" AND insplan.PlanNum=inssub.PlanNum"
-				+" AND insplan.CarrierNum = '"+POut.Long(Cur.CarrierNum)+"'"
-				+" ORDER BY LName,FName";
-			DataTable table=Database.ExecuteDataTable(command);
-			List<string> retStr=new List<string>();
-			for(int i=0;i<table.Rows.Count;i++) {
+		public static List<string> DependentPlans(Carrier Cur)
+		{
+			string command = "SELECT CONCAT(CONCAT(LName,', '),FName) FROM patient,insplan,inssub"
+				+ " WHERE patient.PatNum=inssub.Subscriber"
+				+ " AND insplan.PlanNum=inssub.PlanNum"
+				+ " AND insplan.CarrierNum = '" + POut.Long(Cur.Id) + "'"
+				+ " ORDER BY LName,FName";
+			DataTable table = Database.ExecuteDataTable(command);
+			List<string> retStr = new List<string>();
+			for (int i = 0; i < table.Rows.Count; i++)
+			{
 				retStr.Add(PIn.String(table.Rows[i][0].ToString()));
 			}
 			return retStr;
@@ -330,37 +290,43 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the name of a carrier based on the carrierNum.  
 		///This also refreshes the list if necessary, so it will work even if the list has not been refreshed recently.</summary>
-		public static string GetName(long carrierNum) {
-			//No need to check RemotingRole; no call to db.
-			string carrierName="";
+		public static string GetName(long carrierNum)
+		{
+			string carrierName = "";
+
 			//This is an uncommon pre-check because places throughout the program explicitly did not correctly send out a cache refresh signal.
-			if(!GetContainsKey(carrierNum)) {
+			if (!GetContainsKey(carrierNum))
+			{
 				RefreshCache();
 			}
-			ODException.SwallowAnyException(() => {
-				carrierName=GetOne(carrierNum).CarrierName;
+
+			ODException.SwallowAnyException(() =>
+			{
+				carrierName = GetOne(carrierNum).Name;
 			});
-			//Empty string can only happen if corrupted:
+
 			return carrierName;
 		}
 
-		public static Carrier GetCarrierDB(long carrierNum) {
-			
-			string command="SELECT * FROM carrier WHERE CarrierNum="+POut.Long(carrierNum);
-			return Crud.CarrierCrud.SelectOne(command);
+		public static Carrier GetCarrierDB(long carrierNum)
+		{
+			return Crud.CarrierCrud.SelectOne("SELECT * FROM carrier WHERE CarrierNum=" + POut.Long(carrierNum));
 		}
 
 		///<summary>Gets the specified carrier from Cache. 
 		///This also refreshes the list if necessary, so it will work even if the list has not been refreshed recently.</summary>
-		public static Carrier GetCarrier(long carrierNum) {
+		public static Carrier GetCarrier(long carrierNum)
+		{
 			//No need to check RemotingRole; no call to db.
-			Carrier retVal=new Carrier() { CarrierName="" };
+			Carrier retVal = new Carrier() { Name = "" };
 			//This is an uncommon pre-check because places throughout the program explicitly did not correctly send out a cache refresh signal.
-			if(!GetContainsKey(carrierNum)) {
+			if (!GetContainsKey(carrierNum))
+			{
 				RefreshCache();
 			}
-			ODException.SwallowAnyException(() => {
-				retVal=GetOne(carrierNum);
+			ODException.SwallowAnyException(() =>
+			{
+				retVal = GetOne(carrierNum);
 			});
 			//New and empty carrier can only happen if corrupted.
 			return retVal;
@@ -369,61 +335,68 @@ namespace OpenDentBusiness{
 		///<summary>Primarily used when user clicks OK from the InsPlan window.  Gets a carrierNum from the database based on the other supplied carrier
 		///data.  Sets the CarrierNum accordingly. If there is no matching carrier, then a new carrier is created.  The end result is a valid carrierNum
 		///to use.</summary>
-		public static Carrier GetIdentical(Carrier carrier,Carrier carrierOld=null) {
-			if(carrier.CarrierName=="") {
+		public static Carrier GetIdentical(Carrier carrier, Carrier carrierOld = null)
+		{
+			if (carrier.Name == "")
+			{
 				return new Carrier();//should probably be null instead
 			}
-			
-			Carrier retVal=carrier.Copy();
-			string command="SELECT CarrierNum,Phone FROM carrier WHERE " 
-				+"CarrierName = '"    +POut.String(carrier.CarrierName)+"' "
-				+"AND Address = '"    +POut.String(carrier.Address)+"' "
-				+"AND Address2 = '"   +POut.String(carrier.Address2)+"' "
-				+"AND City = '"       +POut.String(carrier.City)+"' "
-				+"AND State LIKE '"   +POut.String(carrier.State)+"' "//This allows user to remove trailing spaces from the FormInsPlan interface.
-				+"AND Zip = '"        +POut.String(carrier.Zip)+"' "
-				+"AND ElectID = '"    +POut.String(carrier.ElectID)+"' "
-				+"AND NoSendElect = " +POut.Int((int)carrier.NoSendElect);
-			DataTable table=Database.ExecuteDataTable(command);
+
+			Carrier retVal = carrier.Copy();
+			string command = "SELECT CarrierNum,Phone FROM carrier WHERE "
+				+ "CarrierName = '" + POut.String(carrier.Name) + "' "
+				+ "AND Address = '" + POut.String(carrier.AddressLine1) + "' "
+				+ "AND Address2 = '" + POut.String(carrier.AddressLine2) + "' "
+				+ "AND City = '" + POut.String(carrier.City) + "' "
+				+ "AND State LIKE '" + POut.String(carrier.State) + "' "//This allows user to remove trailing spaces from the FormInsPlan interface.
+				+ "AND Zip = '" + POut.String(carrier.Zip) + "' "
+				+ "AND ElectID = '" + POut.String(carrier.ElectronicId) + "' "
+				+ "AND NoSendElect = " + POut.Int((int)carrier.NoSendElect);
+			DataTable table = Database.ExecuteDataTable(command);
 			//Previously carrier.Phone has been given to us after being formatted by ValidPhone in the UI (FormInsPlan).
 			//Strip all formatting from the given phone number and the DB phone numbers to compare.
 			//The phone in the database could be in a different format if it was imported in an old version.
-			string carrierPhoneStripped=carrier.Phone.StripNonDigits();
-			for(int i=0;i<table.Rows.Count;i++) {
-				string phone=PIn.String(table.Rows[i]["Phone"].ToString());
-				if(phone.StripNonDigits()==carrierPhoneStripped){
+			string carrierPhoneStripped = carrier.Phone.StripNonDigits();
+			for (int i = 0; i < table.Rows.Count; i++)
+			{
+				string phone = PIn.String(table.Rows[i]["Phone"].ToString());
+				if (phone.StripNonDigits() == carrierPhoneStripped)
+				{
 					//A matching carrier was found in the database, so we will use it.
-					retVal.CarrierNum=PIn.Long(table.Rows[i][0].ToString());
+					retVal.Id = PIn.Long(table.Rows[i][0].ToString());
 					return retVal;
 				}
 			}
 			//No match found.  Decide what to do.  Usually add carrier.--------------------------------------------------------------
 			//Canada:
-			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
+			if (CultureInfo.CurrentCulture.Name.EndsWith("CA"))
+			{//Canadian. en-CA or fr-CA
 				throw new ApplicationException("Carrier not found.");//gives user a chance to add manually.
 			}
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			carrier.SecUserNumEntry=Security.CurrentUser.Id;
-			Insert(carrier,carrierOld); //insert function takes care of logging.
-			retVal.CarrierNum=carrier.CarrierNum;
+			carrier.AddedByUserId = Security.CurrentUser.Id;
+			Insert(carrier, carrierOld); //insert function takes care of logging.
+			retVal.Id = carrier.Id;
 			return retVal;
 		}
 
 		///<summary>Returns true if all fields for one carrier match all fields for another carrier.  
 		///Returns false if one of the carriers is null or any of the fields don't match.</summary>
-		public static bool Compare(Carrier carrierOne,Carrier carrierTwo) {
-			if(carrierOne==null || carrierTwo==null) {
+		public static bool Compare(Carrier carrierOne, Carrier carrierTwo)
+		{
+			if (carrierOne == null || carrierTwo == null)
+			{
 				return false;
 			}
-			if(carrierOne.Address!=carrierTwo.Address
-				|| carrierOne.Address2!=carrierTwo.Address2
-				|| carrierOne.CarrierName!=carrierTwo.CarrierName
-				|| carrierOne.City!=carrierTwo.City
-				|| carrierOne.ElectID!=carrierTwo.ElectID
-				|| carrierOne.NoSendElect!=carrierTwo.NoSendElect
-				|| carrierOne.Phone!=carrierTwo.Phone
-				|| carrierOne.State!=carrierTwo.State
-				|| carrierOne.Zip!=carrierTwo.Zip) 
+			if (carrierOne.AddressLine1 != carrierTwo.AddressLine1
+				|| carrierOne.AddressLine2 != carrierTwo.AddressLine2
+				|| carrierOne.Name != carrierTwo.Name
+				|| carrierOne.City != carrierTwo.City
+				|| carrierOne.ElectronicId != carrierTwo.ElectronicId
+				|| carrierOne.NoSendElect != carrierTwo.NoSendElect
+				|| carrierOne.Phone != carrierTwo.Phone
+				|| carrierOne.State != carrierTwo.State
+				|| carrierOne.Zip != carrierTwo.Zip)
 			{
 				return false;
 			}
@@ -431,91 +404,106 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>Returns an arraylist of Carriers with names similar to the supplied string.  Used in dropdown list from carrier field for faster entry.  There is a small chance that the list will not be completely refreshed when this is run, but it won't really matter if one carrier doesn't show in dropdown.</summary>
-		public static List<Carrier> GetSimilarNames(string carrierName){
-			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.CarrierName.ToUpper().IndexOf(carrierName.ToUpper())==0,true);
+		public static List<Carrier> GetSimilarNames(string carrierName)
+		{
+			carrierName = carrierName.ToUpper();
+
+			return cache.Find(carrier => !carrier.IsHidden && carrier.Name.ToUpper().Contains(carrierName));
 		}
 
 		///<summary>Surround with try/catch Combines all the given carriers into one. 
 		///The carrier that will be used as the basis of the combination is specified in the pickedCarrier argument. 
 		///Updates insplan and etrans, then deletes all the other carriers.</summary>
-		public static void Combine(List<long> carrierNums,long pickedCarrierNum) {
-			
-			if(carrierNums.Count==1){
+		public static void Combine(List<long> carrierNums, long pickedCarrierNum)
+		{
+
+			if (carrierNums.Count == 1)
+			{
 				return;//nothing to do
 			}
 			//remove pickedCarrierNum from the carrierNums list to make the queries easier to construct.
-			List<long> carrierNumList=new List<long>();
-			for(int i=0;i<carrierNums.Count;i++){
-				if(carrierNums[i]==pickedCarrierNum)
+			List<long> carrierNumList = new List<long>();
+			for (int i = 0; i < carrierNums.Count; i++)
+			{
+				if (carrierNums[i] == pickedCarrierNum)
 					continue;
 				carrierNumList.Add(carrierNums[i]);
 			}
 			//Now, do the actual combining----------------------------------------------------------------------------------
-			for(int i=0;i<carrierNums.Count;i++){
-				if(carrierNums[i]==pickedCarrierNum)
+			for (int i = 0; i < carrierNums.Count; i++)
+			{
+				if (carrierNums[i] == pickedCarrierNum)
 					continue;
-				string command="SELECT * FROM insplan WHERE CarrierNum = "+POut.Long(carrierNums[i]);
-				List<InsPlan> listInsPlan = Crud.InsPlanCrud.SelectMany(command);
-				command="UPDATE insplan SET CarrierNum = '"+POut.Long(pickedCarrierNum)+"' "
-					+"WHERE CarrierNum = "+POut.Long(carrierNums[i]);
+				string command = "SELECT * FROM insplan WHERE CarrierNum = " + POut.Long(carrierNums[i]);
+				List<InsurancePlan> listInsPlan = Crud.InsPlanCrud.SelectMany(command);
+				command = "UPDATE insplan SET CarrierNum = '" + POut.Long(pickedCarrierNum) + "' "
+					+ "WHERE CarrierNum = " + POut.Long(carrierNums[i]);
 				Database.ExecuteNonQuery(command);
-				command="UPDATE etrans SET CarrierNum='"+POut.Long(pickedCarrierNum)+"' "
-					+"WHERE CarrierNum="+POut.Long(carrierNums[i]);
+				command = "UPDATE etrans SET CarrierNum='" + POut.Long(pickedCarrierNum) + "' "
+					+ "WHERE CarrierNum=" + POut.Long(carrierNums[i]);
 				Database.ExecuteNonQuery(command);
-				command="UPDATE etrans SET CarrierNum2='"+POut.Long(pickedCarrierNum)+"' "
-					+"WHERE CarrierNum2="+POut.Long(carrierNums[i]);
+				command = "UPDATE etrans SET CarrierNum2='" + POut.Long(pickedCarrierNum) + "' "
+					+ "WHERE CarrierNum2=" + POut.Long(carrierNums[i]);
 				Database.ExecuteNonQuery(command);
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-				listInsPlan.ForEach(x => { //Log InsPlan CarrierNum change.
-					InsEditLogs.MakeLogEntry("CarrierNum",Security.CurrentUser.Id,POut.Long(carrierNums[i]),POut.Long(pickedCarrierNum),
-						InsEditLogType.InsPlan,x.PlanNum,0,x.GroupNum+" - "+x.GroupName);
+				listInsPlan.ForEach(x =>
+				{ //Log InsPlan CarrierNum change.
+					InsEditLogs.MakeLogEntry("CarrierNum", Security.CurrentUser.Id, POut.Long(carrierNums[i]), POut.Long(pickedCarrierNum),
+						InsEditLogType.InsPlan, x.Id, 0, x.GroupNumber + " - " + x.GroupName);
 				});
 				Carrier carrierCur = GetCarrier(carrierNums[i]); //gets from cache
-				command="DELETE FROM carrier"
-					+" WHERE CarrierNum = '"+carrierNums[i].ToString()+"'";
+				command = "DELETE FROM carrier"
+					+ " WHERE CarrierNum = '" + carrierNums[i].ToString() + "'";
 				Database.ExecuteNonQuery(command);
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-				InsEditLogs.MakeLogEntry(null,carrierCur,InsEditLogType.Carrier,Security.CurrentUser.Id);
+				InsEditLogs.MakeLogEntry(null, carrierCur, InsEditLogType.Carrier, Security.CurrentUser.Id);
 			}
 		}
 
 		///<summary>Used in the FormCarrierCombine window.</summary>
-		public static List<Carrier> GetCarriers(List<long> carrierNums) {
+		public static List<Carrier> GetCarriers(List<long> carrierNums)
+		{
 			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.CarrierNum.In(carrierNums));
+			return GetWhere(x => x.Id.In(carrierNums));
 		}
 
 		///<summary>Used in FormInsPlan to check whether another carrier is already using this id.
 		///That way, it won't tell the user that this might be an invalid id.</summary>
-		public static bool ElectIdInUse(string electID){
+		public static bool ElectIdInUse(string electID)
+		{
 			//No need to check RemotingRole; no call to db.
-			if(string.IsNullOrEmpty(electID)) {
+			if (string.IsNullOrEmpty(electID))
+			{
 				return true;
 			}
-			return (_carrierCache.GetFirstOrDefault(x => x.ElectID==electID)!=null);
+			return (cache.FirstOrDefault(x => x.ElectronicId == electID) != null);
 		}
 
 		///<summary>Used from insplan window when requesting benefits.  Gets carrier based on electID.  Returns empty list if no match found.</summary>
-		public static List<Carrier> GetAllByElectId(string electID){
+		public static List<Carrier> GetAllByElectId(string electID)
+		{
 			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.ElectID==electID);
+			return GetWhere(x => x.ElectronicId == electID);
 		}
 
 		///<summary>If carrierName is blank (empty string) this will throw an ApplicationException.  If a carrier is not found with the exact name,
 		///including capitalization, a new carrier is created, inserted in the database, and returned.</summary>
-		public static Carrier GetByNameAndPhone(string carrierName,string phone,bool updateCacheIfNew=false){
+		public static Carrier GetByNameAndPhone(string carrierName, string phone, bool updateCacheIfNew = false)
+		{
 			//No need to check RemotingRole; no call to db.
-			if(string.IsNullOrEmpty(carrierName)) {
+			if (string.IsNullOrEmpty(carrierName))
+			{
 				throw new ApplicationException("Carrier cannot be blank");
 			}
-			Carrier carrier=GetFirstOrDefault(x => x.CarrierName==carrierName && x.Phone==phone);
-			if(carrier==null) {
-				carrier=new Carrier();
-				carrier.CarrierName=carrierName;
-				carrier.Phone=phone;
+			Carrier carrier = GetFirstOrDefault(x => x.Name == carrierName && x.Phone == phone);
+			if (carrier == null)
+			{
+				carrier = new Carrier();
+				carrier.Name = carrierName;
+				carrier.Phone = phone;
 				Insert(carrier); //Insert function takes care of logging.
-				if(updateCacheIfNew) {
+				if (updateCacheIfNew)
+				{
 					Signalods.SetInvalid(InvalidType.Carriers);
 					RefreshCache();
 				}
@@ -524,12 +512,13 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>Returns null if no match is found. You are allowed to pass in nulls.</summary>
-		public static Carrier GetByNameAndPhoneNoInsert(string carrierName,string phone) {
-			//No need to check RemotingRole; no call to db.
-			if(string.IsNullOrEmpty(carrierName) || string.IsNullOrEmpty(phone)) {
+		public static Carrier GetByNameAndPhoneNoInsert(string carrierName, string phone)
+		{
+			if (string.IsNullOrEmpty(carrierName) || string.IsNullOrEmpty(phone))
+			{
 				return null;
 			}
-			return GetFirstOrDefault(x => x.CarrierName==carrierName && x.Phone==phone);
+			return GetFirstOrDefault(x => x.Name == carrierName && x.Phone == phone);
 		}
 
 		/*
@@ -560,49 +549,32 @@ namespace OpenDentBusiness{
 			return retVal;
 		}*/
 
-		///<summary>The carrierName is case insensitive.</summary>
-		public static List<Carrier> GetByNameAndTin(string carrierName,string tin){
-			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.CarrierName.Trim().ToLower()==carrierName.Trim().ToLower() && x.TIN==tin);
+		public static List<Carrier> GetByNameAndTin(string carrierName, string tin)
+		{
+			return GetWhere(x => x.Name.Trim().ToLower() == carrierName.Trim().ToLower() && x.TIN == tin);
 		}
 
-		///<summary>Will return null if carrier does not exist with that name.</summary>
-		public static Carrier GetCarrierByName(string carrierName) {
-			return GetFirstOrDefault(x => x.CarrierName==carrierName);
+		public static Carrier GetCarrierByName(string carrierName)
+		{
+			return GetFirstOrDefault(x => x.Name == carrierName);
 		}
 
-		///<summary>Will return null if carrier does not exist with that name.</summary>
-		public static Carrier GetCarrierByNameNoCache(string carrierName) {
-			
-			string command="SELECT * FROM carrier WHERE CarrierName='"+POut.String(carrierName)+"'";
-			return Crud.CarrierCrud.SelectOne(command);
+		public static Carrier GetCarrierByNameNoCache(string carrierName)
+		{
+			return Crud.CarrierCrud.SelectOne("SELECT * FROM `carriers` WHERE `name` = '" + POut.String(carrierName) + "'");
 		}
 
-		public static bool IsMedicaid(Carrier carrier) {
-			//No need to check RemotingRole; no call to db.
-			ElectID electId=ElectIDs.GetID(carrier.ElectID);
-			if(electId!=null && electId.IsMedicaid) {//Emdeon Medical requires loop 2420E when the claim is sent to DMERC (Medicaid) carriers.
+		public static bool IsMedicaid(Carrier carrier)
+		{
+			ElectID electId = ElectIDs.GetID(carrier.ElectronicId);
+
+			if (electId != null && electId.IsMedicaid)
+			{
+				// Emdeon Medical requires loop 2420E when the claim is sent to DMERC (Medicaid) carriers.
 				return true;
 			}
+
 			return false;
 		}
-
 	}
-
-	
-	
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -393,7 +393,7 @@ namespace OpenDentBusiness{
 					List<Procedure> listProcs=Procedures.GetProcsByStatusForPat(patNum,ProcStat.TP,ProcStat.TPi);
 					listPatPlans=PatPlans.Refresh(patNum);
 					List<InsSub> listInsSubs=InsSubs.RefreshForFam(fam);
-					List<InsPlan> listInsPlans=InsPlans.RefreshForSubList(listInsSubs);
+					List<InsurancePlan> listInsPlans=InsPlans.RefreshForSubList(listInsSubs);
 					List<Benefit> listBenefits=Benefits.Refresh(listPatPlans,listInsSubs);
 					Procedures.ComputeEstimatesForAll(patNum,listClaimProcs,listProcs,listInsPlans,listPatPlans,listBenefits,pat.Age,listInsSubs);
 					if(prefChanged) {
@@ -401,8 +401,8 @@ namespace OpenDentBusiness{
 					}
 				}
 			}
-			InsPlan insPlanFrom=InsPlans.RefreshOne(insPlanNumFrom);
-			InsPlan planOld = insPlanFrom.Copy();
+			InsurancePlan insPlanFrom=InsPlans.RefreshOne(insPlanNumFrom);
+			InsurancePlan planOld = insPlanFrom.Copy();
 			insPlanFrom.IsHidden=true;
 			InsPlans.Update(insPlanFrom,planOld);
 			return insSubMovedCount;
@@ -413,18 +413,18 @@ namespace OpenDentBusiness{
 			//No need to check RemotingRole; no call to db.
 			//Will get the plan if it exists, or create a new one and insert if it does not.
 			string strCarrierUnknownName="UNKNOWN CARRIER";
-			InsPlan plan=InsPlans.GetByCarrierName(strCarrierUnknownName).FirstOrDefault();
+			InsurancePlan plan=InsPlans.GetByCarrierName(strCarrierUnknownName).FirstOrDefault();
 			//If an UNKNOWN CARRIER plan doesn't exist in the database, we will create it
 			if(plan==null) {
 				//Will create a new UNKNOWN CARRIER carrier if it doesn't already exist
 				Carrier carrier=Carriers.GetByNameAndPhone(strCarrierUnknownName,"");
-				plan=new InsPlan();
-				plan.CarrierNum=carrier.CarrierNum;
+				plan=new InsurancePlan();
+				plan.CarrierId=carrier.Id;
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 				plan.SecUserNumEntry=Security.CurrentUser.Id;
 				InsPlans.Insert(plan); //log taken care of in a subfunction.
 			}
-			subCur.PlanNum=plan.PlanNum;
+			subCur.PlanNum=plan.Id;
 			Update(subCur);
 		}
 
@@ -432,11 +432,11 @@ namespace OpenDentBusiness{
 		///Returns false if changes were needed. doFixIfInvalid dictates if changes were actually made, separate from the return value.
 		///If doFixIfInvalid is true, we attempt to delete an inssub with an invalid PlanNum.
 		///If unable to delete, we set the PlanNum to a new insplan associated to a carrier with the CarrierName of "UNKNOWN CARRIER" (this matches DBM logic)</summary>
-		public static bool ValidatePlanNum(long insSubNum,bool doFixIfInvalid=true,List<InsSub> listInsSubs=null,List<InsPlan> listInsPlans=null) {
+		public static bool ValidatePlanNum(long insSubNum,bool doFixIfInvalid=true,List<InsSub> listInsSubs=null,List<InsurancePlan> listInsPlans=null) {
 			//No need to check RemotingRole; no call to db.
 			InsSub sub=InsSubs.GetSub(insSubNum,listInsSubs);
 			long subscriberNum=sub.Subscriber;
-			InsPlan plan=InsPlans.GetPlan(sub.PlanNum,listInsPlans);
+			InsurancePlan plan=InsPlans.GetPlan(sub.PlanNum,listInsPlans);
 			if(plan!=null) {//Plan exists.  This means the reference from the inssub is intact.
 				return true;
 			}

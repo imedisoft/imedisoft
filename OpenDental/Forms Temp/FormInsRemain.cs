@@ -55,8 +55,8 @@ namespace OpenDental {
 				gridRemainTimeUnits.EndUpdate();
 				return;
 			}
-			List<InsPlan> listInsPlans=InsPlans.GetByInsSubs(listInsSubs.Select(x => x.InsSubNum).ToList());
-			List<Carrier> listCarriers=Carriers.GetCarriers(listInsPlans.Select( x => x.CarrierNum).ToList());
+			List<InsurancePlan> listInsPlans=InsPlans.GetByInsSubs(listInsSubs.Select(x => x.InsSubNum).ToList());
+			List<Carrier> listCarriers=Carriers.GetCarriers(listInsPlans.Select( x => x.CarrierId).ToList());
 			//Get the LIM information for all potential subscribers.
 			List<Patient> listSubscribers=Patients.GetLimForPats(listInsSubs.Select(x => x.Subscriber).ToList());
 			GridRow gridRow;
@@ -119,8 +119,8 @@ namespace OpenDental {
 					if(insSub==null) {
 						continue;//If not found then there are claimprocs associated to an inssub that is associated to a dropped or missing plan.
 					}
-					InsPlan insPlan=listInsPlans.FirstOrDefault(x => x.PlanNum==insSub.PlanNum);
-					Carrier carrier=listCarriers.FirstOrDefault(x => x.CarrierNum==insPlan.CarrierNum);
+					InsurancePlan insPlan=listInsPlans.FirstOrDefault(x => x.Id==insSub.PlanNum);
+					Carrier carrier=listCarriers.FirstOrDefault(x => x.Id==insPlan.CarrierId);
 					Patient subscriber=listSubscribers.FirstOrDefault(x => x.PatNum==insSub.Subscriber);
 					CovCat category=CovCats.GetCovCat(benefit.CovCatNum);
 					//Filter out any procedures that are not associated to the insurance plan of the current benefit.
@@ -128,7 +128,7 @@ namespace OpenDental {
 					//Calculate the amount used for one benefit.
 					double amtUsed=CovCats.GetAmtUsedForCat(listFilterProcs,category);
 					double amtRemain=benefit.Quantity-amtUsed;
-					gridRow=new GridRow((carrier==null) ? "Unknown" : carrier.CarrierName,
+					gridRow=new GridRow((carrier==null) ? "Unknown" : carrier.Name,
 						(subscriber==null) ? "Unknown" : subscriber.GetNameFL(),
 						category.Description.ToString(),
 						benefit.Quantity.ToString(),
@@ -169,7 +169,7 @@ namespace OpenDental {
 			double remain=0;
 			double pend=0;
 			double used=0;
-			InsPlan PlanCur;
+			InsurancePlan PlanCur;
 			InsSub SubCur;
 			List<PatPlan> PatPlanList=PatPlans.Refresh(_patCur.PatNum);
 			if(!PatPlans.IsPatPlanListValid(PatPlanList)) {
@@ -177,7 +177,7 @@ namespace OpenDental {
 				PatPlanList=PatPlans.Refresh(_patCur.PatNum);
 			}
 			List<InsSub> subList=InsSubs.RefreshForFam(_famCur);
-			List<InsPlan> InsPlanList=InsPlans.RefreshForSubList(subList);
+			List<InsurancePlan> InsPlanList=InsPlans.RefreshForSubList(subList);
 			List<Benefit> BenefitList=Benefits.Refresh(PatPlanList,subList);
 			List<Claim> ClaimList=Claims.Refresh(_patCur.PatNum);
 			List<ClaimProcHist> HistList=ClaimProcs.GetHistList(_patCur.PatNum,BenefitList,PatPlanList,InsPlanList,DateTimeOD.Today,subList);
@@ -186,12 +186,12 @@ namespace OpenDental {
 				PlanCur=InsPlans.GetPlan(SubCur.PlanNum,InsPlanList);
 				pend=InsPlans.GetPendingDisplay(HistList,DateTimeOD.Today,PlanCur,PatPlanList[0].PatPlanNum,
 					-1,_patCur.PatNum,PatPlanList[0].InsSubNum,BenefitList);
-				used=InsPlans.GetInsUsedDisplay(HistList,DateTimeOD.Today,PlanCur.PlanNum,PatPlanList[0].PatPlanNum,
+				used=InsPlans.GetInsUsedDisplay(HistList,DateTimeOD.Today,PlanCur.Id,PatPlanList[0].PatPlanNum,
 					-1,InsPlanList,BenefitList,_patCur.PatNum,PatPlanList[0].InsSubNum);
 				textPriPend.Text=pend.ToString("F");
 				textPriUsed.Text=used.ToString("F");
-				maxFam=Benefits.GetAnnualMaxDisplay(BenefitList,PlanCur.PlanNum,PatPlanList[0].PatPlanNum,true);
-				maxInd=Benefits.GetAnnualMaxDisplay(BenefitList,PlanCur.PlanNum,PatPlanList[0].PatPlanNum,false);
+				maxFam=Benefits.GetAnnualMaxDisplay(BenefitList,PlanCur.Id,PatPlanList[0].PatPlanNum,true);
+				maxInd=Benefits.GetAnnualMaxDisplay(BenefitList,PlanCur.Id,PatPlanList[0].PatPlanNum,false);
 				if(maxFam==-1) {
 					textFamPriMax.Text="";
 				}
@@ -212,11 +212,11 @@ namespace OpenDental {
 					textPriRem.Text=remain.ToString("F");
 				}
 				//deductible:
-				ded=Benefits.GetDeductGeneralDisplay(BenefitList,PlanCur.PlanNum,PatPlanList[0].PatPlanNum,BenefitCoverageLevel.Individual);
-				dedFam=Benefits.GetDeductGeneralDisplay(BenefitList,PlanCur.PlanNum,PatPlanList[0].PatPlanNum,BenefitCoverageLevel.Family);
+				ded=Benefits.GetDeductGeneralDisplay(BenefitList,PlanCur.Id,PatPlanList[0].PatPlanNum,BenefitCoverageLevel.Individual);
+				dedFam=Benefits.GetDeductGeneralDisplay(BenefitList,PlanCur.Id,PatPlanList[0].PatPlanNum,BenefitCoverageLevel.Family);
 				if(ded!=-1) {
 					textPriDed.Text=ded.ToString("F");
-					dedRem=InsPlans.GetDedRemainDisplay(HistList,DateTimeOD.Today,PlanCur.PlanNum,PatPlanList[0].PatPlanNum,
+					dedRem=InsPlans.GetDedRemainDisplay(HistList,DateTimeOD.Today,PlanCur.Id,PatPlanList[0].PatPlanNum,
 						-1,InsPlanList,_patCur.PatNum,ded,dedFam);
 					textPriDedRem.Text=dedRem.ToString("F");
 				}
@@ -230,12 +230,12 @@ namespace OpenDental {
 				pend=InsPlans.GetPendingDisplay(HistList,DateTimeOD.Today,PlanCur,PatPlanList[1].PatPlanNum,
 					-1,_patCur.PatNum,PatPlanList[1].InsSubNum,BenefitList);
 				textSecPend.Text=pend.ToString("F");
-				used=InsPlans.GetInsUsedDisplay(HistList,DateTimeOD.Today,PlanCur.PlanNum,PatPlanList[1].PatPlanNum,
+				used=InsPlans.GetInsUsedDisplay(HistList,DateTimeOD.Today,PlanCur.Id,PatPlanList[1].PatPlanNum,
 					-1,InsPlanList,BenefitList,_patCur.PatNum,PatPlanList[1].InsSubNum);
 				textSecUsed.Text=used.ToString("F");
 				//max=Benefits.GetAnnualMaxDisplay(BenefitList,PlanCur.PlanNum,PatPlanList[1].PatPlanNum);
-				maxFam=Benefits.GetAnnualMaxDisplay(BenefitList,PlanCur.PlanNum,PatPlanList[1].PatPlanNum,true);
-				maxInd=Benefits.GetAnnualMaxDisplay(BenefitList,PlanCur.PlanNum,PatPlanList[1].PatPlanNum,false);
+				maxFam=Benefits.GetAnnualMaxDisplay(BenefitList,PlanCur.Id,PatPlanList[1].PatPlanNum,true);
+				maxInd=Benefits.GetAnnualMaxDisplay(BenefitList,PlanCur.Id,PatPlanList[1].PatPlanNum,false);
 				if(maxFam==-1) {
 					textFamSecMax.Text="";
 				}
@@ -256,11 +256,11 @@ namespace OpenDental {
 					textSecRem.Text=remain.ToString("F");
 				}
 				//deductible:
-				ded=Benefits.GetDeductGeneralDisplay(BenefitList,PlanCur.PlanNum,PatPlanList[1].PatPlanNum,BenefitCoverageLevel.Individual);
-				dedFam=Benefits.GetDeductGeneralDisplay(BenefitList,PlanCur.PlanNum,PatPlanList[1].PatPlanNum,BenefitCoverageLevel.Family);
+				ded=Benefits.GetDeductGeneralDisplay(BenefitList,PlanCur.Id,PatPlanList[1].PatPlanNum,BenefitCoverageLevel.Individual);
+				dedFam=Benefits.GetDeductGeneralDisplay(BenefitList,PlanCur.Id,PatPlanList[1].PatPlanNum,BenefitCoverageLevel.Family);
 				if(ded!=-1) {
 					textSecDed.Text=ded.ToString("F");
-					dedRem=InsPlans.GetDedRemainDisplay(HistList,DateTimeOD.Today,PlanCur.PlanNum,PatPlanList[1].PatPlanNum,
+					dedRem=InsPlans.GetDedRemainDisplay(HistList,DateTimeOD.Today,PlanCur.Id,PatPlanList[1].PatPlanNum,
 						-1,InsPlanList,_patCur.PatNum,ded,dedFam);
 					textSecDedRem.Text=dedRem.ToString("F");
 				}

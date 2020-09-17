@@ -91,20 +91,20 @@ namespace OpenDentBusiness.HL7 {
 				seg.SetField(21,prov.EcwID,prov.LastName,prov.FirstName,prov.Initials);//ordering provider.
 				seg.SetField(22,listProcs[i].ProcFee.ToString("F2"));
 				procCode=ProcedureCodes.GetProcCode(listProcs[i].CodeNum);
-				if(procCode.ProcCode.Length>5 && procCode.ProcCode.StartsWith("D")) {
-					seg.SetField(25,procCode.ProcCode.Substring(0,5));//Remove suffix from all D codes.
+				if(procCode.Code.Length>5 && procCode.Code.StartsWith("D")) {
+					seg.SetField(25,procCode.Code.Substring(0,5));//Remove suffix from all D codes.
 				}
 				else {
-					seg.SetField(25,procCode.ProcCode);
+					seg.SetField(25,procCode.Code);
 				}
-				if(procCode.TreatArea==TreatmentArea.ToothRange){
+				if(procCode.TreatmentArea==ProcedureTreatmentArea.ToothRange){
 					seg.SetField(26,listProcs[i].ToothRange,"");
 				}
-				else if(procCode.TreatArea==TreatmentArea.Surf){//probably not necessary
+				else if(procCode.TreatmentArea==ProcedureTreatmentArea.Surface){//probably not necessary
 					seg.SetField(26,Tooth.ToInternat(listProcs[i].ToothNum),Tooth.SurfTidyForClaims(listProcs[i].Surf,listProcs[i].ToothNum));
 				}
 				//this property will not exist if using Oracle, eCW will never use Oracle
-				else if(procCode.TreatArea==TreatmentArea.Quad && ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.eClinicalWorks),"IsQuadAsToothNum")=="1") {
+				else if(procCode.TreatmentArea==ProcedureTreatmentArea.Quad && ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.eClinicalWorks),"IsQuadAsToothNum")=="1") {
 					seg.SetField(26,listProcs[i].Surf,"");
 				}
 				else{

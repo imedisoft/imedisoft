@@ -1,4 +1,5 @@
 ﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -47,7 +48,7 @@ namespace OpenDentBusiness {
 				HAVING !MIN(insplan.IsMedical){(includeMedProcs?" OR MAX(insplan.IsMedical)":"")}{(showProcsBeforeIns?" OR ISNULL(MIN(insplan.PlanNum))":"")}
 				ORDER BY patient.LName,patient.FName,patient.PatNum,procedurelog.ProcDate";
 			DataTable table=Database.ExecuteDataTable(query);
-			Dictionary<long,ProcedureCode> dictProcCodes=ProcedureCodes.GetListDeep().ToDictionary(x => x.CodeNum);
+			Dictionary<long,ProcedureCode> dictProcCodes=ProcedureCodes.GetListDeep().ToDictionary(x => x.Id);
 			foreach(DataRow rawRow in table.Select()) {
 				if(!dictProcCodes.TryGetValue(PIn.Long(rawRow["CodeNum"].ToString()),out ProcedureCode procCode)) {
 					table.Rows.Remove(rawRow);
@@ -57,7 +58,7 @@ namespace OpenDentBusiness {
 					table.Rows.Remove(rawRow);
 					continue;
 				}
-				rawRow["Descript"]=procCode.Descript??"";
+				rawRow["Descript"]=procCode.Description??"";
 			}
 			return table;
 		}

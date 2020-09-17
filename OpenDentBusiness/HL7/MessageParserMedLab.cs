@@ -946,11 +946,11 @@ namespace OpenDentBusiness.HL7 {
 			Document doc = new Document();
 			doc.FileName = ".pdf";
 			doc.ImgType = ImageType.Document;
-			doc.DateCreated = DateTime.Now;
-			doc.DocCategory = Definitions.GetFirstForCategory(DefinitionCategory.ImageCats, true).Id;//put it in the first category
+			doc.AddedOnDate = DateTime.Now;
+			doc.Category = Definitions.GetFirstForCategory(DefinitionCategory.ImageCats, true).Id;//put it in the first category
 			if (_defCur.LabResultImageCat > 0)
 			{//if category is set for the def, use that image category
-				doc.DocCategory = _defCur.LabResultImageCat;
+				doc.Category = _defCur.LabResultImageCat;
 			}
 
 			string embeddedFile = "";
@@ -971,12 +971,12 @@ namespace OpenDentBusiness.HL7 {
 				if (_patCur == null)
 				{
 					doc.FileName = Path.GetFileName(embeddedFile);
-					doc.DocNum = Documents.Insert(doc);//PatNum will be 0, this will indicate that we should look in the MedLabEmbeddedFiles folder for the PDF
+					doc.Id = Documents.Insert(doc);//PatNum will be 0, this will indicate that we should look in the MedLabEmbeddedFiles folder for the PDF
 				}
 				else
 				{
 					//This will upload to Dropbox from the temp file created above if using dropbox.
-					doc = ImageStore.Import(embeddedFile, doc.DocCategory, _patCur);
+					doc = ImageStore.Import(embeddedFile, doc.Category, _patCur);
 					try
 					{
 						File.Delete(embeddedFile);//Clean up the temp file, only one copy will exist in the patient's image folder
@@ -997,7 +997,7 @@ namespace OpenDentBusiness.HL7 {
 				return;
 			}
 
-			_medLabResultCur.DocNum = doc.DocNum;
+			_medLabResultCur.DocNum = doc.Id;
 		}
 
 		///<summary>Inserts any MedLabFacility objects not in the database.  Creates a dictionary linking the facilityIDs to a list of MedLabFacilityNums.

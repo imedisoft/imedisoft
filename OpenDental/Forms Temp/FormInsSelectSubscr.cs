@@ -126,18 +126,18 @@ namespace OpenDental{
 
 		private void FormInsSelectSubscr_Load(object sender, System.EventArgs e) {
 			SubList=InsSubs.GetListForSubscriber(Subscriber);
-			List<InsPlan> planList=InsPlans.RefreshForSubList(SubList);
+			List<InsurancePlan> planList=InsPlans.RefreshForSubList(SubList);
 			//PatPlan[] patPlanArray;
 			string str;
-			InsPlan plan;
+			InsurancePlan plan;
 			if(!InsSubs.ValidatePlanNumForList(SubList.Select(x => x.InsSubNum).ToList())) {//If !isValid, any links should have been fixed and we now need to update our list.
 				SubList=InsSubs.GetListForSubscriber(Subscriber);
 			}
 			for(int i=0;i<SubList.Count;i++) {
 				plan=InsPlans.GetPlan(SubList[i].PlanNum,planList);
 				str=InsPlans.GetCarrierName(SubList[i].PlanNum,planList);
-				if(plan.GroupNum!="") {
-					str+=" group:"+plan.GroupNum;
+				if(plan.GroupNumber!="") {
+					str+=" group:"+plan.GroupNumber;
 				}
 				int countPatPlans=PatPlans.GetCountBySubNum(SubList[i].InsSubNum);
 				if(countPatPlans==0) {
@@ -150,7 +150,7 @@ namespace OpenDental{
 		/// <summary>Checks if the insurnace plan selected still exists. Returns true if it does, false if it doesn't. If the plan does not exist a message box is popped up
 		/// and the selected index is removed from SubList and listPlans </summary>
 		private bool VerifyInsPlanExists() {
-			if(InsPlans.GetPlan(SubList[listPlans.SelectedIndex].PlanNum,new List<InsPlan>())==null) {
+			if(InsPlans.GetPlan(SubList[listPlans.SelectedIndex].PlanNum,new List<InsurancePlan>())==null) {
 				MessageBox.Show("Insurance plan selected no longer exists.");
 				SubList.RemoveAt(listPlans.SelectedIndex);
 				listPlans.Items.RemoveAt(listPlans.SelectedIndex);

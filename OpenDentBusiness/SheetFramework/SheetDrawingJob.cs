@@ -858,7 +858,7 @@ namespace OpenDentBusiness
 							break;
 						}
 						Document patDoc = Documents.GetByNum(PIn.Long(field.FieldValue));
-						List<string> paths = Documents.GetPaths(new List<long> { patDoc.DocNum }, FileAtoZ.GetPreferredAtoZpath());
+						List<string> paths = Documents.GetPaths(new List<long> { patDoc.Id }, FileAtoZ.GetPreferredAtoZpath());
 						if (paths.Count < 1)
 						{//No path was found so we cannot draw the image.
 							return;

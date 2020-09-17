@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Linq;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness
 {
@@ -24,7 +25,7 @@ namespace OpenDentBusiness
 			{
 				CovSpan[] arrayCovSpans = CovSpans.GetForCat(covCat.Id);
 				listValidStrings.AddRange(
-					ProcedureCodes.GetWhere(x => CovSpans.IsCodeInSpans(x.ProcCode, arrayCovSpans), true).Select(x => x.ProcCode).ToList()
+					ProcedureCodes.GetWhere(x => CovSpans.IsCodeInSpans(x.Code, arrayCovSpans), true).Select(x => x.Code).ToList()
 				);
 			}
 			return listValidStrings.Distinct().ToList();
@@ -41,7 +42,7 @@ namespace OpenDentBusiness
 			double total = 0;//CanadaTimeUnits can be decimal numbers, like 0.5.
 			for (int i = 0; i < listProcCodes.Count; i++)
 			{ //for every procedurecode
-				List<CovCat> listCovCatsForProc = GetCovCats(CovSpans.GetCats(listProcCodes[i].ProcCode));
+				List<CovCat> listCovCatsForProc = GetCovCats(CovSpans.GetCats(listProcCodes[i].Code));
 				if (listCovCatsForProc.Any(x => x.Id == covCat.Id))
 				{
 					total += listProcCodes[i].CanadaTimeUnits; //add the Canada time units to the total.

@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -103,7 +105,7 @@ namespace OpenDental {
 				row.Cells.Add(proc.ProcStatus.ToString());
 				row.Cells.Add(Tooth.ToInternat(proc.ToothNum));
 				row.Cells.Add(proc.Surf);
-				row.Cells.Add(proccode.ProcCode);
+				row.Cells.Add(proccode.Code);
 				row.Cells.Add(description);
 				row.Cells.Add(_listTpAttachesAll.FindAll(x => x.ProcNum==proc.ProcNum && x.TreatPlanNum!=_treatPlanUnassigned.TreatPlanNum).Count.ToString());
 				string aptStatus="";

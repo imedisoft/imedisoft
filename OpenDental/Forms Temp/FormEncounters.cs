@@ -42,13 +42,13 @@ namespace OpenDental {
 			for(int i=0;i<listEncs.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(listEncs[i].DateEncounter.ToShortDateString());
-				row.Cells.Add(Providers.GetAbbr(listEncs[i].ProvNum));
+				row.Cells.Add(Providers.GetAbbr(listEncs[i].ProviderId));
 				row.Cells.Add(listEncs[i].CodeValue);
 				string descript="";
 				//to get description, first determine which table the code is from.  Encounter is only allowed to be a CDT, CPT, HCPCS, and SNOMEDCT.
 				switch(listEncs[i].CodeSystem) {
 					case "CDT":
-						descript=ProcedureCodes.GetProcCode(listEncs[i].CodeValue).Descript;
+						descript=ProcedureCodes.GetProcCode(listEncs[i].CodeValue).Description;
 						break;
 					case "CPT":
 						Cpt cptCur=Cpts.GetByCode(listEncs[i].CodeValue);
@@ -84,8 +84,8 @@ namespace OpenDental {
 
 		private void butAdd_Click(object sender,EventArgs e) {
 			Encounter EncCur=new Encounter();
-			EncCur.PatNum=PatCur.PatNum;
-			EncCur.ProvNum=PatCur.PriProv;
+			EncCur.PatientId=PatCur.PatNum;
+			EncCur.ProviderId=PatCur.PriProv;
 			EncCur.DateEncounter=DateTime.Today;
 			EncCur.IsNew=true;
 			FormEncounterEdit FormEE=new FormEncounterEdit(EncCur);

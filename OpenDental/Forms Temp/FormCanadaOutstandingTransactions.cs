@@ -25,9 +25,9 @@ namespace OpenDental {
 			carriers=Carriers.GetWhere(x => 
 				(x.CanadianSupportedTypes & CanSupTransTypes.RequestForOutstandingTrans_04)==CanSupTransTypes.RequestForOutstandingTrans_04);
 			foreach(Carrier carrier in carriers) {
-				listCarriers.Items.Add(carrier.CarrierName);
+				listCarriers.Items.Add(carrier.Name);
 			}
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				if(!_listProviders[i].IsCDAnet || _listProviders[i].NationalProviderID=="" || _listProviders[i].CanadianOfficeNumber=="") {
 					continue;

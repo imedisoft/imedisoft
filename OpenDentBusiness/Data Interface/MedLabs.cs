@@ -221,7 +221,7 @@ namespace OpenDentBusiness{
 			MedLabResults.DeleteAllForMedLabs(listLabNumsOld);//MedLabResults have a FK to MedLabNum
 			MedLabs.DeleteAll(listLabNumsOld);
 			foreach(Document doc in Documents.GetByNums(listResultsOld.Select(x => x.DocNum).ToList())) {
-				Patient docPat=Patients.GetPat(doc.PatNum);
+				Patient docPat=Patients.GetPat(doc.PatientId);
 				if(docPat==null) {
 					Documents.Delete(doc);
 					continue;

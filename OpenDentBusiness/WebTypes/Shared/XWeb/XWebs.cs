@@ -676,7 +676,7 @@ namespace OpenDentBusiness.WebTypes.Shared.XWeb
 				{
 					throw new ODException("CreditCardNum not found: " + creditCardNum.ToString(), ODException.ErrorCodes.OtkArgsInvalid);
 				}
-				if (cc.PatNum != _patNum)
+				if (cc.PatientId != _patNum)
 				{
 					throw new ODException("Credit card token does not belong to this patient. CreditCardNum: " + creditCardNum.ToString() + " - PatNum: " + _patNum.ToString() + ".", ODException.ErrorCodes.OtkArgsInvalid);
 				}
@@ -818,7 +818,7 @@ namespace OpenDentBusiness.WebTypes.Shared.XWeb
 				{
 					throw new ODException("CreditCardNum not found: " + creditCardNum.ToString(), ODException.ErrorCodes.OtkArgsInvalid);
 				}
-				if (cc.PatNum != _patNum)
+				if (cc.PatientId != _patNum)
 				{
 					throw new ODException("Credit card token does not belong to this patient. CreditCardNum: " + creditCardNum.ToString() + " - PatNum: " + _patNum.ToString() + ".", ODException.ErrorCodes.OtkArgsInvalid);
 				}

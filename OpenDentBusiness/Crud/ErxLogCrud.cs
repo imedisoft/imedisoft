@@ -44,12 +44,12 @@ namespace OpenDentBusiness.Crud{
 			ErxLog erxLog;
 			foreach(DataRow row in table.Rows) {
 				erxLog=new ErxLog();
-				erxLog.ErxLogNum = PIn.Long  (row["ErxLogNum"].ToString());
-				erxLog.PatNum    = PIn.Long  (row["PatNum"].ToString());
+				erxLog.Id = PIn.Long  (row["ErxLogNum"].ToString());
+				erxLog.PatientId    = PIn.Long  (row["PatNum"].ToString());
 				erxLog.MsgText   = PIn.String(row["MsgText"].ToString());
-				erxLog.DateTStamp= PIn.Date (row["DateTStamp"].ToString());
-				erxLog.ProvNum   = PIn.Long  (row["ProvNum"].ToString());
-				erxLog.UserNum   = PIn.Long  (row["UserNum"].ToString());
+				erxLog.LastModifiedDate= PIn.Date (row["DateTStamp"].ToString());
+				erxLog.ProviderId   = PIn.Long  (row["ProvNum"].ToString());
+				erxLog.UserId   = PIn.Long  (row["UserNum"].ToString());
 				retVal.Add(erxLog);
 			}
 			return retVal;
@@ -69,12 +69,12 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("UserNum");
 			foreach(ErxLog erxLog in listErxLogs) {
 				table.Rows.Add(new object[] {
-					POut.Long  (erxLog.ErxLogNum),
-					POut.Long  (erxLog.PatNum),
+					POut.Long  (erxLog.Id),
+					POut.Long  (erxLog.PatientId),
 					            erxLog.MsgText,
-					POut.DateT (erxLog.DateTStamp,false),
-					POut.Long  (erxLog.ProvNum),
-					POut.Long  (erxLog.UserNum),
+					POut.DateT (erxLog.LastModifiedDate,false),
+					POut.Long  (erxLog.ProviderId),
+					POut.Long  (erxLog.UserId),
 				});
 			}
 			return table;
@@ -88,7 +88,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one ErxLog into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(ErxLog erxLog,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				erxLog.ErxLogNum=ReplicationServers.GetKey("erxlog","ErxLogNum");
+				erxLog.Id=ReplicationServers.GetKey("erxlog","ErxLogNum");
 			}
 			string command="INSERT INTO erxlog (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -96,14 +96,14 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="PatNum,MsgText,ProvNum,UserNum) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(erxLog.ErxLogNum)+",";
+				command+=POut.Long(erxLog.Id)+",";
 			}
 			command+=
-				     POut.Long  (erxLog.PatNum)+","
+				     POut.Long  (erxLog.PatientId)+","
 				+    DbHelper.ParamChar+"paramMsgText,"
 				//DateTStamp can only be set by MySQL
-				+    POut.Long  (erxLog.ProvNum)+","
-				+    POut.Long  (erxLog.UserNum)+")";
+				+    POut.Long  (erxLog.ProviderId)+","
+				+    POut.Long  (erxLog.UserId)+")";
 			if(erxLog.MsgText==null) {
 				erxLog.MsgText="";
 			}
@@ -112,9 +112,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramMsgText);
 			}
 			else {
-				erxLog.ErxLogNum=Database.ExecuteInsert(command,paramMsgText);
+				erxLog.Id=Database.ExecuteInsert(command,paramMsgText);
 			}
-			return erxLog.ErxLogNum;
+			return erxLog.Id;
 		}
 
 		///<summary>Inserts one ErxLog into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -127,21 +127,21 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO erxlog (";
 			if(!useExistingPK) {
-				erxLog.ErxLogNum=ReplicationServers.GetKeyNoCache("erxlog","ErxLogNum");
+				erxLog.Id=ReplicationServers.GetKeyNoCache("erxlog","ErxLogNum");
 			}
 			if(useExistingPK) {
 				command+="ErxLogNum,";
 			}
 			command+="PatNum,MsgText,ProvNum,UserNum) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(erxLog.ErxLogNum)+",";
+				command+=POut.Long(erxLog.Id)+",";
 			}
 			command+=
-				     POut.Long  (erxLog.PatNum)+","
+				     POut.Long  (erxLog.PatientId)+","
 				+    DbHelper.ParamChar+"paramMsgText,"
 				//DateTStamp can only be set by MySQL
-				+    POut.Long  (erxLog.ProvNum)+","
-				+    POut.Long  (erxLog.UserNum)+")";
+				+    POut.Long  (erxLog.ProviderId)+","
+				+    POut.Long  (erxLog.UserId)+")";
 			if(erxLog.MsgText==null) {
 				erxLog.MsgText="";
 			}
@@ -150,20 +150,20 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramMsgText);
 			}
 			else {
-				erxLog.ErxLogNum=Database.ExecuteInsert(command,paramMsgText);
+				erxLog.Id=Database.ExecuteInsert(command,paramMsgText);
 			}
-			return erxLog.ErxLogNum;
+			return erxLog.Id;
 		}
 
 		///<summary>Updates one ErxLog in the database.</summary>
 		public static void Update(ErxLog erxLog) {
 			string command="UPDATE erxlog SET "
-				+"PatNum    =  "+POut.Long  (erxLog.PatNum)+", "
+				+"PatNum    =  "+POut.Long  (erxLog.PatientId)+", "
 				+"MsgText   =  "+DbHelper.ParamChar+"paramMsgText, "
 				//DateTStamp can only be set by MySQL
-				+"ProvNum   =  "+POut.Long  (erxLog.ProvNum)+", "
-				+"UserNum   =  "+POut.Long  (erxLog.UserNum)+" "
-				+"WHERE ErxLogNum = "+POut.Long(erxLog.ErxLogNum);
+				+"ProvNum   =  "+POut.Long  (erxLog.ProviderId)+", "
+				+"UserNum   =  "+POut.Long  (erxLog.UserId)+" "
+				+"WHERE ErxLogNum = "+POut.Long(erxLog.Id);
 			if(erxLog.MsgText==null) {
 				erxLog.MsgText="";
 			}
@@ -174,22 +174,22 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one ErxLog in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(ErxLog erxLog,ErxLog oldErxLog) {
 			string command="";
-			if(erxLog.PatNum != oldErxLog.PatNum) {
+			if(erxLog.PatientId != oldErxLog.PatientId) {
 				if(command!="") { command+=",";}
-				command+="PatNum = "+POut.Long(erxLog.PatNum)+"";
+				command+="PatNum = "+POut.Long(erxLog.PatientId)+"";
 			}
 			if(erxLog.MsgText != oldErxLog.MsgText) {
 				if(command!="") { command+=",";}
 				command+="MsgText = "+DbHelper.ParamChar+"paramMsgText";
 			}
 			//DateTStamp can only be set by MySQL
-			if(erxLog.ProvNum != oldErxLog.ProvNum) {
+			if(erxLog.ProviderId != oldErxLog.ProviderId) {
 				if(command!="") { command+=",";}
-				command+="ProvNum = "+POut.Long(erxLog.ProvNum)+"";
+				command+="ProvNum = "+POut.Long(erxLog.ProviderId)+"";
 			}
-			if(erxLog.UserNum != oldErxLog.UserNum) {
+			if(erxLog.UserId != oldErxLog.UserId) {
 				if(command!="") { command+=",";}
-				command+="UserNum = "+POut.Long(erxLog.UserNum)+"";
+				command+="UserNum = "+POut.Long(erxLog.UserId)+"";
 			}
 			if(command=="") {
 				return false;
@@ -199,7 +199,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			var paramMsgText = new MySqlParameter("paramMsgText", POut.StringParam(erxLog.MsgText));
 			command="UPDATE erxlog SET "+command
-				+" WHERE ErxLogNum = "+POut.Long(erxLog.ErxLogNum);
+				+" WHERE ErxLogNum = "+POut.Long(erxLog.Id);
 			Database.ExecuteNonQuery(command,paramMsgText);
 			return true;
 		}
@@ -207,17 +207,17 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(ErxLog,ErxLog) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(ErxLog erxLog,ErxLog oldErxLog) {
-			if(erxLog.PatNum != oldErxLog.PatNum) {
+			if(erxLog.PatientId != oldErxLog.PatientId) {
 				return true;
 			}
 			if(erxLog.MsgText != oldErxLog.MsgText) {
 				return true;
 			}
 			//DateTStamp can only be set by MySQL
-			if(erxLog.ProvNum != oldErxLog.ProvNum) {
+			if(erxLog.ProviderId != oldErxLog.ProviderId) {
 				return true;
 			}
-			if(erxLog.UserNum != oldErxLog.UserNum) {
+			if(erxLog.UserId != oldErxLog.UserId) {
 				return true;
 			}
 			return false;

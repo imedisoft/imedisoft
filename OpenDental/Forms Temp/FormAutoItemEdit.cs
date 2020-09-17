@@ -161,7 +161,7 @@ namespace OpenDental{
 			foreach(string s in Enum.GetNames(typeof(AutoCodeConditionType))) {
 				listConditions.Items.Add(s);
 			}
-			List<AutoCodeCondition> listAutoCodeConds=AutoCodeConditions.GetWhere(x => x.AutoCodeItemId==AutoCodeItemCur.Id);
+			List<AutoCodeCondition> listAutoCodeConds=AutoCodeConditions.Find(x => x.AutoCodeItemId==AutoCodeItemCur.Id);
 			for(int i=0;i<listAutoCodeConds.Count;i++) {
 				listConditions.SetSelected((int)listAutoCodeConds[i].Type,true);
 			}
@@ -199,7 +199,7 @@ namespace OpenDental{
 				textADA.Text=ProcedureCodes.GetStringProcCode(AutoCodeItemCur.ProcedureCodeId);
 				return;
 			}
-			if(AutoCodeItems.GetContainsKey(FormP.SelectedCodeNum)
+			if(AutoCodeItems.Contains(FormP.SelectedCodeNum)
 				&& AutoCodeItems.GetById(FormP.SelectedCodeNum).AutoCodeId != AutoCodeItemCur.AutoCodeId) 
 			{
 				//This section is a fix for an old bug that did not cause items to get deleted properly

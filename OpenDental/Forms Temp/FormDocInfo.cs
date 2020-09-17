@@ -58,12 +58,12 @@ namespace OpenDental{
 			_documentCur=docCur;
 			_documentOld=_documentCur.Copy();
 			_isOkDisabled=isOkDisabled;
-			if(_documentCur.DocNum==0){
+			if(_documentCur.Id==0){
 				List<Definition> listDefNumsImageCats=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true);
-				_documentCur.DocCategory=listDefNumsImageCats[0].Id;
+				_documentCur.Category=listDefNumsImageCats[0].Id;
 				for(int i=0;i<listDefNumsImageCats.Count;i++){
 					if(listDefNumsImageCats[0].Name==initialCategoryName){
-						_documentCur.DocCategory=listDefNumsImageCats[i].Id;
+						_documentCur.Category=listDefNumsImageCats[i].Id;
 					}
 				}
 			}
@@ -372,7 +372,7 @@ namespace OpenDental{
 			for(int i=0;i<_listImageCatDefs.Count;i++){
 				string folderName=_listImageCatDefs[i].Name;
 				listCategory.Items.Add(folderName);
-				if(i==0 || _listImageCatDefs[i].Id==_documentCur.DocCategory){
+				if(i==0 || _listImageCatDefs[i].Id==_documentCur.Category){
 					listCategory.SelectedIndex=i;
 				}
 			}
@@ -380,8 +380,8 @@ namespace OpenDental{
 			listType.Items.AddRange(Enum.GetNames(typeof(ImageType)));
 			listType.SelectedIndex=(int)_documentCur.ImgType;
 			textToothNumbers.Text=Tooth.FormatRangeForDisplay(_documentCur.ToothNumbers);
-			textDate.Text=_documentCur.DateCreated.ToShortDateString();
-			textTime.Text=_documentCur.DateCreated.ToLongTimeString();
+			textDate.Text=_documentCur.AddedOnDate.ToShortDateString();
+			textTime.Text=_documentCur.AddedOnDate.ToLongTimeString();
 			textDescript.Text=_documentCur.Description;
 
 				string patFolder;
@@ -446,7 +446,7 @@ namespace OpenDental{
 			List<Permissions> listPermissions=new List<Permissions>();
 			listPermissions.Add(Permissions.ImageEdit);
 			listPermissions.Add(Permissions.ImageDelete);
-			FormAuditOneType formA=new FormAuditOneType(0,listPermissions,"Audit Trail for Document",_documentCur.DocNum);
+			FormAuditOneType formA=new FormAuditOneType(0,listPermissions,"Audit Trail for Document",_documentCur.Id);
 			formA.ShowDialog();
 		}
 
@@ -471,13 +471,13 @@ namespace OpenDental{
 			//We had a security bug where users could change the date to a more recent date, and then subsequently delete.
 			//The code below is for that specific scenario.
 			DateTime dateTimeEntered=PIn.Date(textDate.Text+" "+textTime.Text);
-			if(dateTimeEntered>_documentCur.DateCreated) {
+			if(dateTimeEntered>_documentCur.AddedOnDate) {
 				//user is trying to change the date to some date after the previously linked date
 				//is the new doc date allowed?
-				if(!Security.IsAuthorized(Permissions.ImageDelete,_documentCur.DateCreated,true)) {
+				if(!Security.IsAuthorized(Permissions.ImageDelete,_documentCur.AddedOnDate,true)) {
 					//suppress the default security message above (it's too confusing for this case) and generate our own here
 					MessageBox.Show(this,"Not allowed to future date this image from"+": "
-						+"\r\n"+_documentCur.DateCreated.ToString()+" to "+dateTimeEntered.ToString()
+						+"\r\n"+_documentCur.AddedOnDate.ToString()+" to "+dateTimeEntered.ToString()
 						+"\r\n\r\n"+"A user with the SecurityAdmin permission must grant you access for"
 						+":\r\n"+GroupPermissions.GetDesc(Permissions.ImageDelete));
 					return;
@@ -490,10 +490,10 @@ namespace OpenDental{
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			_documentCur.DocCategory=_listImageCatDefs[listCategory.SelectedIndex].Id;
+			_documentCur.Category=_listImageCatDefs[listCategory.SelectedIndex].Id;
 			_documentCur.ImgType=(ImageType)listType.SelectedIndex;
 			_documentCur.Description=textDescript.Text;			
-			_documentCur.DateCreated=dateTimeEntered;	
+			_documentCur.AddedOnDate=dateTimeEntered;	
 			try{//incomplete
 				_documentCur.ToothNumbers=Tooth.FormatRangeForDb(textToothNumbers.Text);
 			}
@@ -508,7 +508,7 @@ namespace OpenDental{
 			//}
 			//else{
 			if(Documents.Update(_documentCur,_documentOld)) {
-				ImageStore.LogDocument("Document Edited"+": ",Permissions.ImageEdit,_documentCur,_documentOld.DateTStamp);
+				ImageStore.LogDocument("Document Edited"+": ",Permissions.ImageEdit,_documentCur,_documentOld.LastModifiedDate);
 			}
 			//}
 			DialogResult=DialogResult.OK;

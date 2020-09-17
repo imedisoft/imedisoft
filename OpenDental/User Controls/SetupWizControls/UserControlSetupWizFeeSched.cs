@@ -18,9 +18,9 @@ using Imedisoft.Data;
 namespace OpenDental.User_Controls.SetupWizard {
 	public partial class UserControlSetupWizFeeSched:SetupWizControl {
 		///<summary>Copy of the cached fee schedules.</summary>
-		private List<FeeSched> _listFeeScheds;
+		private List<FeeSchedule> _listFeeScheds;
 		///<summary>Stale deep copy of _listFeeScheds to use with sync.</summary>
-		private List<FeeSched> _listFeeSchedsOld;
+		private List<FeeSchedule> _listFeeSchedsOld;
 		private bool _isChanged;
 
 		public UserControlSetupWizFeeSched() {
@@ -35,7 +35,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void FillGrid(){
-			_listFeeScheds=_listFeeScheds.OrderBy(x => x.ItemOrder).ToList();
+			_listFeeScheds=_listFeeScheds.OrderBy(x => x.SortOrder).ToList();
 			gridMain.BeginUpdate();
 			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Description",145);
@@ -50,11 +50,11 @@ namespace OpenDental.User_Controls.SetupWizard {
 			if(_listFeeScheds.Where(x => x.Description.ToLower()!="default").ToList().Count==0) {
 				IsDone=false;
 			}
-			foreach(FeeSched feeSched in _listFeeScheds) {
+			foreach(FeeSchedule feeSched in _listFeeScheds) {
 				row=new GridRow();
 				row.Tag=feeSched;
 				row.Cells.Add(feeSched.Description);
-				row.Cells.Add(feeSched.FeeSchedType.ToString());
+				row.Cells.Add(feeSched.Type.ToString());
 				row.Cells.Add(feeSched.IsHidden ? "X" : "");
 				gridMain.Rows.Add(row);
 			}
@@ -63,16 +63,16 @@ namespace OpenDental.User_Controls.SetupWizard {
 
 		private void butAdd_Click(object sender, System.EventArgs e) {
 			FormFeeSchedEdit FormF=new FormFeeSchedEdit();
-			FormF.FeeSchedCur=new FeeSched();
+			FormF.FeeSchedCur=new FeeSchedule();
 			FormF.FeeSchedCur.IsNew=true;
-			FormF.FeeSchedCur.ItemOrder=_listFeeScheds.Count;
+			FormF.FeeSchedCur.SortOrder=_listFeeScheds.Count;
 			FormF.ListFeeScheds=_listFeeScheds;
 			FormF.ShowDialog();
 			if(FormF.DialogResult==DialogResult.OK) {
 				FillGrid();
 				_isChanged=true;
 				for(int i=0;i<_listFeeScheds.Count;i++){
-					if(FormF.FeeSchedCur.FeeSchedNum==_listFeeScheds[i].FeeSchedNum){
+					if(FormF.FeeSchedCur.Id==_listFeeScheds[i].Id){
 						gridMain.SetSelected(i,true);
 					}
 				}
@@ -110,9 +110,9 @@ namespace OpenDental.User_Controls.SetupWizard {
 				Cursor=Cursors.Default;
 				return;
 			}
-			FeeSched feeSched=((FeeSched)gridMain.SelectedRows[0].Tag);//get selected fee sched from grid.
+			FeeSchedule feeSched=((FeeSchedule)gridMain.SelectedRows[0].Tag);//get selected fee sched from grid.
 			try { 
-				FeeL.ImportFees(Dlg.FileName,feeSched.FeeSchedNum,clinicNum,provNum);
+				FeeL.ImportFees(Dlg.FileName,feeSched.Id,clinicNum,provNum);
 				_isChanged=true;
 			}
 			catch(Exception ex) {
@@ -142,7 +142,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 				FillGrid();
 				_isChanged=true;
 				for(int i=0;i<_listFeeScheds.Count;i++){
-					if(FormF.FeeSchedCur.FeeSchedNum==_listFeeScheds[i].FeeSchedNum){
+					if(FormF.FeeSchedCur.Id==_listFeeScheds[i].Id){
 						gridMain.SetSelected(i,true);
 					}
 				}

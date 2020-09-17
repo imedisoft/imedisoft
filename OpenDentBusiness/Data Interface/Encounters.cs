@@ -58,8 +58,8 @@ namespace OpenDentBusiness{
 			}
 			//Insert encounter with default encounter code system and code value set in Setup>EHR>Settings
 			Encounter encounter = new Encounter();
-			encounter.PatNum=patNum;
-			encounter.ProvNum=provNum;
+			encounter.PatientId=patNum;
+			encounter.ProviderId=provNum;
 			encounter.DateEncounter=date;
 			encounter.CodeSystem=Preferences.GetString(PreferenceName.CQMDefaultEncounterCodeSystem);
 			encounter.CodeValue=Preferences.GetString(PreferenceName.CQMDefaultEncounterCodeValue);

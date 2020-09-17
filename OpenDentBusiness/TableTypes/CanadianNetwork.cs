@@ -3,7 +3,7 @@ using Imedisoft.Data.Annotations;
 namespace OpenDentBusiness
 {
 	[Table("canadian_networks")]
-	public class CanadianNetwork : TableBase
+	public class CanadianNetwork
 	{
 		[PrimaryKey]
 		public long Id;

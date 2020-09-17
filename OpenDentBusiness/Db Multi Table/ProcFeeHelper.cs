@@ -13,7 +13,7 @@ namespace OpenDentBusiness {
 		public List<Fee> ListFees;
 		public List<PatPlan> ListPatPlans;
 		public List<InsSub> ListInsSubs;
-		public List<InsPlan> ListInsPlans;
+		public List<InsurancePlan> ListInsPlans;
 		public List<Benefit> ListBenefitsPrimary;
 
 		///<summary>For serialization ONLY.</summary>
@@ -24,7 +24,7 @@ namespace OpenDentBusiness {
 			_patNum=patNum;
 		}
 
-		public ProcFeeHelper(Patient pat,List<Fee> listFees,List<PatPlan> listPatPlans,List<InsSub> listInsSubs,List<InsPlan> listInsPlans,
+		public ProcFeeHelper(Patient pat,List<Fee> listFees,List<PatPlan> listPatPlans,List<InsSub> listInsSubs,List<InsurancePlan> listInsPlans,
 			List<Benefit> listBenefits) : this(pat.PatNum) {
 			Pat=pat;
 			ListFees=listFees;
@@ -57,8 +57,8 @@ namespace OpenDentBusiness {
 			if(procFeeHelper.ListPatPlans.Count>0) {
 				PatPlan priPatPlan=procFeeHelper.ListPatPlans[0];
 				InsSub priInsSub=InsSubs.GetSub(priPatPlan.InsSubNum,procFeeHelper.ListInsSubs);
-				InsPlan priInsPlan=InsPlans.GetPlan(priInsSub.PlanNum,procFeeHelper.ListInsPlans);
-				procFeeHelper.ListBenefitsPrimary=procFeeHelper.ListBenefitsPrimary??Benefits.RefreshForPlan(priInsPlan.PlanNum,priPatPlan.PatPlanNum);
+				InsurancePlan priInsPlan=InsPlans.GetPlan(priInsSub.PlanNum,procFeeHelper.ListInsPlans);
+				procFeeHelper.ListBenefitsPrimary=procFeeHelper.ListBenefitsPrimary??Benefits.RefreshForPlan(priInsPlan.Id,priPatPlan.PatPlanNum);
 			}
 			else {
 				procFeeHelper.ListBenefitsPrimary=new List<Benefit>();

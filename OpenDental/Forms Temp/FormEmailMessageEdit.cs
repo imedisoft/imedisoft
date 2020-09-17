@@ -6,6 +6,7 @@ using CodeBase;
 using OpenDentBusiness;
 using System.Linq;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental
 {
@@ -711,7 +712,7 @@ namespace OpenDental
 			{
 				return;
 			}
-			string emailUserName = EmailMessages.GetAddressSimple(emailOutgoing.EmailUsername);
+			string emailUserName = EmailMessages.GetAddressSimple(emailOutgoing.SmtpUsername);
 			string emailSender = EmailMessages.GetAddressSimple(emailOutgoing.SenderAddress);
 			string autographEmail;
 			for (int i = 0; i < _listEmailAutographs.Count; i++)
@@ -794,7 +795,7 @@ namespace OpenDental
 			{
 				return;
 			}
-			EmailAutographs.Delete(_listEmailAutographs[listAutographs.SelectedIndex].EmailAutographNum);
+			EmailAutographs.Delete(_listEmailAutographs[listAutographs.SelectedIndex].Id);
 			EmailAutographs.RefreshCache();
 			FillAutographs();
 		}
@@ -1012,7 +1013,7 @@ namespace OpenDental
 				case FromAddressMatchResult.Multi:
 					if (MessageBox.Show("Multiple email accounts matching" + " " + emailPreview.FromAddress + "\r\n"
 						+ "Send using" + ":\r\n"
-						+ "Username" + ": " + emailAddress.EmailUsername + "\r\n"
+						+ "Username" + ": " + emailAddress.SmtpUsername + "\r\n"
 						+ "Sending Address" + ": " + emailAddress.GetFrom() + "?", "Email Address", MessageBoxButtons.YesNo)
 						== DialogResult.No)
 					{
@@ -1040,13 +1041,13 @@ namespace OpenDental
 			{
 				return;
 			}
-			if (emailPreview.FromAddress != emailAddressFrom.EmailUsername)
+			if (emailPreview.FromAddress != emailAddressFrom.SmtpUsername)
 			{
 				//Without this block, encryption would fail with an obscure error message, because the from address would not match the digital signature of the sender.
-				MessageBox.Show("From address must match email address username in email setup." + "\r\n" + "From address must be exactly" + " " + emailAddressFrom.EmailUsername);
+				MessageBox.Show("From address must match email address username in email setup." + "\r\n" + "From address must be exactly" + " " + emailAddressFrom.SmtpUsername);
 				return;
 			}
-			if (emailAddressFrom.SMTPserver == "")
+			if (emailAddressFrom.SmtpServer == "")
 			{
 				MessageBox.Show("The email address in email setup must have an SMTP server.");
 				return;
@@ -1138,7 +1139,7 @@ namespace OpenDental
 			{
 				return;
 			}
-			if (emailAddress.SMTPserver == "")
+			if (emailAddress.SmtpServer == "")
 			{
 				MessageBox.Show("The email address in email setup must have an SMTP server.");
 				return;
@@ -1148,7 +1149,7 @@ namespace OpenDental
 			try
 			{
 				//By this point, we are confident we have selected the correct EmailAddress object.  Use the appropriate cert/sig for this address.
-				System.Security.Cryptography.X509Certificates.X509Certificate2 cert = EmailMessages.GetCertFromPrivateStore(emailAddress.EmailUsername);
+				System.Security.Cryptography.X509Certificates.X509Certificate2 cert = EmailMessages.GetCertFromPrivateStore(emailAddress.SmtpUsername);
 				if (cert != null && emailPreview.IsSigned)
 				{
 					EmailMessages.SendEmailUnsecureWithSig(_emailMessage, emailAddress, cert);

@@ -23,17 +23,17 @@ namespace OpenDental {
 		}
 
 		private void FormCanadaPaymentReconciliation_Load(object sender,EventArgs e) {
-			_listCanadianNetworks=CanadianNetworks.GetDeepCopy();
+			_listCanadianNetworks=CanadianNetworks.GetAll();
 			for(int i=0;i<_listCanadianNetworks.Count;i++) {
 				listNetworks.Items.Add(_listCanadianNetworks[i].Abbr+" - "+_listCanadianNetworks[i].Description);
 			}
 			carriers=Carriers.GetWhere(x => x.CDAnetVersion!="02" &&//This transaction does not exist in version 02.
 				(x.CanadianSupportedTypes & CanSupTransTypes.RequestForSummaryReconciliation_05)==CanSupTransTypes.RequestForSummaryReconciliation_05);
 			foreach(Carrier carrier in carriers) {
-				listCarriers.Items.Add(carrier.CarrierName);
+				listCarriers.Items.Add(carrier.Name);
 			}
 			long defaultProvNum=Preferences.GetLong(PreferenceName.PracticeDefaultProv);
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				listTreatingProvider.Items.Add(_listProviders[i].Abbr);
 				if(_listProviders[i].Id==defaultProvNum) {
@@ -79,7 +79,7 @@ namespace OpenDental {
 				if(checkGetForAllCarriers.Checked) {
 					Carrier carrier=new Carrier();
 					carrier.CDAnetVersion="04";
-					carrier.ElectID="999999";//The whole ITRANS network.
+					carrier.ElectronicId="999999";//The whole ITRANS network.
 					carrier.CanadianEncryptionMethod=1;//No encryption.
 					Clearinghouse clearinghouseHq=Canadian.GetCanadianClearinghouseHq(carrier);
 					Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.Active.Id);

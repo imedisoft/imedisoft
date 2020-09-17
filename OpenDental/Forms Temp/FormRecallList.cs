@@ -134,7 +134,7 @@ namespace OpenDental {
 			datePickerRemind.DefaultDateTimeTo=DateTime.Today;
 			#endregion Set Reminder Dates
 			#region Providers
-			_listProv=Providers.GetDeepCopy(isShort:true);
+			_listProv=Providers.GetAll(true);
 			comboProviderRecalls.IncludeAll=true;
 			comboProviderRecalls.Items.AddList(_listProv,x => x.GetLongDesc());
 			comboProviderRecalls.IsAllSelected=true;
@@ -253,19 +253,19 @@ namespace OpenDental {
 			//Exclude any email addresses that are associated to a clinic or are the default practice and web mail notification email addresses.
 			List<long> listExcludeEmailAddressNums=Clinics.GetAll(true).Where(x => x.EmailAddressId.HasValue).Select(x => x.EmailAddressId.Value)
 				.Concat(new[] { Preferences.GetLong(PreferenceName.EmailDefaultAddressNum),Preferences.GetLong(PreferenceName.EmailNotifyAddressNum) }).ToList();
-			_listEmailAddresses=EmailAddresses.GetWhere(x => !listExcludeEmailAddressNums.Contains(x.EmailAddressNum));
+			_listEmailAddresses=EmailAddresses.GetWhere(x => !listExcludeEmailAddressNums.Contains(x.Id));
 			comboEmailFromRecalls.Items.Add("Practice/Clinic");//default
 			comboEmailFromRecalls.SelectedIndex=0;
-			comboEmailFromRecalls.Items.AddRange(_listEmailAddresses.Select(x => x.EmailUsername).ToArray());
+			comboEmailFromRecalls.Items.AddRange(_listEmailAddresses.Select(x => x.SmtpUsername).ToArray());
 			comboEmailFromReact.Items.Add("Practice/Clinic");//default
 			comboEmailFromReact.SelectedIndex=0;
-			comboEmailFromReact.Items.AddRange(_listEmailAddresses.Select(x => x.EmailUsername).ToArray());
+			comboEmailFromReact.Items.AddRange(_listEmailAddresses.Select(x => x.SmtpUsername).ToArray());
 			//Add user specific email address if present.
 			EmailAddress emailAddressMe=EmailAddresses.GetForUser(Security.CurrentUser.Id);//can be null
 			if(emailAddressMe!=null) {
 				_listEmailAddresses.Insert(0,emailAddressMe);
-				comboEmailFromRecalls.Items.Insert(1,"Me"+" <"+emailAddressMe.EmailUsername+">");//Just below Practice/Clinic
-				comboEmailFromReact.Items.Insert(1,"Me"+" <"+emailAddressMe.EmailUsername+">");//Just below Practice/Clinic
+				comboEmailFromRecalls.Items.Insert(1,"Me"+" <"+emailAddressMe.SmtpUsername+">");//Just below Practice/Clinic
+				comboEmailFromReact.Items.Insert(1,"Me"+" <"+emailAddressMe.SmtpUsername+">");//Just below Practice/Clinic
 			}
 		}
 
@@ -522,7 +522,7 @@ namespace OpenDental {
 
 		///<summary>Creates a recall appointment and returns the AptNum in a list.  Validation should be done prior to invoking this method.
 		///Shows an error message to the user and then returns an empty list if anything goes wrong.</summary>
-		private List<long> SchedPatRecall(long recallNum,Patient pat,List<InsSub> subList,List<InsPlan> planList) {
+		private List<long> SchedPatRecall(long recallNum,Patient pat,List<InsSub> subList,List<InsurancePlan> planList) {
 			try {
 				if(Recalls.HasProphyOrPerioScheduled(_patNumCur)) {
 					MessageBox.Show("Recall has already been scheduled.");
@@ -544,7 +544,7 @@ namespace OpenDental {
 		///<summary>Creates recall appointments for the family and returns a list of all the AptNums.
 		///Validation should be done prior to invoking this method.
 		///Shows a message to the user if there were any restricted patients or no appointments created.</summary>
-		public List<long> SchedFamRecall(Family fam,List<InsSub> subList,List<InsPlan> planList) {
+		public List<long> SchedFamRecall(Family fam,List<InsSub> subList,List<InsurancePlan> planList) {
 			Appointment apt;
 			List<long> pinAptNums=new List<long>();
 			int patsRestricted=0;
@@ -1844,7 +1844,7 @@ namespace OpenDental {
 			}
 			Family fam=Patients.GetFamily(_patNumCur);
 			List<InsSub> subList=InsSubs.RefreshForFam(fam);
-			List<InsPlan> planList=InsPlans.RefreshForSubList(subList);
+			List<InsurancePlan> planList=InsPlans.RefreshForSubList(subList);
 			List<long> pinAptNums=new List<long>();
 			switch(((UI.Button)sender).Tag.ToString()) {
 				case "SchedPatRecall":

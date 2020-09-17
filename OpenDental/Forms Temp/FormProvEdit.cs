@@ -119,7 +119,7 @@ namespace OpenDental{
 		///<summary>Provider Identifiers showing in the list for this provider.</summary>
 		private ProviderIdent[] ListProvIdent;
 		private List<SchoolClass> _listSchoolClasses;
-		private List<FeeSched> _listFeeSchedShort;
+		private List<FeeSchedule> _listFeeSchedShort;
 		private User _existingUser;
 		public Provider ProvCur;
 		private ValidDouble textProdGoalHr;
@@ -1533,7 +1533,7 @@ namespace OpenDental{
 			_listFeeSchedShort=FeeScheds.GetDeepCopy(true);
 			for(int i=0;i<_listFeeSchedShort.Count;i++){
 				this.listFeeSched.Items.Add(_listFeeSchedShort[i].Description);
-				if(_listFeeSchedShort[i].FeeSchedNum==ProvCur.FeeScheduleId){
+				if(_listFeeSchedShort[i].Id==ProvCur.FeeScheduleId){
 					listFeeSched.SelectedIndex=i;
 				}
 			}
@@ -1558,7 +1558,7 @@ namespace OpenDental{
 			}
 			checkIsNotPerson.Checked=ProvCur.IsNotPerson;
 			comboProv.Items.AddProvNone();
-			comboProv.Items.AddProvsFull(Providers.GetDeepCopy(true));
+			comboProv.Items.AddProvsFull(Providers.GetAll(true));
 			comboProv.SetSelectedProvNum(ProvCur.BillingOverrideProviderId.Value);
 			textWebSchedDescript.Text=ProvCur.WebSchedDescription;
 			FillImage();
@@ -1891,7 +1891,7 @@ namespace OpenDental{
 				}
 			}
 			if(listFeeSched.SelectedIndex!=-1) {
-				ProvCur.FeeScheduleId=_listFeeSchedShort[listFeeSched.SelectedIndex].FeeSchedNum;
+				ProvCur.FeeScheduleId=_listFeeSchedShort[listFeeSched.SelectedIndex].Id;
 			}
 			//default to first specialty in the list if it can't find the specialty by exact name
 			ProvCur.Specialty=Definitions.GetByExactNameNeverZero(DefinitionCategory.ProviderSpecialties,listSpecialty.SelectedItem.ToString());//selected index defaults to 0

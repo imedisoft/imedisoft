@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDental {

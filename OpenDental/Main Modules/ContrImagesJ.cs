@@ -395,7 +395,7 @@ namespace OpenDental{
 			button=new ODToolBarButton("Mounts",-1,"",TB.Mounts);
 			button.Style=ODToolBarButtonStyle.DropDownButton;
 			menuMounts=new ContextMenu();
-			List<MountDef> listMountDefs=MountDefs.GetDeepCopy();
+			List<MountDef> listMountDefs=MountDefs.GetAll();
 			for(int i=0;i<listMountDefs.Count;i++){
 				menuMounts.MenuItems.Add(listMountDefs[i].Description,menuMounts_Click);
 			}
@@ -539,8 +539,8 @@ namespace OpenDental{
 				SetCropPanEditAdj(EnumCropPanAdj.Pan);
 			}
 			if(nodeObjTag.NodeType==EnumNodeType.Mount){
-				_mountShowing=Mounts.GetByNum(nodeObjTag.MountNum);
-				_listMountItems=MountItems.GetItemsForMount(_mountShowing.MountNum);
+				_mountShowing=Mounts.GetById(nodeObjTag.MountNum);
+				_listMountItems=MountItems.GetByMount(_mountShowing.Id).ToList();
 				_arrayDocumentsShowing=Documents.GetDocumentsForMountItems(_listMountItems);
 				_idxSelectedInMount=-1;//No selection to start.
 				_idxSelectedInMountOld=-1;
@@ -603,7 +603,7 @@ namespace OpenDental{
 				return;
 			}
 			FillTree(false);
-			SelectTreeNode(new NodeObjTag(EnumNodeType.Document,doc.DocNum));
+			SelectTreeNode(new NodeObjTag(EnumNodeType.Document,doc.Id));
 			FormDocInfo FormD=new FormDocInfo(_patCur,doc);
 			FormD.ShowDialog(this);//some of the fields might get changed, but not the filename
 			if(FormD.DialogResult!=DialogResult.OK) {
@@ -616,11 +616,11 @@ namespace OpenDental{
 
 		private void menuMounts_Click(object sender,System.EventArgs e) {
 			int idx = ((MenuItem)sender).Index;
-			List<MountDef> listMountDefs=MountDefs.GetDeepCopy();
+			List<MountDef> listMountDefs=MountDefs.GetAll();
 			//MsgBox.Show(listMountDefs[idx].Description);
-			Mount mount=Mounts.CreateMountFromDef(listMountDefs[idx],_patCur.PatNum,GetCurrentCategory());
+			Mount mount=Mounts.CreateFromDefinition(listMountDefs[idx],_patCur.PatNum,GetCurrentCategory());
 			FillTree(false);
-			SelectTreeNode(new NodeObjTag(EnumNodeType.Mount,mount.MountNum));
+			SelectTreeNode(new NodeObjTag(EnumNodeType.Mount,mount.Id));
 		}
 
 		private void menuTree_Click(object sender,System.EventArgs e) {
@@ -654,7 +654,7 @@ namespace OpenDental{
 					Point pointRaw=ControlPointToBitmapPoint(e.Location);
 					_idxSelectedInMount=-1;
 					for(int i=0;i<_listMountItems.Count;i++){
-						Rectangle rect=new Rectangle(_listMountItems[i].Xpos,_listMountItems[i].Ypos,_listMountItems[i].Width,_listMountItems[i].Height);
+						Rectangle rect=new Rectangle(_listMountItems[i].X,_listMountItems[i].Y,_listMountItems[i].Width,_listMountItems[i].Height);
 						if(rect.Contains(pointRaw)){
 							_idxSelectedInMount=i;
 						}
@@ -669,8 +669,8 @@ namespace OpenDental{
 							_isDraggingMount=true;
 							//float scaleFactor=zoomSlider.Value/100f;
 							//To handle rotation, crop, etc, always measure from center of mount position.  Crop is not involved until mouse up.
-							_pointDragNow=new Point(_listMountItems[_idxSelectedInMount].Xpos+_listMountItems[_idxSelectedInMount].Width/2,
-								_listMountItems[_idxSelectedInMount].Ypos+_listMountItems[_idxSelectedInMount].Height/2);
+							_pointDragNow=new Point(_listMountItems[_idxSelectedInMount].X+_listMountItems[_idxSelectedInMount].Width/2,
+								_listMountItems[_idxSelectedInMount].Y+_listMountItems[_idxSelectedInMount].Height/2);
 							_pointDragStart=_pointDragNow;
 						}
 					}
@@ -767,7 +767,7 @@ namespace OpenDental{
 				int yDrag=ControlPointToBitmapPoint(e.Location).Y-ControlPointToBitmapPoint(_pointMouseDown).Y;
 				if(idxNewPos!=_idxSelectedInMount){
 					bool movedPosNoCrop=false;//moving to a new mount position, but no crop was specified, then don't add one
-					_arrayDocumentsShowing[_idxSelectedInMount].MountItemNum=_listMountItems[idxNewPos].MountItemNum;
+					_arrayDocumentsShowing[_idxSelectedInMount].MountItemNum=_listMountItems[idxNewPos].Id;
 					if(_arrayDocumentsShowing[_idxSelectedInMount].CropW==0 || _arrayDocumentsShowing[_idxSelectedInMount].CropH==0){
 						movedPosNoCrop=true;
 					}
@@ -777,10 +777,10 @@ namespace OpenDental{
 					_arrayDocumentsShowing[idxNewPos]=_arrayDocumentsShowing[_idxSelectedInMount];
 					_arrayDocumentsShowing[_idxSelectedInMount]=null;
 					//reference point for drag needs to be relative to new mountitem instead of old mountitem, or crop xy gets set wrong
-					xDrag+=_listMountItems[_idxSelectedInMount].Xpos+_listMountItems[_idxSelectedInMount].Width/2
-						-(_listMountItems[idxNewPos].Xpos+_listMountItems[idxNewPos].Width/2);
-					yDrag+=_listMountItems[_idxSelectedInMount].Ypos+_listMountItems[_idxSelectedInMount].Height/2
-						-(_listMountItems[idxNewPos].Ypos+_listMountItems[idxNewPos].Height/2);
+					xDrag+=_listMountItems[_idxSelectedInMount].X+_listMountItems[_idxSelectedInMount].Width/2
+						-(_listMountItems[idxNewPos].X+_listMountItems[idxNewPos].Width/2);
+					yDrag+=_listMountItems[_idxSelectedInMount].Y+_listMountItems[_idxSelectedInMount].Height/2
+						-(_listMountItems[idxNewPos].Y+_listMountItems[idxNewPos].Height/2);
 					_idxSelectedInMount=idxNewPos;
 					if(movedPosNoCrop){//not adding crop, so nothing else to do
 						_isDraggingMount=false;
@@ -1158,7 +1158,7 @@ namespace OpenDental{
 				FormDocInfo formDocInfo=new FormDocInfo(_patCur,documentNew);
 				formDocInfo.ShowDialog(this);
 				if(formDocInfo.DialogResult==DialogResult.OK) {
-					nodeObjTagNew=new NodeObjTag(EnumNodeType.Document,documentNew.DocNum);
+					nodeObjTagNew=new NodeObjTag(EnumNodeType.Document,documentNew.Id);
 					_documentShowing=documentNew.Copy();
 				}
 				else {
@@ -1364,19 +1364,19 @@ namespace OpenDental{
 				return;
 			}
 			if(_nodeObjTagDragging.NodeType==EnumNodeType.Mount) {
-				Mount mount=Mounts.GetByNum(_nodeObjTagDragging.MountNum);
-				string mountOriginalCat=Definitions.GetDef(DefinitionCategory.ImageCats,mount.DocCategory).Name;
+				Mount mount=Mounts.GetById(_nodeObjTagDragging.MountNum);
+				string mountOriginalCat=Definitions.GetDef(DefinitionCategory.ImageCats,mount.Category).Name;
 				string mountNewCat=Definitions.GetDef(DefinitionCategory.ImageCats,nodeNewCatDefNum).Name;
-				mount.DocCategory=nodeNewCatDefNum;
-				SecurityLogs.MakeLogEntry(Permissions.ImageEdit,mount.PatNum,"Mount moved from"+" "+mountOriginalCat+" "
+				mount.Category=nodeNewCatDefNum;
+				SecurityLogs.MakeLogEntry(Permissions.ImageEdit,mount.PatientId,"Mount moved from"+" "+mountOriginalCat+" "
 					+"to"+" "+mountNewCat);
 				Mounts.Update(mount);
 			}
 			else {
 				Document document=Documents.GetByNum(_nodeObjTagDragging.DocNum);
-				string docOldCat=Definitions.GetDef(DefinitionCategory.ImageCats,document.DocCategory).Name;
+				string docOldCat=Definitions.GetDef(DefinitionCategory.ImageCats,document.Category).Name;
 				string docNewCat=Definitions.GetDef(DefinitionCategory.ImageCats,nodeNewCatDefNum).Name;
-				document.DocCategory=nodeNewCatDefNum;
+				document.Category=nodeNewCatDefNum;
 				string logText="Document moved"+": "+document.FileName;
 				if(document.Description!="") {
 					string docDescript=document.Description;
@@ -1386,7 +1386,7 @@ namespace OpenDental{
 					logText+=" "+"with description"+" "+docDescript;
 				}
 				logText+=" "+"from category"+" "+docOldCat+" "+"to category"+" "+docNewCat;
-				SecurityLogs.MakeLogEntry(Permissions.ImageEdit,document.PatNum,logText,document.DocNum,document.DateTStamp);
+				SecurityLogs.MakeLogEntry(Permissions.ImageEdit,document.PatientId,logText,document.Id,document.LastModifiedDate);
 				Documents.Update(document);
 			}
 			FillTree(true);
@@ -1481,11 +1481,11 @@ namespace OpenDental{
 		///<summary>Deletes the specified document from the database and refreshes the tree view. Set securityCheck false when creating a new document that might get cancelled.  Document is passed in because it might not be in the tree if the image folder it belongs to is now hidden.</summary>
 		private void DeleteDocument(bool isVerbose,bool doSecurityCheck,Document document) {
 			if(doSecurityCheck) {
-				if(!Security.IsAuthorized(Permissions.ImageDelete,document.DateCreated)) {
+				if(!Security.IsAuthorized(Permissions.ImageDelete,document.AddedOnDate)) {
 					return;
 				}
 			}
-			EhrLab lab=EhrLabImages.GetFirstLabForDocNum(document.DocNum);
+			EhrLab lab=EhrLabImages.GetFirstLabForDocNum(document.Id);
 			if(lab!=null) {
 				string dateSt=lab.ObservationDateTimeStart.PadRight(8,'0').Substring(0,8);//stored in DB as yyyyMMddhhmmss-zzzz
 				DateTime dateT=PIn.Date(dateSt.Substring(4,2)+"/"+dateSt.Substring(6,2)+"/"+dateSt.Substring(0,4));
@@ -1505,7 +1505,7 @@ namespace OpenDental{
 					}
 				}
 			}
-			Statements.DetachDocFromStatements(document.DocNum);
+			Statements.DetachDocFromStatements(document.Id);
 			//SelectTreeNode(null);//Release access to current image so it may be properly deleted.
 			if(_webBrowser!=null) {
 				_webBrowser.Dispose();//Clear any previously loaded Acrobat .pdf file.
@@ -1560,7 +1560,7 @@ namespace OpenDental{
 		private void DrawMount(Graphics g){
 			//we're at center of the mount, and working in mount coordinates
 			g.TranslateTransform(-_mountShowing.Width/2f,-_mountShowing.Height/2f);
-			using(SolidBrush brushBack=new SolidBrush(_mountShowing.ColorBack)){
+			using(SolidBrush brushBack=new SolidBrush(_mountShowing.BackColor)){
 				g.FillRectangle(brushBack,0,0,_mountShowing.Width,_mountShowing.Height);
 			}
 			//&& 
@@ -1576,19 +1576,19 @@ namespace OpenDental{
 			//SELECT * FROM document WHERE patnum=293 AND mountitemnum > 0
 			//outlines:
 			for(int i=0;i<_listMountItems.Count;i++){
-				g.DrawRectangle(Pens.Silver,_listMountItems[i].Xpos,_listMountItems[i].Ypos,
+				g.DrawRectangle(Pens.Silver,_listMountItems[i].X,_listMountItems[i].Y,
 					_listMountItems[i].Width,_listMountItems[i].Height);//silver is 50% black
 			}
 			//yellow outline of selected
 			if(_idxSelectedInMount!=-1){
-				g.DrawRectangle(Pens.Yellow,_listMountItems[_idxSelectedInMount].Xpos,_listMountItems[_idxSelectedInMount].Ypos,
+				g.DrawRectangle(Pens.Yellow,_listMountItems[_idxSelectedInMount].X,_listMountItems[_idxSelectedInMount].Y,
 					_listMountItems[_idxSelectedInMount].Width,_listMountItems[_idxSelectedInMount].Height);
 			}
 		}
 
 		private void DrawMountOne(Graphics g,int i){
 			GraphicsState graphicsStateMount=g.Save();
-			g.TranslateTransform(_listMountItems[i].Xpos,_listMountItems[i].Ypos);//UL of mount position
+			g.TranslateTransform(_listMountItems[i].X,_listMountItems[i].Y);//UL of mount position
 			if(_isDraggingMount && i==_idxSelectedInMount){// && _dateTimeMouseDown.AddMilliseconds(600) < DateTime.Now){//_pointDragStart!=_pointDragNow){
 				g.TranslateTransform(_pointDragNow.X-_pointDragStart.X,_pointDragNow.Y-_pointDragStart.Y);
 				//combined with the centering below, this has the effect of dragging based on center
@@ -1846,7 +1846,7 @@ namespace OpenDental{
 				pointMount=ControlPointToBitmapPoint(new Point(x,y));
 			}
 			for(int i=0;i<_listMountItems.Count;i++){
-				Rectangle rect=new Rectangle(_listMountItems[i].Xpos,_listMountItems[i].Ypos,_listMountItems[i].Width,_listMountItems[i].Height);
+				Rectangle rect=new Rectangle(_listMountItems[i].X,_listMountItems[i].Y,_listMountItems[i].Width,_listMountItems[i].Height);
 				if(rect.Contains(pointMount)){
 					return i;
 				}
@@ -2245,7 +2245,7 @@ namespace OpenDental{
 				return;
 			}
 			Document documentOld=documentNew.Copy();
-			documentNew.MountItemNum=_listMountItems[_idxSelectedInMount].MountItemNum;
+			documentNew.MountItemNum=_listMountItems[_idxSelectedInMount].Id;
 			Documents.Update(documentNew,documentOld);
 			_arrayDocumentsShowing[_idxSelectedInMount]=documentNew;
 			_bitmapRaw=new Bitmap(bitmapOrig);
@@ -2514,7 +2514,7 @@ namespace OpenDental{
 					//.FileName is full path
 					doc=ImageStore.Import(fileNames[i],GetCurrentCategory(),_patCur);//Makes log
 					Document docOld=doc.Copy();
-					doc.MountItemNum=listAvail[i].MountItemNum;
+					doc.MountItemNum=listAvail[i].Id;
 					Documents.Update(doc,docOld);
 				}
 				catch(Exception ex) {
@@ -2529,7 +2529,7 @@ namespace OpenDental{
 				//	_arrayDocumentsShowing[_idxSelectedInMount],_arrayBitmapsRaw[_idxSelectedInMount], ImageSettingFlags.CROP | ImageSettingFlags.COLORFUNCTION);
 			}
 			actionCloseUploadProgress?.Invoke();
-			SelectTreeNode(new NodeObjTag(EnumNodeType.Mount,_mountShowing.MountNum));
+			SelectTreeNode(new NodeObjTag(EnumNodeType.Mount,_mountShowing.Id));
 		}
 
 		private List<MountItem> GetAvailSlots(int countNeed){
@@ -2604,7 +2604,7 @@ namespace OpenDental{
 					continue;
 				}
 				FillTree(false);
-				SelectTreeNode(new NodeObjTag(EnumNodeType.Document,doc.DocNum),fileNames[i]);
+				SelectTreeNode(new NodeObjTag(EnumNodeType.Document,doc.Id),fileNames[i]);
 				FormDocInfo FormD=new FormDocInfo(_patCur,doc);
 				FormD.TopMost=true;
 				FormD.ShowDialog(this);//some of the fields might get changed, but not the filename
@@ -2615,13 +2615,13 @@ namespace OpenDental{
 					if(doc.ImgType==ImageType.Photo) {
 						PatientEvent.Fire(EventCategory.Patient,_patCur);//Possibly updated the patient picture.
 					}
-					nodeObjTag=new NodeObjTag(EnumNodeType.Document,doc.DocNum);
+					nodeObjTag=new NodeObjTag(EnumNodeType.Document,doc.Id);
 					_documentShowing=doc.Copy();
 				}
 			}
 			//Reselect the last successfully added node when necessary.
-			if(doc!=null && !new NodeObjTag(EnumNodeType.Document,doc.DocNum).Equals(nodeObjTag)) {
-				TreeNode treeNode=GetTreeNodeByKey(new NodeObjTag(EnumNodeType.Document,doc.DocNum));
+			if(doc!=null && !new NodeObjTag(EnumNodeType.Document,doc.Id).Equals(nodeObjTag)) {
+				TreeNode treeNode=GetTreeNodeByKey(new NodeObjTag(EnumNodeType.Document,doc.Id));
 				if(treeNode!=null) {
 					SelectTreeNode((NodeObjTag)treeNode.Tag,fileNames[fileNames.Length-1]);
 				}
@@ -2698,7 +2698,7 @@ namespace OpenDental{
 							//fileName is full path
 							doc=ImageStore.Import(fileNames[i],GetCurrentCategory(),_patCur);//Makes log
 							Document docOld=doc.Copy();
-							doc.MountItemNum=listAvail[i].MountItemNum;
+							doc.MountItemNum=listAvail[i].Id;
 							Documents.Update(doc,docOld);
 						}
 						catch(Exception ex) {
@@ -2710,7 +2710,7 @@ namespace OpenDental{
 					}
 					actionCloseUploadProgress?.Invoke();
 					Cursor=Cursors.Default;
-					SelectTreeNode(new NodeObjTag(EnumNodeType.Mount,_mountShowing.MountNum));
+					SelectTreeNode(new NodeObjTag(EnumNodeType.Mount,_mountShowing.Id));
 				}
 				else{//one bitmap
 					if(_idxSelectedInMount==-1 || _arrayDocumentsShowing[_idxSelectedInMount]!=null){
@@ -2721,7 +2721,7 @@ namespace OpenDental{
 					try {
 						Document doc=ImageStore.Import(bitmapPaste,GetCurrentCategory(),ImageType.Photo,_patCur);//Makes log
 						Document docOld=doc.Copy();
-						doc.MountItemNum=_listMountItems[_idxSelectedInMount].MountItemNum;
+						doc.MountItemNum=_listMountItems[_idxSelectedInMount].Id;
 						Documents.Update(doc,docOld);
 					}
 					catch(Exception ex) {
@@ -2729,7 +2729,7 @@ namespace OpenDental{
 						MessageBox.Show("Unable to paste bitmap: "+ex.Message);
 					}
 					Cursor=Cursors.Default;
-					SelectTreeNode(new NodeObjTag(EnumNodeType.Mount,_mountShowing.MountNum));
+					SelectTreeNode(new NodeObjTag(EnumNodeType.Mount,_mountShowing.Id));
 				}//bitmap
 				return;
 			}//mount
@@ -2744,7 +2744,7 @@ namespace OpenDental{
 				return;
 			}
 			FillTree(false);
-			SelectTreeNode(new NodeObjTag(EnumNodeType.Document,document.DocNum));
+			SelectTreeNode(new NodeObjTag(EnumNodeType.Document,document.Id));
 			Cursor=Cursors.Default;
 			FormDocInfo formD=new FormDocInfo(_patCur,document);
 			formD.ShowDialog(this);
@@ -2801,7 +2801,7 @@ namespace OpenDental{
 			}
 			Document documentOld=_arrayDocumentsShowing[_idxSelectedInMount].Copy();
 			_arrayDocumentsShowing[_idxSelectedInMount].MountItemNum=0;
-			_arrayDocumentsShowing[_idxSelectedInMount].DocCategory=_mountShowing.DocCategory;
+			_arrayDocumentsShowing[_idxSelectedInMount].Category=_mountShowing.Category;
 			Documents.Update(_arrayDocumentsShowing[_idxSelectedInMount],documentOld);
 			_arrayDocumentsShowing[_idxSelectedInMount]=null;
 			_bitmapRaw?.Dispose();
@@ -3028,7 +3028,7 @@ namespace OpenDental{
 			Cursor=Cursors.Default;
 			if(saved) {
 				FillTree(false);//Reload and keep new document selected.
-				SelectTreeNode(new NodeObjTag(EnumNodeType.Document,doc.DocNum));
+				SelectTreeNode(new NodeObjTag(EnumNodeType.Document,doc.Id));
 				FormDocInfo formDocInfo=new FormDocInfo(_patCur,_documentShowing);
 				formDocInfo.ShowDialog(this);
 				if(formDocInfo.DialogResult!=DialogResult.OK) {
@@ -3116,7 +3116,7 @@ namespace OpenDental{
 			}
 			if(copied) {
 				FillTree(false);
-				SelectTreeNode(new NodeObjTag(EnumNodeType.Document,doc.DocNum));
+				SelectTreeNode(new NodeObjTag(EnumNodeType.Document,doc.Id));
 				FormDocInfo FormD=new FormDocInfo(_patCur,doc);
 				FormD.ShowDialog(this);//some of the fields might get changed, but not the filename 
 				//Customer complained this window was showing up behind OD.  We changed above line to add a parent form as an attempted fix.
@@ -3125,15 +3125,15 @@ namespace OpenDental{
 					DeleteDocument(false,false,doc);
 				}
 				else {
-					nodeObjTag=new NodeObjTag(EnumNodeType.Document,doc.DocNum);
+					nodeObjTag=new NodeObjTag(EnumNodeType.Document,doc.Id);
 					_documentShowing=doc.Copy();
 				}
 			}
 			ImageStore.TryDeleteFile(tempFile,(msg) => MsgBox.Show(msg)//Informs user when a 'file is in use' exception occurs.
 			);
 			//Reselect the last successfully added node when necessary. js This code seems to be copied from import multi.  Simplify it.
-			if(doc!=null && !new NodeObjTag(EnumNodeType.Document,doc.DocNum).Equals(nodeObjTag)) {
-				SelectTreeNode(new NodeObjTag(EnumNodeType.Document,doc.DocNum));
+			if(doc!=null && !new NodeObjTag(EnumNodeType.Document,doc.Id).Equals(nodeObjTag)) {
+				SelectTreeNode(new NodeObjTag(EnumNodeType.Document,doc.Id));
 			}
 			FillTree(true);
 		}
@@ -3193,8 +3193,8 @@ namespace OpenDental{
 				return;
 			}
 			_pointTranslation=new Point(
-				_mountShowing.Width/2-_listMountItems[_idxSelectedInMount].Xpos-_listMountItems[_idxSelectedInMount].Width/2,
-				_mountShowing.Height/2-_listMountItems[_idxSelectedInMount].Ypos-_listMountItems[_idxSelectedInMount].Height/2);
+				_mountShowing.Width/2-_listMountItems[_idxSelectedInMount].X-_listMountItems[_idxSelectedInMount].Width/2,
+				_mountShowing.Height/2-_listMountItems[_idxSelectedInMount].Y-_listMountItems[_idxSelectedInMount].Height/2);
 			float newZoom=ZoomSlider.CalcScaleFit(new Size(panelMain.Width,panelMain.Height),
 				new Size(_listMountItems[_idxSelectedInMount].Width,_listMountItems[_idxSelectedInMount].Height),0);
 			zoomSlider.SetValueAndMax(newZoom*95);				

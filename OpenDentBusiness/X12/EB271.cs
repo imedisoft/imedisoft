@@ -1,4 +1,5 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -173,7 +174,7 @@ namespace OpenDentBusiness
 			//13-proc
 			if (proccode != null)
 			{
-				Benefitt.CodeNum = proccode.CodeNum;//element 13,2
+				Benefitt.CodeNum = proccode.Id;//element 13,2
 			}
 			if (Benefitt.BenefitType == InsBenefitType.Limitations
 				&& proccode != null //Valid ADA code.
@@ -476,7 +477,7 @@ namespace OpenDentBusiness
 						return "";
 					}
 					ProcedureCode procCode = ProcedureCodes.GetProcCode(procStr);
-					return procStr + " - " + procCode.AbbrDesc;//ProcedureCodes.GetLaymanTerm(procCode.CodeNum);
+					return procStr + " - " + procCode.ShortDescription;//ProcedureCodes.GetLaymanTerm(procCode.CodeNum);
 															   //Even though we don't make requests about specific procedure codes, some ins co's will send back codes.
 				default:
 					return "";

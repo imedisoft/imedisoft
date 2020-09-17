@@ -252,8 +252,8 @@ namespace OpenDentBusiness
 				doc.FileName = Path.GetExtension(pathImportFrom);
 			}
 
-			doc.DateCreated = File.GetLastWriteTime(pathImportFrom);
-			doc.PatNum = pat.PatNum;
+			doc.AddedOnDate = File.GetLastWriteTime(pathImportFrom);
+			doc.PatientId = pat.PatNum;
 
 			if (HasImageExtension(doc.FileName))
 			{
@@ -264,7 +264,7 @@ namespace OpenDentBusiness
 				doc.ImgType = ImageType.Document;
 			}
 
-			doc.DocCategory = docCategory;
+			doc.Category = docCategory;
 			doc = Documents.InsertAndGet(doc, pat);//this assigns a filename and saves to db
 
 			try
@@ -293,13 +293,13 @@ namespace OpenDentBusiness
             {
                 ImgType = imageType,
                 FileName = GetImageFileExtensionByMimeType(mimeType),
-                DateCreated = DateTime.Now,
-                PatNum = patient.PatNum,
-                DocCategory = docCategory
+                AddedOnDate = DateTime.Now,
+                PatientId = patient.PatNum,
+                Category = docCategory
             };
 
             Documents.Insert(document, patient);
-			document = Documents.GetByNum(document.DocNum);
+			document = Documents.GetByNum(document.Id);
 
             long qualityL;
             if (imageType == ImageType.Radiograph || imageType == ImageType.Photo)
@@ -364,15 +364,15 @@ namespace OpenDentBusiness
             Document document = new Document
             {
                 FileName = Path.GetExtension(sourceFileName),
-                DateCreated = DateTime.Now,
-                DocCategory = documentCategory,
-                PatNum = patient.PatNum,
+                AddedOnDate = DateTime.Now,
+                Category = documentCategory,
+                PatientId = patient.PatNum,
                 ImgType = ImageType.Document
             };
 
             Documents.Insert(document, patient);
 
-			document = Documents.GetByNum(document.DocNum);
+			document = Documents.GetByNum(document.Id);
 
 			try
 			{
@@ -400,16 +400,16 @@ namespace OpenDentBusiness
                 DegreesRotated = rotationAngle,
                 ImgType = ImageType.Radiograph,
                 FileName = ".bmp",
-                DateCreated = DateTime.Now,
-                PatNum = patient.PatNum,
-                DocCategory = docCategory,
+                AddedOnDate = DateTime.Now,
+                PatientId = patient.PatNum,
+                Category = docCategory,
                 WindowingMin = PrefC.GetInt(PreferenceName.ImageWindowingMin),
                 WindowingMax = PrefC.GetInt(PreferenceName.ImageWindowingMax)
             };
 
             Documents.Insert(document, patient);
 
-			document = Documents.GetByNum(document.DocNum);
+			document = Documents.GetByNum(document.Id);
 			try
 			{
 				SaveDocument(document, image, patientFolder);
@@ -631,7 +631,7 @@ namespace OpenDentBusiness
             {
 				if (document == null) continue;
 
-				var sheets = Sheets.GetForDocument(document.DocNum);
+				var sheets = Sheets.GetForDocument(document.Id);
 				if (sheets.Count > 0)
                 {
 					var errorMessage = "Cannot delete image, it is referenced by sheets with the following dates:";
@@ -650,7 +650,7 @@ namespace OpenDentBusiness
                     {
 						File.Delete(path);
 
-						LogDocument("Document Deleted: ", Permissions.ImageDelete, document, document.DateTStamp);
+						LogDocument("Document Deleted: ", Permissions.ImageDelete, document, document.LastModifiedDate);
 					}
                 }
 				catch
@@ -763,11 +763,11 @@ namespace OpenDentBusiness
 				message += " with description " + descriptDoc;
 			}
 
-			var documentCategory = Definitions.GetDef(DefinitionCategory.ImageCats, document.DocCategory);
+			var documentCategory = Definitions.GetDef(DefinitionCategory.ImageCats, document.Category);
 
 			message += " with category " + documentCategory.Name;
 
-			SecurityLogs.MakeLogEntry(perm, document.PatNum, message, document.DocNum, secDatePrevious);
+			SecurityLogs.MakeLogEntry(perm, document.PatientId, message, document.Id, secDatePrevious);
 		}
 	}
 }

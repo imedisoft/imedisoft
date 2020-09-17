@@ -9,6 +9,8 @@ using CodeBase;
 using System.Net.Mail;
 using System.Linq;
 using Imedisoft.UI;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormMassEmailSend:ODForm {
@@ -155,7 +157,7 @@ namespace OpenDental {
 				emailAddress=EmailAddresses.GetOne(formEmailAddresses.EmailAddressNum);
 			}
 			//This object will parse out the sender name and email address.
-			MailAddress toAddress=new MailAddress(string.IsNullOrWhiteSpace(emailAddress.SenderAddress) ? emailAddress.EmailUsername : emailAddress.SenderAddress);
+			MailAddress toAddress=new MailAddress(string.IsNullOrWhiteSpace(emailAddress.SenderAddress) ? emailAddress.SmtpUsername : emailAddress.SenderAddress);
 			string promotionName="";
 			InputBox box=new InputBox("What would you like to name this mass email group? This will help identify the emails when looking at analytics.");
 			box.textResult.Text=_templateCur.TemplateName;

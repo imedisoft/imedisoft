@@ -143,7 +143,7 @@ namespace OpenDentBusiness{
 				clinicNum=0;
 				provNum=0;
 			}
-			Fee fee=listFees.Find(f => f.CodeNum==codeNum && f.FeeSched==feeSched && f.ClinicNum==clinicNum && f.ProvNum==provNum);
+			Fee fee=listFees.Find(f => f.CodeNum==codeNum && f.FeeScheduleId==feeSched && f.ClinicNum==clinicNum && f.ProvNum==provNum);
 			if(fee!=null){
 				return fee;//match found.  Would include a clinic and provider override.
 			}
@@ -152,17 +152,17 @@ namespace OpenDentBusiness{
 			}
 			//no exact match exists, so we look for closest match
 			//2: Prov override
-			fee=listFees.Find(f => f.CodeNum==codeNum && f.FeeSched==feeSched && f.ClinicNum==0 && f.ProvNum==provNum);
+			fee=listFees.Find(f => f.CodeNum==codeNum && f.FeeScheduleId==feeSched && f.ClinicNum==0 && f.ProvNum==provNum);
 			if(fee!=null){
 				return fee;
 			}
 			//3: Clinic override
-			fee=listFees.Find(f => f.CodeNum==codeNum && f.FeeSched==feeSched && f.ClinicNum==clinicNum && f.ProvNum==0);
+			fee=listFees.Find(f => f.CodeNum==codeNum && f.FeeScheduleId==feeSched && f.ClinicNum==clinicNum && f.ProvNum==0);
 			if(fee!=null){
 				return fee;
 			}
 			//4: Just unassigned clinic default
-			fee=listFees.Find(f => f.CodeNum==codeNum && f.FeeSched==feeSched && f.ClinicNum==0 && f.ProvNum==0);
+			fee=listFees.Find(f => f.CodeNum==codeNum && f.FeeScheduleId==feeSched && f.ClinicNum==0 && f.ProvNum==0);
 			//whether it's null or not:
 			return fee;
 		}
@@ -183,7 +183,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all possible fees associated with the various objects passed in.  Gets fees from db based on code and fee schedule combos.  Includes all provider overrides.  Includes default/no clinic as well as any specified clinic overrides. Although the list always includes extra fees from scheds that we don't need, it's still a very small list.  That list is then used repeatedly by other code in loops to find the actual individual fee amounts.</summary>
 		public static List<Fee> GetListFromObjects(List<ProcedureCode> listProcedureCodes,List<string> listMedicalCodes,List<long> listProvNumsTreat,long patPriProv,
-			long patSecProv,long patFeeSched,List<InsPlan> listInsPlans,List<long> listClinicNums,List<Appointment> listAppts,
+			long patSecProv,long patFeeSched,List<InsurancePlan> listInsPlans,List<long> listClinicNums,List<Appointment> listAppts,
 			List<SubstitutionLink> listSubstLinks,long discountPlan
 			//listCodeNums,listProvNumsTreat,listProcCodesProvNumDefault,patPriProv,patSecProv,patFeeSched,listInsPlans,listClinicNums
 			//List<long> listProcCodesProvNumDefault
@@ -207,8 +207,8 @@ namespace OpenDentBusiness{
 				if(procedureCode==null){
 					continue;
 				}
-				if(!listCodeNumsOut.Contains(procedureCode.CodeNum)){
-					listCodeNumsOut.Add(procedureCode.CodeNum);
+				if(!listCodeNumsOut.Contains(procedureCode.Id)){
+					listCodeNumsOut.Add(procedureCode.Id);
 				}
 				if(ProcedureCodes.IsValidCode(procedureCode.MedicalCode)){
 					long codeNumMed=ProcedureCodes.GetCodeNum(procedureCode.MedicalCode);
@@ -278,10 +278,10 @@ namespace OpenDentBusiness{
 				if(procedureCode==null){
 					continue;
 				}
-				long provNumDefault=procedureCode.ProvNumDefault;
-				if(provNumDefault==0){
+				if(procedureCode.DefaultProviderId == null){
 					continue;
 				}
+				long provNumDefault = procedureCode.DefaultProviderId.Value;
 				Provider provDefault=Providers.GetById(provNumDefault);
 				if(provDefault!=null && provDefault.FeeScheduleId!=0 && !listFeeScheds.Contains(provDefault.FeeScheduleId)){
 					listFeeScheds.Add(provDefault.FeeScheduleId);
@@ -308,7 +308,7 @@ namespace OpenDentBusiness{
 			}
 			//Add feesched for each insplan, both reg and allowed--------------------------------------------------------------------------------
 			if(listInsPlans!=null){
-				foreach(InsPlan insPlan in listInsPlans){
+				foreach(InsurancePlan insPlan in listInsPlans){
 					if(insPlan.FeeSched!=0 && !listFeeScheds.Contains(insPlan.FeeSched)){
 						listFeeScheds.Add(insPlan.FeeSched);//insplan feeSched
 					}
@@ -432,7 +432,7 @@ namespace OpenDentBusiness{
 				provNum=Preferences.GetLong(PreferenceName.PracticeDefaultProv);
 			}
 			Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-			Provider provider=Providers.GetFirstOrDefault(x => x.Id==provNum)??providerFirst;
+			Provider provider=Providers.FirstOrDefault(x => x.Id==provNum)??providerFirst;
 			//get the fee based on code and prov fee sched
 			double ppoFee=GetAmount0(proc.CodeNum,provider.FeeScheduleId,proc.ClinicNum,provNum);
 			double ucrFee=proc.ProcFee;
@@ -461,7 +461,7 @@ namespace OpenDentBusiness{
 			fee.SecUserNumEntry=Security.CurrentUser.Id;
 			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
 				//If this fee isn't in a group don't bother checking.
-				if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fee.FeeSched,fee.ClinicNum)!=null) {
+				if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fee.FeeScheduleId,fee.ClinicNum)!=null) {
 					FeeSchedGroups.UpsertGroupFees(new List<Fee>() { fee });
 				}
 			}
@@ -487,7 +487,7 @@ namespace OpenDentBusiness{
 			//Check if this fee is associated to a FeeSchedGroup and update the rest of the group as needed.
 			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
 				//If this fee isn't in a group don't bother checking.
-				if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fee.FeeSched,fee.ClinicNum)!=null) {
+				if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fee.FeeScheduleId,fee.ClinicNum)!=null) {
 					FeeSchedGroups.UpsertGroupFees(new List<Fee>() { fee });
 				}
 			}
@@ -504,7 +504,7 @@ namespace OpenDentBusiness{
 			if (Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && doCheckFeeSchedGroups)
 			{
 				//If this fee isn't in a group don't bother checking.
-				if (FeeSchedGroups.GetOneForFeeSchedAndClinic(fee.FeeSched, fee.ClinicNum) != null)
+				if (FeeSchedGroups.GetOneForFeeSchedAndClinic(fee.FeeScheduleId, fee.ClinicNum) != null)
 				{
 					FeeSchedGroups.DeleteGroupFees(new List<long>() { fee.FeeNum });
 				}

@@ -26,7 +26,7 @@ namespace OpenDental{
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
-		private List<FeeSched> FeeSchedsForType;
+		private List<FeeSchedule> FeeSchedsForType;
 		private ComboBox comboFeeSchedWith;
 		private Label label4;
 		private ComboBox comboFeeSchedNew;
@@ -337,10 +337,10 @@ namespace OpenDental{
 			long feeSchedWithout=0;
 			long feeSchedWith=0;
 			if(comboFeeSchedWithout.SelectedIndex!=0){
-				feeSchedWithout=FeeSchedsForType[comboFeeSchedWithout.SelectedIndex-1].FeeSchedNum;
+				feeSchedWithout=FeeSchedsForType[comboFeeSchedWithout.SelectedIndex-1].Id;
 			}
 			if(comboFeeSchedWith.SelectedIndex!=0) {
-				feeSchedWith=FeeSchedsForType[comboFeeSchedWith.SelectedIndex-1].FeeSchedNum;
+				feeSchedWith=FeeSchedsForType[comboFeeSchedWith.SelectedIndex-1].Id;
 			}
 			table=InsPlans.GetListFeeCheck(textCarrier.Text,textCarrierNot.Text,feeSchedWithout,feeSchedWith,
 				(FeeScheduleType)(listType.SelectedIndex));
@@ -422,7 +422,7 @@ namespace OpenDental{
 			string groupName;
 			long newFeeSchedNum=0;
 			if(comboFeeSchedNew.SelectedIndex!=0){
-				newFeeSchedNum=FeeSchedsForType[comboFeeSchedNew.SelectedIndex-1].FeeSchedNum;
+				newFeeSchedNum=FeeSchedsForType[comboFeeSchedNew.SelectedIndex-1].Id;
 			}
 			long oldFeeSchedNum;
 			long rowsChanged=0;

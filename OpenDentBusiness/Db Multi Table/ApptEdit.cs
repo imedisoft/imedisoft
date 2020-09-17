@@ -43,7 +43,7 @@ namespace OpenDentBusiness
 		///<summary>Adds procedures to the appointment.</summary>
 		///<returns>First item of tuple is the newly added procedures. Second item is all procedures for the appointment.</returns>
 		public static ODTuple<List<Procedure>, List<Procedure>> QuickAddProcs(Appointment apt, Patient pat, List<string> listProcCodesToAdd, long provNum,
-			long provHyg, List<InsSub> SubList, List<InsPlan> listInsPlans, List<PatPlan> listPatPlans, List<Benefit> listBenefits)
+			long provHyg, List<InsSub> SubList, List<InsurancePlan> listInsPlans, List<PatPlan> listPatPlans, List<Benefit> listBenefits)
 		{
 			Procedures.SetDateFirstVisit(apt.AptDateTime.Date, 1, pat);
 			List<ClaimProc> ClaimProcList = ClaimProcs.Refresh(apt.PatNum);
@@ -71,7 +71,7 @@ namespace OpenDentBusiness
 			foreach (string procCode in listProcCodesToAdd)
 			{
 				ProcedureCode procCodeCur = ProcedureCodes.GetProcCode(procCode);
-				Procedure proc = Procedures.ConstructProcedureForAppt(procCodeCur.CodeNum, aptCur, pat, listPatPlans, listInsPlans, SubList, listFees);
+				Procedure proc = Procedures.ConstructProcedureForAppt(procCodeCur.Id, aptCur, pat, listPatPlans, listInsPlans, SubList, listFees);
 				Procedures.Insert(proc);//recall synch not required
 				Procedures.ComputeEstimates(proc, pat.PatNum, ref ClaimProcList, true, listInsPlans, listPatPlans, listBenefits,
 					null, null, true,
@@ -94,7 +94,7 @@ namespace OpenDentBusiness
 			public List<PatPlan> ListPatPlans;
 			public List<Benefit> ListBenefits;
 			public List<InsSub> ListInsSubs;
-			public List<InsPlan> ListInsPlans;
+			public List<InsurancePlan> ListInsPlans;
 			public DataTable TableApptFields;
 			public DataTable TableComms;
 			public LabCase Lab;

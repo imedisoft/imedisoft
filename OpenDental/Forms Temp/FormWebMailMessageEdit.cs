@@ -93,8 +93,8 @@ namespace OpenDental {
 			//Webmail notification email address.  One notification email per database (not clinic specific).
 			_emailAddressSender=EmailAddresses.GetOne(Preferences.GetLong(PreferenceName.EmailNotifyAddressNum));
 			if(_emailAddressSender==null
-				|| _emailAddressSender.EmailAddressNum==0
-				|| _emailAddressSender.EmailUsername=="") 
+				|| _emailAddressSender.Id==0
+				|| _emailAddressSender.SmtpUsername=="") 
 			{
 				//No valid "Notify" email setup for this practice yet.
 				error+="Invalid Web Mail Notify email.  Configure a Web Mail Notify email address in E-mail Setup. ";

@@ -30,7 +30,7 @@ namespace OpenDental{
 		///<summary>Set to true when selecting a plan for a patient and we want SelectedPlan to be filled upon closing.</summary>
 		public bool IsSelectMode;
 		///<summary>After closing this form, if IsSelectMode, then this will contain the selected Plan.</summary>
-		public InsPlan SelectedPlan;
+		public InsurancePlan SelectedPlan;
 		private Label label1;
 		private TextBox textEmployer;
 		private TextBox textCarrier;
@@ -490,8 +490,8 @@ namespace OpenDental{
 			Cursor=Cursors.Default;
 		}
 
-		private bool InsPlanExists(InsPlan plan) {
-			if(plan==null || plan.PlanNum==0) {
+		private bool InsPlanExists(InsurancePlan plan) {
+			if(plan==null || plan.Id==0) {
 				MessageBox.Show("Insurance plan selected no longer exists.");
 				FillGrid();
 				return false;
@@ -500,7 +500,7 @@ namespace OpenDental{
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e){
-			InsPlan plan=InsPlans.GetPlan(PIn.Long(table.Rows[e.Row]["PlanNum"].ToString()),null);
+			InsurancePlan plan=InsPlans.GetPlan(PIn.Long(table.Rows[e.Row]["PlanNum"].ToString()),null);
 			if(!InsPlanExists(plan)) {
 				return;
 			}
@@ -565,7 +565,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select at least two items first.");
 				return;
 			}
-			InsPlan[] listSelected=new InsPlan[gridMain.SelectedIndices.Length];
+			InsurancePlan[] listSelected=new InsurancePlan[gridMain.SelectedIndices.Length];
 			for(int i=0;i<listSelected.Length;i++){
 				listSelected[i]=InsPlans.GetPlan(PIn.Long(table.Rows[gridMain.SelectedIndices[i]]["PlanNum"].ToString()),null);
 				listSelected[i].NumberSubscribers=PIn.Int(table.Rows[gridMain.SelectedIndices[i]]["subscribers"].ToString());
@@ -577,20 +577,20 @@ namespace OpenDental{
 				return;
 			}
 			//Do the merge.
-			InsPlan planToMergeTo=FormI.PlanToMergeTo.Copy();
+			InsurancePlan planToMergeTo=FormI.PlanToMergeTo.Copy();
 			//List<Benefit> benList=Benefits.RefreshForPlan(planToMergeTo,0);
 			Cursor=Cursors.WaitCursor;
 			bool didMerge=false;
 			List<long> listMergedPlanNums=new List<long>();
 			for(int i=0;i<listSelected.Length;i++){//loop through each selected plan
 				//skip the planToMergeTo, because it's already correct
-				if(planToMergeTo.PlanNum==listSelected[i].PlanNum){
+				if(planToMergeTo.Id==listSelected[i].Id){
 					continue;
 				}
 				//==Michael - We are changing plans here, but not carriers, so this is not needed:
 				//SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeCarrierName
-				InsPlans.ChangeReferences(listSelected[i].PlanNum,planToMergeTo.PlanNum);
-				Benefits.DeleteForPlan(listSelected[i].PlanNum);
+				InsPlans.ChangeReferences(listSelected[i].Id,planToMergeTo.Id);
+				Benefits.DeleteForPlan(listSelected[i].Id);
 				try {
 					InsPlans.Delete(listSelected[i],canDeleteInsSub:false);
 				}
@@ -598,26 +598,26 @@ namespace OpenDental{
 					MessageBox.Show(ex.Message);
 					SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,0,
 						"InsPlan Combine delete validation failed.  Plan was not deleted.",
-						listSelected[i].PlanNum,listSelected[i].SecDateTEdit); //new plan, no date needed.
+						listSelected[i].Id,listSelected[i].SecDateTEdit); //new plan, no date needed.
 					//Since we already deleted/changed all of the other dependencies, 
 					//we should continue in making the Securitylog entry and cleaning up. 
 				}
 				didMerge=true;
-				listMergedPlanNums.Add(listSelected[i].PlanNum);
+				listMergedPlanNums.Add(listSelected[i].Id);
 				//for(int j=0;j<planNums.Count;j++) {
 					//InsPlans.ComputeEstimatesForPlan(planNums[j]);
 					//Eliminated in 5.0 for speed.
 				//}
 			}
 			if(didMerge) {
-				string logText="Merged the following PlanNum(s): "+string.Join(", ",listMergedPlanNums)+" "+"into"+" "+planToMergeTo.PlanNum;
+				string logText="Merged the following PlanNum(s): "+string.Join(", ",listMergedPlanNums)+" "+"into"+" "+planToMergeTo.Id;
 				SecurityLogs.MakeLogEntry(Permissions.InsPlanMerge,0,logText);
 			}
 			FillGrid();
 			//highlight the merged plan
 			for(int i=0;i<table.Rows.Count;i++){
 				for(int j=0;j<listSelected.Length;j++){
-					if(table.Rows[i]["PlanNum"].ToString()==listSelected[j].PlanNum.ToString()){
+					if(table.Rows[i]["PlanNum"].ToString()==listSelected[j].Id.ToString()){
 						gridMain.SetSelected(i,true);
 					}
 				}
@@ -627,7 +627,7 @@ namespace OpenDental{
 
 		private void butBlank_Click(object sender, System.EventArgs e) {
 			//this button is normally not visible.  It's only set visible when IsSelectMode.
-			SelectedPlan=new InsPlan();
+			SelectedPlan=new InsurancePlan();
 			DialogResult=DialogResult.OK;
 		}
 
@@ -656,7 +656,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select only one item first.");
 				return;
 			}
-			InsPlan plan=InsPlans.GetPlan(PIn.Long(table.Rows[gridMain.SelectedIndices[0]]["PlanNum"].ToString()),null);
+			InsurancePlan plan=InsPlans.GetPlan(PIn.Long(table.Rows[gridMain.SelectedIndices[0]]["PlanNum"].ToString()),null);
 			if(!InsPlanExists(plan)) {
 				return;
 			}

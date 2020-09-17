@@ -1,17 +1,18 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using Ionic.Zip;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
-using OpenDentBusiness;
-using Ionic.Zip;
-using Imedisoft.Data;
-using Imedisoft.Data.Models;
 
-namespace OpenDentBusiness.Eclaims {
-	public class Ramq
+namespace OpenDentBusiness.Eclaims
+{
+    public class Ramq
 	{
 		///<summary></summary>
 		public static string ErrorMessage = "";
@@ -25,7 +26,7 @@ namespace OpenDentBusiness.Eclaims {
 		{
 			//STEP 1 - Build XML output.
 			List<DP_RACINDP> listDps = new List<DP_RACINDP>();
-			List<ProcedureCode> listProcCodes = ProcedureCodes.GetAllCodes();
+			List<ProcedureCode> listProcCodes = ProcedureCodes.GetAllCodes().ToList();
 			List<Etrans> listEtrans = new List<Etrans>();
 			foreach (ClaimSendQueueItem queueItem in queueItems)
 			{
@@ -53,8 +54,8 @@ namespace OpenDentBusiness.Eclaims {
 				dp.DISP_REFNT = claim.CanadianReferralProviderNum.Trim();
 				//dp.DIAGN=;//Diagnostic code.  Not currently used.
 				dp.ETAB = provClaimTreat.CanadianOfficeNumber;//Usually empty.
-														   //dp.ADMIS=;//Date of patient admission.  Not currently used.  This would be the same as the date of service for dental claims anyway.
-														   //dp.SORTI=;//Date patient discharged.  Not currently used.  This would be the same as the date of service for dental claims anyway.
+															  //dp.ADMIS=;//Date of patient admission.  Not currently used.  This would be the same as the date of service for dental claims anyway.
+															  //dp.SORTI=;//Date patient discharged.  Not currently used.  This would be the same as the date of service for dental claims anyway.
 				dp.TOT_DEM = claim.ClaimFee.ToString().Replace(".", "").PadLeft(6, '0');
 				dp.COMPL = TidyStr(claim.ClaimNote, 200);
 				//dp.CS=;//Not sure what this is.  Not currently used.
@@ -93,21 +94,21 @@ namespace OpenDentBusiness.Eclaims {
 				{
 					dp.PERS_ASSU.EXPIR_CAM = insSub.DateTerm.ToString("yyMM");
 				}
-				InsPlan insPlan = InsPlans.RefreshOne(claim.PlanNum);
-				InsPlan insPlan2 = InsPlans.RefreshOne(claim.PlanNum2);
+				InsurancePlan insPlan = InsPlans.RefreshOne(claim.PlanNum);
+				InsurancePlan insPlan2 = InsPlans.RefreshOne(claim.PlanNum2);
 				Carrier carrier = null;
 				if (claim.ClaimType == "S")
 				{
-					carrier = Carriers.GetCarrier(insPlan2.CarrierNum);
+					carrier = Carriers.GetCarrier(insPlan2.CarrierId);
 				}
 				else
 				{
-					carrier = Carriers.GetCarrier(insPlan.CarrierNum);
+					carrier = Carriers.GetCarrier(insPlan.CarrierId);
 				}
-				if (carrier.Address.Trim() != "")
+				if (carrier.AddressLine1.Trim() != "")
 				{
-					dp.PERS_ASSU.ADR_1 = carrier.Address;
-					dp.PERS_ASSU.ADR_2 = carrier.Address2;
+					dp.PERS_ASSU.ADR_1 = carrier.AddressLine1;
+					dp.PERS_ASSU.ADR_2 = carrier.AddressLine2;
 					dp.PERS_ASSU.CP = carrier.Zip;
 				}
 				#endregion Insurance
@@ -124,15 +125,15 @@ namespace OpenDentBusiness.Eclaims {
 						continue;
 					}
 					ProcedureCode procCode = ProcedureCodes.GetProcCode(proc.CodeNum, listProcCodes);
-					if (procCode.NoBillIns)
+					if (procCode.NoInsuranceBill)
 					{
 						continue;
 					}
 					DP_RACINDPACTE acteProc = new DP_RACINDPACTE();
-					acteProc.ACTE = procCode.ProcCode;
-					if (procCode.ProcCode.Length > 5)
+					acteProc.ACTE = procCode.Code;
+					if (procCode.Code.Length > 5)
 					{
-						acteProc.ACTE = procCode.ProcCode.Substring(0, 5);
+						acteProc.ACTE = procCode.Code.Substring(0, 5);
 					}
 					acteProc.ROLE = "1";//1 for principal role and 2 for assistant role.
 										//acte.MODIF=;//Optional.  Not sure what to put here, so leaving blank for now.
@@ -150,10 +151,10 @@ namespace OpenDentBusiness.Eclaims {
 						}
 						ProcedureCode labProcCode = ProcedureCodes.GetProcCode(labProc.CodeNum, listProcCodes);
 						DP_RACINDPACTE acteLab = new DP_RACINDPACTE();
-						acteLab.ACTE = labProcCode.ProcCode;
-						if (labProcCode.ProcCode.Length > 5)
+						acteLab.ACTE = labProcCode.Code;
+						if (labProcCode.Code.Length > 5)
 						{
-							acteLab.ACTE = labProcCode.ProcCode.Substring(0, 5);
+							acteLab.ACTE = labProcCode.Code.Substring(0, 5);
 						}
 						acteLab.ROLE = "1";//1 for principal role and 2 for assistant role.
 						acteLab.MNT = labProc.ProcFee.ToString("F").Replace(".", "").PadLeft(6, '0');
@@ -320,7 +321,7 @@ namespace OpenDentBusiness.Eclaims {
 			}
 			#endregion Insurance
 			#region Procedures
-			List<ProcedureCode> listProcCodes = ProcedureCodes.GetAllCodes();
+			List<ProcedureCode> listProcCodes = ProcedureCodes.GetAllCodes().ToList();
 			List<ClaimProc> listClaimProcsForPat = ClaimProcs.Refresh(claim.PatNum);
 			List<ClaimProc> listClaimProcsForClaim = ClaimProcs.GetForSendClaim(listClaimProcsForPat, claim.ClaimNum);//Excludes labs.
 			List<Procedure> listProcsForPat = Procedures.Refresh(claim.PatNum);
@@ -332,18 +333,18 @@ namespace OpenDentBusiness.Eclaims {
 					continue;
 				}
 				ProcedureCode procCode = ProcedureCodes.GetProcCode(proc.CodeNum, listProcCodes);
-				if (procCode.NoBillIns)
+				if (procCode.NoInsuranceBill)
 				{
 					continue;
 				}
 				//ACTE
-				if (procCode.ProcCode.Length < 5 || !Regex.IsMatch(procCode.ProcCode.Substring(0, 5), @"^[0-9]{5}$"))
+				if (procCode.Code.Length < 5 || !Regex.IsMatch(procCode.Code.Substring(0, 5), @"^[0-9]{5}$"))
 				{
 					if (sbErrors.Length != 0)
 					{
 						sbErrors.Append(",");
 					}
-					sbErrors.Append("Procedure code invalid '" + procCode.ProcCode + "'");
+					sbErrors.Append("Procedure code invalid '" + procCode.Code + "'");
 				}
 				List<Procedure> listLabProcs = Procedures.GetCanadianLabFees(proc.ProcNum, listProcsForPat);
 				foreach (Procedure labProc in listLabProcs)
@@ -353,13 +354,13 @@ namespace OpenDentBusiness.Eclaims {
 						continue;
 					}
 					ProcedureCode labProcCode = ProcedureCodes.GetProcCode(labProc.CodeNum, listProcCodes);
-					if (labProcCode.ProcCode.Length < 5 || !Regex.IsMatch(labProcCode.ProcCode.Substring(0, 5), @"^[0-9]{5}$"))
+					if (labProcCode.Code.Length < 5 || !Regex.IsMatch(labProcCode.Code.Substring(0, 5), @"^[0-9]{5}$"))
 					{
 						if (sbErrors.Length != 0)
 						{
 							sbErrors.Append(",");
 						}
-						sbErrors.Append("Lab code invalid '" + labProcCode.ProcCode + "'");
+						sbErrors.Append("Lab code invalid '" + labProcCode.Code + "'");
 					}
 				}
 			}
@@ -370,7 +371,7 @@ namespace OpenDentBusiness.Eclaims {
 
 	}
 
-#region DP_RACIN - autogenerated by xsd.exe
+	#region DP_RACIN - autogenerated by xsd.exe
 	//------------------------------------------------------------------------------
 	// <auto-generated>
 	//     This code was generated by a tool.
@@ -390,22 +391,26 @@ namespace OpenDentBusiness.Eclaims {
 	[System.SerializableAttribute()]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://tempuri.org/DP_DENTI.xsd")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace="http://tempuri.org/DP_DENTI.xsd", IsNullable=false)]
-	public partial class DP_RACIN {
-    
-			private DP_RACINDP[] dpField;
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlElementAttribute("DP", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-			public DP_RACINDP[] DP {
-					get {
-							return this.dpField;
-					}
-					set {
-							this.dpField = value;
-					}
+	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://tempuri.org/DP_DENTI.xsd")]
+	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://tempuri.org/DP_DENTI.xsd", IsNullable = false)]
+	public partial class DP_RACIN
+	{
+
+		private DP_RACINDP[] dpField;
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlElementAttribute("DP", Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+		public DP_RACINDP[] DP
+		{
+			get
+			{
+				return this.dpField;
 			}
+			set
+			{
+				this.dpField = value;
+			}
+		}
 	}
 
 	/// <remarks/>
@@ -413,294 +418,361 @@ namespace OpenDentBusiness.Eclaims {
 	[System.SerializableAttribute()]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://tempuri.org/DP_DENTI.xsd")]
-	public partial class DP_RACINDP {
-    
-			private DP_RACINDPPERS_ASSU pERS_ASSUField;
-    
-			private DP_RACINDPACTE[] aCTEField;
-    
-			private DP_RACINDPCHN cHNField;
-    
-			private bool cHNFieldSpecified;
-    
-			private DP_RACINDPENRG eNRGField;
-    
-			private bool eNRGFieldSpecified;
-    
-			private string tRNSMField;
-    
-			private string dISPField;
-    
-			private string cPTE_ADMNField;
-    
-			private string aTTESField;
-    
-			private string nCEField;
-    
-			private string dISP_REFNTField;
-    
-			private string dIAGNField;
-    
-			private string eTABField;
-    
-			private string aDMISField;
-    
-			private string sORTIField;
-    
-			private string tOT_DEMField;
-    
-			private string cOMPLField;
-    
-			private string csField;
-    
-			private string aUTORField;
-    
-			private string dAT_AUTORField;
-    
-			private string sERVField;
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-			public DP_RACINDPPERS_ASSU PERS_ASSU {
-					get {
-							return this.pERS_ASSUField;
-					}
-					set {
-							this.pERS_ASSUField = value;
-					}
+	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://tempuri.org/DP_DENTI.xsd")]
+	public partial class DP_RACINDP
+	{
+
+		private DP_RACINDPPERS_ASSU pERS_ASSUField;
+
+		private DP_RACINDPACTE[] aCTEField;
+
+		private DP_RACINDPCHN cHNField;
+
+		private bool cHNFieldSpecified;
+
+		private DP_RACINDPENRG eNRGField;
+
+		private bool eNRGFieldSpecified;
+
+		private string tRNSMField;
+
+		private string dISPField;
+
+		private string cPTE_ADMNField;
+
+		private string aTTESField;
+
+		private string nCEField;
+
+		private string dISP_REFNTField;
+
+		private string dIAGNField;
+
+		private string eTABField;
+
+		private string aDMISField;
+
+		private string sORTIField;
+
+		private string tOT_DEMField;
+
+		private string cOMPLField;
+
+		private string csField;
+
+		private string aUTORField;
+
+		private string dAT_AUTORField;
+
+		private string sERVField;
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+		public DP_RACINDPPERS_ASSU PERS_ASSU
+		{
+			get
+			{
+				return this.pERS_ASSUField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlElementAttribute("ACTE", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-			public DP_RACINDPACTE[] ACTE {
-					get {
-							return this.aCTEField;
-					}
-					set {
-							this.aCTEField = value;
-					}
+			set
+			{
+				this.pERS_ASSUField = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute()]
-			public DP_RACINDPCHN CHN {
-					get {
-							return this.cHNField;
-					}
-					set {
-							this.cHNField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlElementAttribute("ACTE", Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+		public DP_RACINDPACTE[] ACTE
+		{
+			get
+			{
+				return this.aCTEField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlIgnoreAttribute()]
-			public bool CHNSpecified {
-					get {
-							return this.cHNFieldSpecified;
-					}
-					set {
-							this.cHNFieldSpecified = value;
-					}
+			set
+			{
+				this.aCTEField = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute()]
-			public DP_RACINDPENRG ENRG {
-					get {
-							return this.eNRGField;
-					}
-					set {
-							this.eNRGField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute()]
+		public DP_RACINDPCHN CHN
+		{
+			get
+			{
+				return this.cHNField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlIgnoreAttribute()]
-			public bool ENRGSpecified {
-					get {
-							return this.eNRGFieldSpecified;
-					}
-					set {
-							this.eNRGFieldSpecified = value;
-					}
+			set
+			{
+				this.cHNField = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string TRNSM {
-					get {
-							return this.tRNSMField;
-					}
-					set {
-							this.tRNSMField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlIgnoreAttribute()]
+		public bool CHNSpecified
+		{
+			get
+			{
+				return this.cHNFieldSpecified;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string DISP {
-					get {
-							return this.dISPField;
-					}
-					set {
-							this.dISPField = value;
-					}
+			set
+			{
+				this.cHNFieldSpecified = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string CPTE_ADMN {
-					get {
-							return this.cPTE_ADMNField;
-					}
-					set {
-							this.cPTE_ADMNField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute()]
+		public DP_RACINDPENRG ENRG
+		{
+			get
+			{
+				return this.eNRGField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string ATTES {
-					get {
-							return this.aTTESField;
-					}
-					set {
-							this.aTTESField = value;
-					}
+			set
+			{
+				this.eNRGField = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string NCE {
-					get {
-							return this.nCEField;
-					}
-					set {
-							this.nCEField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlIgnoreAttribute()]
+		public bool ENRGSpecified
+		{
+			get
+			{
+				return this.eNRGFieldSpecified;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string DISP_REFNT {
-					get {
-							return this.dISP_REFNTField;
-					}
-					set {
-							this.dISP_REFNTField = value;
-					}
+			set
+			{
+				this.eNRGFieldSpecified = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute()]
-			public string DIAGN {
-					get {
-							return this.dIAGNField;
-					}
-					set {
-							this.dIAGNField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string TRNSM
+		{
+			get
+			{
+				return this.tRNSMField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string ETAB {
-					get {
-							return this.eTABField;
-					}
-					set {
-							this.eTABField = value;
-					}
+			set
+			{
+				this.tRNSMField = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string ADMIS {
-					get {
-							return this.aDMISField;
-					}
-					set {
-							this.aDMISField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string DISP
+		{
+			get
+			{
+				return this.dISPField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string SORTI {
-					get {
-							return this.sORTIField;
-					}
-					set {
-							this.sORTIField = value;
-					}
+			set
+			{
+				this.dISPField = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="nonNegativeInteger")]
-			public string TOT_DEM {
-					get {
-							return this.tOT_DEMField;
-					}
-					set {
-							this.tOT_DEMField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string CPTE_ADMN
+		{
+			get
+			{
+				return this.cPTE_ADMNField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute()]
-			public string COMPL {
-					get {
-							return this.cOMPLField;
-					}
-					set {
-							this.cOMPLField = value;
-					}
+			set
+			{
+				this.cPTE_ADMNField = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute()]
-			public string CS {
-					get {
-							return this.csField;
-					}
-					set {
-							this.csField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string ATTES
+		{
+			get
+			{
+				return this.aTTESField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string AUTOR {
-					get {
-							return this.aUTORField;
-					}
-					set {
-							this.aUTORField = value;
-					}
+			set
+			{
+				this.aTTESField = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string DAT_AUTOR {
-					get {
-							return this.dAT_AUTORField;
-					}
-					set {
-							this.dAT_AUTORField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string NCE
+		{
+			get
+			{
+				return this.nCEField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string SERV {
-					get {
-							return this.sERVField;
-					}
-					set {
-							this.sERVField = value;
-					}
+			set
+			{
+				this.nCEField = value;
 			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string DISP_REFNT
+		{
+			get
+			{
+				return this.dISP_REFNTField;
+			}
+			set
+			{
+				this.dISP_REFNTField = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute()]
+		public string DIAGN
+		{
+			get
+			{
+				return this.dIAGNField;
+			}
+			set
+			{
+				this.dIAGNField = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string ETAB
+		{
+			get
+			{
+				return this.eTABField;
+			}
+			set
+			{
+				this.eTABField = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string ADMIS
+		{
+			get
+			{
+				return this.aDMISField;
+			}
+			set
+			{
+				this.aDMISField = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string SORTI
+		{
+			get
+			{
+				return this.sORTIField;
+			}
+			set
+			{
+				this.sORTIField = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "nonNegativeInteger")]
+		public string TOT_DEM
+		{
+			get
+			{
+				return this.tOT_DEMField;
+			}
+			set
+			{
+				this.tOT_DEMField = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute()]
+		public string COMPL
+		{
+			get
+			{
+				return this.cOMPLField;
+			}
+			set
+			{
+				this.cOMPLField = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute()]
+		public string CS
+		{
+			get
+			{
+				return this.csField;
+			}
+			set
+			{
+				this.csField = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string AUTOR
+		{
+			get
+			{
+				return this.aUTORField;
+			}
+			set
+			{
+				this.aUTORField = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string DAT_AUTOR
+		{
+			get
+			{
+				return this.dAT_AUTORField;
+			}
+			set
+			{
+				this.dAT_AUTORField = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string SERV
+		{
+			get
+			{
+				return this.sERVField;
+			}
+			set
+			{
+				this.sERVField = value;
+			}
+		}
 	}
 
 	/// <remarks/>
@@ -708,164 +780,199 @@ namespace OpenDentBusiness.Eclaims {
 	[System.SerializableAttribute()]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://tempuri.org/DP_DENTI.xsd")]
-	public partial class DP_RACINDPPERS_ASSU {
-    
-			private string nAMField;
-    
-			private string pREField;
-    
-			private string nOMField;
-    
-			private string nAISSField;
-    
-			private DP_RACINDPPERS_ASSUSEXE sEXEField;
-    
-			private bool sEXEFieldSpecified;
-    
-			private string cAMField;
-    
-			private string eXPIR_CAMField;
-    
-			private string aDR_1Field;
-    
-			private string aDR_2Field;
-    
-			private string cpField;
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute()]
-			public string NAM {
-					get {
-							return this.nAMField;
-					}
-					set {
-							this.nAMField = value;
-					}
+	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://tempuri.org/DP_DENTI.xsd")]
+	public partial class DP_RACINDPPERS_ASSU
+	{
+
+		private string nAMField;
+
+		private string pREField;
+
+		private string nOMField;
+
+		private string nAISSField;
+
+		private DP_RACINDPPERS_ASSUSEXE sEXEField;
+
+		private bool sEXEFieldSpecified;
+
+		private string cAMField;
+
+		private string eXPIR_CAMField;
+
+		private string aDR_1Field;
+
+		private string aDR_2Field;
+
+		private string cpField;
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute()]
+		public string NAM
+		{
+			get
+			{
+				return this.nAMField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute()]
-			public string PRE {
-					get {
-							return this.pREField;
-					}
-					set {
-							this.pREField = value;
-					}
+			set
+			{
+				this.nAMField = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute()]
-			public string NOM {
-					get {
-							return this.nOMField;
-					}
-					set {
-							this.nOMField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute()]
+		public string PRE
+		{
+			get
+			{
+				return this.pREField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string NAISS {
-					get {
-							return this.nAISSField;
-					}
-					set {
-							this.nAISSField = value;
-					}
+			set
+			{
+				this.pREField = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute()]
-			public DP_RACINDPPERS_ASSUSEXE SEXE {
-					get {
-							return this.sEXEField;
-					}
-					set {
-							this.sEXEField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute()]
+		public string NOM
+		{
+			get
+			{
+				return this.nOMField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlIgnoreAttribute()]
-			public bool SEXESpecified {
-					get {
-							return this.sEXEFieldSpecified;
-					}
-					set {
-							this.sEXEFieldSpecified = value;
-					}
+			set
+			{
+				this.nOMField = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string CAM {
-					get {
-							return this.cAMField;
-					}
-					set {
-							this.cAMField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string NAISS
+		{
+			get
+			{
+				return this.nAISSField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string EXPIR_CAM {
-					get {
-							return this.eXPIR_CAMField;
-					}
-					set {
-							this.eXPIR_CAMField = value;
-					}
+			set
+			{
+				this.nAISSField = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute()]
-			public string ADR_1 {
-					get {
-							return this.aDR_1Field;
-					}
-					set {
-							this.aDR_1Field = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute()]
+		public DP_RACINDPPERS_ASSUSEXE SEXE
+		{
+			get
+			{
+				return this.sEXEField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute()]
-			public string ADR_2 {
-					get {
-							return this.aDR_2Field;
-					}
-					set {
-							this.aDR_2Field = value;
-					}
+			set
+			{
+				this.sEXEField = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute()]
-			public string CP {
-					get {
-							return this.cpField;
-					}
-					set {
-							this.cpField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlIgnoreAttribute()]
+		public bool SEXESpecified
+		{
+			get
+			{
+				return this.sEXEFieldSpecified;
 			}
+			set
+			{
+				this.sEXEFieldSpecified = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string CAM
+		{
+			get
+			{
+				return this.cAMField;
+			}
+			set
+			{
+				this.cAMField = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string EXPIR_CAM
+		{
+			get
+			{
+				return this.eXPIR_CAMField;
+			}
+			set
+			{
+				this.eXPIR_CAMField = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute()]
+		public string ADR_1
+		{
+			get
+			{
+				return this.aDR_1Field;
+			}
+			set
+			{
+				this.aDR_1Field = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute()]
+		public string ADR_2
+		{
+			get
+			{
+				return this.aDR_2Field;
+			}
+			set
+			{
+				this.aDR_2Field = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute()]
+		public string CP
+		{
+			get
+			{
+				return this.cpField;
+			}
+			set
+			{
+				this.cpField = value;
+			}
+		}
 	}
 
 	/// <remarks/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
 	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://tempuri.org/DP_DENTI.xsd")]
-	public enum DP_RACINDPPERS_ASSUSEXE {
-    
-			/// <remarks/>
-			M,
-    
-			/// <remarks/>
-			F,
+	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://tempuri.org/DP_DENTI.xsd")]
+	public enum DP_RACINDPPERS_ASSUSEXE
+	{
+
+		/// <remarks/>
+		M,
+
+		/// <remarks/>
+		F,
 	}
 
 	/// <remarks/>
@@ -873,122 +980,145 @@ namespace OpenDentBusiness.Eclaims {
 	[System.SerializableAttribute()]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://tempuri.org/DP_DENTI.xsd")]
-	public partial class DP_RACINDPACTE {
-    
-			private string aCTEField;
-    
-			private string rOLEField;
-    
-			private string mODIFField;
-    
-			private string uNITField;
-    
-			private string mNTField;
-    
-			private string dENTField;
-    
-			private string sURFField;
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string ACTE {
-					get {
-							return this.aCTEField;
-					}
-					set {
-							this.aCTEField = value;
-					}
+	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://tempuri.org/DP_DENTI.xsd")]
+	public partial class DP_RACINDPACTE
+	{
+
+		private string aCTEField;
+
+		private string rOLEField;
+
+		private string mODIFField;
+
+		private string uNITField;
+
+		private string mNTField;
+
+		private string dENTField;
+
+		private string sURFField;
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string ACTE
+		{
+			get
+			{
+				return this.aCTEField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string ROLE {
-					get {
-							return this.rOLEField;
-					}
-					set {
-							this.rOLEField = value;
-					}
+			set
+			{
+				this.aCTEField = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string MODIF {
-					get {
-							return this.mODIFField;
-					}
-					set {
-							this.mODIFField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string ROLE
+		{
+			get
+			{
+				return this.rOLEField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string UNIT {
-					get {
-							return this.uNITField;
-					}
-					set {
-							this.uNITField = value;
-					}
+			set
+			{
+				this.rOLEField = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string MNT {
-					get {
-							return this.mNTField;
-					}
-					set {
-							this.mNTField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string MODIF
+		{
+			get
+			{
+				return this.mODIFField;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string DENT {
-					get {
-							return this.dENTField;
-					}
-					set {
-							this.dENTField = value;
-					}
+			set
+			{
+				this.mODIFField = value;
 			}
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-			public string SURF {
-					get {
-							return this.sURFField;
-					}
-					set {
-							this.sURFField = value;
-					}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string UNIT
+		{
+			get
+			{
+				return this.uNITField;
 			}
+			set
+			{
+				this.uNITField = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string MNT
+		{
+			get
+			{
+				return this.mNTField;
+			}
+			set
+			{
+				this.mNTField = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string DENT
+		{
+			get
+			{
+				return this.dENTField;
+			}
+			set
+			{
+				this.dENTField = value;
+			}
+		}
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
+		public string SURF
+		{
+			get
+			{
+				return this.sURFField;
+			}
+			set
+			{
+				this.sURFField = value;
+			}
+		}
 	}
 
 	/// <remarks/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
 	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://tempuri.org/DP_DENTI.xsd")]
-	public enum DP_RACINDPCHN {
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlEnumAttribute("06")]
-			Item06,
+	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://tempuri.org/DP_DENTI.xsd")]
+	public enum DP_RACINDPCHN
+	{
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlEnumAttribute("06")]
+		Item06,
 	}
 
 	/// <remarks/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
 	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://tempuri.org/DP_DENTI.xsd")]
-	public enum DP_RACINDPENRG {
-    
-			/// <remarks/>
-			[System.Xml.Serialization.XmlEnumAttribute("1")]
-			Item1,
-	}
-#endregion DP_RACIN - autogenerated by xsd.exe
+	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://tempuri.org/DP_DENTI.xsd")]
+	public enum DP_RACINDPENRG
+	{
 
+		/// <remarks/>
+		[System.Xml.Serialization.XmlEnumAttribute("1")]
+		Item1,
+	}
+	#endregion DP_RACIN - autogenerated by xsd.exe
 }

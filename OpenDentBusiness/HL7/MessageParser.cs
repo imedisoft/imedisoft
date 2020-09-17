@@ -763,7 +763,7 @@ namespace OpenDentBusiness.HL7 {
 					+strAllergenType+"'.",EventLogEntryType.Information);
 				return;//not able to assign drug allergy if not given a valid rxnorm or allergen type is not a drug allergy
 			}
-			AllergyDef allergyDefCur=AllergyDefs.GetAllergyDefFromRxnorm(rxnorm);
+			AllergyDef allergyDefCur=AllergyDefs.GetByRxNorm(rxnorm);
 			if(allergyDefCur==null) {
 				EventLog.WriteEntry("OpenDentHL7","A drug allergy was not added for patient "+pat.GetNameFLnoPref()+
 					".  There is not a drug allergy in the database with an RxNorm code of "+rxnorm.ToString()+".",EventLogEntryType.Information);
@@ -1733,24 +1733,24 @@ namespace OpenDentBusiness.HL7 {
 			}
 			Procedure procCur=new Procedure();
 			#region Validate/Convert/Set Treatment Area
-			switch(procCode.TreatArea) {
-				case TreatmentArea.Arch:
+			switch(procCode.TreatmentArea) {
+				case ProcedureTreatmentArea.Arch:
 					if(strSurf!="L" && strSurf!="U") {
 						EventLog.WriteEntry("OpenDentHL7","A procedure was not added for patient "+pat.GetNameFLnoPref()+".  The treatment area for the code "
-							+procCode.ProcCode+" is arch but the arch of "+strSurf+" is invalid.",EventLogEntryType.Information);
+							+procCode.Code+" is arch but the arch of "+strSurf+" is invalid.",EventLogEntryType.Information);
 						return;
 					}
 					procCur.Surf=strSurf;
 					break;
-				case TreatmentArea.Quad:
+				case ProcedureTreatmentArea.Quad:
 					if(strSurf!="UL" && strSurf!="UR" && strSurf!="LL" && strSurf!="LR") {
 						EventLog.WriteEntry("OpenDentHL7","A procedure was not added for patient "+pat.GetNameFLnoPref()+".  The treatment area for the code "
-							+procCode.ProcCode+" is quadrant but the quadrant of "+strSurf+" is invalid.",EventLogEntryType.Information);
+							+procCode.Code+" is quadrant but the quadrant of "+strSurf+" is invalid.",EventLogEntryType.Information);
 						return;
 					}
 					procCur.Surf=strSurf;
 					break;
-				case TreatmentArea.Sextant:
+				case ProcedureTreatmentArea.Sextant:
 					bool isValidSextant=false;
 					if(strSurf=="1" || strSurf=="2" || strSurf=="3" || strSurf=="4" || strSurf=="5" || strSurf=="6") {
 						isValidSextant=true;
@@ -1762,44 +1762,44 @@ namespace OpenDentBusiness.HL7 {
 					}
 					if(!isValidSextant) {
 						EventLog.WriteEntry("OpenDentHL7","A procedure was not added for patient "+pat.GetNameFLnoPref()+".  The treatment area for the code "
-							+procCode.ProcCode+" is sextant but the sextant of "+strSurf+" is invalid.",EventLogEntryType.Information);
+							+procCode.Code+" is sextant but the sextant of "+strSurf+" is invalid.",EventLogEntryType.Information);
 						return;
 					}
 					procCur.Surf=strSurf;
 					break;
-				case TreatmentArea.Surf:
+				case ProcedureTreatmentArea.Surface:
 					if(!Tooth.IsValidEntry(strToothNum)) {
 						EventLog.WriteEntry("OpenDentHL7","A procedure was not added for patient "+pat.GetNameFLnoPref()+".  The treatment area for the code "
-							+procCode.ProcCode+" is surface but the tooth number of "+strToothNum+" is invalid.",EventLogEntryType.Information);
+							+procCode.Code+" is surface but the tooth number of "+strToothNum+" is invalid.",EventLogEntryType.Information);
 					}
 					procCur.ToothNum=Tooth.FromInternat(strToothNum);
 					string strSurfTidy=Tooth.SurfTidyFromDisplayToDb(strSurf,procCur.ToothNum);
 					if(strSurfTidy=="" || strSurf=="") {
 						EventLog.WriteEntry("OpenDentHL7","A procedure was not added for patient "+pat.GetNameFLnoPref()+".  The treatment area for the code "
-							+procCode.ProcCode+" is surface but the surface of "+strSurf+" is invalid.",EventLogEntryType.Information);
+							+procCode.Code+" is surface but the surface of "+strSurf+" is invalid.",EventLogEntryType.Information);
 						return;
 					}
 					procCur.Surf=strSurfTidy;
 					break;
-				case TreatmentArea.Tooth:
+				case ProcedureTreatmentArea.Tooth:
 					if(!Tooth.IsValidEntry(strToothNum)) {
 						EventLog.WriteEntry("OpenDentHL7","A procedure was not added for patient "+pat.GetNameFLnoPref()+".  The treatment area for the code "
-							+procCode.ProcCode+" is tooth but the tooth number of "+strToothNum+" is invalid.",EventLogEntryType.Information);
+							+procCode.Code+" is tooth but the tooth number of "+strToothNum+" is invalid.",EventLogEntryType.Information);
 						return;
 					}
 					procCur.ToothNum=Tooth.FromInternat(strToothNum);
 					break;
-				case TreatmentArea.ToothRange:
+				case ProcedureTreatmentArea.ToothRange:
 					//break up the list of tooth numbers supplied and validate and convert them into universal tooth numbers for inserting into the db
 					string[] listToothNums=strToothNum.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries);
 					for(int i=0;i<listToothNums.Length;i++) {
 						if(!Tooth.IsValidEntry(listToothNums[i])) {
 							EventLog.WriteEntry("OpenDentHL7","A procedure was not added for patient "+pat.GetNameFLnoPref()+".  The treatment area for the code "
-								+procCode.ProcCode+" is tooth range but the tooth number of "+listToothNums[i]+" is invalid.",EventLogEntryType.Information);
+								+procCode.Code+" is tooth range but the tooth number of "+listToothNums[i]+" is invalid.",EventLogEntryType.Information);
 							return;
 						}
 						if(Tooth.IsPrimary(Tooth.FromInternat(listToothNums[i]))) {
-							EventLog.WriteEntry("OpenDentHL7","A procedure was not added for patient "+pat.GetNameFLnoPref()+".  The treatment area for the code "+procCode.ProcCode
+							EventLog.WriteEntry("OpenDentHL7","A procedure was not added for patient "+pat.GetNameFLnoPref()+".  The treatment area for the code "+procCode.Code
 								+" is tooth range but the tooth number of "+listToothNums[i]+" is a primary tooth number and therefore not allowed.",EventLogEntryType.Information);
 						}
 						listToothNums[i]=Tooth.FromInternat(listToothNums[i]);
@@ -1807,8 +1807,8 @@ namespace OpenDentBusiness.HL7 {
 					procCur.ToothNum=string.Join(",",listToothNums);
 					break;
 				//We won't validate or use the tooth number or surface fields if the treatment are of the proccode is mouth or none
-				case TreatmentArea.None:
-				case TreatmentArea.Mouth:
+				case ProcedureTreatmentArea.None:
+				case ProcedureTreatmentArea.Mouth:
 				default:
 					break;
 			}
@@ -1818,15 +1818,15 @@ namespace OpenDentBusiness.HL7 {
 			}
 			#endregion Validate/Convert/Set Treatment Area
 			//broken appointment procedure codes shouldn't trigger DateFirstVisit update.
-			if(procCode.ProcCode!="D9986" && procCode.ProcCode!="D9987") {
+			if(procCode.Code!="D9986" && procCode.Code!="D9987") {
 				Procedures.SetDateFirstVisit(dateProc,1,pat);//wait until after validating, might not insert the proc, don't return after this point
 			}
 			procCur.PatNum=pat.PatNum;
-			procCur.CodeNum=procCode.CodeNum;
+			procCur.CodeNum=procCode.Id;
 			procCur.ProcDate=dateProc;
 			procCur.DateTP=dateProc;
 			procCur.ProcStatus=procStatus;//defaults to TP status if not included in msg or not a valid entry
-			procCur.ProvNum=procCode.ProvNumDefault;//use default prov if one is set
+			procCur.ProvNum=procCode.DefaultProviderId??0;//use default prov if one is set
 			if(procCur.ProvNum==0) {//if no proc default prov, use pat's pri or sec prov
 				procCur.ProvNum=pat.PriProv;
 				if(procCode.IsHygiene && pat.SecProv!=0) {
@@ -1842,7 +1842,7 @@ namespace OpenDentBusiness.HL7 {
 			procCur.PlaceService=Preferences.GetString(PreferenceName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default Proc Place of Service for the Practice is used.
 			List<PatPlan> listPatPlan=PatPlans.Refresh(pat.PatNum);
 			List<InsSub> listSubs=InsSubs.RefreshForFam(Patients.GetFamily(pat.PatNum));
-			List<InsPlan> insPlanList=InsPlans.RefreshForSubList(listSubs);
+			List<InsurancePlan> insPlanList=InsPlans.RefreshForSubList(listSubs);
 			List<Benefit> listBen=Benefits.Refresh(listPatPlan,listSubs);
 			procCur.MedicalCode=procCode.MedicalCode;
 			procCur.ProcFee=Procedures.GetProcFee(pat,listPatPlan,listSubs,insPlanList,procCur.CodeNum,procCur.ProvNum,procCur.ClinicNum,
@@ -1856,17 +1856,17 @@ namespace OpenDentBusiness.HL7 {
 				Encounters.InsertDefaultEncounter(procCur.PatNum,procCur.ProvNum,procCur.ProcDate);
 				//OrthoProcedures ---------------------------------------------------------------------------------------------------------------------------
 				Procedures.SetOrthoProcComplete(procCur,procCode);
-				string logText=procCode.ProcCode+", ";
+				string logText=procCode.Code+", ";
 				if(!string.IsNullOrWhiteSpace(procCur.ToothNum)) {
 					logText+="Teeth"+": "+procCur.ToothNum+", ";
 				}
-				logText+="Fee"+": "+procCur.ProcFee.ToString("F")+", "+procCode.Descript;
+				logText+="Fee"+": "+procCur.ProcFee.ToString("F")+", "+procCode.Description;
 				SecurityLogs.MakeLogEntry(Permissions.ProcComplCreate,procCur.PatNum,logText,SecurityLogSource.HL7);
 			}
 			if(procStatus.In(ProcStat.C,ProcStat.EC,ProcStat.EO) && procCode.PaintType==ToothPaintingType.Extraction) {
 				ToothInitials.SetValue(procCur.PatNum,procCur.ToothNum,ToothInitialType.Missing);
 			}
-			Procedures.ComputeEstimates(procCur,pat.PatNum,new List<ClaimProc>(),true,new List<InsPlan>(),listPatPlan,listBen,pat.Age,new List<InsSub>());
+			Procedures.ComputeEstimates(procCur,pat.PatNum,new List<ClaimProc>(),true,new List<InsurancePlan>(),listPatPlan,listBen,pat.Age,new List<InsSub>());
 			if(strOidExt!="" && strOidExtRoot!="") {
 				OIDExternal procOidExt=new OIDExternal();
 				procOidExt.IDType=IdentifierType.Procedure;

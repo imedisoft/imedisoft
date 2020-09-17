@@ -10,7 +10,7 @@ namespace Imedisoft.Forms
     public partial class FormFeeEdit : FormBase
 	{
 		private readonly Fee fee;
-		private FeeSched feeSchedule;
+		private FeeSchedule feeSchedule;
 
 		public FormFeeEdit(Fee fee)
 		{
@@ -21,7 +21,7 @@ namespace Imedisoft.Forms
 
 		private void FormFeeEdit_Load(object sender, EventArgs e)
 		{
-			feeSchedule = FeeScheds.GetFirstOrDefault(x => x.FeeSchedNum == fee.FeeSched);
+			feeSchedule = FeeScheds.GetFirstOrDefault(x => x.Id == fee.FeeScheduleId);
 			if (!FeeL.CanEditFee(feeSchedule, fee.ProvNum, fee.ClinicNum))
 			{
 				DialogResult = DialogResult.Cancel;
@@ -61,7 +61,7 @@ namespace Imedisoft.Forms
 
 			SecurityLogs.MakeLogEntry(Permissions.ProcFeeEdit, 0, 
 				"Procedure: " + ProcedureCodes.GetStringProcCode(fee.CodeNum) + ", " + 
-				"Fee: " + fee.Amount.ToString("c") + ", Fee Schedule: " + FeeScheds.GetDescription(fee.FeeSched) + ". " + 
+				"Fee: " + fee.Amount.ToString("c") + ", Fee Schedule: " + FeeScheds.GetDescription(fee.FeeScheduleId) + ". " + 
 				"Manual edit in Edit Fee window.", fee.CodeNum, DateTime.MinValue);
 
 			SecurityLogs.MakeLogEntry(Permissions.LogFeeEdit, 0, "Fee Updated", fee.FeeNum, dateModified);

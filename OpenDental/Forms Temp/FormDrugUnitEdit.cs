@@ -31,7 +31,7 @@ namespace OpenDental {
 				return;
 			}
 			try {
-				DrugUnits.Delete(DrugUnitCur.DrugUnitNum);
+				DrugUnits.Delete(DrugUnitCur.Id);
 			}
 			catch(ApplicationException ex) {
 				MessageBox.Show(ex.Message);

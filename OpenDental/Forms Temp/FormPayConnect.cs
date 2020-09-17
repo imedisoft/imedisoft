@@ -564,7 +564,7 @@ namespace OpenDental {
 			if(_creditCardCur==null) {//user selected Add new card from the payment window, save it or its token depending on settings
 				_creditCardCur=new CreditCard();
 				_creditCardCur.IsNew=true;
-				_creditCardCur.PatNum=_patCur.PatNum;
+				_creditCardCur.PatientId=_patCur.PatNum;
 				List<CreditCard> itemOrderCount=CreditCards.Refresh(_patCur.PatNum);
 				_creditCardCur.ItemOrder=itemOrderCount.Count;
 			}

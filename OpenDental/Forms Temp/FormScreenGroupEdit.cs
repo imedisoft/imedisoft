@@ -495,7 +495,7 @@ namespace OpenDental{
 			textScreenDate.Text=_screenGroup.SGDate.ToShortDateString();
 			textDescription.Text=_screenGroup.Description;
 			textProvName.Text=_screenGroup.ProvName;//has to be filled before provnum
-			_listProvs=Providers.GetDeepCopy(true);
+			_listProvs=Providers.GetAll(true);
 			for(int i=0;i<_listProvs.Count;i++) {
 				comboProv.Items.Add(_listProvs[i].Abbr);
 				if(_screenGroup.ProvNum==_listProvs[i].Id) {

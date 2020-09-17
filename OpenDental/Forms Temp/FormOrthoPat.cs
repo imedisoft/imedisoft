@@ -10,11 +10,11 @@ using OpenDental.UI;
 namespace OpenDental {
 	public partial class FormOrthoPat:ODForm {
 		private PatPlan _patPlanCur;
-		private InsPlan _insPlanCur;
+		private InsurancePlan _insPlanCur;
 
 		///<summary>This form does NOT take care of updating the patplan table for you. 
 		///It passes around the patPlan you passed in by reference, so you can call update on the same patplan you passed in to update.</summary>
-		public FormOrthoPat(PatPlan patPlanCur,InsPlan insPlanCur, string carrierName, string subID, double defaultFee) {
+		public FormOrthoPat(PatPlan patPlanCur,InsurancePlan insPlanCur, string carrierName, string subID, double defaultFee) {
 			InitializeComponent();
 			
 			_patPlanCur=patPlanCur;

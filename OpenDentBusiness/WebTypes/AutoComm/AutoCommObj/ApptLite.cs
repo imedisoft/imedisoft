@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -58,7 +59,7 @@ namespace OpenDentBusiness.AutoComm
 			Clinic clinic = (appt.ClinicNum == 0) ? Clinics.GetPracticeAsClinicZero() : Clinics.GetById(appt.ClinicNum);
 			OfficeName = Clinics.GetOfficeName(clinic);
 			OfficePhone = Clinics.GetOfficePhone(clinic);
-			OfficeEmail = EmailAddresses.GetByClinic(clinic?.Id ?? 0).EmailUsername;
+			OfficeEmail = EmailAddresses.GetByClinic(clinic?.Id ?? 0).SmtpUsername;
 			Length = appt.Length;
 			SetPatientContact(patComm);
 		}

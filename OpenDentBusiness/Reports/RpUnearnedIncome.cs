@@ -107,7 +107,7 @@ namespace OpenDentBusiness {
 			Dictionary<long,double> dictFamilyBalances = Ledgers.GetBalancesForFamilies(listGuarantors);
 			Dictionary<long,string> dictPatNames =
 				Patients.GetPatientNames(Patients.GetAllFamilyPatNums(listGuarantors));
-			List<ProcedureCode> listProcCodes = ProcedureCodes.GetAllCodes();
+			List<ProcedureCode> listProcCodes = ProcedureCodes.GetAllCodes().ToList();
 			DataTable retVal = new DataTable();
 			retVal.Columns.Add("Guar");
 			retVal.Columns.Add("FamBal");

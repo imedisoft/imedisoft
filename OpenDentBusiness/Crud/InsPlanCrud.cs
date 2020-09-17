@@ -11,10 +11,10 @@ using System.Drawing;
 namespace OpenDentBusiness.Crud{
 	public class InsPlanCrud {
 		///<summary>Gets one InsPlan object from the database using the primary key.  Returns null if not found.</summary>
-		public static InsPlan SelectOne(long planNum) {
+		public static InsurancePlan SelectOne(long planNum) {
 			string command="SELECT * FROM insplan "
 				+"WHERE PlanNum = "+POut.Long(planNum);
-			List<InsPlan> list=TableToList(Database.ExecuteDataTable(command));
+			List<InsurancePlan> list=TableToList(Database.ExecuteDataTable(command));
 			if(list.Count==0) {
 				return null;
 			}
@@ -22,9 +22,9 @@ namespace OpenDentBusiness.Crud{
 		}
 
 		///<summary>Gets one InsPlan object from the database using a query.</summary>
-		public static InsPlan SelectOne(string command) {
+		public static InsurancePlan SelectOne(string command) {
 
-			List<InsPlan> list=TableToList(Database.ExecuteDataTable(command));
+			List<InsurancePlan> list=TableToList(Database.ExecuteDataTable(command));
 			if(list.Count==0) {
 				return null;
 			}
@@ -32,21 +32,21 @@ namespace OpenDentBusiness.Crud{
 		}
 
 		///<summary>Gets a list of InsPlan objects from the database using a query.</summary>
-		public static List<InsPlan> SelectMany(string command) {
+		public static List<InsurancePlan> SelectMany(string command) {
 
-			List<InsPlan> list=TableToList(Database.ExecuteDataTable(command));
+			List<InsurancePlan> list=TableToList(Database.ExecuteDataTable(command));
 			return list;
 		}
 
 		///<summary>Converts a DataTable to a list of objects.</summary>
-		public static List<InsPlan> TableToList(DataTable table) {
-			List<InsPlan> retVal=new List<InsPlan>();
-			InsPlan insPlan;
+		public static List<InsurancePlan> TableToList(DataTable table) {
+			List<InsurancePlan> retVal=new List<InsurancePlan>();
+			InsurancePlan insPlan;
 			foreach(DataRow row in table.Rows) {
-				insPlan=new InsPlan();
-				insPlan.PlanNum                     = PIn.Long  (row["PlanNum"].ToString());
+				insPlan=new InsurancePlan();
+				insPlan.Id                     = PIn.Long  (row["PlanNum"].ToString());
 				insPlan.GroupName                   = PIn.String(row["GroupName"].ToString());
-				insPlan.GroupNum                    = PIn.String(row["GroupNum"].ToString());
+				insPlan.GroupNumber                    = PIn.String(row["GroupNum"].ToString());
 				insPlan.PlanNote                    = PIn.String(row["PlanNote"].ToString());
 				insPlan.FeeSched                    = PIn.Long  (row["FeeSched"].ToString());
 				insPlan.PlanType                    = PIn.String(row["PlanType"].ToString());
@@ -55,7 +55,7 @@ namespace OpenDentBusiness.Crud{
 				insPlan.ClaimsUseUCR                = PIn.Bool  (row["ClaimsUseUCR"].ToString());
 				insPlan.CopayFeeSched               = PIn.Long  (row["CopayFeeSched"].ToString());
 				insPlan.EmployerNum                 = PIn.Long  (row["EmployerNum"].ToString());
-				insPlan.CarrierNum                  = PIn.Long  (row["CarrierNum"].ToString());
+				insPlan.CarrierId                  = PIn.Long  (row["CarrierNum"].ToString());
 				insPlan.AllowedFeeSched             = PIn.Long  (row["AllowedFeeSched"].ToString());
 				insPlan.TrojanID                    = PIn.String(row["TrojanID"].ToString());
 				insPlan.DivisionNo                  = PIn.String(row["DivisionNo"].ToString());
@@ -91,7 +91,7 @@ namespace OpenDentBusiness.Crud{
 		}
 
 		///<summary>Converts a list of InsPlan into a DataTable.</summary>
-		public static DataTable ListToTable(List<InsPlan> listInsPlans,string tableName="") {
+		public static DataTable ListToTable(List<InsurancePlan> listInsPlans,string tableName="") {
 			if(string.IsNullOrEmpty(tableName)) {
 				tableName="InsPlan";
 			}
@@ -137,11 +137,11 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("BillingType");
 			table.Columns.Add("HasPpoSubstWriteoffs");
 			table.Columns.Add("ExclusionFeeRule");
-			foreach(InsPlan insPlan in listInsPlans) {
+			foreach(InsurancePlan insPlan in listInsPlans) {
 				table.Rows.Add(new object[] {
-					POut.Long  (insPlan.PlanNum),
+					POut.Long  (insPlan.Id),
 					            insPlan.GroupName,
-					            insPlan.GroupNum,
+					            insPlan.GroupNumber,
 					            insPlan.PlanNote,
 					POut.Long  (insPlan.FeeSched),
 					            insPlan.PlanType,
@@ -150,7 +150,7 @@ namespace OpenDentBusiness.Crud{
 					POut.Bool  (insPlan.ClaimsUseUCR),
 					POut.Long  (insPlan.CopayFeeSched),
 					POut.Long  (insPlan.EmployerNum),
-					POut.Long  (insPlan.CarrierNum),
+					POut.Long  (insPlan.CarrierId),
 					POut.Long  (insPlan.AllowedFeeSched),
 					            insPlan.TrojanID,
 					            insPlan.DivisionNo,
@@ -186,14 +186,14 @@ namespace OpenDentBusiness.Crud{
 		}
 
 		///<summary>Inserts one InsPlan into the database.  Returns the new priKey.</summary>
-		public static long Insert(InsPlan insPlan) {
+		public static long Insert(InsurancePlan insPlan) {
 			return Insert(insPlan,false);
 		}
 
 		///<summary>Inserts one InsPlan into the database.  Provides option to use the existing priKey.</summary>
-		public static long Insert(InsPlan insPlan,bool useExistingPK) {
+		public static long Insert(InsurancePlan insPlan,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				insPlan.PlanNum=ReplicationServers.GetKey("insplan","PlanNum");
+				insPlan.Id=ReplicationServers.GetKey("insplan","PlanNum");
 			}
 			string command="INSERT INTO insplan (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -201,11 +201,11 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="GroupName,GroupNum,PlanNote,FeeSched,PlanType,ClaimFormNum,UseAltCode,ClaimsUseUCR,CopayFeeSched,EmployerNum,CarrierNum,AllowedFeeSched,TrojanID,DivisionNo,IsMedical,FilingCode,DentaideCardSequence,ShowBaseUnits,CodeSubstNone,IsHidden,MonthRenew,FilingCodeSubtype,CanadianPlanFlag,CanadianDiagnosticCode,CanadianInstitutionCode,RxBIN,CobRule,SopCode,SecUserNumEntry,SecDateEntry,HideFromVerifyList,OrthoType,OrthoAutoProcFreq,OrthoAutoProcCodeNumOverride,OrthoAutoFeeBilled,OrthoAutoClaimDaysWait,BillingType,HasPpoSubstWriteoffs,ExclusionFeeRule) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(insPlan.PlanNum)+",";
+				command+=POut.Long(insPlan.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(insPlan.GroupName)+"',"
-				+"'"+POut.String(insPlan.GroupNum)+"',"
+				+"'"+POut.String(insPlan.GroupNumber)+"',"
 				+    DbHelper.ParamChar+"paramPlanNote,"
 				+    POut.Long  (insPlan.FeeSched)+","
 				+"'"+POut.String(insPlan.PlanType)+"',"
@@ -214,7 +214,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Bool  (insPlan.ClaimsUseUCR)+","
 				+    POut.Long  (insPlan.CopayFeeSched)+","
 				+    POut.Long  (insPlan.EmployerNum)+","
-				+    POut.Long  (insPlan.CarrierNum)+","
+				+    POut.Long  (insPlan.CarrierId)+","
 				+    POut.Long  (insPlan.AllowedFeeSched)+","
 				+"'"+POut.String(insPlan.TrojanID)+"',"
 				+"'"+POut.String(insPlan.DivisionNo)+"',"
@@ -252,33 +252,33 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramPlanNote);
 			}
 			else {
-				insPlan.PlanNum=Database.ExecuteInsert(command,paramPlanNote);
+				insPlan.Id=Database.ExecuteInsert(command,paramPlanNote);
 			}
-			return insPlan.PlanNum;
+			return insPlan.Id;
 		}
 
 		///<summary>Inserts one InsPlan into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
-		public static long InsertNoCache(InsPlan insPlan) {
+		public static long InsertNoCache(InsurancePlan insPlan) {
 			return InsertNoCache(insPlan,false);
 		}
 
 		///<summary>Inserts one InsPlan into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
-		public static long InsertNoCache(InsPlan insPlan,bool useExistingPK) {
+		public static long InsertNoCache(InsurancePlan insPlan,bool useExistingPK) {
 			
 			string command="INSERT INTO insplan (";
 			if(!useExistingPK) {
-				insPlan.PlanNum=ReplicationServers.GetKeyNoCache("insplan","PlanNum");
+				insPlan.Id=ReplicationServers.GetKeyNoCache("insplan","PlanNum");
 			}
 			if(useExistingPK) {
 				command+="PlanNum,";
 			}
 			command+="GroupName,GroupNum,PlanNote,FeeSched,PlanType,ClaimFormNum,UseAltCode,ClaimsUseUCR,CopayFeeSched,EmployerNum,CarrierNum,AllowedFeeSched,TrojanID,DivisionNo,IsMedical,FilingCode,DentaideCardSequence,ShowBaseUnits,CodeSubstNone,IsHidden,MonthRenew,FilingCodeSubtype,CanadianPlanFlag,CanadianDiagnosticCode,CanadianInstitutionCode,RxBIN,CobRule,SopCode,SecUserNumEntry,SecDateEntry,HideFromVerifyList,OrthoType,OrthoAutoProcFreq,OrthoAutoProcCodeNumOverride,OrthoAutoFeeBilled,OrthoAutoClaimDaysWait,BillingType,HasPpoSubstWriteoffs,ExclusionFeeRule) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(insPlan.PlanNum)+",";
+				command+=POut.Long(insPlan.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(insPlan.GroupName)+"',"
-				+"'"+POut.String(insPlan.GroupNum)+"',"
+				+"'"+POut.String(insPlan.GroupNumber)+"',"
 				+    DbHelper.ParamChar+"paramPlanNote,"
 				+    POut.Long  (insPlan.FeeSched)+","
 				+"'"+POut.String(insPlan.PlanType)+"',"
@@ -287,7 +287,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Bool  (insPlan.ClaimsUseUCR)+","
 				+    POut.Long  (insPlan.CopayFeeSched)+","
 				+    POut.Long  (insPlan.EmployerNum)+","
-				+    POut.Long  (insPlan.CarrierNum)+","
+				+    POut.Long  (insPlan.CarrierId)+","
 				+    POut.Long  (insPlan.AllowedFeeSched)+","
 				+"'"+POut.String(insPlan.TrojanID)+"',"
 				+"'"+POut.String(insPlan.DivisionNo)+"',"
@@ -325,16 +325,16 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramPlanNote);
 			}
 			else {
-				insPlan.PlanNum=Database.ExecuteInsert(command,paramPlanNote);
+				insPlan.Id=Database.ExecuteInsert(command,paramPlanNote);
 			}
-			return insPlan.PlanNum;
+			return insPlan.Id;
 		}
 
 		///<summary>Updates one InsPlan in the database.</summary>
-		public static void Update(InsPlan insPlan) {
+		public static void Update(InsurancePlan insPlan) {
 			string command="UPDATE insplan SET "
 				+"GroupName                   = '"+POut.String(insPlan.GroupName)+"', "
-				+"GroupNum                    = '"+POut.String(insPlan.GroupNum)+"', "
+				+"GroupNum                    = '"+POut.String(insPlan.GroupNumber)+"', "
 				+"PlanNote                    =  "+DbHelper.ParamChar+"paramPlanNote, "
 				+"FeeSched                    =  "+POut.Long  (insPlan.FeeSched)+", "
 				+"PlanType                    = '"+POut.String(insPlan.PlanType)+"', "
@@ -343,7 +343,7 @@ namespace OpenDentBusiness.Crud{
 				+"ClaimsUseUCR                =  "+POut.Bool  (insPlan.ClaimsUseUCR)+", "
 				+"CopayFeeSched               =  "+POut.Long  (insPlan.CopayFeeSched)+", "
 				+"EmployerNum                 =  "+POut.Long  (insPlan.EmployerNum)+", "
-				+"CarrierNum                  =  "+POut.Long  (insPlan.CarrierNum)+", "
+				+"CarrierNum                  =  "+POut.Long  (insPlan.CarrierId)+", "
 				+"AllowedFeeSched             =  "+POut.Long  (insPlan.AllowedFeeSched)+", "
 				+"TrojanID                    = '"+POut.String(insPlan.TrojanID)+"', "
 				+"DivisionNo                  = '"+POut.String(insPlan.DivisionNo)+"', "
@@ -373,7 +373,7 @@ namespace OpenDentBusiness.Crud{
 				+"BillingType                 =  "+POut.Long  (insPlan.BillingType)+", "
 				+"HasPpoSubstWriteoffs        =  "+POut.Bool  (insPlan.HasPpoSubstWriteoffs)+", "
 				+"ExclusionFeeRule            =  "+POut.Int   ((int)insPlan.ExclusionFeeRule)+" "
-				+"WHERE PlanNum = "+POut.Long(insPlan.PlanNum);
+				+"WHERE PlanNum = "+POut.Long(insPlan.Id);
 			if(insPlan.PlanNote==null) {
 				insPlan.PlanNote="";
 			}
@@ -382,15 +382,15 @@ namespace OpenDentBusiness.Crud{
 		}
 
 		///<summary>Updates one InsPlan in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
-		public static bool Update(InsPlan insPlan,InsPlan oldInsPlan) {
+		public static bool Update(InsurancePlan insPlan,InsurancePlan oldInsPlan) {
 			string command="";
 			if(insPlan.GroupName != oldInsPlan.GroupName) {
 				if(command!="") { command+=",";}
 				command+="GroupName = '"+POut.String(insPlan.GroupName)+"'";
 			}
-			if(insPlan.GroupNum != oldInsPlan.GroupNum) {
+			if(insPlan.GroupNumber != oldInsPlan.GroupNumber) {
 				if(command!="") { command+=",";}
-				command+="GroupNum = '"+POut.String(insPlan.GroupNum)+"'";
+				command+="GroupNum = '"+POut.String(insPlan.GroupNumber)+"'";
 			}
 			if(insPlan.PlanNote != oldInsPlan.PlanNote) {
 				if(command!="") { command+=",";}
@@ -424,9 +424,9 @@ namespace OpenDentBusiness.Crud{
 				if(command!="") { command+=",";}
 				command+="EmployerNum = "+POut.Long(insPlan.EmployerNum)+"";
 			}
-			if(insPlan.CarrierNum != oldInsPlan.CarrierNum) {
+			if(insPlan.CarrierId != oldInsPlan.CarrierId) {
 				if(command!="") { command+=",";}
-				command+="CarrierNum = "+POut.Long(insPlan.CarrierNum)+"";
+				command+="CarrierNum = "+POut.Long(insPlan.CarrierId)+"";
 			}
 			if(insPlan.AllowedFeeSched != oldInsPlan.AllowedFeeSched) {
 				if(command!="") { command+=",";}
@@ -543,18 +543,18 @@ namespace OpenDentBusiness.Crud{
 			}
 			var paramPlanNote = new MySqlParameter("paramPlanNote", POut.StringParam(insPlan.PlanNote));
 			command="UPDATE insplan SET "+command
-				+" WHERE PlanNum = "+POut.Long(insPlan.PlanNum);
+				+" WHERE PlanNum = "+POut.Long(insPlan.Id);
 			Database.ExecuteNonQuery(command,paramPlanNote);
 			return true;
 		}
 
 		///<summary>Returns true if Update(InsPlan,InsPlan) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
-		public static bool UpdateComparison(InsPlan insPlan,InsPlan oldInsPlan) {
+		public static bool UpdateComparison(InsurancePlan insPlan,InsurancePlan oldInsPlan) {
 			if(insPlan.GroupName != oldInsPlan.GroupName) {
 				return true;
 			}
-			if(insPlan.GroupNum != oldInsPlan.GroupNum) {
+			if(insPlan.GroupNumber != oldInsPlan.GroupNumber) {
 				return true;
 			}
 			if(insPlan.PlanNote != oldInsPlan.PlanNote) {
@@ -581,7 +581,7 @@ namespace OpenDentBusiness.Crud{
 			if(insPlan.EmployerNum != oldInsPlan.EmployerNum) {
 				return true;
 			}
-			if(insPlan.CarrierNum != oldInsPlan.CarrierNum) {
+			if(insPlan.CarrierId != oldInsPlan.CarrierId) {
 				return true;
 			}
 			if(insPlan.AllowedFeeSched != oldInsPlan.AllowedFeeSched) {

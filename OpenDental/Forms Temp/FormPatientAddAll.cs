@@ -48,8 +48,8 @@ namespace OpenDental {
 		private bool mouseIsInListCars2;
 		private Carrier selectedCarrier2;
 		///<summary>If user picks a plan from list, but then changes one of the critical fields, this will be ignored.  Keep in mind that the plan here is just a copy.  It can't be updated, but must instead be inserted.</summary>
-		private InsPlan selectedPlan1;
-		private InsPlan selectedPlan2;
+		private InsurancePlan selectedPlan1;
+		private InsurancePlan selectedPlan2;
 		private ToolTip _referredFromToolTip;
 		private Referral _refCur;
 		private System.Windows.Forms.ListBox listStates;//displayed from within code, not designer
@@ -184,7 +184,7 @@ namespace OpenDental {
 			comboSecProv4.SelectedIndex = 0;
 			comboSecProv5.Items.Add("none");
 			comboSecProv5.SelectedIndex = 0;
-			_listProviders = Providers.GetDeepCopy(true);
+			_listProviders = Providers.GetAll(true);
 			for (int i = 0; i < _listProviders.Count; i++)
 			{
 				comboPriProv1.Items.Add(_listProviders[i].GetLongDesc());
@@ -1755,7 +1755,7 @@ namespace OpenDental {
 		///<summary>Fills the carrier fields on the form based on the specified carrierNum.</summary>
 		private void FillCarrier1(long carrierNum) {
 			selectedCarrier1=Carriers.GetCarrier(carrierNum);
-			textCarrier1.Text=selectedCarrier1.CarrierName;
+			textCarrier1.Text=selectedCarrier1.Name;
 			textPhone1.Text=selectedCarrier1.Phone;
 		}
 
@@ -1768,7 +1768,7 @@ namespace OpenDental {
 					textPhone1.Focus();
 				}
 				else {
-					FillCarrier1(similarCars1[listCars1.SelectedIndex].CarrierNum);
+					FillCarrier1(similarCars1[listCars1.SelectedIndex].Id);
 					textCarrier1.Focus();
 					textCarrier1.SelectionStart=textCarrier1.Text.Length;
 				}
@@ -1785,7 +1785,7 @@ namespace OpenDental {
 				}
 				if(listCars1.SelectedIndex==-1) {
 					listCars1.SelectedIndex=0;
-					textCarrier1.Text=similarCars1[listCars1.SelectedIndex].CarrierName;
+					textCarrier1.Text=similarCars1[listCars1.SelectedIndex].Name;
 				}
 				else if(listCars1.SelectedIndex==listCars1.Items.Count-1) {
 					listCars1.SelectedIndex=-1;
@@ -1793,7 +1793,7 @@ namespace OpenDental {
 				}
 				else {
 					listCars1.SelectedIndex++;
-					textCarrier1.Text=similarCars1[listCars1.SelectedIndex].CarrierName;
+					textCarrier1.Text=similarCars1[listCars1.SelectedIndex].Name;
 				}
 				textCarrier1.SelectionStart=textCarrier1.Text.Length;
 				return;
@@ -1804,7 +1804,7 @@ namespace OpenDental {
 				}
 				if(listCars1.SelectedIndex==-1) {
 					listCars1.SelectedIndex=listCars1.Items.Count-1;
-					textCarrier1.Text=similarCars1[listCars1.SelectedIndex].CarrierName;
+					textCarrier1.Text=similarCars1[listCars1.SelectedIndex].Name;
 				}
 				else if(listCars1.SelectedIndex==0) {
 					listCars1.SelectedIndex=-1;
@@ -1812,7 +1812,7 @@ namespace OpenDental {
 				}
 				else {
 					listCars1.SelectedIndex--;
-					textCarrier1.Text=similarCars1[listCars1.SelectedIndex].CarrierName;
+					textCarrier1.Text=similarCars1[listCars1.SelectedIndex].Name;
 				}
 				textCarrier1.SelectionStart=textCarrier1.Text.Length;
 				return;
@@ -1825,10 +1825,10 @@ namespace OpenDental {
 			listCars1.Items.Clear();
 			similarCars1=Carriers.GetSimilarNames(textCarrier1.Text);
 			for(int i=0;i<similarCars1.Count;i++) {
-				listCars1.Items.Add(similarCars1[i].CarrierName+", "
+				listCars1.Items.Add(similarCars1[i].Name+", "
 					+similarCars1[i].Phone+", "
-					+similarCars1[i].Address+", "
-					+similarCars1[i].Address2+", "
+					+similarCars1[i].AddressLine1+", "
+					+similarCars1[i].AddressLine2+", "
 					+similarCars1[i].City+", "
 					+similarCars1[i].State+", "
 					+similarCars1[i].Zip);
@@ -1847,13 +1847,13 @@ namespace OpenDental {
 			}
 			//or if user clicked on a different text box.
 			if(listCars1.SelectedIndex!=-1) {
-				FillCarrier1(similarCars1[listCars1.SelectedIndex].CarrierNum);
+				FillCarrier1(similarCars1[listCars1.SelectedIndex].Id);
 			}
 			listCars1.Visible=false;
 		}
 
 		private void listCars1_Click(object sender,System.EventArgs e) {
-			FillCarrier1(similarCars1[listCars1.SelectedIndex].CarrierNum);
+			FillCarrier1(similarCars1[listCars1.SelectedIndex].Id);
 			textCarrier1.Focus();
 			textCarrier1.SelectionStart=textCarrier1.Text.Length;
 			listCars1.Visible=false;
@@ -1874,7 +1874,7 @@ namespace OpenDental {
 		///<summary>Fills the carrier fields on the form based on the specified carrierNum.</summary>
 		private void FillCarrier2(long carrierNum) {
 			selectedCarrier2=Carriers.GetCarrier(carrierNum);
-			textCarrier2.Text=selectedCarrier2.CarrierName;
+			textCarrier2.Text=selectedCarrier2.Name;
 			textPhone2.Text=selectedCarrier2.Phone;
 		}
 
@@ -1887,7 +1887,7 @@ namespace OpenDental {
 					textPhone2.Focus();
 				}
 				else {
-					FillCarrier2(similarCars2[listCars2.SelectedIndex].CarrierNum);
+					FillCarrier2(similarCars2[listCars2.SelectedIndex].Id);
 					textCarrier2.Focus();
 					textCarrier2.SelectionStart=textCarrier2.Text.Length;
 				}
@@ -1904,7 +1904,7 @@ namespace OpenDental {
 				}
 				if(listCars2.SelectedIndex==-1) {
 					listCars2.SelectedIndex=0;
-					textCarrier2.Text=similarCars2[listCars2.SelectedIndex].CarrierName;
+					textCarrier2.Text=similarCars2[listCars2.SelectedIndex].Name;
 				}
 				else if(listCars2.SelectedIndex==listCars2.Items.Count-1) {
 					listCars2.SelectedIndex=-1;
@@ -1912,7 +1912,7 @@ namespace OpenDental {
 				}
 				else {
 					listCars2.SelectedIndex++;
-					textCarrier2.Text=similarCars2[listCars2.SelectedIndex].CarrierName;
+					textCarrier2.Text=similarCars2[listCars2.SelectedIndex].Name;
 				}
 				textCarrier2.SelectionStart=textCarrier2.Text.Length;
 				return;
@@ -1923,7 +1923,7 @@ namespace OpenDental {
 				}
 				if(listCars2.SelectedIndex==-1) {
 					listCars2.SelectedIndex=listCars2.Items.Count-1;
-					textCarrier2.Text=similarCars2[listCars2.SelectedIndex].CarrierName;
+					textCarrier2.Text=similarCars2[listCars2.SelectedIndex].Name;
 				}
 				else if(listCars2.SelectedIndex==0) {
 					listCars2.SelectedIndex=-1;
@@ -1931,7 +1931,7 @@ namespace OpenDental {
 				}
 				else {
 					listCars2.SelectedIndex--;
-					textCarrier2.Text=similarCars2[listCars2.SelectedIndex].CarrierName;
+					textCarrier2.Text=similarCars2[listCars2.SelectedIndex].Name;
 				}
 				textCarrier2.SelectionStart=textCarrier2.Text.Length;
 				return;
@@ -1944,10 +1944,10 @@ namespace OpenDental {
 			listCars2.Items.Clear();
 			similarCars2=Carriers.GetSimilarNames(textCarrier2.Text);
 			for(int i=0;i<similarCars2.Count;i++) {
-				listCars2.Items.Add(similarCars2[i].CarrierName+", "
+				listCars2.Items.Add(similarCars2[i].Name+", "
 					+similarCars2[i].Phone+", "
-					+similarCars2[i].Address+", "
-					+similarCars2[i].Address2+", "
+					+similarCars2[i].AddressLine1+", "
+					+similarCars2[i].AddressLine2+", "
 					+similarCars2[i].City+", "
 					+similarCars2[i].State+", "
 					+similarCars2[i].Zip);
@@ -1966,13 +1966,13 @@ namespace OpenDental {
 			}
 			//or if user clicked on a different text box.
 			if(listCars2.SelectedIndex!=-1) {
-				FillCarrier2(similarCars2[listCars2.SelectedIndex].CarrierNum);
+				FillCarrier2(similarCars2[listCars2.SelectedIndex].Id);
 			}
 			listCars2.Visible=false;
 		}
 
 		private void listCars2_Click(object sender,System.EventArgs e) {
-			FillCarrier2(similarCars2[listCars2.SelectedIndex].CarrierNum);
+			FillCarrier2(similarCars2[listCars2.SelectedIndex].Id);
 			textCarrier2.Focus();
 			textCarrier2.SelectionStart=textCarrier2.Text.Length;
 			listCars2.Visible=false;
@@ -2011,9 +2011,9 @@ namespace OpenDental {
 			//PlanCur.SubscNote=textSubscNote.Text;
 			//Benefits will be created when click OK.
 			textEmployer1.Text=Employers.GetName(selectedPlan1.EmployerNum);
-			FillCarrier1(selectedPlan1.CarrierNum);
+			FillCarrier1(selectedPlan1.CarrierId);
 			textGroupName1.Text=selectedPlan1.GroupName;
-			textGroupNum1.Text=selectedPlan1.GroupNum;
+			textGroupNum1.Text=selectedPlan1.GroupNumber;
 			SetRequiredFields();
 		}
 
@@ -2036,9 +2036,9 @@ namespace OpenDental {
 			//PlanCur.SubscNote=textSubscNote.Text;
 			//Benefits will be created when click OK.
 			textEmployer2.Text=Employers.GetName(selectedPlan2.EmployerNum);
-			FillCarrier2(selectedPlan2.CarrierNum);
+			FillCarrier2(selectedPlan2.CarrierId);
 			textGroupName2.Text=selectedPlan2.GroupName;
-			textGroupNum2.Text=selectedPlan2.GroupNum;
+			textGroupNum2.Text=selectedPlan2.GroupNumber;
 		}
 		#endregion InsPlanPick
 		
@@ -2477,30 +2477,30 @@ namespace OpenDental {
 			//validate the ins fields.  If they don't match perfectly, then set the selected plan to null
 			if(selectedPlan1!=null) {
 				if(Employers.GetName(selectedPlan1.EmployerNum)!=textEmployer1.Text
-					|| Carriers.GetName(selectedPlan1.CarrierNum)!=textCarrier1.Text
+					|| Carriers.GetName(selectedPlan1.CarrierId)!=textCarrier1.Text
 					|| selectedPlan1.GroupName!=textGroupName1.Text
-					|| selectedPlan1.GroupNum!=textGroupNum1.Text)
+					|| selectedPlan1.GroupNumber!=textGroupNum1.Text)
 				{
 					selectedPlan1=null;
 				}
 			}
 			if(selectedPlan2!=null) {
 				if(Employers.GetName(selectedPlan2.EmployerNum)!=textEmployer2.Text
-					|| Carriers.GetName(selectedPlan2.CarrierNum)!=textCarrier2.Text
+					|| Carriers.GetName(selectedPlan2.CarrierId)!=textCarrier2.Text
 					|| selectedPlan2.GroupName!=textGroupName2.Text
-					|| selectedPlan2.GroupNum!=textGroupNum2.Text)
+					|| selectedPlan2.GroupNumber!=textGroupNum2.Text)
 				{
 					selectedPlan2=null;
 				}
 			}
 			//validate the carrier fields.  If they don't match perfectly, then set the selected plan to null
 			if(selectedCarrier1!=null) {
-				if(selectedCarrier1.CarrierName!=textCarrier1.Text || selectedCarrier1.Phone!=textPhone1.Text) {
+				if(selectedCarrier1.Name!=textCarrier1.Text || selectedCarrier1.Phone!=textPhone1.Text) {
 					selectedCarrier1=null;
 				}
 			}
 			if(selectedCarrier2!=null) {
-				if(selectedCarrier2.CarrierName!=textCarrier2.Text || selectedCarrier2.Phone!=textPhone2.Text) {
+				if(selectedCarrier2.Name!=textCarrier2.Text || selectedCarrier2.Phone!=textPhone2.Text) {
 					selectedCarrier2=null;
 				}
 			}
@@ -2514,11 +2514,11 @@ namespace OpenDental {
 				}
 				if(selectedPlan1==null) {
 					//don't try to get a copy of an existing plan. Instead, start from scratch.
-					selectedPlan1=new InsPlan();
+					selectedPlan1=new InsurancePlan();
 					selectedPlan1.EmployerNum=Employers.GetEmployerNum(textEmployer1.Text);
-					selectedPlan1.CarrierNum=selectedCarrier1.CarrierNum;
+					selectedPlan1.CarrierId=selectedCarrier1.Id;
 					selectedPlan1.GroupName=textGroupName1.Text;
-					selectedPlan1.GroupNum=textGroupNum1.Text;
+					selectedPlan1.GroupNumber=textGroupNum1.Text;
 					selectedPlan1.PlanType="";
 					if(Preferences.GetBool(PreferenceName.InsDefaultPPOpercent)) {
 						selectedPlan1.PlanType="p";
@@ -2529,7 +2529,7 @@ namespace OpenDental {
 					selectedPlan1.CobRule=(EnumCobRule)PrefC.GetInt(PreferenceName.InsDefaultCobRule);
 					InsPlans.Insert(selectedPlan1);
 					Benefit ben=new Benefit();
-					ben.PlanNum=selectedPlan1.PlanNum;//same for all benefits inserted
+					ben.PlanNum=selectedPlan1.Id;//same for all benefits inserted
 					ben.BenefitType=InsBenefitType.CoInsurance;//same for all benefits inserted from CovCats.ListShort
 					ben.MonetaryAmt=-1;//same for all benefits inserted from CovCats.ListShort
 					ben.TimePeriod=BenefitTimePeriod.CalendarYear;//same for all benefits inserted
@@ -2556,7 +2556,7 @@ namespace OpenDental {
 					}
 				}
 				sub1=new InsSub();
-				sub1.PlanNum=selectedPlan1.PlanNum;
+				sub1.PlanNum=selectedPlan1.Id;
 				sub1.AssignBen=Preferences.GetBool(PreferenceName.InsDefaultAssignBen);
 				sub1.ReleaseInfo=true;
 				sub1.DateEffective=DateTime.MinValue;
@@ -2575,11 +2575,11 @@ namespace OpenDental {
 				}
 				if(selectedPlan2==null) {
 					//don't try to get a copy of an existing plan. Instead, start from scratch.
-					selectedPlan2=new InsPlan();
+					selectedPlan2=new InsurancePlan();
 					selectedPlan2.EmployerNum=Employers.GetEmployerNum(textEmployer2.Text);
-					selectedPlan2.CarrierNum=selectedCarrier2.CarrierNum;
+					selectedPlan2.CarrierId=selectedCarrier2.Id;
 					selectedPlan2.GroupName=textGroupName2.Text;
-					selectedPlan2.GroupNum=textGroupNum2.Text;
+					selectedPlan2.GroupNumber=textGroupNum2.Text;
 					selectedPlan2.PlanType="";
 					if(Preferences.GetBool(PreferenceName.InsDefaultPPOpercent)) {
 						selectedPlan2.PlanType="p";
@@ -2590,7 +2590,7 @@ namespace OpenDental {
 					selectedPlan2.CobRule=(EnumCobRule)PrefC.GetInt(PreferenceName.InsDefaultCobRule);
 					InsPlans.Insert(selectedPlan2);
 					Benefit ben=new Benefit();
-					ben.PlanNum=selectedPlan2.PlanNum;//same for all benefits inserted
+					ben.PlanNum=selectedPlan2.Id;//same for all benefits inserted
 					ben.BenefitType=InsBenefitType.CoInsurance;//same for all benefits inserted from CovCats.ListShort
 					ben.MonetaryAmt=-1;//same for all benefits inserted from CovCats.ListShort
 					ben.TimePeriod=BenefitTimePeriod.CalendarYear;//same for all benefits inserted
@@ -2617,7 +2617,7 @@ namespace OpenDental {
 					}
 				}
 				sub2=new InsSub();
-				sub2.PlanNum=selectedPlan2.PlanNum;
+				sub2.PlanNum=selectedPlan2.Id;
 				sub2.AssignBen=Preferences.GetBool(PreferenceName.InsDefaultAssignBen);
 				sub2.ReleaseInfo=true;
 				sub2.DateEffective=DateTime.MinValue;

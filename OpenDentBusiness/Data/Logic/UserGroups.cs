@@ -64,7 +64,7 @@ namespace Imedisoft.Data
 
 		public static void Delete(UserGroup userGroup)
 		{
-			var count = Database.ExecuteLong("SELECT COUNT(*) FROM usergroupattach WHERE UserGroupNum=" + userGroup.Id);
+			var count = Database.ExecuteLong("SELECT COUNT(*) FROM `user_group_users` WHERE `user_group_id` = " + userGroup.Id);
 			if (count != 0)
 			{
 				throw new Exception(

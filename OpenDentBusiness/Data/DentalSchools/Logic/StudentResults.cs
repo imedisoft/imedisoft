@@ -38,7 +38,7 @@ namespace Imedisoft.Data
 			=> SelectOne(studentResultId);
 
 		public static List<Provider> GetStudents(long schoolClassId) // TODO: This should be part of the SchoolClasses interface...
-			=> Providers.GetWhere(x => x.SchoolClassId == schoolClassId, true);
+			=> Providers.FindAll(x => x.SchoolClassId == schoolClassId, true);
 
 		public static void Save(StudentResult studentResult)
         {

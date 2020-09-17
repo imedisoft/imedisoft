@@ -16,7 +16,7 @@ namespace OpenDental {
 		public FormProviderMerge() {
 			InitializeComponent();
 			
-			_listActiveProvs=Providers.GetWhere(x => x.Status != ProviderStatus.Deleted,true);
+			_listActiveProvs=Providers.FindAll(x => x.Status != ProviderStatus.Deleted,true);
 		}
 
 		private void butChangeProvInto_Click(object sender,EventArgs e) {
@@ -33,7 +33,7 @@ namespace OpenDental {
 		}
 
 		private void butChangeProvFrom_Click(object sender,EventArgs e) {
-			FormProviderPick FormPP=new FormProviderPick(checkDeletedProvs.Checked ? Providers.GetDeepCopy() : _listActiveProvs);
+			FormProviderPick FormPP=new FormProviderPick(checkDeletedProvs.Checked ? Providers.GetAll() : _listActiveProvs);
 			FormPP.ShowDialog();
 			if(FormPP.DialogResult==DialogResult.OK) {
 				Provider selectedProv=Providers.GetById(FormPP.SelectedProviderId);
@@ -88,7 +88,7 @@ namespace OpenDental {
 			CheckUIState();
 			MessageBox.Show("Done.");
 			DataValid.SetInvalid(InvalidType.Providers);
-			_listActiveProvs=Providers.GetWhere(x => x.Status != ProviderStatus.Deleted,true);
+			_listActiveProvs=Providers.FindAll(x => x.Status != ProviderStatus.Deleted,true);
 		}
 
 		private void butClose_Click(object sender,EventArgs e) {

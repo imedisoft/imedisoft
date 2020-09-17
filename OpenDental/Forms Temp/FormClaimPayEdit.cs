@@ -824,7 +824,7 @@ namespace OpenDental{
 			formC.IsSelectMode=true;
 			formC.ShowDialog();
 			if(formC.DialogResult==DialogResult.OK) {
-				textCarrierName.Text=formC.SelectedCarrier.CarrierName;
+				textCarrierName.Text=formC.SelectedCarrier.Name;
 			}
 		}
 

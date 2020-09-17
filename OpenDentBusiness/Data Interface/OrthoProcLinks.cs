@@ -100,7 +100,7 @@ namespace OpenDentBusiness{
 			}
 			OrthoProcType procType;
 			OrthoProcLink procLink;
-			string procCode=ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode;
+			string procCode=ProcedureCodes.GetProcCode(proc.CodeNum).Code;
 			//If proc being set complete is the banding, it is already linked. We just need to set the fee and update the date.
 			if(linkingData.BandingProc!=null && linkingData.BandingProc.ProcNum==proc.ProcNum) {
 				procType=OrthoProcType.Banding;
@@ -324,7 +324,7 @@ namespace OpenDentBusiness{
 			}
 			//If case is transfer or we already have a banding procedure and we're attempting to link another banding procedure, do not continue.
 			if(((BandingProc!=null && proc.ProcNum!=BandingProc.ProcNum) || ActiveOrthoCase.IsTransfer) 
-				&& OrthoCases.GetListProcTypeProcCodes(PreferenceName.OrthoBandingCodes).Contains(ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode)) 
+				&& OrthoCases.GetListProcTypeProcCodes(PreferenceName.OrthoBandingCodes).Contains(ProcedureCodes.GetProcCode(proc.CodeNum).Code)) 
 			{
 				return false;
 			}

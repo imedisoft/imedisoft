@@ -1,7 +1,4 @@
 ﻿using Imedisoft.Data.Annotations;
-using System;
-using System.Collections;
-using System.Drawing;
 
 namespace OpenDentBusiness
 {
@@ -12,7 +9,7 @@ namespace OpenDentBusiness
 	public class Cvx : TableBase
 	{
 		[PrimaryKey]
-		public long CvxNum;
+		public long Id;
 
 		/// <summary>
 		/// Cvx code. Not allowed to edit this column once saved in the database.

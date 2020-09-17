@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data;
 
 namespace OpenDental
 {
@@ -28,12 +29,12 @@ namespace OpenDental
 		private Patient PatCur;
 		private Family FamCur;
 		private OpenDental.UI.ODGrid gridMain;
-		private List<InsPlan> PlanList;
+		private List<InsurancePlan> PlanList;
 		private List<PatPlan> PatPlanList;
 		private List<InsSub> SubList;
 
 		///<summary></summary>
-		public FormClaimPayPreAuth(Patient patCur,Family famCur,List<InsPlan> planList,List<PatPlan> patPlanList,List<InsSub> subList) {
+		public FormClaimPayPreAuth(Patient patCur,Family famCur,List<InsurancePlan> planList,List<PatPlan> patPlanList,List<InsSub> subList) {
 			InitializeComponent();// Required for Windows Form Designer support
 			FamCur=famCur;
 			PatCur=patCur;
@@ -160,7 +161,7 @@ namespace OpenDental
 			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				toothIndexOffset=1;
 			}
-			InsPlan plan=InsPlans.GetPlan(ClaimProcsToEdit[0].PlanNum,PlanList);
+			InsurancePlan plan=InsPlans.GetPlan(ClaimProcsToEdit[0].PlanNum,PlanList);
 			gridMain.SetSelected(new Point(4-toothIndexOffset,0));
 		}
 
@@ -197,11 +198,11 @@ namespace OpenDental
 				row=new GridRow();
 				//for pre-auths, there are no total payments, so ProcNum must be >0
 				ProcCur=Procedures.GetProcFromList(ProcList,ClaimProcsToEdit[i].ProcNum);
-				row.Cells.Add(ProcedureCodes.GetProcCode(ProcCur.CodeNum).ProcCode);
+				row.Cells.Add(ProcedureCodes.GetProcCode(ProcCur.CodeNum).Code);
 				if(!Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 					row.Cells.Add(Tooth.ToInternat(ProcCur.ToothNum));
 				}
-				row.Cells.Add(ProcedureCodes.GetProcCode(ProcCur.CodeNum).Descript);
+				row.Cells.Add(ProcedureCodes.GetProcCode(ProcCur.CodeNum).Description);
 				row.Cells.Add(ClaimProcsToEdit[i].FeeBilled.ToString("F"));
 				row.Cells.Add(ClaimProcsToEdit[i].InsPayEst.ToString("F"));
 				row.Cells.Add(ClaimProcsToEdit[i].Remarks);

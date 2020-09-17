@@ -20,6 +20,7 @@ using MySql.Data.MySqlClient;
 using OpenDental.Thinfinity;
 using OpenDentBusiness.IO;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -633,23 +634,23 @@ namespace OpenDental{
 			_listEmailAddresses=EmailAddresses.GetDeepCopy();//Does not include user specific email addresses.
 			List<Clinic> listClinicsAll=Clinics.GetAll(true);
 			for(int i=0;i<listClinicsAll.Count;i++) {//Exclude any email addresses that are associated to a clinic.
-				_listEmailAddresses.RemoveAll(x => x.EmailAddressNum==listClinicsAll[i].EmailAddressId);
+				_listEmailAddresses.RemoveAll(x => x.Id==listClinicsAll[i].EmailAddressId);
 			}
 			//Exclude default practice email address.
-			_listEmailAddresses.RemoveAll(x => x.EmailAddressNum==Preferences.GetLong(PreferenceName.EmailDefaultAddressNum));
+			_listEmailAddresses.RemoveAll(x => x.Id==Preferences.GetLong(PreferenceName.EmailDefaultAddressNum));
 			//Exclude web mail notification email address.
-			_listEmailAddresses.RemoveAll(x => x.EmailAddressNum==Preferences.GetLong(PreferenceName.EmailNotifyAddressNum));
+			_listEmailAddresses.RemoveAll(x => x.Id==Preferences.GetLong(PreferenceName.EmailNotifyAddressNum));
 			comboEmailFrom.Items.Add("Practice/Clinic");//default
 			comboEmailFrom.SelectedIndex=0;
 			//Add all email addresses which are not associated to a user, a clinic, or either of the default email addresses.
 			for(int i=0;i<_listEmailAddresses.Count;i++) {
-				comboEmailFrom.Items.Add(_listEmailAddresses[i].EmailUsername);
+				comboEmailFrom.Items.Add(_listEmailAddresses[i].SmtpUsername);
 			}
 			//Add user specific email address if present.
 			EmailAddress emailAddressMe=EmailAddresses.GetForUser(Security.CurrentUser.Id);//can be null
 			if(emailAddressMe!=null) {
 				_listEmailAddresses.Insert(0,emailAddressMe);
-				comboEmailFrom.Items.Insert(1,"Me"+" <"+emailAddressMe.EmailUsername+">");//Just below Practice/Clinic
+				comboEmailFrom.Items.Insert(1,"Me"+" <"+emailAddressMe.SmtpUsername+">");//Just below Practice/Clinic
 			}
 		}
 
@@ -1039,7 +1040,7 @@ namespace OpenDental{
 				}
 				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"10%",10,100,ProgBarStyle.Blocks,"3")));
 				if(stmt.Mode_==StatementMode.Email) {
-					if(emailAddress.SMTPserver=="") {
+					if(emailAddress.SmtpServer=="") {
 						_progExtended.Close();
 						MessageBox.Show("You need to enter an SMTP server name in e-mail setup before you can send e-mail.");
 						Cursor=Cursors.Default;

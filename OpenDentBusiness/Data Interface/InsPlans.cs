@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Linq;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness {
 	///<summary></summary>
@@ -32,20 +33,20 @@ namespace OpenDentBusiness {
 		#endregion
 
 		///<summary>Also fills PlanNum from db.</summary>
-		public static long Insert(InsPlan plan) {
+		public static long Insert(InsurancePlan plan) {
 			return Insert(plan,false);
 		}
 		
 		///<summary>Also fills PlanNum from db.</summary>
-		public static long Insert(InsPlan plan,bool useExistingPK) {
+		public static long Insert(InsurancePlan plan,bool useExistingPK) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			plan.SecUserNumEntry=Security.CurrentUser.Id;
 			long planNum=0;
-			InsPlan planOld=plan.Copy();
+			InsurancePlan planOld=plan.Copy();
 			planNum=Crud.InsPlanCrud.Insert(plan,useExistingPK);
 			
-			if(planOld.PlanNum==0) {
+			if(planOld.Id==0) {
 				InsEditLogs.MakeLogEntry(plan,null,InsEditLogType.InsPlan,plan.SecUserNumEntry);
 			}
 			else {
@@ -56,10 +57,10 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary>Pass in the old InsPlan to avoid querying the db for it.</summary>
-		public static void Update(InsPlan plan,InsPlan planOld=null) {
+		public static void Update(InsurancePlan plan,InsurancePlan planOld=null) {
 			
 			if(planOld==null) {
-				planOld=InsPlans.RefreshOne(plan.PlanNum);
+				planOld=InsPlans.RefreshOne(plan.Id);
 			}
 			Crud.InsPlanCrud.Update(plan,planOld);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
@@ -68,22 +69,22 @@ namespace OpenDentBusiness {
 
 		///<summary>It's fastest if you supply a plan list that contains the plan, but it also works just fine if it can't initally locate the plan in the
 		///list.  You can supply a list of length 0 or null.  If not in the list, retrieves from db.  Returns null if planNum is 0 or if it cannot find the insplan from the db.</summary>
-		public static InsPlan GetPlan(long planNum,List<InsPlan> planList) {
+		public static InsurancePlan GetPlan(long planNum,List<InsurancePlan> planList) {
 			//No need to check RemotingRole; no call to db.
 			if(planNum==0) {
 				return null;
 			}
 			if(planList==null) {
-				planList=new List<InsPlan>();
+				planList=new List<InsurancePlan>();
 			}
 			//LastOrDefault to preserve old behavior. No other reason.
-			return planList.LastOrDefault(x => x.PlanNum==planNum)??RefreshOne(planNum);
+			return planList.LastOrDefault(x => x.Id==planNum)??RefreshOne(planNum);
 		}
 
 		///<summary>Gets a list of plans from the database.</summary>
-		public static List<InsPlan> GetPlans(List<long> listPlanNums) {
+		public static List<InsurancePlan> GetPlans(List<long> listPlanNums) {
 			if(listPlanNums==null || listPlanNums.Count==0) {
-				return new List<InsPlan>();
+				return new List<InsurancePlan>();
 			}
 			
 			string command="SELECT * FROM insplan WHERE PlanNum IN ("+string.Join(",",listPlanNums)+")";
@@ -100,14 +101,14 @@ namespace OpenDentBusiness {
 			//num = '"+planNum+"'";
 		}*/
 
-		public static InsPlan[] GetByTrojanID(string trojanID) {
+		public static InsurancePlan[] GetByTrojanID(string trojanID) {
 			 
 			string command="SELECT * FROM insplan WHERE TrojanID = '"+POut.String(trojanID)+"'";
 			return Crud.InsPlanCrud.SelectMany(command).ToArray();
 		}
 
 		///<summary>Only loads one plan from db. Can return null.</summary>
-		public static InsPlan RefreshOne(long planNum) {
+		public static InsurancePlan RefreshOne(long planNum) {
 			 
 			if(planNum==0){
 				return null;
@@ -122,20 +123,20 @@ namespace OpenDentBusiness {
 		//}
 
 		///<summary>Gets List of plans based on the subList.  The list won't be in the same order.</summary>
-		public static List<InsPlan> RefreshForSubList(List<InsSub> listInsSubs) {
+		public static List<InsurancePlan> RefreshForSubList(List<InsSub> listInsSubs) {
 			
 			if(listInsSubs==null || listInsSubs.Count==0) {
-				return new List<InsPlan>();
+				return new List<InsurancePlan>();
 			}
 			string command="SELECT * FROM insplan WHERE PlanNum IN("+string.Join(",",listInsSubs.Select(x => POut.Long(x.PlanNum)))+")";
 			return Crud.InsPlanCrud.SelectMany(command);
 		}
 
 		///<summary>Tests all fields for equality.</summary>
-		public static bool AreEqualValue(InsPlan plan1,InsPlan plan2) {
-			if(plan1.PlanNum==plan2.PlanNum
+		public static bool AreEqualValue(InsurancePlan plan1,InsurancePlan plan2) {
+			if(plan1.Id==plan2.Id
 				&& plan1.GroupName==plan2.GroupName
-				&& plan1.GroupNum==plan2.GroupNum
+				&& plan1.GroupNumber==plan2.GroupNumber
 				&& plan1.PlanNote==plan2.PlanNote
 				&& plan1.FeeSched==plan2.FeeSched
 				&& plan1.PlanType==plan2.PlanType
@@ -144,7 +145,7 @@ namespace OpenDentBusiness {
 				&& plan1.ClaimsUseUCR==plan2.ClaimsUseUCR
 				&& plan1.CopayFeeSched==plan2.CopayFeeSched
 				&& plan1.EmployerNum==plan2.EmployerNum
-				&& plan1.CarrierNum==plan2.CarrierNum
+				&& plan1.CarrierId==plan2.CarrierId
 				&& plan1.AllowedFeeSched==plan2.AllowedFeeSched
 				&& plan1.TrojanID==plan2.TrojanID
 				&& plan1.DivisionNo==plan2.DivisionNo
@@ -175,9 +176,9 @@ namespace OpenDentBusiness {
 			return false;
 		}
 
-		public static List<InsPlan> GetForFeeSchedNum(long feeSchedNum) {
+		public static List<InsurancePlan> GetForFeeSchedNum(long feeSchedNum) {
 			
-			List<InsPlan> listPlanWithFeeSched = new List<InsPlan>();
+			List<InsurancePlan> listPlanWithFeeSched = new List<InsurancePlan>();
 			string command = "SELECT * FROM insplan WHERE insplan.FeeSched = " + POut.Long(feeSchedNum);
 			return Crud.InsPlanCrud.SelectMany(command);
 		}
@@ -220,13 +221,13 @@ namespace OpenDentBusiness {
 		}*/
 
 		///<summary>Gets a description of the specified plan, including carrier name and subscriber. It's fastest if you supply a plan list that contains the plan, but it also works just fine if it can't initally locate the plan in the list.  You can supply an array of length 0 for both family and planlist.</summary>
-		public static string GetDescript(long planNum,Family family,List<InsPlan> planList,long insSubNum,List<InsSub> subList) {
+		public static string GetDescript(long planNum,Family family,List<InsurancePlan> planList,long insSubNum,List<InsSub> subList) {
 			//No need to check RemotingRole; no call to db.
 			if(planNum==0) {
 				return "";
 			}
-			InsPlan plan=GetPlan(planNum,planList);
-			if(plan==null || plan.PlanNum==0) {
+			InsurancePlan plan=GetPlan(planNum,planList);
+			if(plan==null || plan.Id==0) {
 				return "";
 			}
 			InsSub sub=InsSubs.GetSub(insSubNum,subList);
@@ -241,7 +242,7 @@ namespace OpenDentBusiness {
 			//loop just to get the index of the plan in the family list
 			bool otherFam=true;
 			for(int i=0;i<planList.Count;i++) {
-				if(planList[i].PlanNum==planNum) {
+				if(planList[i].Id==planNum) {
 					otherFam=false;
 					//retStr += (i+1).ToString()+": ";
 				}
@@ -249,8 +250,8 @@ namespace OpenDentBusiness {
 			if(otherFam) {//retStr=="")
 				retStr="(other fam):";
 			}
-			Carrier carrier=Carriers.GetCarrier(plan.CarrierNum);
-			string carrierName=carrier.CarrierName;
+			Carrier carrier=Carriers.GetCarrier(plan.CarrierId);
+			string carrierName=carrier.Name;
 			if(carrierName.Length>20) {
 				carrierName=carrierName.Substring(0,20)+"...";
 			}
@@ -260,17 +261,17 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary>Used in Ins lines in Account module and in Family module.</summary>
-		public static string GetCarrierName(long planNum,List<InsPlan> planList) {
+		public static string GetCarrierName(long planNum,List<InsurancePlan> planList) {
 			//No need to check RemotingRole; no call to db.
-			InsPlan plan=GetPlan(planNum,planList);
+			InsurancePlan plan=GetPlan(planNum,planList);
 			if(plan==null) {
 				return "";
 			}
-			Carrier carrier=Carriers.GetCarrier(plan.CarrierNum);
-			if(carrier.CarrierNum==0) {//if corrupted
+			Carrier carrier=Carriers.GetCarrier(plan.CarrierId);
+			if(carrier.Id==0) {//if corrupted
 				return "";
 			}
-			return carrier.CarrierName;
+			return carrier.Name;
 		}
 
 		/// <summary>Returns a DataTable containing the PlanNum, CarrierNum, and CarrierName for a list of PlanNums.</summary>
@@ -283,17 +284,17 @@ namespace OpenDentBusiness {
 			DataTable table=Database.ExecuteDataTable(command);
 			foreach(DataRow row in table.Rows) {
 				Carrier carrierCur=Carriers.GetCarrier(PIn.Long(row["CarrierNum"].ToString()));
-				row["CarrierName"]=carrierCur.CarrierName;
+				row["CarrierName"]=carrierCur.Name;
 				row["CarrierColor"]=carrierCur.ApptTextBackColor.ToArgb();
 			}
 			return table;
 		}
 
 		/// <summary>Only used once in Claims.cs.  Gets insurance benefits remaining for one benefit year.  Returns actual remaining insurance based on ClaimProc data, taking into account inspaid and ins pending. Must supply all claimprocs for the patient.  Date used to determine which benefit year to calc.  Usually today's date.  The insplan.PlanNum is the plan to get value for.  ExcludeClaim is the ClaimNum to exclude, or enter -1 to include all.  This does not yet handle calculations where ortho max is different from regular max.  Just takes the most general annual max, and subtracts all benefits used from all categories.</summary>
-		public static double GetInsRem(List<ClaimProcHist> histList,DateTime asofDate,long planNum,long patPlanNum,long excludeClaim,List<InsPlan> planList,List<Benefit> benList,long patNum,long insSubNum) {
+		public static double GetInsRem(List<ClaimProcHist> histList,DateTime asofDate,long planNum,long patPlanNum,long excludeClaim,List<InsurancePlan> planList,List<Benefit> benList,long patNum,long insSubNum) {
 			//No need to check RemotingRole; no call to db.
 			double insUsed=GetInsUsedDisplay(histList,asofDate,planNum,patPlanNum,excludeClaim,planList,benList,patNum,insSubNum);
-			InsPlan plan=InsPlans.GetPlan(planNum,planList);
+			InsurancePlan plan=InsPlans.GetPlan(planNum,planList);
 			double insPending=GetPendingDisplay(histList,asofDate,plan,patPlanNum,excludeClaim,patNum,insSubNum,benList);
 			double annualMaxFam=Benefits.GetAnnualMaxDisplay(benList,planNum,patPlanNum,true);
 			double annualMaxInd=Benefits.GetAnnualMaxDisplay(benList,planNum,patPlanNum,false);
@@ -311,7 +312,7 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary>Only for display purposes rather than for calculations.  Get pending insurance for a given plan for one benefit year. Include a history list for the patient/family.  asofDate used to determine which benefit year to calc.  Usually the date of service for a claim.  The planNum is the plan to get value for.</summary>
-		public static double GetPendingDisplay(List<ClaimProcHist> histList,DateTime asofDate,InsPlan curPlan,long patPlanNum,long excludeClaim,long patNum,long insSubNum,List<Benefit> benefitList) {
+		public static double GetPendingDisplay(List<ClaimProcHist> histList,DateTime asofDate,InsurancePlan curPlan,long patPlanNum,long excludeClaim,long patNum,long insSubNum,List<Benefit> benefitList) {
 			//No need to check RemotingRole; no call to db.
 			//InsPlan curPlan=GetPlan(planNum,PlanList);
 			if(curPlan==null) {
@@ -332,10 +333,10 @@ namespace OpenDentBusiness {
 				//    continue;
 				//  }
 				//}
-				if(Benefits.LimitationExistsNotGeneral(benefitList,curPlan.PlanNum,patPlanNum,histList[i].StrProcCode)) {
+				if(Benefits.LimitationExistsNotGeneral(benefitList,curPlan.Id,patPlanNum,histList[i].StrProcCode)) {
 					continue;
 				}
-				if(histList[i].PlanNum==curPlan.PlanNum
+				if(histList[i].PlanNum==curPlan.Id
 					&& histList[i].InsSubNum==insSubNum
 					&& histList[i].ClaimNum != excludeClaim
 					&& histList[i].ProcDate < stopDate
@@ -352,9 +353,9 @@ namespace OpenDentBusiness {
 		}
 
 		/// <summary>Only for display purposes rather than for calculations.  Get insurance benefits used for one benefit year.  Must supply all relevant hist for the patient.  asofDate is used to determine which benefit year to calc.  Usually date of service for a claim.  The insplan.PlanNum is the plan to get value for.  ExcludeClaim is the ClaimNum to exclude, or enter -1 to include all.  The behavior of this changed in 7.1.  It now only includes values that apply towards annual max.  So if there is a limitation override for a category like ortho or preventive, then completed procedures in those categories will be excluded.  The benefitList passed in might very well have benefits from other insurance plans included.</summary>
-		public static double GetInsUsedDisplay(List<ClaimProcHist> histList,DateTime asofDate,long planNum,long patPlanNum,long excludeClaim,List<InsPlan> planList,List<Benefit> benefitList,long patNum,long insSubNum) {
+		public static double GetInsUsedDisplay(List<ClaimProcHist> histList,DateTime asofDate,long planNum,long patPlanNum,long excludeClaim,List<InsurancePlan> planList,List<Benefit> benefitList,long patNum,long insSubNum) {
 			//No need to check RemotingRole; no call to db.
-			InsPlan curPlan=GetPlan(planNum,planList);
+			InsurancePlan curPlan=GetPlan(planNum,planList);
 			if(curPlan==null) {
 				return 0;
 			}
@@ -397,9 +398,9 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary>Only for display purposes rather than for calculations.  Get insurance deductible used for one benefit year.  Must supply a history list for the patient/family.  asofDate is used to determine which benefit year to calc.  Usually date of service for a claim.  The planNum is the plan to get value for.  ExcludeClaim is the ClaimNum to exclude, or enter -1 to include all.  It includes pending deductibles in the result.</summary>
-		public static double GetDedUsedDisplay(List<ClaimProcHist> histList,DateTime asofDate,long planNum,long patPlanNum,long excludeClaim,List<InsPlan> planList,BenefitCoverageLevel coverageLevel,long patNum) {
+		public static double GetDedUsedDisplay(List<ClaimProcHist> histList,DateTime asofDate,long planNum,long patPlanNum,long excludeClaim,List<InsurancePlan> planList,BenefitCoverageLevel coverageLevel,long patNum) {
 			//No need to check RemotingRole; no call to db.
-			InsPlan curPlan=GetPlan(planNum,planList);
+			InsurancePlan curPlan=GetPlan(planNum,planList);
 			if(curPlan==null) {
 				return 0;
 			}
@@ -427,9 +428,9 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary>Only for display purposes rather than for calculations.  Get insurance deductible used for one benefit year.  Must supply a history list for the patient/family.  asofDate is used to determine which benefit year to calc.  Usually date of service for a claim.  The planNum is the plan to get value for.  ExcludeClaim is the ClaimNum to exclude, or enter -1 to include all.  It includes pending deductibles in the result. The ded and dedFam variables are the individual and family deductibles respectively. This function assumes that the individual deductible 'ded' is always available, but that the family deductible 'dedFam' is optional (set to -1 if not available).</summary>
-		public static double GetDedRemainDisplay(List<ClaimProcHist> histList,DateTime asofDate,long planNum,long patPlanNum,long excludeClaim,List<InsPlan> planList,long patNum,double ded,double dedFam) {
+		public static double GetDedRemainDisplay(List<ClaimProcHist> histList,DateTime asofDate,long planNum,long patPlanNum,long excludeClaim,List<InsurancePlan> planList,long patNum,double ded,double dedFam) {
 			//No need to check RemotingRole; no call to db.
-			InsPlan curPlan=GetPlan(planNum,planList);
+			InsurancePlan curPlan=GetPlan(planNum,planList);
 			if(curPlan==null) {
 				return 0;
 			}
@@ -805,7 +806,7 @@ namespace OpenDentBusiness {
 			DataTable table=Database.ExecuteDataTable(command);
 			//loop through all the carrier names
 			string carrierName;
-			FeeSched sched;
+			FeeSchedule sched;
 			int itemOrder=FeeScheds.GetCount();
 			long retVal=0;
 			for(int i=0;i<table.Rows.Count;i++){
@@ -816,14 +817,14 @@ namespace OpenDentBusiness {
 				//add a fee schedule if needed
 				sched=FeeScheds.GetByExactName(carrierName,FeeScheduleType.OutNetwork);
 				if(sched==null){
-					sched=new FeeSched();
+					sched=new FeeSchedule();
 					sched.Description=carrierName;
-					sched.FeeSchedType=FeeScheduleType.OutNetwork;
+					sched.Type=FeeScheduleType.OutNetwork;
 					//sched.IsNew=true;
 					sched.IsGlobal=true;
-					sched.ItemOrder=itemOrder;
+					sched.SortOrder=itemOrder;
 					//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-					sched.SecUserNumEntry=Security.CurrentUser.Id;
+					sched.AddedBy=Security.CurrentUser.Id;
 					FeeScheds.Insert(sched);
 					itemOrder++;
 				}
@@ -840,16 +841,16 @@ namespace OpenDentBusiness {
 					+"AND PlanType='' "
 					+"AND IsHidden=0 "
 					+"AND CarrierNum IN ("+string.Join(",",listCarrierNums)+")";
-				List<InsPlan> listInsPlans = Crud.InsPlanCrud.SelectMany(command);
+				List<InsurancePlan> listInsPlans = Crud.InsPlanCrud.SelectMany(command);
 				command="UPDATE insplan "
-					+"SET AllowedFeeSched="+POut.Long(sched.FeeSchedNum)+" "
-					+"WHERE PlanNum IN ("+string.Join(",",listInsPlans.Select(x => x.PlanNum))+")";
+					+"SET AllowedFeeSched="+POut.Long(sched.Id)+" "
+					+"WHERE PlanNum IN ("+string.Join(",",listInsPlans.Select(x => x.Id))+")";
 				retVal+=Database.ExecuteNonQuery(command);
 				//log updated InsPlan's AllowedFeeSched
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 				listInsPlans.ForEach(x => {
-					InsEditLogs.MakeLogEntry("AllowedFeeSched",Security.CurrentUser.Id,"0",POut.Long(sched.FeeSchedNum),InsEditLogType.InsPlan,
-						x.PlanNum,0,x.GroupNum.ToString()+" - "+x.GroupName.ToString());
+					InsEditLogs.MakeLogEntry("AllowedFeeSched",Security.CurrentUser.Id,"0",POut.Long(sched.Id),InsEditLogType.InsPlan,
+						x.Id,0,x.GroupNumber.ToString()+" - "+x.GroupName.ToString());
 				});
 			}
 			return retVal;
@@ -868,18 +869,18 @@ namespace OpenDentBusiness {
 			string command="SELECT * FROM insplan "
 				+"WHERE IsHidden=0 "
 				+"AND NOT EXISTS (SELECT * FROM inssub WHERE inssub.PlanNum=insplan.PlanNum)";
-			List<InsPlan> listInsPlans = Crud.InsPlanCrud.SelectMany(command);
+			List<InsurancePlan> listInsPlans = Crud.InsPlanCrud.SelectMany(command);
 			if(listInsPlans.Count==0) { 
 				return;
 			}
 			command="UPDATE insplan SET IsHidden=1 "
-				+"WHERE PlanNum IN ("+string.Join(",",listInsPlans.Select(x => x.PlanNum))+")";
+				+"WHERE PlanNum IN ("+string.Join(",",listInsPlans.Select(x => x.Id))+")";
 			Database.ExecuteNonQuery(command);
 			//log newly hidden InsPlans
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			listInsPlans.ForEach(x => {
 				InsEditLogs.MakeLogEntry("IsHidden",Security.CurrentUser.Id,"0","1",InsEditLogType.InsPlan,
-					x.PlanNum,0,x.GroupNum.ToString()+" - "+x.GroupName.ToString());
+					x.Id,0,x.GroupNumber.ToString()+" - "+x.GroupName.ToString());
 			});
 		}
 
@@ -992,13 +993,13 @@ namespace OpenDentBusiness {
 			return Fees.GetAmount(substCodeNum,feeSched,clinicNum,provNum,listFees);
 		}
 
-		public static decimal GetAllowedForProc(Procedure proc,ClaimProc claimProc,List<InsPlan> listInsPlans,List<SubstitutionLink> listSubLinks,Lookup<FeeKey2,Fee> lookupFees){
+		public static decimal GetAllowedForProc(Procedure proc,ClaimProc claimProc,List<InsurancePlan> listInsPlans,List<SubstitutionLink> listSubLinks,Lookup<FeeKey2,Fee> lookupFees){
 			//List<Fee> listFees=null) {
 			//No need to check RemotingRole; no call to db.
-			InsPlan plan=InsPlans.GetPlan(claimProc.PlanNum,listInsPlans);
+			InsurancePlan plan=InsPlans.GetPlan(claimProc.PlanNum,listInsPlans);
 			decimal carrierAllowedAmount=(decimal)InsPlans.GetAllowed(ProcedureCodes.GetStringProcCode(proc.CodeNum),plan.FeeSched,plan.AllowedFeeSched,
 				!SubstitutionLinks.HasSubstCodeForPlan(plan,proc.CodeNum,listSubLinks),plan.PlanType,proc.ToothNum
-				,proc.ProvNum,proc.ClinicNum,plan.PlanNum,listSubLinks,lookupFees);
+				,proc.ProvNum,proc.ClinicNum,plan.Id,listSubLinks,lookupFees);
 			if(carrierAllowedAmount==-1) {
 				return -1;
 			}
@@ -1010,10 +1011,10 @@ namespace OpenDentBusiness {
 			}
 		}
 
-		public static List<InsPlan> GetByInsSubs(List<long> insSubNums) {
+		public static List<InsurancePlan> GetByInsSubs(List<long> insSubNums) {
 			
 			if(insSubNums==null || insSubNums.Count < 1) {
-				return new List<InsPlan>();
+				return new List<InsurancePlan>();
 			}
 			string command="SELECT DISTINCT insplan.* FROM insplan,inssub "
 				+"WHERE insplan.PlanNum=inssub.PlanNum "
@@ -1064,7 +1065,7 @@ namespace OpenDentBusiness {
 				//Only use the claim procs associated to the non-completed procedures.
 				List<ClaimProc> listNonCompletedClaimProcs=claimProcs.FindAll(x => listNonCompletedProcs.Exists(y => y.ProcNum==x.ProcNum));
 				List<InsSub> subs=InsSubs.RefreshForFam(fam);
-				List<InsPlan> plans=InsPlans.RefreshForSubList(subs);
+				List<InsurancePlan> plans=InsPlans.RefreshForSubList(subs);
 				List<PatPlan> patPlans=PatPlans.Refresh(patNum);
 				List<Benefit> benefitList=Benefits.Refresh(patPlans,subs);
 				List<ProcedureCode> listProcedureCodes=new List<ProcedureCode>();
@@ -1087,24 +1088,24 @@ namespace OpenDentBusiness {
 		///Also deletes patplans, benefits, and claimprocs. 
 		///If canDeleteInsSub is true and there is only one inssub associated to the plan, it will also delete inssubs. 
 		///This should only really happen when an existing plan is being deleted.</summary>
-		public static void Delete(InsPlan plan,bool canDeleteInsSub=true,bool doInsertInsEditLogs=true) {
+		public static void Delete(InsurancePlan plan,bool canDeleteInsSub=true,bool doInsertInsEditLogs=true) {
 			
 			#region Validation
 			//Claims
-			string command="SELECT 1 FROM claim WHERE PlanNum="+POut.Long(plan.PlanNum)+" "+DbHelper.LimitAnd(1);
+			string command="SELECT 1 FROM claim WHERE PlanNum="+POut.Long(plan.Id)+" "+DbHelper.LimitAnd(1);
 			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
 				throw new ApplicationException("Not allowed to delete a plan with existing claims.");
 			}
 			//Claimprocs
 			command="SELECT 1 FROM claimproc "
-				+"WHERE PlanNum="+POut.Long(plan.PlanNum)+" AND Status!="+POut.Int((int)ClaimProcStatus.Estimate)+" "//ignore estimates
+				+"WHERE PlanNum="+POut.Long(plan.Id)+" AND Status!="+POut.Int((int)ClaimProcStatus.Estimate)+" "//ignore estimates
 				+DbHelper.LimitAnd(1);
 			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
 				throw new ApplicationException("Not allowed to delete a plan attached to procedures.");
 			}
 			//Appointments
 			command="SELECT 1 FROM appointment "
-				+"WHERE (InsPlan1="+POut.Long(plan.PlanNum)+" OR InsPlan2="+POut.Long(plan.PlanNum)+") "
+				+"WHERE (InsPlan1="+POut.Long(plan.Id)+" OR InsPlan2="+POut.Long(plan.Id)+") "
 				+"AND AptStatus IN ("+POut.Int((int)ApptStatus.Complete)+","
 					+POut.Int((int)ApptStatus.Broken)+","
 					+POut.Int((int)ApptStatus.PtNote)+","
@@ -1114,13 +1115,13 @@ namespace OpenDentBusiness {
 				throw new ApplicationException("Not allowed to delete a plan attached to appointments.");
 			}
 			//PayPlans
-			command="SELECT 1 FROM payplan WHERE PlanNum="+POut.Long(plan.PlanNum)+" "+DbHelper.LimitAnd(1);
+			command="SELECT 1 FROM payplan WHERE PlanNum="+POut.Long(plan.Id)+" "+DbHelper.LimitAnd(1);
 			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
 				throw new ApplicationException("Not allowed to delete a plan attached to payment plans.");
 			}
 			//InsSubs
 			//we want the InsSubNum if only 1, otherwise only need to know there's more than one.
-			command="SELECT InsSubNum FROM inssub WHERE PlanNum="+POut.Long(plan.PlanNum)+" "+DbHelper.LimitAnd(2);
+			command="SELECT InsSubNum FROM inssub WHERE PlanNum="+POut.Long(plan.Id)+" "+DbHelper.LimitAnd(2);
 			List<long> listInsSubNums=Database.GetListLong(command);
 			if(listInsSubNums.Count>1) {
 				throw new ApplicationException("Not allowed to delete a plan with more than one subscriber.");
@@ -1129,10 +1130,10 @@ namespace OpenDentBusiness {
 				InsSubs.Delete(listInsSubNums[0]);//Checks dependencies first;  If none, deletes the inssub, claimprocs, patplans, and recomputes all estimates.
 			}
 			#endregion Validation
-			command="SELECT * FROM benefit WHERE PlanNum="+POut.Long(plan.PlanNum);
+			command="SELECT * FROM benefit WHERE PlanNum="+POut.Long(plan.Id);
 			List<Benefit> listBenefits=Crud.BenefitCrud.SelectMany(command);
 			if(listBenefits.Count>0) {
-				command="DELETE FROM benefit WHERE PlanNum="+POut.Long(plan.PlanNum);
+				command="DELETE FROM benefit WHERE PlanNum="+POut.Long(plan.Id);
 				Database.ExecuteNonQuery(command);
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 				if(doInsertInsEditLogs) {
@@ -1141,14 +1142,14 @@ namespace OpenDentBusiness {
 					});
 				}
 			}
-			ClearFkey(plan.PlanNum);//Zero securitylog FKey column for rows to be deleted.
-			command="DELETE FROM insplan WHERE PlanNum="+POut.Long(plan.PlanNum);
+			ClearFkey(plan.Id);//Zero securitylog FKey column for rows to be deleted.
+			command="DELETE FROM insplan WHERE PlanNum="+POut.Long(plan.Id);
 			Database.ExecuteNonQuery(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			if(doInsertInsEditLogs) {
 				InsEditLogs.MakeLogEntry(null,plan,InsEditLogType.InsPlan,Security.CurrentUser.Id); //log insplan deletion
 			}
-			InsVerifies.DeleteByFKey(plan.PlanNum,VerifyTypes.InsuranceBenefit);
+			InsVerifies.DeleteByFKey(plan.Id,VerifyTypes.InsuranceBenefit);
 		}
 
 		/// <summary>This changes PlanNum in every place in database where it's used.  It also deletes benefits for the old planNum.</summary>
@@ -1194,18 +1195,18 @@ namespace OpenDentBusiness {
 		public static long SetAllPlansToShowUCR() {
 			
 			string command="SELECT * FROM insplan WHERE ClaimsUseUCR = 0";
-			List<InsPlan> listInsPlans = Crud.InsPlanCrud.SelectMany(command);
+			List<InsurancePlan> listInsPlans = Crud.InsPlanCrud.SelectMany(command);
 			command="UPDATE insplan SET ClaimsUseUCR=1";
 			Database.ExecuteNonQuery(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			listInsPlans.ForEach(x => { //log insplan ClaimsUseUCR change.
 				InsEditLogs.MakeLogEntry("ClaimsUseUCR",Security.CurrentUser.Id,"0","1",InsEditLogType.InsPlan,
-					x.PlanNum,0,x.GroupNum+" - "+x.GroupName);
+					x.Id,0,x.GroupNumber+" - "+x.GroupName);
 			});
 			return listInsPlans.Count;
 		}
 		
-		public static List<InsPlan> GetByCarrierName(string carrierName) {
+		public static List<InsurancePlan> GetByCarrierName(string carrierName) {
 			
 			string command="SELECT * FROM insplan WHERE CarrierNum IN (SELECT CarrierNum FROM carrier WHERE CarrierName='"+POut.String(carrierName)+"')";
 			return Crud.InsPlanCrud.SelectMany(command);
@@ -1222,7 +1223,7 @@ namespace OpenDentBusiness {
 			return planNums;
 		}
 
-		public static List<InsPlan> GetAllByCarrierNum(long carrierNum) {
+		public static List<InsurancePlan> GetAllByCarrierNum(long carrierNum) {
 			
 			string command="SELECT * FROM insplan WHERE CarrierNum="+POut.Long(carrierNum);
 			return Crud.InsPlanCrud.SelectMany(command);
@@ -1231,18 +1232,18 @@ namespace OpenDentBusiness {
 		public static void UpdateCobRuleForAll(EnumCobRule cobRule) {
 			
 			string command = "SELECT * FROM insplan WHERE CobRule != "+POut.Int((int)cobRule);
-			List<InsPlan> listInsPlans = Crud.InsPlanCrud.SelectMany(command);
+			List<InsurancePlan> listInsPlans = Crud.InsPlanCrud.SelectMany(command);
 			command="UPDATE insplan SET CobRule="+POut.Int((int)cobRule);
 			Database.ExecuteNonQuery(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			listInsPlans.ForEach(x => {
 				InsEditLogs.MakeLogEntry("CobRule",Security.CurrentUser.Id,x.CobRule.ToString(),POut.Int((int)cobRule),
-					InsEditLogType.InsPlan,x.PlanNum,0,x.GroupNum+" - "+x.GroupName);
+					InsEditLogType.InsPlan,x.Id,0,x.GroupNumber+" - "+x.GroupName);
 			});
 		}
 
 		///<summary>Checks preference and insurance plan settings to determine if the insurance plan uses UCR fees for exclusions.</summary>
-		public static bool UsesUcrFeeForExclusions(InsPlan insPlan) {
+		public static bool UsesUcrFeeForExclusions(InsurancePlan insPlan) {
 			if(insPlan==null) {
 				return false;
 			}
@@ -1269,7 +1270,7 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary>Returns the ortho auto proc code override associated to the plan passed in or returns the default codeNum via pref.</summary>
-		public static long GetOrthoAutoProc(InsPlan planCur) {
+		public static long GetOrthoAutoProc(InsurancePlan planCur) {
 			//No need to check RemotingRole; no call to db.
 			if(planCur.OrthoAutoProcCodeNumOverride != 0) {
 				return planCur.OrthoAutoProcCodeNumOverride;

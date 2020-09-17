@@ -71,7 +71,7 @@ namespace OpenDental{
     private bool RefToSel;
 		private System.Windows.Forms.TextBox textBox1;
     private bool RefFromSel;  
-		private List<FeeSched> _listFeeScheds;
+		private List<FeeSchedule> _listFeeScheds;
 		private List<Provider> _listProviders;
 		private List<Definition> _listBillingTypeDefs;
 		private List<Definition> _listRecallUnschedStatusDefs;
@@ -101,7 +101,7 @@ namespace OpenDental{
 			IsDropDown=false;
 			TextValidAge.MinVal=0;
 			TextValidAge.MaxVal=125;
-			_listProviders=Providers.GetDeepCopy();
+			_listProviders=Providers.GetAll();
 			_listFeeScheds=FeeScheds.GetDeepCopy();
 			_listBillingTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes);
 			_listRecallUnschedStatusDefs=Definitions.GetDefsForCategory(DefinitionCategory.RecallUnschedStatus);
@@ -1287,7 +1287,7 @@ namespace OpenDental{
               sItem="OR ";
             }  
 						sItem+="patient.FeeSched "+ListConditions.SelectedItem.ToString()+" '"
-							+_listFeeScheds[ComboBox.SelectedIndices[i]].FeeSchedNum.ToString()+"'"; 
+							+_listFeeScheds[ComboBox.SelectedIndices[i]].Id.ToString()+"'"; 
 						if(i==ComboBox.SelectedIndices.Count-1){
 							sItem+=")";
             }  

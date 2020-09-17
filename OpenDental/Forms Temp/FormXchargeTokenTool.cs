@@ -87,8 +87,8 @@ namespace OpenDental {
 			GridRow row;
 			for(int i=0;i<_listCreditCards.Count;i++) {
 				row=new GridRow();
-				Patient pat=Patients.GetLim(_listCreditCards[i].PatNum);
-				row.Cells.Add(_listCreditCards[i].PatNum.ToString());
+				Patient pat=Patients.GetLim(_listCreditCards[i].PatientId);
+				row.Cells.Add(_listCreditCards[i].PatientId.ToString());
 				row.Cells.Add(pat.FName);
 				row.Cells.Add(pat.LName);
 				string ccNum=_listCreditCards[i].CCNumberMasked;
@@ -182,15 +182,15 @@ namespace OpenDental {
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			CreditCard cc=(CreditCard)gridMain.Rows[e.Row].Tag;
-			FormCreditCardManage FormCCM=new FormCreditCardManage(Patients.GetPat(cc.PatNum));
+			FormCreditCardManage FormCCM=new FormCreditCardManage(Patients.GetPat(cc.PatientId));
 			FormCCM.ShowDialog();
 			int totalCCs=PIn.Int(textTotal.Text);
 			int invalidCCs=PIn.Int(textInvalid.Text);
-			List<CreditCard> listCardsForPat=CreditCards.Refresh(cc.PatNum);
+			List<CreditCard> listCardsForPat=CreditCards.Refresh(cc.PatientId);
 			gridMain.BeginUpdate();
 			for(int i=gridMain.Rows.Count-1;i>-1;i--) {//loop through backwards and remove any cards that are no longer in the list
 				CreditCard ccGrid=(CreditCard)gridMain.Rows[i].Tag;
-				if(cc.PatNum!=ccGrid.PatNum) {
+				if(cc.PatientId!=ccGrid.PatientId) {
 					continue;
 				}
 				if(!listCardsForPat.Any(x => x.CreditCardNum==ccGrid.CreditCardNum)) {//this row is one of the cards for the patient

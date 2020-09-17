@@ -168,8 +168,8 @@ namespace OpenDental {
 			if(comboEncCodes.SelectedIndex==-1) {//default enc code set to code not in recommended list and not 'none'
 				switch(defaultEncCodeSystem) {
 					case "CDT":
-						textEncCodeValue.Text=ProcedureCodes.GetProcCode(defaultEncCode).ProcCode;//Will return a new ProcCode object, not null, if not found
-						textEncCodeDescript.Text=ProcedureCodes.GetProcCode(defaultEncCode).Descript;
+						textEncCodeValue.Text=ProcedureCodes.GetProcCode(defaultEncCode).Code;//Will return a new ProcCode object, not null, if not found
+						textEncCodeDescript.Text=ProcedureCodes.GetProcCode(defaultEncCode).Description;
 						break;
 					case "CPT":
 						Cpt cEnc=Cpts.GetByCode(defaultEncCode);
@@ -306,8 +306,8 @@ namespace OpenDental {
 				NewEncCodeSystem="CDT";
 				comboEncCodes.SelectedIndex=-1;
 				ProcedureCode procCur=ProcedureCodes.GetProcCode(FormP.SelectedCodeNum);
-				textEncCodeValue.Text=procCur.ProcCode;
-				textEncCodeDescript.Text=procCur.Descript;
+				textEncCodeValue.Text=procCur.Code;
+				textEncCodeDescript.Text=procCur.Description;
 				//We might implement a CodeSystem column on the ProcCode table since it may have ICD9 and ICD10 codes in it.  If so, we can set the NewEncCodeSystem to the value in that new column.
 				//NewEncCodeSystem=procCur.CodeSystem;
 				labelEncWarning.Visible=true;

@@ -9,6 +9,7 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.Collections;
 using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary>This form was originally designed to show providers all radiology procedures that are not flagged as CPOE.
@@ -70,7 +71,7 @@ namespace OpenDental {
 			GridRow row;
 			for(int i=0;i<_listNonCpoeProcs.Count;i++) {
 				Patient pat=_listPats.FirstOrDefault(x => x.PatNum==_listNonCpoeProcs[i].PatNum);
-				ProcedureCode procCode=_listProcCodes.FirstOrDefault(x => x.CodeNum==_listNonCpoeProcs[i].CodeNum);
+				ProcedureCode procCode=_listProcCodes.FirstOrDefault(x => x.Id==_listNonCpoeProcs[i].CodeNum);
 				Appointment appt=_listAppointments.FirstOrDefault(x => x.AptNum==_listNonCpoeProcs[i].AptNum);
 				if(pat==null || procCode==null || appt==null) {
 					continue;
@@ -78,9 +79,9 @@ namespace OpenDental {
 				row=new GridRow();
 				row.Cells.Add(appt.AptDateTime.ToShortDateString());
 				row.Cells.Add(Patients.GetNameLF(pat.LName,pat.FName,pat.Preferred,pat.MiddleI));
-				row.Cells.Add(procCode.ProcCode);
-				row.Cells.Add(procCode.AbbrDesc);
-				row.Cells.Add(procCode.Descript);
+				row.Cells.Add(procCode.Code);
+				row.Cells.Add(procCode.ShortDescription);
+				row.Cells.Add(procCode.Description);
 				row.Tag=_listNonCpoeProcs[i];
 				gridMain.Rows.Add(row);
 			}

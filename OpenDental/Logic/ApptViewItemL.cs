@@ -73,7 +73,7 @@ namespace OpenDental
 					else
 					{
 						//make visible provs exactly the same as the prov list (all except hidden)
-						visProvs.AddRange(Providers.GetDeepCopy(true));
+						visProvs.AddRange(Providers.GetAll(true));
 					}
 				}
 				//Hard coded elements showing
@@ -111,7 +111,7 @@ namespace OpenDental
 						{
 							continue;
 						}
-						Provider prov = Providers.GetFirstOrDefault(x => x.Id == listApptViewItems[i].ProvNum, true);
+						Provider prov = Providers.FirstOrDefault(x => x.Id == listApptViewItems[i].ProvNum, true);
 						if (prov != null)
 						{
 							visProvs.Add(prov);

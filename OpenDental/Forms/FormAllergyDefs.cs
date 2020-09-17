@@ -110,7 +110,7 @@ namespace Imedisoft.Forms
 				return;
 			}
 
-			if (AllergyDefs.DefIsInUse(allergyDef.Id))
+			if (AllergyDefs.IsInUse(allergyDef.Id))
 			{
 				ShowError("Cannot delete allergies in use.");
 

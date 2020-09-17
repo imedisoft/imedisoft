@@ -22,7 +22,7 @@ namespace Imedisoft.Forms
 
 			providerListBox.Items.Clear();
 
-			foreach (var provider in Providers.GetDeepCopy(true))
+			foreach (var provider in Providers.GetAll(true))
             {
 				providerListBox.Items.Add(provider);
 				if (provider.Id == perioExam.ProviderId)

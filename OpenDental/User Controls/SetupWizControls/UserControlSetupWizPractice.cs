@@ -30,7 +30,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void FillControls() {
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			textPracticeTitle.Text=Preferences.GetString(PreferenceName.PracticeTitle);
 			textAddress.Text=Preferences.GetString(PreferenceName.PracticeAddress);
 			textAddress2.Text=Preferences.GetString(PreferenceName.PracticeAddress2);

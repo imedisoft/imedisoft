@@ -974,7 +974,7 @@ namespace OpenDentBusiness
 
 		///<summary>Updates all claimproc estimates and also updates claim totals to db. Must supply procList which includes all procedures that this 
 		///claim is linked to.  Will also need to refresh afterwards to see the results</summary>
-		public static void CalculateAndUpdate(List<Procedure> listProcedures, List<InsPlan> listInsPlans, Claim claimCur, List<PatPlan> patPlans, List<Benefit> benefitList, Patient patient, List<InsSub> subList)
+		public static void CalculateAndUpdate(List<Procedure> listProcedures, List<InsurancePlan> listInsPlans, Claim claimCur, List<PatPlan> patPlans, List<Benefit> benefitList, Patient patient, List<InsSub> subList)
 		{
 			//No remoting role check; no call to db
 			//we need more than just the claimprocs for this claim.
@@ -996,7 +996,7 @@ namespace OpenDentBusiness
 			double insPayEst = 0;
 			double insPayAmt = 0;
 			double writeoff = 0;
-			InsPlan plan = InsPlans.GetPlan(claimCur.PlanNum, listInsPlans);
+			InsurancePlan plan = InsPlans.GetPlan(claimCur.PlanNum, listInsPlans);
 			if (plan == null)
 			{
 				return;
@@ -1102,7 +1102,7 @@ namespace OpenDentBusiness
 						provNum = Preferences.GetLong(PreferenceName.PracticeDefaultProv);
 					}
 					Provider providerFirst = Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-					Provider provider = Providers.GetFirstOrDefault(x => x.Id == provNum) ?? providerFirst;
+					Provider provider = Providers.FirstOrDefault(x => x.Id == provNum) ?? providerFirst;
 					//get the fee based on code and prov fee sched
 					double ppoFee = Fees.GetAmount0(ProcCur.CodeNum, provider.FeeScheduleId, ProcCur.ClinicNum, provNum, listFees);
 					double ucrFee = ProcCur.ProcFee;//Usual Customary and Regular (UCR) fee.  Also known as billed fee.
@@ -1169,12 +1169,12 @@ namespace OpenDentBusiness
 		}
 
 		///<summary>Creates a claim for a newly created repeat charge procedure.</summary>
-		public static Claim CreateClaimForRepeatCharge(string claimType, List<PatPlan> patPlanList, List<InsPlan> planList, List<ClaimProc> claimProcList,
+		public static Claim CreateClaimForRepeatCharge(string claimType, List<PatPlan> patPlanList, List<InsurancePlan> planList, List<ClaimProc> claimProcList,
 			Procedure proc, List<InsSub> subList, Patient pat)
 		{
 			//No remoting role check; no call to db
 			long claimFormNum = 0;
-			InsPlan planCur = new InsPlan();
+			InsurancePlan planCur = new InsurancePlan();
 			InsSub subCur = new InsSub();
 			Relat relatOther = Relat.Self;
 			switch (claimType)
@@ -1208,7 +1208,7 @@ namespace OpenDentBusiness
 			claimCur.ClaimStatus = "W";
 			claimCur.DateSent = DateTime.Today;
 			claimCur.DateSentOrig = DateTime.MinValue;
-			claimCur.PlanNum = planCur.PlanNum;
+			claimCur.PlanNum = planCur.Id;
 			claimCur.InsSubNum = subCur.InsSubNum;
 
 			InsSub sub;
@@ -1306,7 +1306,7 @@ namespace OpenDentBusiness
 			}
 			else
 			{
-				claimProcCur.CodeSent = ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode;
+				claimProcCur.CodeSent = ProcedureCodes.GetProcCode(proc.CodeNum).Code;
 				if (claimProcCur.CodeSent.Length > 5 && claimProcCur.CodeSent.Substring(0, 1) == "D")
 				{
 					claimProcCur.CodeSent = claimProcCur.CodeSent.Substring(0, 5);
@@ -1325,13 +1325,13 @@ namespace OpenDentBusiness
 		}
 
 		///<summary>Create claim for the automatic ortho procedure.</summary>
-		public static Claim CreateClaimForOrthoProc(string claimType, PatPlan patPlanCur, InsPlan insPlanCur, InsSub inssubCur,
+		public static Claim CreateClaimForOrthoProc(string claimType, PatPlan patPlanCur, InsurancePlan insPlanCur, InsSub inssubCur,
 			ClaimProc claimProc, Procedure proc, double feeBilled, DateTime dateBanding, int totalMonths, int monthsRem)
 		{
 			//No remoting role check; no call to db
 			ClaimProc claimProcCur = Procedures.GetClaimProcEstimate(proc.ProcNum, new List<ClaimProc> { claimProc }, insPlanCur, inssubCur.InsSubNum);
 			List<PatPlan> listPatPlansForPat = PatPlans.GetPatPlansForPat(patPlanCur.PatNum);
-			List<InsPlan> listInsPlansForPat = InsPlans.GetByInsSubs(listPatPlansForPat.Select(x => x.InsSubNum).ToList());
+			List<InsurancePlan> listInsPlansForPat = InsPlans.GetByInsSubs(listPatPlansForPat.Select(x => x.InsSubNum).ToList());
 			List<InsSub> listInsSubsForPat = InsSubs.GetMany(listPatPlansForPat.Select(x => x.InsSubNum).ToList());
 			if (claimProcCur == null)
 			{
@@ -1346,7 +1346,7 @@ namespace OpenDentBusiness
 			claimCur.ClaimStatus = "W";
 			claimCur.DateSent = DateTime.Today;
 			claimCur.DateSentOrig = DateTime.MinValue;
-			claimCur.PlanNum = insPlanCur.PlanNum;
+			claimCur.PlanNum = insPlanCur.Id;
 			claimCur.InsSubNum = inssubCur.InsSubNum;
 			claimCur.ClaimFee = feeBilled;
 			if (Preferences.GetBool(PreferenceName.OrthoClaimMarkAsOrtho))
@@ -1450,7 +1450,7 @@ namespace OpenDentBusiness
 			}
 			else
 			{
-				claimProcCur.CodeSent = ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode;
+				claimProcCur.CodeSent = ProcedureCodes.GetProcCode(proc.CodeNum).Code;
 				if (claimProcCur.CodeSent.Length > 5 && claimProcCur.CodeSent.Substring(0, 1) == "D")
 				{
 					claimProcCur.CodeSent = claimProcCur.CodeSent.Substring(0, 5);

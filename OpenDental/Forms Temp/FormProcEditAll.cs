@@ -144,7 +144,7 @@ namespace OpenDental {
 			if(comboClinic.GetSelected<Clinic>()==null) {//Dummy clinic is selected either directly or on load due to procs having multiple clinics.
 				//default the list to use all providers
 				//We might want to change this to instead load all providers for all ClinicNums in ProcList.
-				_listProvsForClinic=Providers.GetDeepCopy(true);
+				_listProvsForClinic=Providers.GetAll(true);
 			}
 			else {
 				_listProvsForClinic=Providers.GetProvsForClinic(comboClinic.GetSelected<Clinic>().Id);
@@ -240,7 +240,7 @@ namespace OpenDental {
 
 		private string ConstructSecurityLogForProcType(Procedure proc,Procedure procOld) {
 			string logTextForProc="";
-			string code=ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode;
+			string code=ProcedureCodes.GetProcCode(proc.CodeNum).Code;
 			string procDateStrOld=POut.Date(procOld.ProcDate);
 			string procDateStrNew=POut.Date(proc.ProcDate);
 			logTextForProc+=SecurityLogEntryHelper(code,SecurityLogFields.ProcDate,procDateStrOld,procDateStrNew);
@@ -283,7 +283,7 @@ namespace OpenDental {
 			Patient pat=Patients.GetPat(proc.PatNum);
 			List<PatPlan> listPatPlans=PatPlans.GetPatPlansForPat(pat.PatNum);
 			List<InsSub> listInsSubs=InsSubs.GetMany(listPatPlans.Select(x => x.InsSubNum).ToList());
-			List<InsPlan> listInsPlans=InsPlans.GetByInsSubs(listInsSubs.Select(x => x.InsSubNum).ToList());
+			List<InsurancePlan> listInsPlans=InsPlans.GetByInsSubs(listInsSubs.Select(x => x.InsSubNum).ToList());
 			List<Benefit> listBenefits=Benefits.Refresh(listPatPlans,listInsSubs);//Same method used in FormProcEdit.Load()->GetLoadData()
 			//FormProcEdit uses GetHistList(....,procDate:DateTimeOD.Today,...)
 			List<ClaimProcHist> listHist=ClaimProcs.GetHistList(pat.PatNum,listBenefits,listPatPlans,listInsPlans,DateTimeOD.Today,listInsSubs);

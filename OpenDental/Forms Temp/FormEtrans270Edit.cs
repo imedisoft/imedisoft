@@ -54,7 +54,7 @@ namespace OpenDental {
 			_isDependent=isDependent;
 			_subPatNum=subPatNum;
 			_isConinsuranceInverted=isCoinsuranceInverted;
-			textCurrentGroupNum.Text=InsPlans.GetPlan(planNum,new List<InsPlan>()).GroupNum;
+			textCurrentGroupNum.Text=InsPlans.GetPlan(planNum,new List<InsurancePlan>()).GroupNumber;
 		}
 
 		private void FormEtrans270Edit_Load(object sender,EventArgs e) {
@@ -367,14 +367,14 @@ namespace OpenDental {
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				InsSub sub=InsSubs.GetSub(this.SubNum,new List<InsSub>());
-				InsPlan plan=InsPlans.GetPlan(this.PlanNum,new List<InsPlan>());
+				InsurancePlan plan=InsPlans.GetPlan(this.PlanNum,new List<InsurancePlan>());
 				Patient subsc=Patients.GetPat(sub.Subscriber);
 				text="Subscriber: "+subsc.GetNameFL();
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
-				Carrier carrier=Carriers.GetCarrier(plan.CarrierNum);
-				if(carrier.CarrierNum!=0) {//not corrupted
-					text=carrier.CarrierName;
+				Carrier carrier=Carriers.GetCarrier(plan.CarrierId);
+				if(carrier.Id!=0) {//not corrupted
+					text=carrier.Name;
 					g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				}
 				yPos+=20;

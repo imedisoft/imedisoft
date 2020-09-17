@@ -28,11 +28,11 @@ namespace OpenDentBusiness
 			{
 				var arrayDefs = Definitions.GetDictionaryNoCache();
 				listProcCodes = ProcedureCodes.GetProcList(arrayDefs)
-					.OrderBy(x => x.ProcCat).ThenBy(x => x.ProcCode).ToList(); //Ordered by category
+					.OrderBy(x => x.ProcedureCategory).ThenBy(x => x.Code).ToList(); //Ordered by category
 			}
 			else
 			{
-				listProcCodes = ProcedureCodes.GetAllCodes(); //Ordered by ProcCode, used for the non-category version of the report if they want blanks.
+				listProcCodes = ProcedureCodes.GetAllCodes().ToList(); //Ordered by ProcCode, used for the non-category version of the report if they want blanks.
 			}
 			bool isFound;
 			List<Definition> listDefs = Definitions.GetDefsNoCache(DefinitionCategory.ProcCodeCats);
@@ -43,21 +43,21 @@ namespace OpenDentBusiness
 				if (isCategories)
 				{
 					//reports should no longer use the cache.
-					Definition def = listDefs.FirstOrDefault(x => x.Id == listProcCodes[i].ProcCat);
+					Definition def = listDefs.FirstOrDefault(x => x.Id == listProcCodes[i].ProcedureCategory);
 					row[0] = def == null ? "" : def.Name;
-					row[1] = listProcCodes[i].ProcCode;
-					row[2] = listProcCodes[i].Descript;
-					row[3] = listProcCodes[i].AbbrDesc;
+					row[1] = listProcCodes[i].Code;
+					row[2] = listProcCodes[i].Description;
+					row[3] = listProcCodes[i].ShortDescription;
 				}
 				else
 				{
-					row[0] = listProcCodes[i].ProcCode;
-					row[1] = listProcCodes[i].Descript;
-					row[2] = listProcCodes[i].AbbrDesc;
+					row[0] = listProcCodes[i].Code;
+					row[1] = listProcCodes[i].Description;
+					row[2] = listProcCodes[i].ShortDescription;
 				}
 				for (int j = 0; j < data.Rows.Count; j++)
 				{
-					if (data.Rows[j]["ProcCode"].ToString() == listProcCodes[i].ProcCode)
+					if (data.Rows[j]["ProcCode"].ToString() == listProcCodes[i].Code)
 					{
 						isFound = true;
 						double amt = PIn.Double(data.Rows[j]["Amount"].ToString());

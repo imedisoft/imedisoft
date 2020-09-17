@@ -117,7 +117,7 @@ namespace OpenDental {
 			Patient pat=Patients.GetPat(claim.PatNum);
 			Family fam=Patients.GetFamily(claim.PatNum);
 			List<InsSub> listInsSubs=InsSubs.RefreshForFam(fam);
-			List<InsPlan> listInsPlans=InsPlans.RefreshForSubList(listInsSubs);
+			List<InsurancePlan> listInsPlans=InsPlans.RefreshForSubList(listInsSubs);
 			List<PatPlan> listPatPlans=PatPlans.Refresh(claim.PatNum);
 			List<Procedure> listProcs=Procedures.GetProcsFromClaimProcs(listClaimProcsForClaim);
 			List<Hx835_Claim> listNotDetachedPaidClaims=new List<Hx835_Claim>();
@@ -638,12 +638,12 @@ namespace OpenDental {
 							List<Carrier> listCarriers=Carriers.GetByNameAndTin(tran.Payer.Name,tran.Payer.IdentificationCode);							
 							if(listCarriers.Count==0) {
 								Carrier carrier=new Carrier();
-								carrier.CarrierName=tran.Payer.Name;
+								carrier.Name=tran.Payer.Name;
 								carrier.TIN=tran.Payer.IdentificationCode;
 								Carriers.Insert(carrier);
 								DataValid.SetInvalid(InvalidType.Carriers);
 								listCarriers.Add(carrier);
-								SecurityLogs.MakeLogEntry(Permissions.CarrierCreate,0,"Carrier '"+carrier.CarrierName
+								SecurityLogs.MakeLogEntry(Permissions.CarrierCreate,0,"Carrier '"+carrier.Name
 									+"' created from Import Ins Plans 834.", SecurityLogSource.InsPlanImport834);
 								createdCarrierCount++;
 							}
@@ -651,14 +651,14 @@ namespace OpenDental {
 							//ins plan.
 							bool is834ExplicitlyDropping=(healthCoverage.HealthCoverage.MaintenanceTypeCode=="002");
 							//The insPlanNew will only be inserted if necessary.  Created temporarily in order to determine if insert is needed.
-							InsPlan insPlanNew=InsertOrUpdateInsPlan(null,member,listCarriers[0],false);
+							InsurancePlan insPlanNew=InsertOrUpdateInsPlan(null,member,listCarriers[0],false);
 							//Since the insurance plans in the 834 do not include very much information, it is likely that many patients will share the same exact plan.
 							//We look for an existing plan being used by any other patinents which match the fields we typically import.
-							List<InsPlan> listInsPlans=InsPlans.GetAllByCarrierNum(listCarriers[0].CarrierNum);
-							InsPlan insPlanMatch=null;
+							List<InsurancePlan> listInsPlans=InsPlans.GetAllByCarrierNum(listCarriers[0].Id);
+							InsurancePlan insPlanMatch=null;
 							for(int p=0;p<listInsPlans.Count;p++) {
 								//Set the PlanNums equal so that AreEqualValue() will ignore this field.  We must ignore PlanNum, since we do not know the PlanNum.
-								insPlanNew.PlanNum=listInsPlans[p].PlanNum;
+								insPlanNew.Id=listInsPlans[p].Id;
 								if(InsPlans.AreEqualValue(listInsPlans[p],insPlanNew)) {
 									insPlanMatch=listInsPlans[p];
 									break;
@@ -667,19 +667,19 @@ namespace OpenDental {
 							Family fam=Patients.GetFamily(member.Pat.PatNum);
 							List<InsSub> listInsSubs=InsSubs.RefreshForFam(fam);							
 							List<PatPlan> listPatPlans=PatPlans.Refresh(member.Pat.PatNum);
-							List<InsPlan> listUpdatedInsPlans=new List<InsPlan>();
+							List<InsurancePlan> listUpdatedInsPlans=new List<InsurancePlan>();
 							List<InsSub> listUpdatedInsSubs=new List<InsSub>();
 							List<PatPlan> listUpdatedPatPlans=new List<PatPlan>();
 							InsSub insSubMatch=null;							
 							PatPlan patPlanMatch=null;
 							//Get InsPlans for listInsSubs so we can check the Carrier name. Limits Db calls.
-							List<InsPlan> listPlansForSubs=InsPlans.GetByInsSubs(listInsSubs.Select(x=>x.InsSubNum).ToList());
+							List<InsurancePlan> listPlansForSubs=InsPlans.GetByInsSubs(listInsSubs.Select(x=>x.InsSubNum).ToList());
 							for(int p=0;p<listInsSubs.Count;p++) {
 								InsSub insSub=listInsSubs[p];
-								Carrier carrier=Carriers.GetCarrier(listPlansForSubs.First(x=>x.PlanNum==insSub.PlanNum).CarrierNum);
+								Carrier carrier=Carriers.GetCarrier(listPlansForSubs.First(x=>x.Id==insSub.PlanNum).CarrierId);
 								//According to section 1.4.3 of the standard, the preferred method of matching a dependent to a subscriber is to use the subscriberId.
 								if(insSub.SubscriberID.Trim()!=member.SubscriberId.Trim()
-									|| carrier.CarrierName.Trim().ToLower()!=tran.Payer.Name.Trim().ToLower())
+									|| carrier.Name.Trim().ToLower()!=tran.Payer.Name.Trim().ToLower())
 								{
 									continue;
 								}
@@ -732,11 +732,11 @@ namespace OpenDental {
 						//true.
 						if(doDropExistingInsurance && !listPatPlanNumsToRemove.IsNullOrEmpty()) {
 							List<InsSub> listInsSubsForLog=InsSubs.GetMany(listPatPlanNumsToRemove.Select(x => x.InsSubNum).ToList());
-							List<InsPlan> listInsPlansForLog=InsPlans.GetPlans(listInsSubsForLog.Select(x => x.PlanNum).ToList());
+							List<InsurancePlan> listInsPlansForLog=InsPlans.GetPlans(listInsSubsForLog.Select(x => x.PlanNum).ToList());
 							foreach(PatPlan plan in listPatPlanNumsToRemove) {
 								InsSub insSub=listInsSubsForLog.FirstOrDefault(x => x.InsSubNum==plan.InsSubNum);
-								InsPlan insPlan=listInsPlansForLog.FirstOrDefault(x => x.PlanNum==insSub.PlanNum);
-								Carrier carrier=Carriers.GetFirstOrDefault(x => x.CarrierNum==insPlan.CarrierNum);
+								InsurancePlan insPlan=listInsPlansForLog.FirstOrDefault(x => x.Id==insSub.PlanNum);
+								Carrier carrier=Carriers.GetFirstOrDefault(x => x.Id==insPlan.CarrierId);
 								DropPlan(plan,insPlan,insSub,carrier);
 								droppedPatPlanCount++;
 							}
@@ -772,7 +772,7 @@ namespace OpenDental {
 		}
 
 		///<summary>Drops the given patplan. Makes a security log.</summary>
-		private static void DropPlan(PatPlan patPlan,InsPlan insPlan,InsSub insSub,Carrier carrier) {
+		private static void DropPlan(PatPlan patPlan,InsurancePlan insPlan,InsSub insSub,Carrier carrier) {
 			//This code mimics the behavior of FormInsPlan.butDrop_Click(), except here we do not care if there are claims for this plan today.
 			//We need this feature to be as streamlined as possible so that it might become an automated process later.
 			//Testing for claims on today's date does not seem that useful anyway, or at least not as useful as checking for any claims
@@ -780,8 +780,8 @@ namespace OpenDental {
 			PatPlans.Delete(patPlan.PatPlanNum);//Estimates recomputed within Delete()
 			SecurityLogs.MakeLogEntry(Permissions.InsPlanDropPat,patPlan.PatNum,
 				"Insurance plan dropped from patient for carrier '"+carrier+"' and groupnum "
-				+"'"+insPlan.GroupNum+"' and subscriber ID '"+insSub.SubscriberID+"' "
-				+"from Import Ins Plans 834.",insPlan.PlanNum, SecurityLogSource.InsPlanImport834,insPlan.SecDateTEdit);
+				+"'"+insPlan.GroupNumber+"' and subscriber ID '"+insSub.SubscriberID+"' "
+				+"from Import Ins Plans 834.",insPlan.Id, SecurityLogSource.InsPlanImport834,insPlan.SecDateTEdit);
 		}
 
 		///<summary>For the given x834, tries to move the file to the archive folder. Will return if this succeeded or not.</summary>
@@ -815,15 +815,15 @@ namespace OpenDental {
 
 		///<summary>For the given information creates an insurance plan if insPlan is null. If one is passed in, it updates the plan. Returns the
 		///inserted/updated InsPlan object.</summary>
-		private static InsPlan InsertOrUpdateInsPlan(InsPlan insPlan,Hx834_Member member,Carrier carrier,bool isInsertAllowed=true) {
+		private static InsurancePlan InsertOrUpdateInsPlan(InsurancePlan insPlan,Hx834_Member member,Carrier carrier,bool isInsertAllowed=true) {
 			//The code below mimics how insurance plans are created in ContrFamily.ToolButIns_Click().
 			if(insPlan==null) {
-				insPlan=new InsPlan();
+				insPlan=new InsurancePlan();
 				if(member.InsFiling!=null) {
 					insPlan.FilingCode=member.InsFiling.InsFilingCodeNum;
 				}
 				insPlan.GroupName="";
-				insPlan.GroupNum=member.GroupNum;
+				insPlan.GroupNumber=member.GroupNum;
 				insPlan.PlanNote="";
 				insPlan.FeeSched=0;
 				insPlan.PlanType="";
@@ -832,7 +832,7 @@ namespace OpenDental {
 				insPlan.ClaimsUseUCR=false;
 				insPlan.CopayFeeSched=0;
 				insPlan.EmployerNum=0;
-				insPlan.CarrierNum=carrier.CarrierNum;
+				insPlan.CarrierId=carrier.Id;
 				insPlan.AllowedFeeSched=0;
 				insPlan.TrojanID="";
 				insPlan.DivisionNo="";
@@ -849,21 +849,21 @@ namespace OpenDental {
 				insPlan.HideFromVerifyList=false;
 				if(isInsertAllowed) {
 					InsPlans.Insert(insPlan);
-					SecurityLogs.MakeLogEntry(Permissions.InsPlanCreate,0,"Insurance plan for carrier '"+carrier.CarrierName+"' and groupnum "
-						+"'"+insPlan.GroupNum+"' created from Import Ins Plans 834.",insPlan.PlanNum, SecurityLogSource.InsPlanImport834,
+					SecurityLogs.MakeLogEntry(Permissions.InsPlanCreate,0,"Insurance plan for carrier '"+carrier.Name+"' and groupnum "
+						+"'"+insPlan.GroupNumber+"' created from Import Ins Plans 834.",insPlan.Id, SecurityLogSource.InsPlanImport834,
 						DateTime.MinValue); //new insplan, no date needed
 				}
 			}
 			else {
-				InsPlan insPlanOld=insPlan.Copy();
+				InsurancePlan insPlanOld=insPlan.Copy();
 				if(member.InsFiling!=null) {
 					insPlan.FilingCode=member.InsFiling.InsFilingCodeNum;
 				}
-				insPlan.GroupNum=member.GroupNum;
+				insPlan.GroupNumber=member.GroupNum;
 				if(OpenDentBusiness.Crud.InsPlanCrud.UpdateComparison(insPlan,insPlanOld)) {
 					InsPlans.Update(insPlan,insPlanOld);
-					SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,0,"Insurance plan for carrier '"+carrier.CarrierName+"' and groupnum "
-						+"'"+insPlan.GroupNum+"' edited from Import Ins Plans 834.",insPlan.PlanNum, SecurityLogSource.InsPlanImport834,insPlanOld.SecDateTEdit);
+					SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,0,"Insurance plan for carrier '"+carrier.Name+"' and groupnum "
+						+"'"+insPlan.GroupNumber+"' edited from Import Ins Plans 834.",insPlan.Id, SecurityLogSource.InsPlanImport834,insPlanOld.SecDateTEdit);
 				}
 			}
 			return insPlan;
@@ -871,10 +871,10 @@ namespace OpenDental {
 
 		///<summary>For the given information creates an insSub if insSub is null. If one is passed in, it updates the InsSub. Returns the
 		///inserted/updated InsSub object.</summary>
-		private static InsSub InsertOrUpdateInsSub(InsSub insSub,InsPlan insPlan,Hx834_Member member,Hx834_HealthCoverage healthCoverage,Carrier carrier) {
+		private static InsSub InsertOrUpdateInsSub(InsSub insSub,InsurancePlan insPlan,Hx834_Member member,Hx834_HealthCoverage healthCoverage,Carrier carrier) {
 			if(insSub==null) {
 				insSub=new InsSub();
-				insSub.PlanNum=insPlan.PlanNum;
+				insSub.PlanNum=insPlan.Id;
 				//According to section 1.4.3 of the 834 standard, subscribers must be sent in the 834 before dependents.
 				//This requirement facilitates easier linking of dependents to their subscribers.
 				//Since we were not able to locate a subscriber within the family above, we can safely assume that the insurance plan in the 834
@@ -887,9 +887,9 @@ namespace OpenDental {
 				insSub.DateTerm=healthCoverage.DateTerm;
 				InsSubs.Insert(insSub);
 				SecurityLogs.MakeLogEntry(Permissions.InsPlanCreateSub,insSub.Subscriber,
-					"Insurance subscriber created for carrier '"+carrier.CarrierName+"' and groupnum "
-					+"'"+insPlan.GroupNum+"' and subscriber ID '"+insSub.SubscriberID+"' "
-					+"from Import Ins Plans 834.",insPlan.PlanNum, SecurityLogSource.InsPlanImport834,DateTime.MinValue);
+					"Insurance subscriber created for carrier '"+carrier.Name+"' and groupnum "
+					+"'"+insPlan.GroupNumber+"' and subscriber ID '"+insSub.SubscriberID+"' "
+					+"from Import Ins Plans 834.",insPlan.Id, SecurityLogSource.InsPlanImport834,DateTime.MinValue);
 			}
 			else {
 				InsSub insSubOld=insSub.Copy();
@@ -899,9 +899,9 @@ namespace OpenDental {
 				if(OpenDentBusiness.Crud.InsSubCrud.UpdateComparison(insSub,insSubOld)) {
 					InsSubs.Update(insSub);
 					SecurityLogs.MakeLogEntry(Permissions.InsPlanEditSub,insSub.Subscriber,
-						"Insurance subscriber edited for carrier '"+carrier.CarrierName+"' and groupnum "
-						+"'"+insPlan.GroupNum+"' and subscriber ID '"+insSub.SubscriberID+"' "
-						+"from Import Ins Plans 834.",insPlan.PlanNum,SecurityLogSource.InsPlanImport834,insSubOld.SecDateTEdit);
+						"Insurance subscriber edited for carrier '"+carrier.Name+"' and groupnum "
+						+"'"+insPlan.GroupNumber+"' and subscriber ID '"+insSub.SubscriberID+"' "
+						+"from Import Ins Plans 834.",insPlan.Id,SecurityLogSource.InsPlanImport834,insSubOld.SecDateTEdit);
 				}
 			}
 			return insSub;
@@ -909,7 +909,7 @@ namespace OpenDental {
 
 		///<summary>For the given information creates an patPlan if patPlan is null. If one is passed in, it updates the patPlan. Returns the
 		///inserted/updated patPlan object.</summary>
-		private static PatPlan InsertOrUpdatePatPlan(PatPlan patPlan,InsSub insSub,InsPlan insPlan,Hx834_Member member,
+		private static PatPlan InsertOrUpdatePatPlan(PatPlan patPlan,InsSub insSub,InsurancePlan insPlan,Hx834_Member member,
 			Carrier carrier,List <PatPlan> listOtherPatPlans)
 		{
 			if(patPlan==null) {
@@ -932,17 +932,17 @@ namespace OpenDental {
 				}
 				PatPlans.Insert(patPlan);
 				SecurityLogs.MakeLogEntry(Permissions.InsPlanAddPat,patPlan.PatNum,
-					"Insurance plan added to patient for carrier '"+carrier.CarrierName+"' and groupnum "
-					+"'"+insPlan.GroupNum+"' and subscriber ID '"+insSub.SubscriberID+"' "
-					+"from Import Ins Plans 834.",insPlan.PlanNum, SecurityLogSource.InsPlanImport834,insPlan.SecDateTEdit);
+					"Insurance plan added to patient for carrier '"+carrier.Name+"' and groupnum "
+					+"'"+insPlan.GroupNumber+"' and subscriber ID '"+insSub.SubscriberID+"' "
+					+"from Import Ins Plans 834.",insPlan.Id, SecurityLogSource.InsPlanImport834,insPlan.SecDateTEdit);
 			}
 			else {
 				PatPlan patPlanOld=patPlan.Copy();
 				patPlan.Relationship=member.PlanRelat;
 				if(OpenDentBusiness.Crud.PatPlanCrud.UpdateComparison(patPlan,patPlanOld)) {
 					SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,patPlan.PatNum,"Insurance plan relationship changed from "
-						+member.PlanRelat+" to "+patPlan.Relationship+" for carrier '"+carrier.CarrierName+"' and groupnum "
-						+"'"+insPlan.GroupNum+"' from Import Ins Plans 834.",insPlan.PlanNum, SecurityLogSource.InsPlanImport834,insPlan.SecDateTEdit);
+						+member.PlanRelat+" to "+patPlan.Relationship+" for carrier '"+carrier.Name+"' and groupnum "
+						+"'"+insPlan.GroupNumber+"' from Import Ins Plans 834.",insPlan.Id, SecurityLogSource.InsPlanImport834,insPlan.SecDateTEdit);
 					PatPlans.Update(patPlan);
 				}
 			}

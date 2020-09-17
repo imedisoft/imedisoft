@@ -464,7 +464,7 @@ namespace OpenDental{
 			textDateTo.Text=AddWorkDays(2,DateTime.Today).ToShortDateString();
 			comboProv.Items.Add("All");
 			comboProv.SelectedIndex=0;
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboProv.Items.Add(_listProviders[i].GetLongDesc());
 			}
@@ -502,23 +502,23 @@ namespace OpenDental{
 			_listEmailAddresses=EmailAddresses.GetDeepCopy();//Does not include user specific email addresses.
 			List<Clinic> listClinicsAll=Clinics.GetAll(true);
 			for(int i=0;i<listClinicsAll.Count;i++) {//Exclude any email addresses that are associated to a clinic.
-				_listEmailAddresses.RemoveAll(x => x.EmailAddressNum==listClinicsAll[i].EmailAddressId);
+				_listEmailAddresses.RemoveAll(x => x.Id==listClinicsAll[i].EmailAddressId);
 			}
 			//Exclude default practice email address.
-			_listEmailAddresses.RemoveAll(x => x.EmailAddressNum==Preferences.GetLong(PreferenceName.EmailDefaultAddressNum));
+			_listEmailAddresses.RemoveAll(x => x.Id==Preferences.GetLong(PreferenceName.EmailDefaultAddressNum));
 			//Exclude web mail notification email address.
-			_listEmailAddresses.RemoveAll(x => x.EmailAddressNum==Preferences.GetLong(PreferenceName.EmailNotifyAddressNum));
+			_listEmailAddresses.RemoveAll(x => x.Id==Preferences.GetLong(PreferenceName.EmailNotifyAddressNum));
 			comboEmailFrom.Items.Add("Practice/Clinic");//default
 			comboEmailFrom.SelectedIndex=0;
 			//Add all email addresses which are not associated to a user, a clinic, or either of the default email addresses.
 			for(int i=0;i<_listEmailAddresses.Count;i++) {
-				comboEmailFrom.Items.Add(_listEmailAddresses[i].EmailUsername);
+				comboEmailFrom.Items.Add(_listEmailAddresses[i].SmtpUsername);
 			}
 			//Add user specific email address if present.
 			EmailAddress emailAddressMe=EmailAddresses.GetForUser(Security.CurrentUser.Id);//can be null
 			if(emailAddressMe!=null) {
 				_listEmailAddresses.Insert(0,emailAddressMe);
-				comboEmailFrom.Items.Insert(1,"Me"+" <"+emailAddressMe.EmailUsername+">");//Just below Practice/Clinic
+				comboEmailFrom.Items.Insert(1,"Me"+" <"+emailAddressMe.SmtpUsername+">");//Just below Practice/Clinic
 			}
 		}
 

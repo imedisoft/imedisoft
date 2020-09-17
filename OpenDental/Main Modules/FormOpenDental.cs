@@ -1992,16 +1992,16 @@ namespace OpenDental
 			{
 				List<PatPlan> PatPlanList = PatPlans.Refresh(CurPatNum);
 				List<InsSub> subList = InsSubs.RefreshForFam(fam);
-				List<InsPlan> PlanList = InsPlans.RefreshForSubList(subList);
+				List<InsurancePlan> PlanList = InsPlans.RefreshForSubList(subList);
 				Carrier carrier;
-				InsPlan plan;
+				InsurancePlan plan;
 				InsSub sub;
 				for (int i = 0; i < PatPlanList.Count; i++)
 				{
 					sub = InsSubs.GetSub(PatPlanList[i].InsSubNum, subList);
 					plan = InsPlans.GetPlan(sub.PlanNum, PlanList);
-					carrier = Carriers.GetCarrier(plan.CarrierNum);
-					menuItem = new MenuItem(carrier.CarrierName, menuLabel_Click);
+					carrier = Carriers.GetCarrier(plan.CarrierId);
+					menuItem = new MenuItem(carrier.Name, menuLabel_Click);
 					menuItem.Tag = carrier;
 					menuLabel.MenuItems.Add(menuItem);
 				}
@@ -2078,7 +2078,7 @@ namespace OpenDental
 			else if (((MenuItem)sender).Tag.GetType() == typeof(Carrier))
 			{
 				Carrier carrier = (Carrier)((MenuItem)sender).Tag;
-				LabelSingle.PrintCarrier(carrier.CarrierNum);
+				LabelSingle.PrintCarrier(carrier.Id);
 			}
 			else if (((MenuItem)sender).Tag.GetType() == typeof(Referral))
 			{
@@ -3191,7 +3191,7 @@ namespace OpenDental
 				menuItemAlerts.MenuItems.Remove(menuItem);//New MenuItem needed for new AlertItem.
 				doRedrawMenu = true;
 			}
-			List<ActionType> listActionTypes = Enum.GetValues(typeof(ActionType)).Cast<ActionType>().ToList();
+			List<AlertAction> listActionTypes = Enum.GetValues(typeof(AlertAction)).Cast<AlertAction>().ToList();
 			listActionTypes.Sort(AlertItem.CompareActionType);
 			//Loop through the _listAlertItems to either update or create our MenuItems.
 			foreach (AlertItem alertItemCur in _listAlertItems)
@@ -3211,9 +3211,9 @@ namespace OpenDental
 				}
 				//A List of sub menuitems based off of the available actions for the current AlertItem.
 				List<MenuItem> listSubMenuItems = new List<MenuItem>();
-				foreach (ActionType actionTypeCur in listActionTypes)
+				foreach (AlertAction actionTypeCur in listActionTypes)
 				{
-					if (actionTypeCur == ActionType.None || //This should never be shown to the user. Simply a default ActionType.
+					if (actionTypeCur == AlertAction.None || //This should never be shown to the user. Simply a default ActionType.
 						!alertItemCur.Actions.HasFlag(actionTypeCur))//Current AlertItem does not have this ActionType associated with it.
 					{
 						continue;
@@ -3287,31 +3287,31 @@ namespace OpenDental
 				case AlertType.DoseSpotClinicRegistered:
 				case AlertType.ClinicsChanged:
 				default:
-					value += alertItem.Type.GetDescription() + ": ";
+					value += alertItem.Type + ": ";
 					break;
 			}
 			return value;
 		}
 
 		///<summary>Helper function to translate the title for the given alerttype and alertItem.</summary>
-		private string AlertSubMenuItemHelper(ActionType actionType, AlertItem parentAlertItem)
+		private string AlertSubMenuItemHelper(AlertAction actionType, AlertItem parentAlertItem)
 		{
 			string value = "";
 			switch (actionType)
 			{
-				case ActionType.None://This should never happen.
+				case AlertAction.None://This should never happen.
 					value += "None";
 					break;
-				case ActionType.MarkAsRead:
+				case AlertAction.MarkAsRead:
 					value += "Mark As Read";
 					break;
-				case ActionType.OpenForm:
+				case AlertAction.OpenForm:
 					value += "Open " + parentAlertItem.FormToOpen.GetDescription();
 					break;
-				case ActionType.Delete:
+				case AlertAction.Delete:
 					value += "Delete Alert";
 					break;
-				case ActionType.ShowItemValue:
+				case AlertAction.ShowItemValue:
 					value += "View Details";
 					break;
 			}
@@ -6274,31 +6274,31 @@ namespace OpenDental
 
 		#region Alerts
 		///<summary>Helper function to determin backgroud color of an AlertItem.</summary>
-		private Color AlertBackgroudColorHelper(SeverityType type)
+		private Color AlertBackgroudColorHelper(AlertSeverityType type)
 		{
 			switch (type)
 			{
 				default:
-				case SeverityType.Normal:
+				case AlertSeverityType.Normal:
 					return SystemColors.Control;
-				case SeverityType.Low:
+				case AlertSeverityType.Low:
 					return Color.LightGoldenrodYellow;
-				case SeverityType.Medium:
+				case AlertSeverityType.Medium:
 					return Color.DarkOrange;
-				case SeverityType.High:
+				case AlertSeverityType.High:
 					return Color.OrangeRed;
 			}
 		}
 
 		///<summary>Helper function to determin text color of an AlertItem.</summary>
-		private Color AlertTextColorHelper(SeverityType type)
+		private Color AlertTextColorHelper(AlertSeverityType type)
 		{
 			switch (type)
 			{
 				default:
 					return Color.White;
-				case SeverityType.Low:
-				case SeverityType.Normal:
+				case AlertSeverityType.Low:
+				case AlertSeverityType.Normal:
 					return Color.Black;
 			}
 		}
@@ -6345,7 +6345,7 @@ namespace OpenDental
 			MenuItem menuItem = (MenuItem)sender;
 			AlertItem alertItem = ((AlertItem)menuItem.Tag);//Can be Null
 															//The TagOD on the alert is the list of AlertItemNums for all alerts that are its duplicate.
-			List<long> listThisAlertItemNums = (List<long>)alertItem?.TagOD ?? new List<long>();
+			//List<long> listThisAlertItemNums = (List<long>)alertItem?.TagOD ?? new List<long>();
 			Color colorText = SystemColors.MenuText;
 			Color backGroundColor = SystemColors.Control;
 			if (menuItem == menuItemAlerts)
@@ -6358,7 +6358,7 @@ namespace OpenDental
 							!listAlertItemNums.All(x => listAlertReadItemNums.Contains(x)))
 					{
 						//Max SeverityType for all unread AlertItems.
-						SeverityType maxSeverity = _listAlertItems.FindAll(x => !listAlertReadItemNums.Contains(x.Id)).Select(x => x.Severity).Max();
+						AlertSeverityType maxSeverity = _listAlertItems.FindAll(x => !listAlertReadItemNums.Contains(x.Id)).Select(x => x.Severity).Max();
 						backGroundColor = AlertBackgroudColorHelper(maxSeverity);
 						colorText = AlertTextColorHelper(maxSeverity);
 					}
@@ -6479,26 +6479,26 @@ namespace OpenDental
 			MenuItem menuItem = (MenuItem)sender;
 			AlertItem alertItem = (AlertItem)menuItem.Tag;
 			//The TagOD on the alert is the list of AlertItemNums for all alerts that are its duplicate.
-			List<long> listAlertItemNums = (List<long>)alertItem.TagOD;
-			if (menuItem.Name == ActionType.MarkAsRead.ToString())
+			//List<long> listAlertItemNums = (List<long>)alertItem.TagOD;
+			if (menuItem.Name == AlertAction.MarkAsRead.ToString())
 			{
-				AlertReadsHelper(listAlertItemNums);
+				//AlertReadsHelper(listAlertItemNums);
 				CheckAlerts();
 				return;
 			}
-			if (menuItem.Name == ActionType.Delete.ToString())
+			if (menuItem.Name == AlertAction.Delete.ToString())
 			{
 				if (!MsgBox.Show(MsgBoxButtons.OKCancel, "This will delete the alert for all users. Are you sure you want to delete it?"))
 				{
 					return;
 				}
-				AlertItems.Delete(listAlertItemNums);
+				//AlertItems.Delete(listAlertItemNums);
 				CheckAlerts();
 				return;
 			}
-			if (menuItem.Name == ActionType.OpenForm.ToString())
+			if (menuItem.Name == AlertAction.OpenForm.ToString())
 			{
-				AlertReadsHelper(listAlertItemNums);
+				//AlertReadsHelper(listAlertItemNums);
 				switch (alertItem.FormToOpen)
 				{
 					case FormType.FormPendingPayments:
@@ -6581,9 +6581,9 @@ namespace OpenDental
 						break;
 				}
 			}
-			if (menuItem.Name == ActionType.ShowItemValue.ToString())
+			if (menuItem.Name == AlertAction.ShowItemValue.ToString())
 			{
-				AlertReadsHelper(listAlertItemNums);
+				//AlertReadsHelper(listAlertItemNums);
 				MsgBoxCopyPaste msgBCP = new MsgBoxCopyPaste($"{alertItem.Description}\r\n\r\n{alertItem.Details}");
 				msgBCP.Show();
 			}

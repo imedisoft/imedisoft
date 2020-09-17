@@ -20,18 +20,12 @@ namespace Imedisoft.Data
 			=> Database.SelectMany(
 				"SELECT `name` FROM `counties` ORDER BY `name`", Database.ToScalar<string>);
 
-		public static long Insert(County county) 
-			=> ExecuteInsert(county);
-
-		public static void Update(County county)
-			=> ExecuteUpdate(county);
-
 		public static void Save(County county)
 		{
-			if (county.Id == 0) Insert(county);
+			if (county.Id == 0) ExecuteInsert(county);
             else
             {
-				Update(county);
+				ExecuteUpdate(county);
             }
 		}
 

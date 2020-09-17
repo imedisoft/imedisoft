@@ -33,7 +33,7 @@ namespace OpenDental
 		private List<Procedure> ProcList;
 		private Patient PatCur;
 		private Family FamCur;
-		private List <InsPlan> PlanList;
+		private List <InsurancePlan> PlanList;
 		///<summary>List of substitution links.  Lazy loaded, do not directly use this variable, use the property instead.</summary>
 		private List<SubstitutionLink> _listSubLinks=null;
 		private DataTable tablePayments;
@@ -218,7 +218,7 @@ namespace OpenDental
 			PlanList=_loadData.ListInsPlans;
 			PatPlanList=_loadData.ListPatPlans;
 			tablePayments=_loadData.TablePayments;
-			InsPlan insPlan=InsPlans.GetPlan(ClaimCur.PlanNum,PlanList);
+			InsurancePlan insPlan=InsPlans.GetPlan(ClaimCur.PlanNum,PlanList);
 			//If there is no insplan then we need to close
 			if(insPlan==null) {
 				MsgBox.Show("Invalid insurance plan associated to claim. Please run database maintenance method"+" "+nameof(DatabaseMaintenances.InsSubNumMismatchPlanNum)
@@ -1191,7 +1191,7 @@ namespace OpenDental
 				}
 				ProcedureCode procCodeCur=ProcedureCodes.GetProcCode(ProcCur.CodeNum);
 				ProcedureCode procCodeSent=ProcedureCodes.GetProcCode(claimProcCur.CodeSent);
-				InsPlan planCur=PlanList.Where(x => x.PlanNum == claimProcCur.PlanNum).FirstOrDefault();
+				InsurancePlan planCur=PlanList.Where(x => x.Id == claimProcCur.PlanNum).FirstOrDefault();
 				string descript=Procedures.GetClaimDescript(claimProcCur,procCodeSent,ProcCur,procCodeCur,planCur);
 				if(procCodeSent.IsCanadianLab) {
 					descript="^ ^ "+descript;
@@ -1466,7 +1466,7 @@ namespace OpenDental
 			if(FormIPS.DialogResult!=DialogResult.OK){
 				return;
 			}
-			ClaimCur.PlanNum2=FormIPS.SelectedPlan.PlanNum;
+			ClaimCur.PlanNum2=FormIPS.SelectedPlan.Id;
 			ClaimCur.InsSubNum2=FormIPS.SelectedSub.InsSubNum;
 			textPlan2.Text=InsPlans.GetDescript(ClaimCur.PlanNum2,FamCur,PlanList,ClaimCur.InsSubNum2,SubList);
 			if(textPlan2.Text==""){
@@ -1502,7 +1502,7 @@ namespace OpenDental
 				return;
 			}
 			if(Preferences.GetBool(PreferenceName.OrthoInsPayConsolidated)) {
-				InsPlan planCur = InsPlans.GetPlan(ClaimCur.PlanNum,PlanList);
+				InsurancePlan planCur = InsPlans.GetPlan(ClaimCur.PlanNum,PlanList);
 				long orthoAutoCodeNum = InsPlans.GetOrthoAutoProc(planCur);
 				//if all the procedures on this claim are ortho auto procedures...
 				if(_listClaimProcsForClaim.All(x => Procedures.GetProcFromList(ProcList,x.ProcNum).CodeNum == orthoAutoCodeNum)) {
@@ -1653,7 +1653,7 @@ namespace OpenDental
 			#region OrthoInsPayConsolidated
 			if(Preferences.GetBool(PreferenceName.OrthoInsPayConsolidated)) {
 				List<int> listOrthoAutoGridRows = new List<int>();
-				InsPlan planCur = InsPlans.GetPlan(ClaimCur.PlanNum,PlanList);
+				InsurancePlan planCur = InsPlans.GetPlan(ClaimCur.PlanNum,PlanList);
 				long orthoAutoCodeNum = InsPlans.GetOrthoAutoProc(planCur);
 				for(int i = 0;i<gridProc.SelectedIndices.Length;i++) {
 					//if all the procedures on this claim are ortho auto procedures...
@@ -1668,7 +1668,7 @@ namespace OpenDental
 						return;
 					}
 					//get the most recent claim marked as ortho with an ortho banding proc on it.
-					Claim claimBanding =Claims.GetOrthoBandingClaim(PatCur.PatNum,planCur.PlanNum);
+					Claim claimBanding =Claims.GetOrthoBandingClaim(PatCur.PatNum,planCur.Id);
 					if(claimBanding==null) {
 						MessageBox.Show("The claim with the original banding procedure was not marked as received or could not be found."
 							+"\r\nPlease manually add the payment to that claim.");
@@ -2004,7 +2004,7 @@ namespace OpenDental
 			claimPayment.CheckDate=MiscData.GetNowDateTime().Date;//Today's date for easier tracking by the office and to avoid backdating before accounting lock dates.
 			claimPayment.IsPartial=true;
 			claimPayment.ClinicNum=PatCur.ClinicNum;
-			claimPayment.CarrierName=Carriers.GetName(InsPlans.GetPlan(ClaimCur.PlanNum,PlanList).CarrierNum);
+			claimPayment.CarrierName=Carriers.GetName(InsPlans.GetPlan(ClaimCur.PlanNum,PlanList).CarrierId);
 			ClaimPayments.Insert(claimPayment);
 			long onlyOneClaimNum=0;
 			if(isThisClaimOnly) {
@@ -2305,9 +2305,9 @@ namespace OpenDental
 			//  return;
 			//}
 			//ask if print secondary?
-			InsPlan planCur=InsPlans.GetPlan(ClaimCur.PlanNum,PlanList);
-			Carrier carrierCur=Carriers.GetCarrier(planCur.CarrierNum);
-			LabelSingle.PrintCarrier(carrierCur.CarrierNum);//pd.PrinterSettings.PrinterName);
+			InsurancePlan planCur=InsPlans.GetPlan(ClaimCur.PlanNum,PlanList);
+			Carrier carrierCur=Carriers.GetCarrier(planCur.CarrierId);
+			LabelSingle.PrintCarrier(carrierCur.Id);//pd.PrinterSettings.PrinterName);
 		}
 
 		private void butPreview_Click(object sender, System.EventArgs e) {
@@ -2587,9 +2587,9 @@ namespace OpenDental
 		///<summary>Canada only.</summary>
 		private void butReverse_Click(object sender,EventArgs e) {
 			Cursor=Cursors.WaitCursor;
-			InsPlan insPlan=InsPlans.GetPlan(ClaimCur.PlanNum,null);
+			InsurancePlan insPlan=InsPlans.GetPlan(ClaimCur.PlanNum,null);
 			InsSub insSub=InsSubs.GetOne(ClaimCur.InsSubNum);
-			Carrier carrier=Carriers.GetCarrier(insPlan.CarrierNum);
+			Carrier carrier=Carriers.GetCarrier(insPlan.CarrierId);
 			Clearinghouse clearinghouseHq=Canadian.GetCanadianClearinghouseHq(carrier);
 			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.Active.Id);
 			try {
@@ -3279,7 +3279,7 @@ namespace OpenDental
 			}
 			else {//all other claim types use original estimate claimproc.
 				List<Benefit> benList=Benefits.Refresh(PatPlanList,SubList);
-				InsPlan plan=InsPlans.GetPlan(ClaimCur.PlanNum,PlanList);
+				InsurancePlan plan=InsPlans.GetPlan(ClaimCur.PlanNum,PlanList);
 				for(int i=0;i<_listClaimProcsForClaim.Count;i++) {
 					if(_listClaimProcsForClaim[i].Status==ClaimProcStatus.Supplemental//supplementals are duplicate
 						|| _listClaimProcsForClaim[i].ProcNum==0)//total payments get deleted

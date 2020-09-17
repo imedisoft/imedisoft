@@ -12,7 +12,7 @@ namespace OpenDental {
 	public partial class ContrFamilyEcw:UserControl {
 		private Patient PatCur;
 		private Family FamCur;
-		private List<FeeSched> _listFeeSchedShort;
+		private List<FeeSchedule> _listFeeSchedShort;
 
 		public ContrFamilyEcw() {
 			InitializeComponent();
@@ -49,7 +49,7 @@ namespace OpenDental {
 			_listFeeSchedShort=FeeScheds.GetDeepCopy(true);
 			for(int i=0;i<_listFeeSchedShort.Count;i++) {
 				comboFeeSched.Items.Add(_listFeeSchedShort[i].Description);
-				if(_listFeeSchedShort[i].FeeSchedNum==PatCur.FeeSched) {
+				if(_listFeeSchedShort[i].Id==PatCur.FeeSched) {
 					comboFeeSched.SelectedIndex=i+1;
 				}
 			}
@@ -61,7 +61,7 @@ namespace OpenDental {
 				PatCur.FeeSched=0;
 			}
 			else {
-				PatCur.FeeSched=_listFeeSchedShort[comboFeeSched.SelectedIndex-1].FeeSchedNum;
+				PatCur.FeeSched=_listFeeSchedShort[comboFeeSched.SelectedIndex-1].Id;
 			}
 			Patients.Update(PatCur,oldPat);
 		}

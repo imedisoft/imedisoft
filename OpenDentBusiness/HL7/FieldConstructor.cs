@@ -582,7 +582,7 @@ namespace OpenDentBusiness.HL7 {
 		}
 
 		///<summary>Only for creating the IN1 segment(s).</summary>
-		public static string GenerateFieldIN1(HL7Def def,string fieldName,int sequenceNum,PatPlan patplanCur,InsSub inssubCur,InsPlan insplanCur,
+		public static string GenerateFieldIN1(HL7Def def,string fieldName,int sequenceNum,PatPlan patplanCur,InsSub inssubCur,InsurancePlan insplanCur,
 			Carrier carrierCur,int patplanCount,Patient patSub)
 		{
 			switch(fieldName) {
@@ -591,17 +591,17 @@ namespace OpenDentBusiness.HL7 {
 					if(carrierCur==null) {
 						return "";
 					}
-					return gConcat(def.ComponentSeparator,carrierCur.Address,carrierCur.Address2,carrierCur.City,carrierCur.State,carrierCur.Zip);
+					return gConcat(def.ComponentSeparator,carrierCur.AddressLine1,carrierCur.AddressLine2,carrierCur.City,carrierCur.State,carrierCur.Zip);
 				case "carrier.CarrierName":
 					if(carrierCur==null) {
 						return "";
 					}
-					return carrierCur.CarrierName;
+					return carrierCur.Name;
 				case "carrier.ElectID":
 					if(carrierCur==null) {
 						return "";
 					}
-					return carrierCur.ElectID;
+					return carrierCur.ElectronicId;
 				case "carrier.Phone":
 					//Example: ^WPN^PH^^^800^3635432
 					if(carrierCur==null) {
@@ -644,7 +644,7 @@ namespace OpenDentBusiness.HL7 {
 					if(insplanCur==null) {
 						return "";
 					}
-					return insplanCur.GroupNum;
+					return insplanCur.GroupNumber;
 				case "insplan.planNum":
 					//Example: 2.16.840.1.113883.3.4337.1486.6566.7.1234
 					//If OID for insplan is not set, then it will be ODInsPlan.1234 (where 1234=PlanNum)
@@ -656,7 +656,7 @@ namespace OpenDentBusiness.HL7 {
 					if(insplanOid!=null && insplanOid.IDRoot!="") {
 						insplanOidRoot=insplanOid.IDRoot;
 					}
-					return insplanOidRoot+"."+insplanCur.PlanNum;//tack on "."+PlanNum for extension
+					return insplanOidRoot+"."+insplanCur.Id;//tack on "."+PlanNum for extension
 				case "insplan.PlanType":
 					if(insplanCur==null) {
 						return "";
@@ -868,14 +868,14 @@ namespace OpenDentBusiness.HL7 {
 			}
 			string retVal="";
 			ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
-			if(procCode.ProcCode.Length>5
-				&& procCode.ProcCode.StartsWith("D")
+			if(procCode.Code.Length>5
+				&& procCode.Code.StartsWith("D")
 				&& !hasLongDCodes)//truncate only if HasLongDCodes is false
 			{
-				retVal=procCode.ProcCode.Substring(0,5);//Remove suffix from all D codes.
+				retVal=procCode.Code.Substring(0,5);//Remove suffix from all D codes.
 			}
 			else {
-				retVal=procCode.ProcCode;
+				retVal=procCode.Code;
 			}
 			return retVal;
 		}
@@ -887,7 +887,7 @@ namespace OpenDentBusiness.HL7 {
 				return "";
 			}
 			ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
-			return gConcat(def.ComponentSeparator,procCode.ProcCode,procCode.Descript,"CD2","","","","2014","",procCode.LaymanTerm);			
+			return gConcat(def.ComponentSeparator,procCode.Code,procCode.Description,"CD2","","","","2014","",procCode.LaymanTerm);			
 		}
 
 		private static string gRaceOld(Patient pat) {
@@ -934,14 +934,14 @@ namespace OpenDentBusiness.HL7 {
 			}
 			string retVal="";
 			ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
-			if(procCode.TreatArea==TreatmentArea.ToothRange) {
+			if(procCode.TreatmentArea==ProcedureTreatmentArea.ToothRange) {
 				retVal=gConcat(componentSep,proc.ToothRange,"");
 			}
-			else if(procCode.TreatArea==TreatmentArea.Surf) {//probably not necessary
+			else if(procCode.TreatmentArea==ProcedureTreatmentArea.Surface) {//probably not necessary
 				retVal=gConcat(componentSep,Tooth.ToInternat(proc.ToothNum),Tooth.SurfTidyForClaims(proc.Surf,proc.ToothNum));
 			}
 			//requested change to have the UL, UR, LL, LR appear in the tooth number component of this field instead of the surface component
-			else if(procCode.TreatArea==TreatmentArea.Quad && isQuadAsToothNum) {
+			else if(procCode.TreatmentArea==ProcedureTreatmentArea.Quad && isQuadAsToothNum) {
 				retVal=gConcat(componentSep,proc.Surf,"");
 			}
 			else {

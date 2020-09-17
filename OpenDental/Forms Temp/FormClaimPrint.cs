@@ -50,7 +50,7 @@ namespace OpenDental{
 		private List<Procedure> ListProc;
 		///<summary>This is set externally for Renaissance and generic e-claims.  If it was not set ahead of time, it will set in FillDisplayStrings according to the insPlan.</summary>
 		public ClaimForm ClaimFormCur;
-		private List <InsPlan> ListInsPlan;
+		private List <InsurancePlan> ListInsPlan;
 		//private InsPlan[] MedPlanList;
 		private List<PatPlan> ListPatPlans;
 		private Claim ClaimCur;
@@ -64,7 +64,7 @@ namespace OpenDental{
 		private Referral ClaimReferral;
 		private List<InsSub> ListInsSub2;
 		private InsSub subCur;
-		private InsPlan planCur;
+		private InsurancePlan planCur;
 		private Carrier carrier;
 
 		///<summary></summary>
@@ -483,14 +483,14 @@ namespace OpenDental{
 			ListInsSub2=InsSubs.RefreshForFam(FamCur);
 			ListInsPlan=InsPlans.RefreshForSubList(ListInsSub2);
 			ListPatPlans=PatPlans.Refresh(ClaimCur.PatNum);
-			InsPlan otherPlan=InsPlans.GetPlan(ClaimCur.PlanNum2,ListInsPlan);
+			InsurancePlan otherPlan=InsPlans.GetPlan(ClaimCur.PlanNum2,ListInsPlan);
 			InsSub otherSub=InsSubs.GetSub(ClaimCur.InsSubNum2,ListInsSub2);
 			if(otherPlan==null){
-				otherPlan=new InsPlan();//easier than leaving it null
+				otherPlan=new InsurancePlan();//easier than leaving it null
 			}
 			Carrier otherCarrier=new Carrier();
-			if(otherPlan.PlanNum!=0){
-				otherCarrier=Carriers.GetCarrier(otherPlan.CarrierNum);
+			if(otherPlan.Id!=0){
+				otherCarrier=Carriers.GetCarrier(otherPlan.CarrierId);
 			}
 			//Employers.GetEmployer(otherPlan.EmployerNum);
 			//Employer otherEmployer=Employers.Cur;//not actually used
@@ -498,7 +498,7 @@ namespace OpenDental{
 			subCur=InsSubs.GetSub(ClaimCur.InsSubNum,ListInsSub2);
 			planCur=InsPlans.GetPlan(ClaimCur.PlanNum,ListInsPlan);
 			Clinic clinic=PrefC.HasClinicsEnabled ? Clinics.GetById(ClaimCur.ClinicNum) : null;//null if clinics are not enabled.
-			carrier=Carriers.GetCarrier(planCur.CarrierNum);
+			carrier=Carriers.GetCarrier(planCur.CarrierId);
 			//Employers.GetEmployer(InsPlans.Cur.EmployerNum);
 			Patient subsc;
 			if(FamCur.GetIndex(subCur.Subscriber)==-1) {//from another family
@@ -515,7 +515,7 @@ namespace OpenDental{
 				return false;
 			}
 			Patient otherSubsc=new Patient();
-			if(otherPlan.PlanNum!=0){//if secondary insurance exists
+			if(otherPlan.Id!=0){//if secondary insurance exists
 				if(FamCur.GetIndex(otherSub.Subscriber)==-1) {//from another family
 					otherSubsc=Patients.GetPat(otherSub.Subscriber);
 					//Patients.Cur;
@@ -595,9 +595,9 @@ namespace OpenDental{
 			}
 			arrayDiagnoses=Procedures.GetUniqueDiagnosticCodes(Procedures.GetProcsFromClaimProcs(ListClaimProcs),true).ToArray();
 			Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-			Provider providerClaimTreat=Providers.GetFirstOrDefault(x => x.Id==ClaimCur.ProvTreat)??providerFirst;
+			Provider providerClaimTreat=Providers.FirstOrDefault(x => x.Id==ClaimCur.ProvTreat)??providerFirst;
 			ProviderClinic provClinicClaimTreat=ProviderClinics.GetOneOrDefault(providerClaimTreat.Id,(clinic==null ? 0 : clinic.Id));
-			Provider providerClaimBill=Providers.GetFirstOrDefault(x => x.Id==ClaimCur.ProvBill)??providerFirst;
+			Provider providerClaimBill=Providers.FirstOrDefault(x => x.Id==ClaimCur.ProvBill)??providerFirst;
 			ProviderClinic provClinicClaimBill=ProviderClinics.GetOneOrDefault(providerClaimBill.Id,(clinic==null ? 0 : clinic.Id));
 			if(ClaimFormCur==null){
 				if(ClaimCur.ClaimForm>0){
@@ -667,16 +667,16 @@ namespace OpenDental{
 						displayStrings[i]=ClaimCur.PriorAuthorizationNumber;
 						break;
 					case "PriInsCarrierName":
-						displayStrings[i]=carrier.CarrierName;
+						displayStrings[i]=carrier.Name;
 						break;
 					case "PriInsAddress":
-						displayStrings[i]=carrier.Address;
+						displayStrings[i]=carrier.AddressLine1;
 						break;
 					case "PriInsAddress2":
-						displayStrings[i]=carrier.Address2;
+						displayStrings[i]=carrier.AddressLine2;
 						break;
 					case "PriInsAddressComplete":
-						displayStrings[i]=carrier.Address+" "+carrier.Address2;
+						displayStrings[i]=carrier.AddressLine1+" "+carrier.AddressLine2;
 						break;
 					case "PriInsCity":
 						displayStrings[i]=carrier.City;
@@ -688,36 +688,36 @@ namespace OpenDental{
 						displayStrings[i]=carrier.Zip;
 						break;
 					case "OtherInsExists":
-						if(otherPlan.PlanNum!=0) {
+						if(otherPlan.Id!=0) {
 							displayStrings[i]="X";
 						}
 						break;
 					case "OtherInsNotExists":
-						if(otherPlan.PlanNum==0) {
+						if(otherPlan.Id==0) {
 							displayStrings[i]="X";
 						}
 						break;
 					case "OtherInsExistsDent":
-						if(otherPlan.PlanNum!=0) {
+						if(otherPlan.Id!=0) {
 							if(!otherPlan.IsMedical) {
 								displayStrings[i]="X";
 							}
 						}
 						break;
 					case "OtherInsExistsMed":
-						if(otherPlan.PlanNum!=0) {
+						if(otherPlan.Id!=0) {
 							if(otherPlan.IsMedical) {
 								displayStrings[i]="X";
 							}
 						}
 						break;
 					case "OtherInsSubscrLastFirst":
-						if(otherPlan.PlanNum!=0) {
+						if(otherPlan.Id!=0) {
 							displayStrings[i]=otherSubsc.LName+", "+otherSubsc.FName+" "+otherSubsc.MiddleI;
 						}
 						break;
 					case "OtherInsSubscrDOB":
-						if(otherPlan.PlanNum!=0) {
+						if(otherPlan.Id!=0) {
 							if(ClaimFormCur.Items[i].FormatString=="") {
 								displayStrings[i]=otherSubsc.Birthdate.ToShortDateString();
 							}
@@ -727,22 +727,22 @@ namespace OpenDental{
 						}
 						break;
 					case "OtherInsSubscrIsMale":
-						if(otherPlan.PlanNum!=0 && otherSubsc.Gender==PatientGender.Male) {
+						if(otherPlan.Id!=0 && otherSubsc.Gender==PatientGender.Male) {
 							displayStrings[i]="X";
 						}
 						break;
 					case "OtherInsSubscrIsFemale":
-						if(otherPlan.PlanNum!=0 && otherSubsc.Gender==PatientGender.Female) {
+						if(otherPlan.Id!=0 && otherSubsc.Gender==PatientGender.Female) {
 							displayStrings[i]="X";
 						}
 						break;
 					case "OtherInsSubscrIsGenderUnknown":
-						if(otherPlan.PlanNum!=0 && otherSubsc.Gender==PatientGender.Unknown) {
+						if(otherPlan.Id!=0 && otherSubsc.Gender==PatientGender.Unknown) {
 							displayStrings[i]="X";
 						}
 						break;
 					case "OtherInsSubscrGender":
-						if(otherPlan.PlanNum!=0) {
+						if(otherPlan.Id!=0) {
 							if(otherSubsc.Gender==PatientGender.Male) {
 								displayStrings[i]="M";
 							}
@@ -755,7 +755,7 @@ namespace OpenDental{
 						}
 						break;
 					case "OtherInsSubscrID":
-						if(otherPlan.PlanNum!=0) {
+						if(otherPlan.Id!=0) {
 							displayStrings[i]=otherSub.SubscriberID;
 						}
 						break;
@@ -766,27 +766,27 @@ namespace OpenDental{
 						//}
 						//break;
 					case "OtherInsGroupNum":
-						if(otherPlan.PlanNum!=0) {
-							displayStrings[i]=otherPlan.GroupNum;
+						if(otherPlan.Id!=0) {
+							displayStrings[i]=otherPlan.GroupNumber;
 						}
 						break;
 					case "OtherInsRelatIsSelf":
-						if(otherPlan.PlanNum!=0 && ClaimCur.PatRelat2==Relat.Self) {
+						if(otherPlan.Id!=0 && ClaimCur.PatRelat2==Relat.Self) {
 							displayStrings[i]="X";
 						}
 						break;
 					case "OtherInsRelatIsSpouse":
-						if(otherPlan.PlanNum!=0 && ClaimCur.PatRelat2==Relat.Spouse) {
+						if(otherPlan.Id!=0 && ClaimCur.PatRelat2==Relat.Spouse) {
 							displayStrings[i]="X";
 						}
 						break;
 					case "OtherInsRelatIsChild":
-						if(otherPlan.PlanNum!=0 && ClaimCur.PatRelat2==Relat.Child) {
+						if(otherPlan.Id!=0 && ClaimCur.PatRelat2==Relat.Child) {
 							displayStrings[i]="X";
 						}
 						break;
 					case "OtherInsRelatIsOther":
-						if(otherPlan.PlanNum!=0 && (
+						if(otherPlan.Id!=0 && (
 							ClaimCur.PatRelat2==Relat.Dependent
 							|| ClaimCur.PatRelat2==Relat.Employee
 							|| ClaimCur.PatRelat2==Relat.HandicapDep
@@ -797,27 +797,27 @@ namespace OpenDental{
 							displayStrings[i]="X";
 						break;
 					case "OtherInsCarrierName":
-						if(otherPlan.PlanNum!=0) {
-							displayStrings[i]=otherCarrier.CarrierName;
+						if(otherPlan.Id!=0) {
+							displayStrings[i]=otherCarrier.Name;
 						}
 						break;
 					case "OtherInsAddress":
-						if(otherPlan.PlanNum!=0) {
-							displayStrings[i]=otherCarrier.Address;
+						if(otherPlan.Id!=0) {
+							displayStrings[i]=otherCarrier.AddressLine1;
 						}
 						break;
 					case "OtherInsCity":
-						if(otherPlan.PlanNum!=0) {
+						if(otherPlan.Id!=0) {
 							displayStrings[i]=otherCarrier.City;
 						}
 						break;
 					case "OtherInsST":
-						if(otherPlan.PlanNum!=0) {
+						if(otherPlan.Id!=0) {
 							displayStrings[i]=otherCarrier.State;
 						}
 						break;
 					case "OtherInsZip":
-						if(otherPlan.PlanNum!=0) {
+						if(otherPlan.Id!=0) {
 							displayStrings[i]=otherCarrier.Zip;
 						}
 						break;
@@ -930,7 +930,7 @@ namespace OpenDental{
 						displayStrings[i]=planCur.GroupName;
 						break;
 					case "GroupNum":
-						displayStrings[i]=planCur.GroupNum;
+						displayStrings[i]=planCur.GroupNumber;
 						break;
 					case "DivisionNo":
 						displayStrings[i]=planCur.DivisionNo;
@@ -1120,7 +1120,7 @@ namespace OpenDental{
 					case "PatIDFromPatPlan": //Dependant Code for Canada
 						patPlans=PatPlans.Refresh(PatNumCur);
 						if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-							if(carrier.ElectID=="000064") { //Pacific Blue Cross (PBC)
+							if(carrier.ElectronicId=="000064") { //Pacific Blue Cross (PBC)
 								displayStrings[i]=subCur.SubscriberID+"-"+PatPlans.GetPatID(subCur.InsSubNum,patPlans);
 							}
 						}
@@ -1447,7 +1447,7 @@ namespace OpenDental{
 					case "Remarks":
 						displayStrings[i]="";
 						if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-							if(carrier.ElectID=="000064") { //Pacific Blue Cross (PBC)
+							if(carrier.ElectronicId=="000064") { //Pacific Blue Cross (PBC)
 								if(ClaimCur.ClaimType=="PreAuth") {
 									displayStrings[i]+="Predetermination only."+Environment.NewLine;
 								}
@@ -1722,7 +1722,7 @@ namespace OpenDental{
 						displayStrings[i]=providerClaimBill.MedicaidID;
 						break;
 					case "BillingDentistProviderID":
-						ProviderIdent[] provIdents=ProviderIdents.GetForPayor(ClaimCur.ProvBill,carrier.ElectID);
+						ProviderIdent[] provIdents=ProviderIdents.GetForPayor(ClaimCur.ProvBill,carrier.ElectronicId);
 						if(provIdents.Length>0){
 							displayStrings[i]=provIdents[0].IDNumber;//just use the first one we find
 						}
@@ -1730,7 +1730,7 @@ namespace OpenDental{
 					case "BillingDentistNPI":
 						displayStrings[i]=providerClaimBill.NationalProviderID;
 						if(CultureInfo.CurrentCulture.Name.EndsWith("CA") && //Canadian. en-CA or fr-CA
-							carrier.ElectID=="000064" && //Pacific Blue Cross (PBC)
+							carrier.ElectronicId=="000064" && //Pacific Blue Cross (PBC)
 							providerClaimBill.NationalProviderID!=providerClaimTreat.NationalProviderID && //Billing and treating providers are different
 							displayStrings[i].Length==9) { //Only for provider numbers which have been entered correctly (to prevent and indexing exception).
 							displayStrings[i]="00"+displayStrings[i].Substring(2,5)+"00";
@@ -1950,7 +1950,7 @@ namespace OpenDental{
 						displayStrings[i]=providerClaimTreat.MedicaidID;
 						break;
 					case "TreatingDentistProviderID":
-						provIdents=ProviderIdents.GetForPayor(ClaimCur.ProvTreat,carrier.ElectID);
+						provIdents=ProviderIdents.GetForPayor(ClaimCur.ProvTreat,carrier.ElectronicId);
 						if(provIdents.Length>0) {
 							displayStrings[i]=provIdents[0].IDNumber;//just use the first one we find
 						}
@@ -2185,7 +2185,7 @@ namespace OpenDental{
 				if(ClaimFormCur.Items[i]==null){//Renaissance does not use [0]
 					continue;
 				}
-				InsPlan planCur = InsPlans.GetPlan(ClaimCur.PlanNum, ListInsPlan);
+				InsurancePlan planCur = InsPlans.GetPlan(ClaimCur.PlanNum, ListInsPlan);
 				qty = 0;
 				switch(ClaimFormCur.Items[i].FieldName){
 					//there is no default, because any non-matches will remain as ""
@@ -4217,7 +4217,7 @@ namespace OpenDental{
 					if(insFilingCodeStr=="MC") { //Medicaid
 						string insFilingCodeClaimProcStr="";
 						for(int k=0;k<ListInsPlan.Count;k++) {
-							if(ListInsPlan[k].PlanNum==ClaimProcsForPat[j].PlanNum) {
+							if(ListInsPlan[k].Id==ClaimProcsForPat[j].PlanNum) {
 								insFilingCodeClaimProcStr=InsFilingCodes.GetEclaimCode(ListInsPlan[k].FilingCode);
 								break;
 							}
@@ -4252,7 +4252,7 @@ namespace OpenDental{
 					}
 				}
 				else if(ClaimFormCur.Items[i].FieldName=="MedIns"+insLine+"Name") { //MedInsAName, MedInsBName, MedInsCName
-					displayStrings[i]=Carriers.GetName(planCur.CarrierNum);
+					displayStrings[i]=Carriers.GetName(planCur.CarrierId);
 				}
 				else if(ClaimFormCur.Items[i].FieldName=="MedIns"+insLine+"PlanID") { //MedInsAPlanID, MedInsBPlanID, MedInsCPlanID
 					//Not used. Leave blank.
@@ -4305,9 +4305,9 @@ namespace OpenDental{
 					}
 				}
 				else if(ClaimFormCur.Items[i].FieldName=="MedIns"+insLine+"OtherProvID") { //MedInsAOtherProvID, MedInsBOtherProvID, MedInsCOtherProvID
-					string CarrierElectID=carrier.ElectID.ToString();
+					string CarrierElectID=carrier.ElectronicId.ToString();
 					Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-					Provider prov=Providers.GetFirstOrDefault(x => x.Id==ClaimCur.ProvBill)??providerFirst;
+					Provider prov=Providers.FirstOrDefault(x => x.Id==ClaimCur.ProvBill)??providerFirst;
 					if(prov.Id>0 && CarrierElectID!="" && ProviderIdents.GetForPayor(prov.Id,CarrierElectID).Length>0) {
 						ProviderIdent provID=ProviderIdents.GetForPayor(prov.Id,CarrierElectID)[0];
 						if(provID.IDNumber != "") {
@@ -4351,7 +4351,7 @@ namespace OpenDental{
 					displayStrings[i]=planCur.GroupName;
 				}
 				else if(ClaimFormCur.Items[i].FieldName=="MedIns"+insLine+"GroupNum") { //MedInsAGroupNum, MedInsBGroupNum, MedInsCGroupNum
-					displayStrings[i]=planCur.GroupNum;
+					displayStrings[i]=planCur.GroupNumber;
 				}
 				else if(ClaimFormCur.Items[i].FieldName=="MedIns"+insLine+"AuthCode") { //MedInsAAuthCode, MedInsBAuthCode, MedInsCAuthCode
 					displayStrings[i]=ClaimCur.PreAuthString;
@@ -4475,7 +4475,7 @@ namespace OpenDental{
 					else {
 						ProcedureCode procCodeSent=ProcedureCodes.GetProcCode(ListClaimProcs[procIndex].CodeSent);
 						string descript=Procedures.GetClaimDescript(ListClaimProcs[procIndex],procCodeSent,ProcCur,procCode,planCur);
-						if(procCodeSent.TreatArea==TreatmentArea.Quad) {
+						if(procCodeSent.TreatmentArea==ProcedureTreatmentArea.Quad) {
 							return ProcCur.Surf+" "+descript;
 						}
 						else {
@@ -4496,7 +4496,7 @@ namespace OpenDental{
 					}
 					else {
 						Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-						Provider providerClaimProc=Providers.GetFirstOrDefault(x => x.Id==ListClaimProcs[procIndex].ProvNum)??providerFirst;
+						Provider providerClaimProc=Providers.FirstOrDefault(x => x.Id==ListClaimProcs[procIndex].ProvNum)??providerFirst;
 						return providerClaimProc.MedicaidID;
 					}
 				case "TreatProvNPI":
@@ -4505,7 +4505,7 @@ namespace OpenDental{
 					}
 					else {
 						Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-						Provider providerClaimProc=Providers.GetFirstOrDefault(x => x.Id==ListClaimProcs[procIndex].ProvNum)??providerFirst;
+						Provider providerClaimProc=Providers.FirstOrDefault(x => x.Id==ListClaimProcs[procIndex].ProvNum)??providerFirst;
 						return providerClaimProc.NationalProviderID;
 					}
 				case "PlaceNumericCode":
@@ -4579,23 +4579,23 @@ namespace OpenDental{
 			string area="";
 			string toothNum="";
 			string surf="";
-			switch(ProcedureCodes.GetProcCode(ProcCur.CodeNum).TreatArea){
-				case TreatmentArea.Surf:
+			switch(ProcedureCodes.GetProcCode(ProcCur.CodeNum).TreatmentArea){
+				case ProcedureTreatmentArea.Surface:
 					//area blank
 					toothNum=Tooth.ToInternat(ProcCur.ToothNum);
 					surf=Tooth.SurfTidyForClaims(ProcCur.Surf,ProcCur.ToothNum);
 					break;
-				case TreatmentArea.Tooth:
+				case ProcedureTreatmentArea.Tooth:
 					//area blank
 					toothNum=Tooth.ToInternat(ProcCur.ToothNum);
 					//surf blank
 					break;
-				case TreatmentArea.Quad:
+				case ProcedureTreatmentArea.Quad:
 					area=AreaToCode(ProcCur.Surf);//"UL" etc -> 20 etc
 					//num blank
 					//surf blank
 					break;
-				case TreatmentArea.Sextant:
+				case ProcedureTreatmentArea.Sextant:
 					if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 						//United States Sextant 1 is Canadian sextant 03.
 						//United States Sextant 2 is Canadian sextant 04.
@@ -4613,12 +4613,12 @@ namespace OpenDental{
 						//surf blank
 					}
 					break;
-				case TreatmentArea.Arch:
+				case ProcedureTreatmentArea.Arch:
 					area=AreaToCode(ProcCur.Surf);//area "U", etc
 					//num blank
 					//surf blank
 					break;
-				case TreatmentArea.ToothRange:
+				case ProcedureTreatmentArea.ToothRange:
 					//area blank
 					toothNum=Tooth.FormatRangeForDisplay(ProcCur.ToothRange);
 					/*for(int i=0;i<ProcCur.ToothRange.Split(',').Length;i++){
@@ -4711,7 +4711,7 @@ namespace OpenDental{
 		}
 
 		///<summary>Returns the procedures UnitQty fields.</summary>
-		private string CalculateUnitQtyField(int index,int startProc,InsPlan insPlan) {
+		private string CalculateUnitQtyField(int index,int startProc,InsurancePlan insPlan) {
 			int qty;
 			if(insPlan.ShowBaseUnits) {
 				short bunit;

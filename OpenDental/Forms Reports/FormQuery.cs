@@ -754,7 +754,7 @@ namespace OpenDental{
 							break;
 						case "treatarea":
 							tableOut.Rows[i][j]
-								=((TreatmentArea)PIn.Long(tableOut.Rows[i][j].ToString())).ToString();
+								=((ProcedureTreatmentArea)PIn.Long(tableOut.Rows[i][j].ToString())).ToString();
 							break;
 						case "specialty":
 							tableOut.Rows[i][j]

@@ -10,12 +10,12 @@ using OpenDentBusiness;
 
 namespace OpenDental {
 	public partial class FormInsEditLogs:ODForm {
-		private InsPlan _insPlan;
+		private InsurancePlan _insPlan;
 		private List<Benefit> _listBenefits;
 		private List<InsEditLog> _listLogs;
 
 		///<summary>Opens the window with the passed-in parameters set as the default.</summary>
-		public FormInsEditLogs(InsPlan insPlan, List<Benefit> listBenefits) {
+		public FormInsEditLogs(InsurancePlan insPlan, List<Benefit> listBenefits) {
 			InitializeComponent();
 			
 			_insPlan=insPlan;
@@ -35,7 +35,7 @@ namespace OpenDental {
 		private void FillGrid() {
 			if(_listLogs==null) {
 				Cursor=Cursors.WaitCursor;
-				_listLogs=InsEditLogs.GetLogsForPlan(_insPlan.PlanNum,_insPlan.CarrierNum,_insPlan.EmployerNum);
+				_listLogs=InsEditLogs.GetLogsForPlan(_insPlan.Id,_insPlan.CarrierId,_insPlan.EmployerNum);
 				TranslateBeforeAndAfter();
 				Cursor=Cursors.Default;
 			}
@@ -139,8 +139,8 @@ namespace OpenDental {
 						if(logCur.LogType == InsEditLogType.Carrier) {
 							break;
 						}
-						string carrierNameBefore=Carriers.GetCarrier(beforeKey).CarrierName;
-						string carrierNameAfter=Carriers.GetCarrier(afterKey).CarrierName;
+						string carrierNameBefore=Carriers.GetCarrier(beforeKey).Name;
+						string carrierNameAfter=Carriers.GetCarrier(afterKey).Name;
 						if(logCur.LogType==InsEditLogType.InsPlan && carrierNameBefore==carrierNameAfter) {//Edits to carrier.
 							break;//Don't translate CarrierNum to CarrierName when both carriers have the same name, loses too much useful detail.
 						}

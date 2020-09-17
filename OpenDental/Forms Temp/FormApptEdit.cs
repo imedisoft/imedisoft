@@ -32,7 +32,7 @@ namespace OpenDental{
 		public bool IsNew;
 		private Appointment AptCur;
 		private Appointment AptOld;
-		private List <InsPlan> PlanList;
+		private List <InsurancePlan> PlanList;
 		private List<InsSub> SubList;
 		private Patient pat;
 		private Family fam;
@@ -423,7 +423,7 @@ namespace OpenDental{
 					if(i > 0) {
 						requirements+="\r\n";
 					}
-					Provider student=Providers.GetDeepCopy().First(x => x.Id==listStudents[i].ProviderId);
+					Provider student=Providers.GetAll().First(x => x.Id==listStudents[i].ProviderId);
 					requirements+=student.LastName+", "+student.FirstName+": "+listStudents[i].Description;
 				}
 				textRequirement.Text=requirements;
@@ -769,7 +769,7 @@ namespace OpenDental{
 							row.Cells.Add(Definitions.GetName(DefinitionCategory.TxPriorities,proc.Priority));
 							break;
 						case "Code":
-								row.Cells.Add(procCode.ProcCode);
+								row.Cells.Add(procCode.Code);
 							break;
 						case "Tth":
 							if(isMedical) {
@@ -802,7 +802,7 @@ namespace OpenDental{
 								descript+="(other appt) ";
 							}
 							if(procCode.LaymanTerm=="") {
-								descript+=procCode.Descript;
+								descript+=procCode.Description;
 							}
 							else {
 								descript+=procCode.LaymanTerm;
@@ -816,7 +816,7 @@ namespace OpenDental{
 							row.Cells.Add(proc.ProcFeeTotal.ToString("F"));
 							break;
 						case "Abbreviation":
-							row.Cells.Add(procCode.AbbrDesc);
+							row.Cells.Add(procCode.ShortDescription);
 							break;
 						case "Layman's Term":
 							row.Cells.Add(procCode.LaymanTerm);
@@ -1065,11 +1065,11 @@ namespace OpenDental{
 						if(proc.ProcStatus.In(ProcStat.EO,ProcStat.EC)) {
 							perm=Permissions.ProcExistingEdit;
 						}
-						SecurityLogs.MakeLogEntry(perm,AptCur.PatNum,ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode
+						SecurityLogs.MakeLogEntry(perm,AptCur.PatNum,ProcedureCodes.GetProcCode(proc.CodeNum).Code
 							+" ("+proc.ProcStatus+"), "+proc.ProcFee.ToString("c")+", Deleted");
 					}
 					else {
-						SecurityLogs.MakeLogEntry(Permissions.ProcDelete,AptCur.PatNum,ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode
+						SecurityLogs.MakeLogEntry(Permissions.ProcDelete,AptCur.PatNum,ProcedureCodes.GetProcCode(proc.CodeNum).Code
 							+" ("+proc.ProcStatus+"), "+proc.ProcFee.ToString("c"));
 					}
 				}
@@ -1412,7 +1412,7 @@ namespace OpenDental{
 				textInsPlan1.Text="";
 				return;
 			}
-			AptCur.InsPlan1=FormIPS.SelectedPlan.PlanNum;
+			AptCur.InsPlan1=FormIPS.SelectedPlan.Id;
 			textInsPlan1.Text=InsPlans.GetCarrierName(AptCur.InsPlan1,PlanList);
 		}
 
@@ -1429,7 +1429,7 @@ namespace OpenDental{
 				textInsPlan2.Text="";
 				return;
 			}
-			AptCur.InsPlan2=FormIPS.SelectedPlan.PlanNum;
+			AptCur.InsPlan2=FormIPS.SelectedPlan.Id;
 			textInsPlan2.Text=InsPlans.GetCarrierName(AptCur.InsPlan2,PlanList);
 		}
 
@@ -1444,7 +1444,7 @@ namespace OpenDental{
 			}
 			List<StudentResult> listStudents=StudentResults.GetByAppt(AptCur.AptNum).ToList();
 			textRequirement.Text = string.Join("\r\n",listStudents
-				.Select(x => new { Student = Providers.GetDeepCopy().First(y => y.Id==x.ProviderId),Descript = x.Description })
+				.Select(x => new { Student = Providers.GetAll().First(y => y.Id==x.ProviderId),Descript = x.Description })
 				.Select(x => x.Student.LastName+", "+x.Student.FirstName+": "+x.Descript).ToList());
 		}
 
@@ -2039,7 +2039,7 @@ namespace OpenDental{
 			for(int i=0;i<procsForDay.Count;i++){
 				Procedure proc=procsForDay[i];
 				ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
-				Provider prov=Providers.GetDeepCopy().First(x => x.Id==proc.ProvNum);
+				Provider prov=Providers.GetAll().First(x => x.Id==proc.ProvNum);
 				User usr=Users.GetById(proc.UserNum);
 				GridRow row=new GridRow();
 				row.LowerBorderColor=System.Drawing.Color.Black;
@@ -2061,7 +2061,7 @@ namespace OpenDental{
 							row.Cells.Add(proc.Dx.ToString());
 							break;
 						case "Description":
-							row.Cells.Add((procCode.LaymanTerm!="")?procCode.LaymanTerm:procCode.Descript);
+							row.Cells.Add((procCode.LaymanTerm!="")?procCode.LaymanTerm:procCode.Description);
 							break;
 						case "Stat":
 							if(ProcMultiVisits.IsProcInProcess(proc.ProcNum)) {
@@ -2078,11 +2078,11 @@ namespace OpenDental{
 							row.Cells.Add(proc.ProcFee.ToString("F"));
 							break;
 						case "Proc Code":
-							if(procCode.ProcCode.Length>5 && procCode.ProcCode.StartsWith("D")) {
-								row.Cells.Add(procCode.ProcCode.Substring(0,5));//Remove suffix from all D codes.
+							if(procCode.Code.Length>5 && procCode.Code.StartsWith("D")) {
+								row.Cells.Add(procCode.Code.Substring(0,5));//Remove suffix from all D codes.
 							}
 							else {
-								row.Cells.Add(procCode.ProcCode);
+								row.Cells.Add(procCode.Code);
 							}
 							break;
 						case "User":
@@ -2298,7 +2298,7 @@ namespace OpenDental{
 					.Where(x => gridProc.SelectedIndices.Contains(gridProc.Rows.IndexOf(x)))
 					.Select(x => ((Procedure)x.Tag)).ToList();
 				List<long> listProcCodeNumsToDetach=listSelectedProcs.Select(y => y.CodeNum).ToList()
-				.Except(listAptTypeProcs.Select(x => x.CodeNum).ToList()).ToList();
+				.Except(listAptTypeProcs.Select(x => x.Id).ToList()).ToList();
 				//if there are procedures that would get detached
 				//and if they have the preference AppointmentTypeWarning on,
 				//Display the warning
@@ -2315,7 +2315,7 @@ namespace OpenDental{
 				foreach(ProcedureCode procCodeCur in listAptTypeProcs) {
 					for(int i=0;i<gridProc.Rows.Count;i++) {
 						Procedure rowProc=(Procedure)gridProc.Rows[i].Tag;
-						if(rowProc.CodeNum==procCodeCur.CodeNum
+						if(rowProc.CodeNum==procCodeCur.Id
 							//if the procedure code already exists in the grid and it's not attached to another appointment or planned appointment
 							&& (_isPlanned && (rowProc.PlannedAptNum==0 || rowProc.PlannedAptNum==AptCur.AptNum)
 								|| (!_isPlanned && (rowProc.AptNum==0 || rowProc.AptNum==AptCur.AptNum)))

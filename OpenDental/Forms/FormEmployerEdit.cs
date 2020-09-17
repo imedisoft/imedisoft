@@ -1,3 +1,4 @@
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using System;
 using System.Windows.Forms;
@@ -25,22 +26,14 @@ namespace Imedisoft.Forms
 			var name = nameTextBox.Text.Trim();
 			if (name.Length == 0)
 			{
-				ShowError("Please enter an employer name.");
+				ShowError(Translation.Common.PleaseEnterName);
 
 				return;
 			}
 
-			Employer empOld = employer.Copy();
-
 			employer.Name = name;
-			if (employer.Id == 0)
-			{
-				Employers.Insert(employer);
-			}
-			else
-			{
-				Employers.Update(employer, empOld);
-			}
+
+			Employers.Save(employer);
 
 			DialogResult = DialogResult.OK;
 		}

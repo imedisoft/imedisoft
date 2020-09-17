@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness{
 	/// <summary>Corresponds to the benefit table in the database which replaces the old covpat table.  A benefit is usually a percentage, deductible, 
@@ -107,7 +109,7 @@ namespace OpenDentBusiness{
 			//EB13:  Procedure identifier. Situational.  We don't import this from EB, but we can show it anyway.
 			if(CodeNum != 0) {
 				ProcedureCode proccode=ProcedureCodes.GetProcCode(CodeNum);
-				retVal+=", "+proccode.ProcCode+" - "+proccode.AbbrDesc;
+				retVal+=", "+proccode.Code+" - "+proccode.ShortDescription;
 			}
 			return retVal;
 		}

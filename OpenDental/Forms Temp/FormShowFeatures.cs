@@ -9,6 +9,7 @@ using CodeBase;
 using System.Collections.Generic;
 using System.Linq;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental{
 	/// <summary>
@@ -91,8 +92,8 @@ namespace OpenDental{
 				{
 					Description="Clinic Feature Changed, you may need to restart the eConnector if you are subscribed to eServices",
 					Type=AlertType.ClinicsChanged,
-					Severity=SeverityType.Low,
-					Actions=ActionType.OpenForm | ActionType.MarkAsRead | ActionType.Delete,
+					Severity=AlertSeverityType.Low,
+					Actions=AlertAction.OpenForm | AlertAction.MarkAsRead | AlertAction.Delete,
 					FormToOpen=FormType.FormEServicesEConnector,
 					Details="Clinics turned "+(checkEnableClinics.Checked ? "On":"Off")
 				});
@@ -101,8 +102,8 @@ namespace OpenDental{
 				{
 					Description="Clinics Changed",
 					Type=AlertType.ClinicsChangedInternal,
-					Severity=SeverityType.Normal,
-					Actions=ActionType.None,
+					Severity=AlertSeverityType.Normal,
+					Actions=AlertAction.None,
 					Details=checkEnableClinics.Checked ? "On":"Off"
 				});
 				return true;

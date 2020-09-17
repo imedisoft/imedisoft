@@ -27,7 +27,7 @@ namespace OpenDental {
 			if(_docPatPicture==null) {
 				return;
 			}
-			Document docForPat=data.ListDocuments.FirstOrDefault(x => x.DocNum==_docPatPicture.DocNum);
+			Document docForPat=data.ListDocuments.FirstOrDefault(x => x.Id==_docPatPicture.Id);
 			if(sheetField!=null && docForPat!=null) {
 				_docPatPicture=docForPat;
 				using(Bitmap imageCopy=new Bitmap(data.BitmapImagesModule)) {

@@ -24,15 +24,15 @@ namespace OpenDental {
 		}
 
 		public void FormEncounters_Load(object sender,EventArgs e) {
-			_patCur=Patients.GetPat(_encCur.PatNum);
+			_patCur=Patients.GetPat(_encCur.PatientId);
 			this.Text+=" - "+_patCur.GetNameLF();
 			textDateEnc.Text=_encCur.DateEncounter.ToShortDateString();
-			_provNumSelected=_encCur.ProvNum;
+			_provNumSelected=_encCur.ProviderId;
 			comboProv.Items.Clear();
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboProv.Items.Add(_listProviders[i].GetLongDesc());//Only visible provs added to combobox.
-				if(_listProviders[i].Id==_encCur.ProvNum) {
+				if(_listProviders[i].Id==_encCur.ProviderId) {
 					comboProv.SelectedIndex=i;//Sets combo text too.
 				}
 			}
@@ -49,7 +49,7 @@ namespace OpenDental {
 			//to get description, first determine which table the code is from.  Encounter is only allowed to be a CDT, CPT, HCPCS, and SNOMEDCT.  Will be null if new encounter.
 			switch(_encCur.CodeSystem) {
 				case "CDT":
-					textCodeDescript.Text=ProcedureCodes.GetProcCode(_encCur.CodeValue).Descript;
+					textCodeDescript.Text=ProcedureCodes.GetProcCode(_encCur.CodeValue).Description;
 					break;
 				case "CPT":
 					Cpt cptCur=Cpts.GetByCode(_encCur.CodeValue);
@@ -125,10 +125,10 @@ namespace OpenDental {
 			if(formPCs.ShowDialog()==DialogResult.OK) {
 				_encCur.CodeSystem="CDT";
 				ProcedureCode procCode=ProcedureCodes.GetProcCode(formPCs.SelectedCodeNum);
-				_encCur.CodeValue=procCode.ProcCode;
+				_encCur.CodeValue=procCode.Code;
 				textCodeSystem.Text="CDT";
-				textCodeValue.Text=procCode.ProcCode;
-				textCodeDescript.Text=procCode.Descript;
+				textCodeValue.Text=procCode.Code;
+				textCodeDescript.Text=procCode.Description;
 			}
 		}
 
@@ -162,14 +162,14 @@ namespace OpenDental {
 				MessageBox.Show("You must enter a valid date");
 				return;
 			}
-			_encCur.ProvNum=_provNumSelected;
+			_encCur.ProviderId=_provNumSelected;
 			_encCur.Note=textNote.Text; //PIn.String(textNote.Text);
 			_encCur.DateEncounter=PIn.Date(textDateEnc.Text);
 			if(_encCur.CodeValue==null || _encCur.CodeSystem==null) {
 				MessageBox.Show("You must select a code");
 				return;
 			}
-			if(_encCur.ProvNum==0) { //Should never be hit, defaults to index 1
+			if(_encCur.ProviderId==0) { //Should never be hit, defaults to index 1
 				MessageBox.Show("You must select a provider");
 				return;
 			}

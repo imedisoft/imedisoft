@@ -9,6 +9,7 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.Linq;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	///<summary></summary>
@@ -33,7 +34,7 @@ namespace OpenDental {
 		private List<Procedure> _listProcs;
 		private Patient _patCur;
 		private Family _famCur;
-		private List<InsPlan> _listPlans;
+		private List<InsurancePlan> _listPlans;
 		private List<PatPlan> _listPatPlans;
 		private List<InsSub> _listInsSubs;
 		private X835 _x835;
@@ -52,7 +53,7 @@ namespace OpenDental {
 		public List <ClaimProc> ListClaimProcsForClaim;
 		private List<ClaimProc> _listClaimProcsOld;
 		private CheckBox checkIncludeWOPercCoPay;
-		private InsPlan _insPlan;
+		private InsurancePlan _insPlan;
 		private UI.Button butSplitProcs;
 		///<summary>Index of the Split column in the gridPayments.</summary>
 		private int splitIndex=-1;
@@ -74,7 +75,7 @@ namespace OpenDental {
 
 		///<summary>The claimPaid is the individual EOB to load this window for.
 		///The listOtherSplitClaims will contain any split claims which are associated to claimPaid.</summary>
-		public FormEtrans835ClaimPay(X835 x835,Hx835_Claim claimPaid,Claim claim,Patient patCur,Family famCur,List<InsPlan> planList,List<PatPlan> patPlanList,List<InsSub> subList,bool isSupplementalPay) {
+		public FormEtrans835ClaimPay(X835 x835,Hx835_Claim claimPaid,Claim claim,Patient patCur,Family famCur,List<InsurancePlan> planList,List<PatPlan> patPlanList,List<InsSub> subList,bool isSupplementalPay) {
 			InitializeComponent();
 			_x835=x835;
 			_claimPaid=claimPaid;
@@ -467,7 +468,7 @@ namespace OpenDental {
 		}
 
 		private void FormEtrans835ClaimPay_Shown(object sender,EventArgs e) {
-			InsPlan plan=InsPlans.GetPlan(ListClaimProcsForClaim[0].PlanNum,_listPlans);
+			InsurancePlan plan=InsPlans.GetPlan(ListClaimProcsForClaim[0].PlanNum,_listPlans);
 			int selectedIndex=0;
 			if(_claimPaid.IsSplitClaim) {
 				//For split claims we show all the procs on a claim 
@@ -553,7 +554,7 @@ namespace OpenDental {
 				string procDescript="";
 				if(ProcedureCodes.IsValidCode(proc.ProcCodeAdjudicated)) {
 					ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.ProcCodeAdjudicated);
-					procDescript=procCode.AbbrDesc;
+					procDescript=procCode.ShortDescription;
 				}
 				row.Cells.Add(new GridCell(procDescript));//Description
 				decimal procFee=proc.ProcFee;
@@ -656,9 +657,9 @@ namespace OpenDental {
 				}
 				else {
 					ProcCur=Procedures.GetProcFromList(_listProcs,claimProc.ProcNum);
-					row.Cells.Add(ProcedureCodes.GetProcCode(ProcCur.CodeNum).ProcCode);
+					row.Cells.Add(ProcedureCodes.GetProcCode(ProcCur.CodeNum).Code);
 					row.Cells.Add(Tooth.ToInternat(ProcCur.ToothNum));
-					row.Cells.Add(ProcedureCodes.GetProcCode(ProcCur.CodeNum).Descript);
+					row.Cells.Add(ProcedureCodes.GetProcCode(ProcCur.CodeNum).Description);
 				}
 				row.Cells.Add(claimProc.FeeBilled.ToString("F"));
 				row.Cells.Add(claimProc.DedApplied.ToString("F"));
@@ -952,7 +953,7 @@ namespace OpenDental {
 				return;
 			}
 			//if no allowed fee schedule, then nothing to do
-			InsPlan plan=InsPlans.GetPlan(ListClaimProcsForClaim[0].PlanNum,_listPlans);
+			InsurancePlan plan=InsPlans.GetPlan(ListClaimProcsForClaim[0].PlanNum,_listPlans);
 			if(plan.AllowedFeeSched==0){//no allowed fee sched
 				//plan.PlanType!="p" && //not ppo, and 
 				return;
@@ -985,10 +986,10 @@ namespace OpenDental {
 				DateTime datePrevious=DateTime.MinValue;
 				if(feeCur==null){
 					feeCur=new Fee();
-					feeCur.FeeSched=feeSched;
+					feeCur.FeeScheduleId=feeSched;
 					feeCur.CodeNum=codeNum;
-					feeCur.ClinicNum=(FeeScheds.GetFirst(x => x.FeeSchedNum==feeSched).IsGlobal) ? 0 : proc.ClinicNum;
-					feeCur.ProvNum=(FeeScheds.GetFirst(x => x.FeeSchedNum==feeSched).IsGlobal) ? 0 : proc.ProvNum;
+					feeCur.ClinicNum=(FeeScheds.GetFirst(x => x.Id==feeSched).IsGlobal) ? 0 : proc.ClinicNum;
+					feeCur.ProvNum=(FeeScheds.GetFirst(x => x.Id==feeSched).IsGlobal) ? 0 : proc.ProvNum;
 					feeCur.Amount=PIn.Double(gridPayments.Rows[i].Cells[allowedIndex].Text);
 					Fees.Insert(feeCur);
 				}
@@ -998,10 +999,10 @@ namespace OpenDental {
 					Fees.Update(feeCur);
 				}
 				SecurityLogs.MakeLogEntry(Permissions.ProcFeeEdit,0,"Procedure"+": "+ProcedureCodes.GetStringProcCode(feeCur.CodeNum)
-					+", "+"Fee"+": "+feeCur.Amount.ToString("c")+", "+"Fee Schedule"+" "+FeeScheds.GetDescription(feeCur.FeeSched)
+					+", "+"Fee"+": "+feeCur.Amount.ToString("c")+", "+"Fee Schedule"+" "+FeeScheds.GetDescription(feeCur.FeeScheduleId)
 					+". "+"Automatic change to allowed fee in Enter Payment window.  Confirmed by user.",feeCur.CodeNum,DateTime.MinValue);
 				SecurityLogs.MakeLogEntry(Permissions.LogFeeEdit,0,"Fee Updated",feeCur.FeeNum,datePrevious);
-				invalidFeeSchedNums.Add(feeCur.FeeSched);
+				invalidFeeSchedNums.Add(feeCur.FeeScheduleId);
 			}
 		}
 

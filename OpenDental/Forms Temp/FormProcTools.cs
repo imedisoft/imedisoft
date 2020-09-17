@@ -281,16 +281,16 @@ namespace OpenDental{
 					continue;
 				}
 				ProcedureCode procCode=new ProcedureCode();
-				procCode.ProcCode=PIn.String(fields[0]);//0 ProcCode
-				procCode.Descript=PIn.String(fields[1]);//1 Description
-				procCode.TreatArea=(TreatmentArea)PIn.Int(fields[2]);//2 TreatArea
-				procCode.NoBillIns=PIn.Bool(fields[3]);//3 NoBillIns
-				procCode.IsProsth=PIn.Bool(fields[4]);//4 IsProsth
+				procCode.Code=PIn.String(fields[0]);//0 ProcCode
+				procCode.Description=PIn.String(fields[1]);//1 Description
+				procCode.TreatmentArea=(ProcedureTreatmentArea)PIn.Int(fields[2]);//2 TreatArea
+				procCode.NoInsuranceBill=PIn.Bool(fields[3]);//3 NoBillIns
+				procCode.IsProsthesis=PIn.Bool(fields[4]);//4 IsProsth
 				procCode.IsHygiene=PIn.Bool(fields[5]);//5 IsHygiene
 				procCode.PaintType=(ToothPaintingType)PIn.Int(fields[6]);//6 PaintType
-				procCode.ProcCatDescript=PIn.String(fields[7]);//7 ProcCatDescript
-				procCode.ProcTime=PIn.String(fields[8]);//8 ProcTime
-				procCode.AbbrDesc=PIn.String(fields[9]);//9 AbbrDesc
+				//procCode.ProcCatDescript=PIn.String(fields[7]);//7 ProcCatDescript
+				procCode.Time=PIn.String(fields[8]);//8 ProcTime
+				procCode.ShortDescription=PIn.String(fields[9]);//9 AbbrDesc
 				procCode.CanadaTimeUnits=PIn.Double(fields[10]);//10 CanadaTimeUnits
 				_codeList.Add(procCode);
 			}

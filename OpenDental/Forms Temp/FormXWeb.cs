@@ -120,7 +120,7 @@ namespace OpenDental {
 			try {
 				Cursor=Cursors.WaitCursor;
 				if(_tranType==XWebTransactionType.CreditReturnTransaction) {
-					ResponseResult=XWebs.ReturnPayment(_creditCard.PatNum,textPayNote.Text,amount,_creditCard.CreditCardNum,_createPayment);
+					ResponseResult=XWebs.ReturnPayment(_creditCard.PatientId,textPayNote.Text,amount,_creditCard.CreditCardNum,_createPayment);
 				}
 			}
 			catch(ODException ex) {

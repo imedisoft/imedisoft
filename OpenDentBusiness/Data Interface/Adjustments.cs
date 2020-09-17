@@ -1,21 +1,16 @@
+using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection;
-using CodeBase;
-using Avalara.AvaTax.RestClient;
-using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
-	///<summary>Handles database commands related to the adjustment table in the db.</summary>
-	public class Adjustments
+    public class Adjustments
 	{
 		#region Get Methods
-
-
 
 		public static List<Adjustment> GetMany(List<long> listAdjNums)
 		{

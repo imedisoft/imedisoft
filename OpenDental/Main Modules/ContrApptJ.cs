@@ -1924,7 +1924,7 @@ namespace OpenDental
 				RefreshModuleScreenButtonsRight();
 				if (isCreate)
 				{//new appointment is being added to the schedule from the pinboard, trigger ScheduleProcedure automation
-					List<string> procCodes = procsForSingleApt.Select(x => ProcedureCodes.GetProcCode(x.CodeNum).ProcCode).ToList();
+					List<string> procCodes = procsForSingleApt.Select(x => ProcedureCodes.GetProcCode(x.CodeNum).Code).ToList();
 					AutomationL.Trigger(AutomationTrigger.ScheduleProcedure, procCodes, apptCur.PatNum);
 				}
 				AppointmentEvent.Fire(EventCategory.AppointmentEdited, apptCur);
@@ -2809,7 +2809,7 @@ namespace OpenDental
 		{
 			_listProvidersSearch = new List<Provider>();
 			providersListBox.Items.Clear();
-			List<Provider> listProvidersShort = Providers.GetDeepCopy(true);
+			List<Provider> listProvidersShort = Providers.GetAll(true);
 			for (int i = 0; i < listProvidersShort.Count; i++)
 			{
 				if (contrApptPanel.ListApptViewItems.Exists(x => x.ProvNum == listProvidersShort[i].Id))
@@ -2833,7 +2833,7 @@ namespace OpenDental
 		{
 			_listProvidersSearch = new List<Provider>();
 			providersListBox.Items.Clear();
-			List<Provider> listProvidersShort = Providers.GetDeepCopy(true);
+			List<Provider> listProvidersShort = Providers.GetAll(true);
 			for (int i = 0; i < listProvidersShort.Count; i++)
 			{
 				if (contrApptPanel.ListApptViewItems.Exists(x => x.ProvNum == listProvidersShort[i].Id))
@@ -4028,7 +4028,7 @@ namespace OpenDental
 		private void ShowSearch()
 		{
 			_listProvidersSearch = new List<Provider>();
-			List<Provider> listProvidersShort = Providers.GetDeepCopy(true);
+			List<Provider> listProvidersShort = Providers.GetAll(true);
 			groupSearch.Location = new Point(panelCalendar.Location.X, panelCalendar.Location.Y + pinBoard.Bottom + 2);
 			textBefore.Text = "";
 			textAfter.Text = "";

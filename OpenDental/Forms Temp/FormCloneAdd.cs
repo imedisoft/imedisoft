@@ -16,7 +16,7 @@ namespace OpenDental {
 		///<summary>Shallow copy of the "master" patient that was passed into the constructor that the clone will be created from.</summary>
 		private Patient _patientMaster;
 		private Family _familyCur;
-		private List<InsPlan> _listInsPlans;
+		private List<InsurancePlan> _listInsPlans;
 		private List<InsSub> _listInsSubs;
 		private List<Benefit> _listBenefits;
 		private long _provNumSelected;
@@ -29,7 +29,7 @@ namespace OpenDental {
 		public long PatNumClone;
 
 		///<summary>Patient must be the original or master patient that will have a clone made from them.</summary>
-		public FormCloneAdd(Patient patientMaster,Family familyCur=null,List<InsPlan> listInsPlans=null,List<InsSub> listInsSubs=null
+		public FormCloneAdd(Patient patientMaster,Family familyCur=null,List<InsurancePlan> listInsPlans=null,List<InsSub> listInsSubs=null
 			,List<Benefit> listBenefits=null) 
 		{
 			InitializeComponent();
@@ -56,7 +56,7 @@ namespace OpenDental {
 			textAge.Text=PatientLogic.DateToAgeString(_patientMaster.Birthdate,_patientMaster.DateTimeDeceased);
 			//We intentionally don't synch the patient's provider since the clone feature is so the clone can be assigned to a different provider for tracking production.
 			_provNumSelected=Preferences.GetLong(PreferenceName.PracticeDefaultProv);
-			_listProviders=Providers.GetDeepCopy(true);
+			_listProviders=Providers.GetAll(true);
 			comboPriProv.Items.Clear();
 			for(int i = 0;i<_listProviders.Count;i++) {
 				comboPriProv.Items.Add(_listProviders[i].GetLongDesc());

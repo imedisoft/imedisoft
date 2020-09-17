@@ -117,25 +117,7 @@ namespace OpenDentBusiness
 		public const string InProcess = "C/P";
 	}
 
-	/// <summary>
-	/// Used in procedurecode setup to specify the treatment area for a procedure.
-	/// This determines what fields are available when editing an appointment.
-	/// </summary>
-	public enum TreatmentArea
-	{
-		/// <summary>
-		/// Same as 3 mouth.
-		/// </summary>
-		None,
 
-		Surf,
-		Tooth,
-		Mouth,
-		Quad,
-		Sextant,
-		Arch,
-		ToothRange
-	}
 
 	/// <summary>
 	/// When the autorefresh message is sent to the other computers, this is the type.
@@ -489,25 +471,25 @@ namespace OpenDentBusiness
 		PinboardAndSearch
 	}
 
-	public enum PaintType
-	{
-		Extraction,
-		FillingSolid,
-		FillingOutline,
-		RCT,
-		Post,
-		CrownSolid,
-		CrownOutline,
-		CrownHatch,
-		Implant,
-		Sealant,
-		PonticSolid,
-		PonticOutline,
-		PonticHatch,
-		RetainerSolid,
-		RetainerOutline,
-		RetainerHatch
-	}
+	//public enum PaintType
+	//{
+	//	Extraction,
+	//	FillingSolid,
+	//	FillingOutline,
+	//	RCT,
+	//	Post,
+	//	CrownSolid,
+	//	CrownOutline,
+	//	CrownHatch,
+	//	Implant,
+	//	Sealant,
+	//	PonticSolid,
+	//	PonticOutline,
+	//	PonticHatch,
+	//	RetainerSolid,
+	//	RetainerOutline,
+	//	RetainerHatch
+	//}
 
 	/// <summary>Schedule status.</summary>
 	public enum SchedStatus
@@ -517,18 +499,7 @@ namespace OpenDentBusiness
 		Holiday
 	}
 
-	/// <Summary>
-	/// Used for insurance substitutions conditions of procedurecodes. 
-	/// Mostly for posterior composites.
-	/// </Summary>
-	public enum SubstitutionCondition
-	{
-		Always,
-		Molar,
-		SecondMolar,
-		Never,
-		Posterior
-	}
+
 
 	///<summary>Claimproc Status.  The status must generally be the same as the claim, although it is sometimes not strictly enforced.</summary>
 	public enum ClaimProcStatus
@@ -975,25 +946,25 @@ namespace OpenDentBusiness
 		Adjunctive
 	}
 
-	public enum ToothPaintingType
-	{
-		None,
-		Extraction,
-		Implant,
-		RCT,
-		PostBU,
-		FillingDark,
-		FillingLight,
-		CrownDark,
-		CrownLight,
-		BridgeDark,
-		BridgeLight,
-		DentureDark,
-		DentureLight,
-		Sealant,
-		Veneer,
-		Watch
-	}
+	//public enum ToothPaintingType
+	//{
+	//	None,
+	//	Extraction,
+	//	Implant,
+	//	RCT,
+	//	PostBU,
+	//	FillingDark,
+	//	FillingLight,
+	//	CrownDark,
+	//	CrownLight,
+	//	BridgeDark,
+	//	BridgeLight,
+	//	DentureDark,
+	//	DentureLight,
+	//	Sealant,
+	//	Veneer,
+	//	Watch
+	//}
 
 	public enum ToothInitialType
 	{

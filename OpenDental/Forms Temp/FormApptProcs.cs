@@ -133,7 +133,7 @@ namespace OpenDental {
 			Family fam=Patients.GetFamily(AptCur.PatNum);
 			Patient pat=fam.GetPatient(AptCur.PatNum);
 			List<InsSub> subList=InsSubs.RefreshForFam(fam);
-			List<InsPlan> planList=InsPlans.RefreshForSubList(subList);
+			List<InsurancePlan> planList=InsPlans.RefreshForSubList(subList);
 			List<PatPlan> patPlanList=PatPlans.Refresh(pat.PatNum);
 			ProcedureCode procCodeCur=ProcedureCodes.GetProcCode(ProcCur.CodeNum);
 			ProcCur.MedicalCode=procCodeCur.MedicalCode;

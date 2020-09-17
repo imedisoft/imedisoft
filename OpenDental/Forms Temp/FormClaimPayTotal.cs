@@ -20,7 +20,7 @@ namespace OpenDental {
 		private List<Procedure> ProcList;
 		private Patient PatCur;
 		private Family FamCur;
-		private List<InsPlan> PlanList;
+		private List<InsurancePlan> PlanList;
 		private List<PatPlan> PatPlanList;
 		private List<InsSub> SubList;
 		private List<Definition> _listClaimPaymentTrackingDefs;
@@ -30,7 +30,7 @@ namespace OpenDental {
 		private bool _isWriteOffEditable;
 
 		///<summary></summary>
-		public FormClaimPayTotal(Patient patCur,Family famCur,List <InsPlan> planList,List<PatPlan> patPlanList,List<InsSub> subList){
+		public FormClaimPayTotal(Patient patCur,Family famCur,List <InsurancePlan> planList,List<PatPlan> patPlanList,List<InsSub> subList){
 			InitializeComponent();// Required for Windows Form Designer support
 			FamCur=famCur;
 			PatCur=patCur;
@@ -61,7 +61,7 @@ namespace OpenDental {
 		}
 
 		private void FormClaimPayTotal_Shown(object sender,EventArgs e) {
-			InsPlan plan=InsPlans.GetPlan(ClaimProcsToEdit[0].PlanNum,PlanList);
+			InsurancePlan plan=InsPlans.GetPlan(ClaimProcsToEdit[0].PlanNum,PlanList);
 			if(plan.AllowedFeeSched!=0){//allowed fee sched
 				gridMain.SetSelected(new Point(gridMain.Columns.GetIndex("Allowed"),0));//Allowed, first row.
 			}
@@ -148,11 +148,11 @@ namespace OpenDental {
 					ProcCur=Procedures.GetProcFromList(ProcList,ClaimProcsToEdit[i].ProcNum);//will return a new procedure if none found.
 					procFee=ProcCur.ProcFeeTotal.ToString("F");
 					ProcedureCode procCode=ProcedureCodes.GetProcCode(ProcCur.CodeNum);
-					row.Cells.Add(procCode.ProcCode);
+					row.Cells.Add(procCode.Code);
 					if(!Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 						row.Cells.Add(ProcCur.ToothNum=="" ? Tooth.SurfTidyFromDbToDisplay(ProcCur.Surf,ProcCur.ToothNum) : Tooth.ToInternat(ProcCur.ToothNum));
 					}
-					string descript=procCode.Descript;
+					string descript=procCode.Description;
 					if(procCode.IsCanadianLab) {
 						descript="^ ^ "+descript;
 					}
@@ -369,7 +369,7 @@ namespace OpenDental {
 				isCreditGreater|=(creditRem.IsLessThanZero());
 				if(creditRem.IsLessThanZero()) {
 					Procedure proc=listProcs.FirstOrDefault(x=>x.ProcNum==claimProcCur.ProcNum);
-					listProcDescripts.Add((proc==null ? "" : ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode)
+					listProcDescripts.Add((proc==null ? "" : ProcedureCodes.GetProcCode(proc.CodeNum).Code)
 						+"\t"+"Fee"+": "+feeAcct.ToString("F")
 						+"\t"+"Credits"+": "+(Math.Abs(-patPayAmt-insPayAmt-writeOff+adj)).ToString("F")
 						+"\t"+"Remaining"+": ("+Math.Abs(creditRem).ToString("F")+")");
@@ -418,7 +418,7 @@ namespace OpenDental {
 				isWriteoffGreater|=(writeoffRem.IsLessThanZero() && writeOff.IsGreaterThanZero());
 				if(writeoffRem.IsLessThanZero() && writeOff.IsGreaterThanZero()) {
 					Procedure proc=Procedures.GetProcFromList(ProcList,claimProcCur.ProcNum);//will return a new procedure if none found.
-					listProcDescripts.Add((proc==null ? "" : ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode)
+					listProcDescripts.Add((proc==null ? "" : ProcedureCodes.GetProcCode(proc.CodeNum).Code)
 						+"\t"+"Fee"+": "+feeAcct.ToString("F")
 						+"\t"+"Adjustments"+": "+adjAcct.ToString("F")
 						+"\t"+"Write-off"+": "+(Math.Abs(-writeOff)).ToString("F")
@@ -549,7 +549,7 @@ namespace OpenDental {
 				return;
 			}
 			//if no allowed fee schedule, then nothing to do
-			InsPlan plan=InsPlans.GetPlan(ClaimProcsToEdit[0].PlanNum,PlanList);
+			InsurancePlan plan=InsPlans.GetPlan(ClaimProcsToEdit[0].PlanNum,PlanList);
 			if(plan.AllowedFeeSched==0){//no allowed fee sched
 				//plan.PlanType!="p" && //not ppo, and 
 				return;
@@ -590,9 +590,9 @@ namespace OpenDental {
 				DateTime datePrevious=DateTime.MinValue;
 				FeeCur=Fees.GetFee(codeNum,feeSched,proc.ClinicNum,proc.ProvNum);
 				if(FeeCur==null) {
-					FeeSched feeSchedObj=FeeScheds.GetFirst(x => x.FeeSchedNum==feeSched);
+					FeeSchedule feeSchedObj=FeeScheds.GetFirst(x => x.Id==feeSched);
 					FeeCur=new Fee();
-					FeeCur.FeeSched=feeSched;
+					FeeCur.FeeScheduleId=feeSched;
 					FeeCur.CodeNum=codeNum;
 					FeeCur.ClinicNum=(feeSchedObj.IsGlobal) ? 0 : proc.ClinicNum;
 					FeeCur.ProvNum=(feeSchedObj.IsGlobal) ? 0 : proc.ProvNum;
@@ -605,10 +605,10 @@ namespace OpenDental {
 					Fees.Update(FeeCur);
 				}
 				SecurityLogs.MakeLogEntry(Permissions.ProcFeeEdit,0,"Procedure"+": "+ProcedureCodes.GetStringProcCode(FeeCur.CodeNum)
-					+", "+"Fee"+": "+FeeCur.Amount.ToString("c")+", "+"Fee Schedule"+" "+FeeScheds.GetDescription(FeeCur.FeeSched)
+					+", "+"Fee"+": "+FeeCur.Amount.ToString("c")+", "+"Fee Schedule"+" "+FeeScheds.GetDescription(FeeCur.FeeScheduleId)
 					+". "+"Automatic change to allowed fee in Enter Payment window.  Confirmed by user.",FeeCur.CodeNum,DateTime.MinValue);
 				SecurityLogs.MakeLogEntry(Permissions.LogFeeEdit,0,"Fee Updated",FeeCur.FeeNum,datePrevious);
-				invalidFeeSchedNums.Add(FeeCur.FeeSched);
+				invalidFeeSchedNums.Add(FeeCur.FeeScheduleId);
 			}
 		}
 

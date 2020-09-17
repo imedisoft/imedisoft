@@ -44,11 +44,11 @@ namespace OpenDentBusiness.Crud{
 			Document document;
 			foreach(DataRow row in table.Rows) {
 				document=new Document();
-				document.DocNum        = PIn.Long  (row["DocNum"].ToString());
+				document.Id        = PIn.Long  (row["DocNum"].ToString());
 				document.Description   = PIn.String(row["Description"].ToString());
-				document.DateCreated   = PIn.Date (row["DateCreated"].ToString());
-				document.DocCategory   = PIn.Long  (row["DocCategory"].ToString());
-				document.PatNum        = PIn.Long  (row["PatNum"].ToString());
+				document.AddedOnDate   = PIn.Date (row["DateCreated"].ToString());
+				document.Category   = PIn.Long  (row["DocCategory"].ToString());
+				document.PatientId        = PIn.Long  (row["PatNum"].ToString());
 				document.FileName      = PIn.String(row["FileName"].ToString());
 				document.ImgType       = (OpenDentBusiness.ImageType)PIn.Int(row["ImgType"].ToString());
 				document.IsFlipped     = PIn.Bool  (row["IsFlipped"].ToString());
@@ -64,7 +64,7 @@ namespace OpenDentBusiness.Crud{
 				document.WindowingMin  = PIn.Int   (row["WindowingMin"].ToString());
 				document.WindowingMax  = PIn.Int   (row["WindowingMax"].ToString());
 				document.MountItemNum  = PIn.Long  (row["MountItemNum"].ToString());
-				document.DateTStamp    = PIn.Date (row["DateTStamp"].ToString());
+				document.LastModifiedDate    = PIn.Date (row["DateTStamp"].ToString());
 				document.Thumbnail     = PIn.String(row["Thumbnail"].ToString());
 				document.ExternalGUID  = PIn.String(row["ExternalGUID"].ToString());
 				string externalSource=row["ExternalSource"].ToString();
@@ -114,11 +114,11 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("ExternalSource");
 			foreach(Document document in listDocuments) {
 				table.Rows.Add(new object[] {
-					POut.Long  (document.DocNum),
+					POut.Long  (document.Id),
 					            document.Description,
-					POut.DateT (document.DateCreated,false),
-					POut.Long  (document.DocCategory),
-					POut.Long  (document.PatNum),
+					POut.DateT (document.AddedOnDate,false),
+					POut.Long  (document.Category),
+					POut.Long  (document.PatientId),
 					            document.FileName,
 					POut.Int   ((int)document.ImgType),
 					POut.Bool  (document.IsFlipped),
@@ -134,7 +134,7 @@ namespace OpenDentBusiness.Crud{
 					POut.Int   (document.WindowingMin),
 					POut.Int   (document.WindowingMax),
 					POut.Long  (document.MountItemNum),
-					POut.DateT (document.DateTStamp,false),
+					POut.DateT (document.LastModifiedDate,false),
 					            document.Thumbnail,
 					            document.ExternalGUID,
 					POut.Int   ((int)document.ExternalSource),
@@ -151,7 +151,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one Document into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(Document document,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				document.DocNum=ReplicationServers.GetKey("document","DocNum");
+				document.Id=ReplicationServers.GetKey("document","DocNum");
 			}
 			string command="INSERT INTO document (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -159,13 +159,13 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="Description,DateCreated,DocCategory,PatNum,FileName,ImgType,IsFlipped,DegreesRotated,ToothNumbers,Note,SigIsTopaz,Signature,CropX,CropY,CropW,CropH,WindowingMin,WindowingMax,MountItemNum,Thumbnail,ExternalGUID,ExternalSource) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(document.DocNum)+",";
+				command+=POut.Long(document.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(document.Description)+"',"
-				+    POut.DateT (document.DateCreated)+","
-				+    POut.Long  (document.DocCategory)+","
-				+    POut.Long  (document.PatNum)+","
+				+    POut.DateT (document.AddedOnDate)+","
+				+    POut.Long  (document.Category)+","
+				+    POut.Long  (document.PatientId)+","
 				+"'"+POut.String(document.FileName)+"',"
 				+    POut.Int   ((int)document.ImgType)+","
 				+    POut.Bool  (document.IsFlipped)+","
@@ -201,9 +201,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramNote,paramSignature,paramThumbnail);
 			}
 			else {
-				document.DocNum=Database.ExecuteInsert(command,paramNote,paramSignature,paramThumbnail);
+				document.Id=Database.ExecuteInsert(command,paramNote,paramSignature,paramThumbnail);
 			}
-			return document.DocNum;
+			return document.Id;
 		}
 
 		///<summary>Inserts one Document into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -216,20 +216,20 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO document (";
 			if(!useExistingPK) {
-				document.DocNum=ReplicationServers.GetKeyNoCache("document","DocNum");
+				document.Id=ReplicationServers.GetKeyNoCache("document","DocNum");
 			}
 			if(useExistingPK) {
 				command+="DocNum,";
 			}
 			command+="Description,DateCreated,DocCategory,PatNum,FileName,ImgType,IsFlipped,DegreesRotated,ToothNumbers,Note,SigIsTopaz,Signature,CropX,CropY,CropW,CropH,WindowingMin,WindowingMax,MountItemNum,Thumbnail,ExternalGUID,ExternalSource) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(document.DocNum)+",";
+				command+=POut.Long(document.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(document.Description)+"',"
-				+    POut.DateT (document.DateCreated)+","
-				+    POut.Long  (document.DocCategory)+","
-				+    POut.Long  (document.PatNum)+","
+				+    POut.DateT (document.AddedOnDate)+","
+				+    POut.Long  (document.Category)+","
+				+    POut.Long  (document.PatientId)+","
 				+"'"+POut.String(document.FileName)+"',"
 				+    POut.Int   ((int)document.ImgType)+","
 				+    POut.Bool  (document.IsFlipped)+","
@@ -265,18 +265,18 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramNote,paramSignature,paramThumbnail);
 			}
 			else {
-				document.DocNum=Database.ExecuteInsert(command,paramNote,paramSignature,paramThumbnail);
+				document.Id=Database.ExecuteInsert(command,paramNote,paramSignature,paramThumbnail);
 			}
-			return document.DocNum;
+			return document.Id;
 		}
 
 		///<summary>Updates one Document in the database.</summary>
 		public static void Update(Document document) {
 			string command="UPDATE document SET "
 				+"Description   = '"+POut.String(document.Description)+"', "
-				+"DateCreated   =  "+POut.DateT (document.DateCreated)+", "
-				+"DocCategory   =  "+POut.Long  (document.DocCategory)+", "
-				+"PatNum        =  "+POut.Long  (document.PatNum)+", "
+				+"DateCreated   =  "+POut.DateT (document.AddedOnDate)+", "
+				+"DocCategory   =  "+POut.Long  (document.Category)+", "
+				+"PatNum        =  "+POut.Long  (document.PatientId)+", "
 				+"FileName      = '"+POut.String(document.FileName)+"', "
 				+"ImgType       =  "+POut.Int   ((int)document.ImgType)+", "
 				+"IsFlipped     =  "+POut.Bool  (document.IsFlipped)+", "
@@ -296,7 +296,7 @@ namespace OpenDentBusiness.Crud{
 				+"Thumbnail     =  "+DbHelper.ParamChar+"paramThumbnail, "
 				+"ExternalGUID  = '"+POut.String(document.ExternalGUID)+"', "
 				+"ExternalSource= '"+POut.String(document.ExternalSource.ToString())+"' "
-				+"WHERE DocNum = "+POut.Long(document.DocNum);
+				+"WHERE DocNum = "+POut.Long(document.Id);
 			if(document.Note==null) {
 				document.Note="";
 			}
@@ -319,17 +319,17 @@ namespace OpenDentBusiness.Crud{
 				if(command!="") { command+=",";}
 				command+="Description = '"+POut.String(document.Description)+"'";
 			}
-			if(document.DateCreated != oldDocument.DateCreated) {
+			if(document.AddedOnDate != oldDocument.AddedOnDate) {
 				if(command!="") { command+=",";}
-				command+="DateCreated = "+POut.DateT(document.DateCreated)+"";
+				command+="DateCreated = "+POut.DateT(document.AddedOnDate)+"";
 			}
-			if(document.DocCategory != oldDocument.DocCategory) {
+			if(document.Category != oldDocument.Category) {
 				if(command!="") { command+=",";}
-				command+="DocCategory = "+POut.Long(document.DocCategory)+"";
+				command+="DocCategory = "+POut.Long(document.Category)+"";
 			}
-			if(document.PatNum != oldDocument.PatNum) {
+			if(document.PatientId != oldDocument.PatientId) {
 				if(command!="") { command+=",";}
-				command+="PatNum = "+POut.Long(document.PatNum)+"";
+				command+="PatNum = "+POut.Long(document.PatientId)+"";
 			}
 			if(document.FileName != oldDocument.FileName) {
 				if(command!="") { command+=",";}
@@ -420,7 +420,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			var paramThumbnail = new MySqlParameter("paramThumbnail", POut.StringParam(document.Thumbnail));
 			command="UPDATE document SET "+command
-				+" WHERE DocNum = "+POut.Long(document.DocNum);
+				+" WHERE DocNum = "+POut.Long(document.Id);
 			Database.ExecuteNonQuery(command,paramNote,paramSignature,paramThumbnail);
 			return true;
 		}
@@ -431,13 +431,13 @@ namespace OpenDentBusiness.Crud{
 			if(document.Description != oldDocument.Description) {
 				return true;
 			}
-			if(document.DateCreated != oldDocument.DateCreated) {
+			if(document.AddedOnDate != oldDocument.AddedOnDate) {
 				return true;
 			}
-			if(document.DocCategory != oldDocument.DocCategory) {
+			if(document.Category != oldDocument.Category) {
 				return true;
 			}
-			if(document.PatNum != oldDocument.PatNum) {
+			if(document.PatientId != oldDocument.PatientId) {
 				return true;
 			}
 			if(document.FileName != oldDocument.FileName) {

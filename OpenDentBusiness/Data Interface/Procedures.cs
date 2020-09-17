@@ -648,12 +648,12 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary>Determines what the ProcFee should be based on the given inputs.  If listFees is not null, it must include include fees for medical codes, which are needed here.</summary>
-		public static double GetProcFee(Patient pat,List<PatPlan> listPatPlans,List<InsSub> listInsSubs,List<InsPlan> listInsPlans,
+		public static double GetProcFee(Patient pat,List<PatPlan> listPatPlans,List<InsSub> listInsSubs,List<InsurancePlan> listInsPlans,
 			long procCodeNum,long procProvNum,long procClinicNum,string procMedicalCode,List<Benefit> listBenefits=null,List<Fee> listFees=null)
 		{
 			//No need to check RemotingRole; no call to db.
 			double procFeeRet;
-			InsPlan insPlanPrimary=null;
+			InsurancePlan insPlanPrimary=null;
 			if(listPatPlans.Count>0) {
 				InsSub insSubPrimary=InsSubs.GetSub(listPatPlans[0].InsSubNum,listInsSubs);
 				insPlanPrimary=InsPlans.GetPlan(insSubPrimary.PlanNum,listInsPlans);
@@ -661,7 +661,7 @@ namespace OpenDentBusiness {
 			//Get fee schedule and fee amount for medical or dental.
 			if(Preferences.GetBool(PreferenceName.MedicalFeeUsedForNewProcs) && !string.IsNullOrEmpty(procMedicalCode)) {
 				long feeSch=FeeScheds.GetMedFeeSched(pat,listInsPlans,listPatPlans,listInsSubs,procProvNum);
-				procFeeRet=Fees.GetAmount0(ProcedureCodes.GetProcCode(procMedicalCode).CodeNum,feeSch,procClinicNum,procProvNum,listFees);
+				procFeeRet=Fees.GetAmount0(ProcedureCodes.GetProcCode(procMedicalCode).Id,feeSch,procClinicNum,procProvNum,listFees);
 			}
 			else {
 				long feeSch=FeeScheds.GetFeeSched(pat,listInsPlans,listPatPlans,listInsSubs,procProvNum);
@@ -677,16 +677,16 @@ namespace OpenDentBusiness {
 			if(priPatPlan==null) {
 				return procFeeRet;
 			}
-			InsPlan priInsPlan=listInsPlans.Find(x => x.PlanNum==listInsSubs.Find(y => y.InsSubNum==priPatPlan.InsSubNum)?.PlanNum);
+			InsurancePlan priInsPlan=listInsPlans.Find(x => x.Id==listInsSubs.Find(y => y.InsSubNum==priPatPlan.InsSubNum)?.PlanNum);
 			if(priInsPlan!=null && InsPlans.UsesUcrFeeForExclusions(priInsPlan)) {
 				//Getting benefits here may cause slowness in places that get the fee many times 
 				//(i.e. the Update Fees button in the TP module, or the Quick Add Procs button in FormApptEdit).
 				//In places that are slow because of this (loops, etc) we should pass in listBenefits to avoid the chatty database calls.
 				if(listBenefits==null) {
-					listBenefits=Benefits.RefreshForPlan(priInsPlan.PlanNum,priPatPlan.PatPlanNum);
+					listBenefits=Benefits.RefreshForPlan(priInsPlan.Id,priPatPlan.PatPlanNum);
 				}
-				if(Benefits.IsExcluded(ProcedureCodes.GetStringProcCode(procCodeNum),listBenefits,priInsPlan.PlanNum,priPatPlan.PatPlanNum)
-					|| Benefits.GetPercent(ProcedureCodes.GetStringProcCode(procCodeNum),priInsPlan.PlanType,priInsPlan.PlanNum,priPatPlan.PatPlanNum,
+				if(Benefits.IsExcluded(ProcedureCodes.GetStringProcCode(procCodeNum),listBenefits,priInsPlan.Id,priPatPlan.PatPlanNum)
+					|| Benefits.GetPercent(ProcedureCodes.GetStringProcCode(procCodeNum),priInsPlan.PlanType,priInsPlan.Id,priPatPlan.PatPlanNum,
 							listBenefits)==0) 
 				{
 					//Get the fee from the provider's fee schedule (ucr fee)
@@ -723,8 +723,8 @@ namespace OpenDentBusiness {
 		public static long GetProvNumFromAppointment(Appointment apt,Procedure proc,ProcedureCode procCode) {
 			//No need to check RemotingRole; no call to db.
 			long provNum;
-			if(procCode.ProvNumDefault!=0) {//Override provider for procedures with a default provider
-				provNum=procCode.ProvNumDefault;
+			if(procCode.DefaultProviderId.HasValue) {//Override provider for procedures with a default provider
+				provNum=procCode.DefaultProviderId.Value;
 			}
 			else if(apt.ProvHyg==0 || !procCode.IsHygiene) {//either no hygiene prov on the appt or the proc is not a hygiene proc
 				provNum=apt.ProvNum;
@@ -757,7 +757,7 @@ namespace OpenDentBusiness {
 					continue;
 				}
 				procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
-				if(procCode.TreatArea!=TreatmentArea.Tooth) {
+				if(procCode.TreatmentArea!=ProcedureTreatmentArea.Tooth) {
 					continue;
 				}
 				if(procCode.PaintType!=ToothPaintingType.Extraction) {
@@ -1076,7 +1076,7 @@ namespace OpenDentBusiness {
 				else if(procOld.ProcStatus.In(ProcStat.C,ProcStat.EO,ProcStat.EC) && !isNew) {
 					#region SecurityLog for editing a previously completed proc
 					Permissions perm=Permissions.ProcCompleteEdit;//If was complete before the window loaded.
-					string logText=procCode.ProcCode+" ("+procOld.ProcStatus+"), ";
+					string logText=procCode.Code+" ("+procOld.ProcStatus+"), ";
 					if(procOld.ProcStatus!=procNew.ProcStatus) {//Status changed.
 						string statusText=logText+" changed from "+procOld.ProcStatus+" to "+procNew.ProcStatus;
 						SecurityLogs.MakeLogEntry(Permissions.ProcCompleteStatusEdit,procNew.PatNum,statusText);
@@ -1084,7 +1084,7 @@ namespace OpenDentBusiness {
 					if(!string.IsNullOrEmpty(procTeethStr)) {
 						logText+="Teeth"+": "+procTeethStr+", ";
 					}
-					logText+="Fee"+": "+procNew.ProcFee.ToString("F")+", "+procCode.Descript;
+					logText+="Fee"+": "+procNew.ProcFee.ToString("F")+", "+procCode.Description;
 					if(procOld.ProcStatus.In(ProcStat.EO,ProcStat.EC)) {
 						perm=Permissions.ProcExistingEdit;
 					}
@@ -1462,7 +1462,7 @@ namespace OpenDentBusiness {
 		///Sets the provider and clinic for a proc based on the appt to which it is attached.
 		///Also sets ProcDate for TP procs. Will automatically set procs in listProcs to complete and make securitylogs.</summary>
 		public static bool UpdateProcsInApptHelper(List<Procedure> listProcsForAppt,Patient pat,Appointment AptCur,Appointment AptOld,
-			List<InsPlan> PlanList,List<InsSub> SubList,List<int> listProcSelectedIndices,bool removeCompletedProcs,bool doUpdateProcFees=false,
+			List<InsurancePlan> PlanList,List<InsSub> SubList,List<int> listProcSelectedIndices,bool removeCompletedProcs,bool doUpdateProcFees=false,
 			SecurityLogSource logSource=SecurityLogSource.None)
 		{ 
 			if(AptCur.AptStatus!=ApptStatus.Complete) {//appt is not set complete, just update necessary fields like ProvNum, ProcDate, and ClinicNum
@@ -1616,7 +1616,7 @@ namespace OpenDentBusiness {
 				return;
 			}
 			string message="Discount created or changed from Proc Edit window for procedure"
-					+": "+ProcedureCodes.GetProcCode(procNew.CodeNum).ProcCode+"  "+"Dated"
+					+": "+ProcedureCodes.GetProcCode(procNew.CodeNum).Code+"  "+"Dated"
 					+": "+procNew.ProcDate.ToShortDateString()+"  "+"With a Fee of"+": "+procNew.ProcFee.ToString("c")+".  "
 					+"Changed the discount value from"+" "+procOld.Discount.ToString("c")+" "+"to"+" "
 					+procNew.Discount.ToString("c");
@@ -1747,7 +1747,7 @@ namespace OpenDentBusiness {
 		///Make sure to make a security log after calling this method.  This method requires that Security.CurUser be set prior to invoking.
 		///Returns null procedure if one was not created for the patient.</summary>
 		public static Procedure CreateProcForPat(Patient pat,long codeNum,string surf,string toothNum,ProcStat procStatus,long provNum,long aptNum=0
-			,List<InsSub> subList=null,List<InsPlan> insPlanList=null,List<PatPlan> patPlanList=null,List<Benefit> benefitList=null) 
+			,List<InsSub> subList=null,List<InsurancePlan> insPlanList=null,List<PatPlan> patPlanList=null,List<Benefit> benefitList=null) 
 		{
 			//No need to check RemotingRole; no call to db.
 			if(codeNum < 1) {
@@ -1779,7 +1779,7 @@ namespace OpenDentBusiness {
 			proc.ProcDate=DateTime.Today;
 			proc.DateTP=DateTime.Today;
 			//The below logic is a trimmed down version of the code existing in ContrChart.AddQuick()
-			InsPlan insPlanPrimary=null;
+			InsurancePlan insPlanPrimary=null;
 			InsSub insSubPrimary=null;
 			if(subList==null) {
 				subList=InsSubs.RefreshForFam(Patients.GetFamily(pat.PatNum));
@@ -1824,7 +1824,7 @@ namespace OpenDentBusiness {
 			List<Procedure> listProcedures=new List<Procedure>();
 			Patient patient=Patients.GetPat(patNum);
 			List<InsSub> subList=InsSubs.RefreshForFam(Patients.GetFamily(patNum));
-			List<InsPlan> insPlanList=InsPlans.RefreshForSubList(subList);
+			List<InsurancePlan> insPlanList=InsPlans.RefreshForSubList(subList);
 			List<PatPlan> patPlanList=PatPlans.Refresh(patNum);
 			List<Benefit> benefitList=Benefits.Refresh(patPlanList,subList);
 			foreach(long codeNum in listProcCodeNums) {
@@ -2028,13 +2028,13 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary>Only used in ContrAccount.CreateClaim and FormRepeatChargeUpdate.CreateClaim to decide whether a given procedure has an estimate that can be used to attach to a claim for the specified plan.  Returns a valid claimProc if this procedure has an estimate attached that is not set to NoBillIns.  The list can be all ClaimProcs for patient, or just those for this procedure. Returns null if there are no claimprocs that would work.</summary>
-		public static ClaimProc GetClaimProcEstimate(long procNum,List<ClaimProc> claimProcList,InsPlan plan,long insSubNum) {
+		public static ClaimProc GetClaimProcEstimate(long procNum,List<ClaimProc> claimProcList,InsurancePlan plan,long insSubNum) {
 			//No need to check RemotingRole; no call to db.
 			//bool matchOfWrongType=false;
 			for(int i=0;i<claimProcList.Count;i++) {
 				if(claimProcList[i].ProcNum==procNum
 					&& !claimProcList[i].NoBillIns
-					&& claimProcList[i].PlanNum==plan.PlanNum
+					&& claimProcList[i].PlanNum==plan.Id
 					&& claimProcList[i].InsSubNum==insSubNum) 
 				{
 					if(plan.PlanType=="c") {
@@ -2057,41 +2057,41 @@ namespace OpenDentBusiness {
 			//No need to check RemotingRole; no call to db.
 			string strLine="";
 			ProcedureCode code=ProcedureCodes.GetProcCode(codeNum);
-			switch(code.TreatArea) {
-				case TreatmentArea.Surf:
+			switch(code.TreatmentArea) {
+				case ProcedureTreatmentArea.Surface:
 					if(!forAccount) {
 						strLine+="#"+Tooth.ToInternat(toothNum)+"-";//"#12-"
 					}
 					strLine+=Tooth.SurfTidyFromDbToDisplay(surf,toothNum);//"MOD-"
 				break;
-				case TreatmentArea.Tooth:
+				case ProcedureTreatmentArea.Tooth:
 					if(!forAccount) {
 						strLine+="#"+Tooth.ToInternat(toothNum)+"-";//"#12-"
 					}
 					break;
 				default://area 3 or 0 (mouth)
 					break;
-				case TreatmentArea.Quad:
+				case ProcedureTreatmentArea.Quad:
 					strLine+=surf+"-";//"UL-"
 					break;
-				case TreatmentArea.Sextant:
+				case ProcedureTreatmentArea.Sextant:
 					strLine+="S"+surf+"-";//"S2-"
 					break;
-				case TreatmentArea.Arch:
+				case ProcedureTreatmentArea.Arch:
 					strLine+=surf+"-";//"U-"
 					break;
-				case TreatmentArea.ToothRange:
+				case ProcedureTreatmentArea.ToothRange:
 					//strLine+=table.Rows[j][13].ToString()+" ";//don't show range
 					break;
 			}//end switch
 			if(!forAccount) {
-				strLine+=" "+code.AbbrDesc;
+				strLine+=" "+code.ShortDescription;
 			}
 			else if(code.LaymanTerm!=""){
 				strLine+=" "+code.LaymanTerm;
 			}
 			else{
-				strLine+=" "+code.Descript;
+				strLine+=" "+code.Description;
 			}
 			return strLine;
 		}
@@ -2256,12 +2256,12 @@ namespace OpenDentBusiness {
 			Lookup<FeeKey2,Fee> lookupFeesByCodeAndSched=null;
 			List<Fee> listFeesHQandClinic=Fees.GetByClinicNum(clinicNumGlobal);//could be empty for some clinics that don't use overrides
 			listFeesHQandClinic.AddRange(listFeesHQ);
-			lookupFeesByCodeAndSched=(Lookup<FeeKey2,Fee>)listFeesHQandClinic.ToLookup(x => new FeeKey2(x.CodeNum,x.FeeSched));
+			lookupFeesByCodeAndSched=(Lookup<FeeKey2,Fee>)listFeesHQandClinic.ToLookup(x => new FeeKey2(x.CodeNum,x.FeeScheduleId));
 			//lookup will make it very fast to look up the fees we need.
 			long practDefaultProvNum=Preferences.GetLong(PreferenceName.PracticeDefaultProv);
-			long practDefaultProvFeeSched=Providers.GetFirstOrDefault(x => x.Id==practDefaultProvNum)?.FeeScheduleId??0;//default to 0 if prov is not found
-			long firstNonHiddenProvFeeSched=Providers.GetFirstOrDefault(x => !x.IsHidden)?.FeeScheduleId??0;//default to 0 if all provs hidden (not likely to happen)
-			Dictionary<long,long> dictProvFeeSched=Providers.GetDeepCopy().ToDictionary(x => x.Id,x => x.FeeScheduleId);
+			long practDefaultProvFeeSched=Providers.FirstOrDefault(x => x.Id==practDefaultProvNum)?.FeeScheduleId??0;//default to 0 if prov is not found
+			long firstNonHiddenProvFeeSched=Providers.FirstOrDefault(x => !x.IsHidden)?.FeeScheduleId??0;//default to 0 if all provs hidden (not likely to happen)
+			Dictionary<long,long> dictProvFeeSched=Providers.GetAll().ToDictionary(x => x.Id,x => x.FeeScheduleId);
 			//dictionary of fee key linked to a list of lists of longs in order to keep each update statement limited to updating 1000 procedures per query
 			Dictionary<double,List<List<long>>> dictFeeListCodes=new Dictionary<double,List<List<long>>>();
 			DataTable table=new DataTable();
@@ -2607,7 +2607,7 @@ namespace OpenDentBusiness {
 				return "";
 			}
 			List<InsSub> listInsSubs=InsSubs.GetMany(listPatPlans.Select(x => x.InsSubNum).ToList());
-			List<InsPlan> listInsPlans=InsPlans.GetByInsSubs(listInsSubs.Select(x => x.InsSubNum).ToList());
+			List<InsurancePlan> listInsPlans=InsPlans.GetByInsSubs(listInsSubs.Select(x => x.InsSubNum).ToList());
 			List<Benefit> listBenefits=Benefits.Refresh(listPatPlans,listInsSubs);
 			listBenefits.AddRange(Benefits.GetForPatPlansAndProcs(listPatPlans.Select(x => x.PatPlanNum).ToList(),procListNew.Select(x => x.CodeNum).ToList()));
 			List<ClaimProcHist> listClaimProcsHist=ClaimProcs.GetHistList(patNum,listBenefits,listPatPlans,listInsPlans,DateTime.Now,listInsSubs);
@@ -2647,7 +2647,7 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary></summary>
-		public static void ComputeEstimates(Procedure proc,long patNum,List<ClaimProc> claimProcs,bool isInitialEntry,List<InsPlan> planList,
+		public static void ComputeEstimates(Procedure proc,long patNum,List<ClaimProc> claimProcs,bool isInitialEntry,List<InsurancePlan> planList,
 			List<PatPlan> patPlans,List<Benefit> benefitList,
 			//missing histList,loopList,saveToDb
 			int patientAge,List<InsSub> subList,
@@ -2691,7 +2691,7 @@ namespace OpenDentBusiness {
 		///<param name="listSubstLinks">If null, gets list from db, so don't use this in a loop with listSubstLinks null.</param>
 		///<param name="listFees">Normally, pass in a short listFees or short lookupFees. Ok to leave null if not much looping, and can get fee directly from db.  listFees gets converted to lookupFees before being passed off to Procedures.ComputerForOrdinal</param>
 		///<param name="lookupFees">In the case of GlobalUpdateWriteoffs, pass in this huge lookup instead of listFees.</param>
-		public static void ComputeEstimates(Procedure proc,long patNum,ref List<ClaimProc> claimProcs,bool isInitialEntry,List<InsPlan> planList,
+		public static void ComputeEstimates(Procedure proc,long patNum,ref List<ClaimProc> claimProcs,bool isInitialEntry,List<InsurancePlan> planList,
 			List<PatPlan> patPlans,List<Benefit> benefitList,
 			List<ClaimProcHist> histList,List<ClaimProcHist> loopList,bool saveToDb,//can default to null,null,true
 			int patientAge,List<InsSub> subList,
@@ -2777,7 +2777,7 @@ namespace OpenDentBusiness {
 				//This prevents Canadian lab procedures from generating claimProcs for deleted parent claimProcs. 
 				claimProcs.RemoveAll(x => listDeletedClaimProcNums.Contains(x.ClaimProcNum));
 			}
-			InsPlan planCur;
+			InsurancePlan planCur;
 			InsSub subCur;
 			//bool estExists;
 			bool cpAdded=false;
@@ -2821,7 +2821,7 @@ namespace OpenDentBusiness {
 				else {
 					cp.Status=ClaimProcStatus.Estimate;
 				}
-				cp.PlanNum=planCur.PlanNum;
+				cp.PlanNum=planCur.Id;
 				cp.InsSubNum=subCur.InsSubNum;
 				//Capitation procedures are not usually attached to a claim.
 				//In order for Aging to calculate properly the ProcDate (Date Completed) and DateCP (Payment Date) must be the same.
@@ -2829,7 +2829,7 @@ namespace OpenDentBusiness {
 				cp.DateCP=proc.ProcDate;
 				cp.AllowedOverride=-1;
 				cp.PercentOverride=-1;
-				cp.NoBillIns=ProcedureCodes.GetProcCode(proc.CodeNum).NoBillIns;
+				cp.NoBillIns=ProcedureCodes.GetProcCode(proc.CodeNum).NoInsuranceBill;
 				cp.PaidOtherIns=-1;
 				cp.CopayOverride=-1;
 				cp.ProcDate=proc.ProcDate;
@@ -2875,7 +2875,7 @@ namespace OpenDentBusiness {
 			}
 			if(listFees!=null && lookupFees==null){
 				//we are just dealing with a very short list of fees, so this doesn't cost anything.
-				lookupFees=(Lookup<FeeKey2,Fee>)listFees.ToLookup(x => new FeeKey2(x.CodeNum,x.FeeSched));
+				lookupFees=(Lookup<FeeKey2,Fee>)listFees.ToLookup(x => new FeeKey2(x.CodeNum,x.FeeScheduleId));
 			}
 			//because secondary claimproc might come before primary claimproc in the list, we cannot simply loop through the claimprocs
 			ComputeForOrdinal(1,claimProcs,proc,planList,isInitialEntry,ref paidOtherInsEstTotal,ref paidOtherInsBaseEst,ref writeOffEstOtherIns,
@@ -2907,7 +2907,7 @@ namespace OpenDentBusiness {
 						{
 							continue;
 						}
-						if(claimProcs[i].PlanNum==planCur.PlanNum && claimProcs[i].WriteOffEst>0){
+						if(claimProcs[i].PlanNum==planCur.Id && claimProcs[i].WriteOffEst>0){
 							priClaimProcIdx=i;
 						}
 						if(claimProcs[i].Status==ClaimProcStatus.Received
@@ -2946,14 +2946,14 @@ namespace OpenDentBusiness {
 
 		///<summary>Passing in ordinal 4 will compute for 4 as well as any other situation such as dropped plan.
 		///For Canada, a lab estimate will be created and added to list claimProcs if any of the procs have labs without estimates.</summary>
-		private static void ComputeForOrdinal(int ordinal,List<ClaimProc> claimProcs,Procedure proc,List<InsPlan> planList,bool isInitialEntry,
+		private static void ComputeForOrdinal(int ordinal,List<ClaimProc> claimProcs,Procedure proc,List<InsurancePlan> planList,bool isInitialEntry,
 			ref double paidOtherInsEstTotal,ref double paidOtherInsBaseEst,ref double writeOffEstOtherIns,
 			List<PatPlan> patPlans,List<Benefit> benefitList,List<ClaimProcHist> histList,List<ClaimProcHist> loopList,bool saveToDb,int patientAge,
 			List<InsSub> listInsSubs,List<SubstitutionLink> listSubstLinks,bool useProcDateOnProc,Lookup<FeeKey2,Fee> lookupFees)
 			//lookupFees passed in will also contain all possible alternate codes and medical codes
 		{
 			//No need to check RemotingRole; no call to db.
-			InsPlan PlanCur;
+			InsurancePlan PlanCur;
 			PatPlan patplan;
 			ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
 			for(int i=0;i<claimProcs.Count;i++) {
@@ -3078,8 +3078,8 @@ namespace OpenDentBusiness {
 				//period zero out the claimproc. Otherwise, continue through
 				//get all WaitingPeriod Benefits
 				List<Benefit> listWaitBenefits=benefitList.FindAll(x => x.BenefitType==InsBenefitType.WaitingPeriod 
-					&& (x.PlanNum==PlanCur.PlanNum || (patplan!=null && x.PatPlanNum==patplan.PatPlanNum))
-					&& (procCode.CodeNum==x.CodeNum || CovSpans.IsCodeInSpans(procCode.ProcCode,CovSpans.GetForCat(x.CovCatNum))));
+					&& (x.PlanNum==PlanCur.Id || (patplan!=null && x.PatPlanNum==patplan.PatPlanNum))
+					&& (procCode.Id==x.CodeNum || CovSpans.IsCodeInSpans(procCode.Code,CovSpans.GetForCat(x.CovCatNum))));
 				//Check to see if we have any WaitingPeriod Benefits
 				if(listWaitBenefits.Count>0 && hasEstimateCalculation) {
 					//WaitingPeriods were found, loop through them to see if they apply
@@ -3144,7 +3144,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Returns true if a frequency benefit has been met this time period.</summary>
 		public static bool HasMetFrequencyLimitation(ClaimProc claimProc,List<ClaimProcHist> histList,List<Benefit> benefitList,Procedure proc,
-			ProcedureCode procCode,InsPlan planCur,List<InsPlan> listInsPlans) 
+			ProcedureCode procCode,InsurancePlan planCur,List<InsurancePlan> listInsPlans) 
 		{
 			//No need to check RemotingRole; no call to db.
 			if(histList==null || benefitList==null || !Preferences.GetBool(PreferenceName.InsChecksFrequency) || proc.ProcDate.Year<1880) {
@@ -3157,10 +3157,10 @@ namespace OpenDentBusiness {
 			//the frequency period. If this would put them over the limit then continue past the zero out the claimproc and continue. 
 			//If no frequency information has been set then skip this logic for the current claimproc.
 			//It is assumed for now that all benefits for a group will have the same quantity and quantityqualifier
-			List<Benefit> listBensForGroup=GetAllLimitationsForGroups(benefitList.FindAll(x => x.PlanNum==planCur.PlanNum),planCur,procCode);
+			List<Benefit> listBensForGroup=GetAllLimitationsForGroups(benefitList.FindAll(x => x.PlanNum==planCur.Id),planCur,procCode);
 			//Look at its frequency, then look through loopList to see if the frequency has been met
 			foreach(Benefit ben in listBensForGroup) {
-				if(ben.PlanNum!=planCur.PlanNum) {
+				if(ben.PlanNum!=planCur.Id) {
 					continue;//Only look at frequency limitation benefits for the current plan, not all plans.
 				}
 				if(ben.QuantityQualifier==BenefitQuantity.Months || ben.QuantityQualifier==BenefitQuantity.Years) {
@@ -3178,7 +3178,7 @@ namespace OpenDentBusiness {
 						&& x.ProcDate>=datePast 
 						&& x.PatNum==proc.PatNum
 						&& x.InsSubNum==claimProc.InsSubNum
-						&& IsSameProcedureArea(x.ToothNum,proc.ToothNum,x.ToothRange,proc.ToothRange,x.Surf,proc.Surf,procCode.TreatArea));
+						&& IsSameProcedureArea(x.ToothNum,proc.ToothNum,x.ToothRange,proc.ToothRange,x.Surf,proc.Surf,procCode.TreatmentArea));
 					if(claimProcHist!=null) {
 						return true;
 					}
@@ -3188,7 +3188,7 @@ namespace OpenDentBusiness {
 					List<ClaimProcHist> claimProcHistList=histList.FindAll(x => x.PatNum==proc.PatNum
 						&& x.InsSubNum==claimProc.InsSubNum
 						&& listBensForGroup.Exists(y => ProcedureCodes.GetStringProcCode(y.CodeNum)==x.StrProcCode)
-						&& IsSameProcedureArea(x.ToothNum,proc.ToothNum,x.ToothRange,proc.ToothRange,x.Surf,proc.Surf,procCode.TreatArea));
+						&& IsSameProcedureArea(x.ToothNum,proc.ToothNum,x.ToothRange,proc.ToothRange,x.Surf,proc.Surf,procCode.TreatmentArea));
 					if(ben.TimePeriod==BenefitTimePeriod.NumberInLast12Months) {
 						datePast=DateTimeOD.CalculateForEndOfMonthOffset(proc.ProcDate,12);//Exactly 12 months in the past.
 						claimProcHistList=claimProcHistList
@@ -3201,7 +3201,7 @@ namespace OpenDentBusiness {
 							datePast=new DateTime(proc.ProcDate.Year,1,1);
 						}
 						else if(ben.TimePeriod==BenefitTimePeriod.ServiceYear) {
-							InsPlan insPlan=listInsPlans.Find(x => x.PlanNum==ben.PlanNum);
+							InsurancePlan insPlan=listInsPlans.Find(x => x.Id==ben.PlanNum);
 							datePast=new DateTime(proc.ProcDate.Year,Math.Max(insPlan.MonthRenew,(byte)1),1);
 							if(proc.ProcDate.Date<=datePast && datePast>DateTime.Today) {
 								datePast=datePast.AddYears(-1);
@@ -3226,7 +3226,7 @@ namespace OpenDentBusiness {
 		///E.g., if the benefit list includes a frequency limitation for D0274 (this code designates the bitewing group), this will include a benefit 
 		///for D0274 and another benefit for D0272.</summary>
 		///<param name="procCode">Include a procedure code to limit the benefits returned to only procedures in the group.</param>
-		public static List<Benefit> GetAllLimitationsForGroups(List<Benefit> benefitList,InsPlan plan,ProcedureCode procCode=null) {
+		public static List<Benefit> GetAllLimitationsForGroups(List<Benefit> benefitList,InsurancePlan plan,ProcedureCode procCode=null) {
 			List<Benefit> listBensForGroup=new List<Benefit>();
 			Benefit bwBenefit=benefitList.Find(x => Benefits.IsBitewingFrequency(x));
 			Benefit panoBenefit=benefitList.Find(x => Benefits.IsPanoFrequency(x));
@@ -3262,17 +3262,17 @@ namespace OpenDentBusiness {
 				ProcedureCodes.ListImplantCodeNums,procCode));
 			if(listBensForGroup.Count==0) {
 				listBensForGroup=benefitList.FindAll(x => x.BenefitType==InsBenefitType.Limitations
-					&& (procCode==null || x.CodeNum==procCode.CodeNum)
-					&& x.PlanNum==plan.PlanNum
+					&& (procCode==null || x.CodeNum==procCode.Id)
+					&& x.PlanNum==plan.Id
 					&& (panoBenefit==null || x.BenefitNum!=panoBenefit.BenefitNum)
 					&& (bwBenefit==null || x.BenefitNum!=bwBenefit.BenefitNum));//Takes care of Canadian codes (should only find one benefit generally)
 			}
 			if(listBensForGroup.Count==0) {//Benefit not found for above categories, look to see if it's covered by a span
 				listBensForGroup=benefitList.FindAll(x => x.BenefitType==InsBenefitType.Limitations
 					&& x.CovCatNum!=0
-					&& x.PlanNum==plan.PlanNum
+					&& x.PlanNum==plan.Id
 					&& (examBenefit==null || x.BenefitNum!=examBenefit.BenefitNum)
-					&& CovSpans.IsCodeInSpans(procCode.ProcCode,CovSpans.GetForCat(x.CovCatNum)));
+					&& CovSpans.IsCodeInSpans(procCode.Code,CovSpans.GetForCat(x.CovCatNum)));
 			}
 			return listBensForGroup;
 		}
@@ -3281,7 +3281,7 @@ namespace OpenDentBusiness {
 		private static List<Benefit> GetBenefitsForGroup(Benefit ben,List<long> listCodeNums,ProcedureCode procCode) {
 			//No need to check RemotingRole; no call to db.
 			List<Benefit> listBensForGroup=new List<Benefit>();
-			if((procCode==null ||  listCodeNums.Contains(procCode.CodeNum)) && ben!=null) {//The proc is not included or is part of the group
+			if((procCode==null ||  listCodeNums.Contains(procCode.Id)) && ben!=null) {//The proc is not included or is part of the group
 				foreach(long codeNum in listCodeNums) {
 					Benefit benefit=ben.Copy();
 					benefit.CodeNum=codeNum;
@@ -3295,7 +3295,7 @@ namespace OpenDentBusiness {
 		///Because we store toothrange,toothnum, and surf as strings they default to be empty which results in false positives in our logic. Checking for empty strings whilst doing our logic
 		///in ComputeForOrdinal() results in a very ugly and unreadable linq statement. This method simply pulls out that logic and simplifies the linq statement above.</summary>
 		public static bool IsSameProcedureArea(string histToothNum,string procCurToothNum,string histToothRangeStr,string procCurToothRangeStr,
-			string histSurf,string procCurSurf,TreatmentArea procCurTreatArea) 
+			string histSurf,string procCurSurf,ProcedureTreatmentArea procCurTreatArea) 
 		{
 			//Procedures like exams and BW's do not ever specify a toothnum, toothrange, or surface.
 			if(histToothNum=="" 
@@ -3320,7 +3320,7 @@ namespace OpenDentBusiness {
 						|| hasHistToothInCurRange
 						|| hasCurToothInHistRange
 						|| hasToothRangeOverlap
-						|| procCurTreatArea.In(TreatmentArea.Arch,TreatmentArea.Quad,TreatmentArea.Sextant)))
+						|| procCurTreatArea.In(ProcedureTreatmentArea.Arch,ProcedureTreatmentArea.Quad,ProcedureTreatmentArea.Sextant)))
 			{
 				return true;
 			}
@@ -3328,7 +3328,7 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary>After changing important coverage plan info, this is called to recompute estimates for all procedures for this patient.</summary>
-		public static void ComputeEstimatesForAll(long patNum,List<ClaimProc> claimProcs,List<Procedure> procs,List<InsPlan> planList,
+		public static void ComputeEstimatesForAll(long patNum,List<ClaimProc> claimProcs,List<Procedure> procs,List<InsurancePlan> planList,
 			List<PatPlan> patPlans,List<Benefit> benefitList,int patientAge,List<InsSub> subList,List<ClaimProc> listClaimProcsAll=null,bool isClaimProcRemoveNeeded=false,
 			List<SubstitutionLink> listSubstLinks=null,List<Fee> listFees=null) 
 		{
@@ -3362,7 +3362,7 @@ namespace OpenDentBusiness {
 		///<summary>Only called from one place in this same class.  Loops through list of procs for appt.  
 		///Does not add notes to a procedure that already has notes. Only called from ProcedureL.SetCompleteInAppt, security checked
 		///before calling this.  Also sets provider for each proc and claimproc.</summary>
-		public static List<Procedure> SetCompleteInApptInList(Appointment apt,List<InsPlan> planList,List<PatPlan> patPlans,Patient patient,
+		public static List<Procedure> SetCompleteInApptInList(Appointment apt,List<InsurancePlan> planList,List<PatPlan> patPlans,Patient patient,
 			List<Procedure> listProcsForAppt,List<InsSub> subList,User curUser)
 		{
 			
@@ -3529,11 +3529,11 @@ namespace OpenDentBusiness {
 			}
 			List<long> listOrthoPlacementCodeNums = ProcedureCodes.GetOrthoBandingCodeNums();
 			if(listOrthoPlacementCodeNums.Count > 0) {
-				if(!listOrthoPlacementCodeNums.Contains(procCode.CodeNum)) {
+				if(!listOrthoPlacementCodeNums.Contains(procCode.Id)) {
 					return;
 				}
 			}
-			else if(!procCode.ProcCode.StartsWith("D8080") && !procCode.ProcCode.StartsWith("D8090")) {
+			else if(!procCode.Code.StartsWith("D8080") && !procCode.Code.StartsWith("D8090")) {
 				return;
 			}
 			List<PatPlan> listPatPlans = PatPlans.GetPatPlansForPat(procCur.PatNum);
@@ -3541,7 +3541,7 @@ namespace OpenDentBusiness {
 				if(patPlanCur.OrthoAutoNextClaimDate.Date != DateTime.MinValue.Date) {
 					continue;
 				}
-				InsPlan insPlanCur = InsPlans.GetByInsSubs(new List<long> { patPlanCur.InsSubNum }).FirstOrDefault();
+				InsurancePlan insPlanCur = InsPlans.GetByInsSubs(new List<long> { patPlanCur.InsSubNum }).FirstOrDefault();
 				if(insPlanCur == null || insPlanCur.OrthoType != OrthoClaimType.InitialPlusPeriodic) {
 					continue;
 				}
@@ -3570,9 +3570,9 @@ namespace OpenDentBusiness {
 		///<summary>Decides the base description to send to insurance based off of the claimproc.
 		///This function mimics logic from ContrAccount.CreateClaim() when setting CodeSent.
 		///If the logic in this function changes, then consider changing ContrAccount.CreateClaim() as well.</summary>
-		public static string GetClaimDescript(ClaimProc claimProcCur,ProcedureCode procCodeSent,Procedure procCur,ProcedureCode procCodeCur,InsPlan planCur=null) {
+		public static string GetClaimDescript(ClaimProc claimProcCur,ProcedureCode procCodeSent,Procedure procCur,ProcedureCode procCodeCur,InsurancePlan planCur=null) {
 			//No need to check RemotingRole; no call to db.
-			string descript=procCodeSent.Descript;
+			string descript=procCodeSent.Description;
 			if(Preferences.GetBool(PreferenceName.ClaimPrintProcChartedDesc)) {
 				if(planCur==null) {
 					planCur=InsPlans.GetPlan(claimProcCur.PlanNum,null);
@@ -3582,7 +3582,7 @@ namespace OpenDentBusiness {
 				if((procCodeCur.AlternateCode1=="" || !planCur.UseAltCode) 
 					&& (procCodeCur.MedicalCode=="" || !planCur.IsMedical))
 				{
-					descript=procCodeCur.Descript;
+					descript=procCodeCur.Description;
 				}
 			}
 			return descript;
@@ -3616,7 +3616,7 @@ namespace OpenDentBusiness {
 						Appointment apptOldPlanned=listAppointments.FirstOrDefault(x => x.AptNum==proc.PlannedAptNum && x.AptStatus==ApptStatus.Planned);
 						string apptOldPlannedDateStr=(apptOldPlanned==null ? "[INVALID #"+proc.PlannedAptNum+"]" : apptOldPlanned.AptDateTime.ToShortDateString());
 						SecurityLogs.MakeLogEntry(Permissions.AppointmentEdit,AptCur.PatNum,"Procedure"+" "
-							+ProcedureCodes.GetProcCode(proc.CodeNum).AbbrDesc+" "+"moved from planned appointment created on"+" "
+							+ProcedureCodes.GetProcCode(proc.CodeNum).ShortDescription+" "+"moved from planned appointment created on"+" "
 							+apptOldPlannedDateStr+" "+"to planned appointment created on"+" "
 							+AptCur.AptDateTime.ToShortDateString(),AptCur.AptNum,logSource,AptCur.DateTStamp);
 						UpdateOtherApptDesc(proc,AptCur,isAptPlanned,listAppointments,listProcs);
@@ -3628,7 +3628,7 @@ namespace OpenDentBusiness {
 						Appointment apptOld=listAppointments.FirstOrDefault(x => x.AptNum==proc.AptNum);
 						string apptOldDateStr=(apptOld==null ? "[INVALID #"+proc.AptNum+"]" : apptOld.AptDateTime.ToShortDateString());
 						SecurityLogs.MakeLogEntry(Permissions.AppointmentEdit,AptCur.PatNum,"Procedure"+" "
-							+ProcedureCodes.GetProcCode(proc.CodeNum).AbbrDesc+" "+"moved from appointment on"+" "+apptOldDateStr
+							+ProcedureCodes.GetProcCode(proc.CodeNum).ShortDescription+" "+"moved from appointment on"+" "+apptOldDateStr
 							+" "+"to appointment on"+" "+AptCur.AptDateTime,AptCur.AptNum,logSource,AptCur.DateTStamp);
 						UpdateOtherApptDesc(proc,AptCur,isAptPlanned,listAppointments,listProcs);
 					}
@@ -3667,18 +3667,18 @@ namespace OpenDentBusiness {
 				return;//Nothing to do.  Should never happen.
 			}
 			ProcedureCode procCode=ProcedureCodes.GetProcCode(procCur.CodeNum);
-			string logText=procCode.ProcCode+", ";
+			string logText=procCode.Code+", ";
 			if(toothNums!=null && toothNums.Trim()!="") {
 				logText+="Teeth"+": "+toothNums+", ";
 			}
-			logText+="Fee"+": "+procCur.ProcFee.ToString("F")+", "+procCode.Descript;
+			logText+="Fee"+": "+procCur.ProcFee.ToString("F")+", "+procCode.Description;
 			SecurityLogs.MakeLogEntry(Permissions.ProcComplCreate,patNum,logText);
 		}
 
 		///<summary>Creates securitylog entry for completed procedure where appointment ProvNum is different than the procedures provnum.</summary>
 		private static void LogProcComplEdit(Procedure proc,Procedure procOld,List<ProcedureCode> listProcedureCodes=null) {
 			ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum,listProcedureCodes);
-			string logText="Completed procedure"+" "+procCode.ProcCode.ToString()+" "
+			string logText="Completed procedure"+" "+procCode.Code.ToString()+" "
 				+"edited by setting appointment complete.";
 			if(proc.ProvNum!=procOld.ProvNum) {
 				logText+=" "+"Provider was changed from"+" "+Providers.GetAbbr(procOld.ProvNum)+" "+"to"+" "+
@@ -3688,7 +3688,7 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary>Sets all procedures for apt complete.  Flags procedures as CPOE as needed (when prov logged in).  Makes a log entry for each completed proc.</summary>
-		public static List<Procedure> SetCompleteInAppt(Appointment apt,List<InsPlan> PlanList,List<PatPlan> patPlans,Patient patient,List<InsSub> subList,
+		public static List<Procedure> SetCompleteInAppt(Appointment apt,List<InsurancePlan> PlanList,List<PatPlan> patPlans,Patient patient,List<InsSub> subList,
 			bool removeCompletedProcs) 
 		{
 			//Get all procs attached to the appointment and go through the set complete logic.
@@ -3720,7 +3720,7 @@ namespace OpenDentBusiness {
 		///<summary>Constructs a procedure from a passed-in codenum. Does not prompt you to fill in info like toothNum, etc. 
 		///Does NOT insert the procedure into the DB, just returns it.</summary>
 		public static Procedure ConstructProcedureForAppt(long codeNum,Appointment appt,Patient pat,List<PatPlan> listPatPlans,
-			List<InsPlan> listInsPlans,List<InsSub> listInsSubs,List<Fee> listFees=null)
+			List<InsurancePlan> listInsPlans,List<InsSub> listInsSubs,List<Fee> listFees=null)
 		{
 			//No need to check RemotingRole; no call to db.
 			Procedure proc=new Procedure();
@@ -3735,9 +3735,9 @@ namespace OpenDentBusiness {
 			ProcedureCode procCodeCur=ProcedureCodes.GetProcCode(proc.CodeNum);
 			#region ProvNum
 			proc.ProvNum=appt.ProvNum;
-			if(procCodeCur.ProvNumDefault!=0) {//Override provider for procedures with a default provider
+			if(procCodeCur.DefaultProviderId.HasValue) {//Override provider for procedures with a default provider
 				//This provider might be restricted to a different clinic than this user.
-				proc.ProvNum=procCodeCur.ProvNumDefault;
+				proc.ProvNum=procCodeCur.DefaultProviderId.Value;
 			}
 			else if(procCodeCur.IsHygiene && appt.ProvHyg!=0) {
 				proc.ProvNum=appt.ProvHyg;
@@ -3773,7 +3773,7 @@ namespace OpenDentBusiness {
 			List<string>orthoProcCodes=OrthoCases.GetListProcTypeProcCodes(PreferenceName.OrthoBandingCodes);
 			orthoProcCodes.AddRange(OrthoCases.GetListProcTypeProcCodes(PreferenceName.OrthoVisitCodes));
 			orthoProcCodes.AddRange(OrthoCases.GetListProcTypeProcCodes(PreferenceName.OrthoDebondCodes));
-			string procCode=ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode;
+			string procCode=ProcedureCodes.GetProcCode(proc.CodeNum).Code;
 			if(orthoProcCodes.Contains(procCode)) {
 				return true;
 			}
@@ -3816,7 +3816,7 @@ namespace OpenDentBusiness {
 			//Create new EO procedure. Default to the patient's clinic, primary provider, and the first code in the InsHistPref
 			ProcedureCode procCode=ProcedureCodes.GetByInsHistPref(prefName);
 			Procedure retVal=new Procedure();
-			retVal.CodeNum=procCode.CodeNum;
+			retVal.CodeNum=procCode.Id;
 			retVal.PatNum=patCur.PatNum;
 			retVal.ProcDate=date;
 			retVal.DateTP=date;

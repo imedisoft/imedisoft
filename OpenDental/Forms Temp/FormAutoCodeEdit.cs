@@ -228,8 +228,8 @@ namespace OpenDental{
 			tbAutoItem.SetGridColor(Color.Gray);
 			tbAutoItem.SetBackGColor(Color.White);
 			for(int i=0;i<listForCode.Count;i++) {
-        tbAutoItem.Cell[0,i]=ProcedureCodes.GetProcCode(listForCode[i].ProcedureCodeId).ProcCode;
-				tbAutoItem.Cell[1,i]=ProcedureCodes.GetProcCode(listForCode[i].ProcedureCodeId).Descript;
+        tbAutoItem.Cell[0,i]=ProcedureCodes.GetProcCode(listForCode[i].ProcedureCodeId).Code;
+				tbAutoItem.Cell[1,i]=ProcedureCodes.GetProcCode(listForCode[i].ProcedureCodeId).Description;
         count=0;
         for(int j=0;j<_listAutoCodeConds.Count;j++){
           if(_listAutoCodeConds[j].AutoCodeItemId==listForCode[i].Id){

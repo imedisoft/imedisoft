@@ -65,8 +65,8 @@ namespace OpenDental
 		Claim claim;
 		Provider provTreat;
 		Provider provBill;
-		InsPlan insplan;
-		InsPlan insplan2;
+		InsurancePlan insplan;
+		InsurancePlan insplan2;
 		InsSub insSub;
 		InsSub insSub2;
 		List<ClaimProc> claimprocs;
@@ -132,7 +132,7 @@ namespace OpenDental
 				 //Get primary info
 					insSub = InsSubs.GetSub(etrans.InsSubNum, new List<InsSub>());
 					subscriber = Patients.GetPat(insSub.Subscriber);
-					insplan = InsPlans.GetPlan(etrans.PlanNum, new List<InsPlan>());
+					insplan = InsPlans.GetPlan(etrans.PlanNum, new List<InsurancePlan>());
 					patPlanPri = PatPlans.GetFromList(patPlansForPat, insSub.InsSubNum);
 				}
 				else
@@ -140,7 +140,7 @@ namespace OpenDental
 					//Get primary info
 					insSub = InsSubs.GetSub(claim.InsSubNum, new List<InsSub>());
 					subscriber = Patients.GetPat(insSub.Subscriber);
-					insplan = InsPlans.GetPlan(claim.PlanNum, new List<InsPlan>());
+					insplan = InsPlans.GetPlan(claim.PlanNum, new List<InsurancePlan>());
 					patPlanPri = PatPlans.GetFromList(patPlansForPat, insSub.InsSubNum);
 					//Get secondary info
 					if (claim.InsSubNum2 != 0)
@@ -148,8 +148,8 @@ namespace OpenDental
 						patPlanSec = PatPlans.GetFromList(patPlansForPat, claim.InsSubNum2);
 						insSub2 = InsSubs.GetSub(claim.InsSubNum2, new List<InsSub>());
 						subscriber2 = Patients.GetPat(insSub2.Subscriber);
-						insplan2 = InsPlans.GetPlan(claim.PlanNum2, new List<InsPlan>());
-						secondaryCarrier = Carriers.GetCarrier(insplan2.CarrierNum);
+						insplan2 = InsPlans.GetPlan(claim.PlanNum2, new List<InsurancePlan>());
+						secondaryCarrier = Carriers.GetCarrier(insplan2.CarrierId);
 					}
 					//Provider info
 					provTreat = Providers.GetById(claim.ProvTreat);
@@ -1268,23 +1268,23 @@ namespace OpenDental
 			doc.standardFont = new Font(doc.standardFont.FontFamily, doc.standardFont.Size, FontStyle.Regular);
 			text = isFrench ? "ASSUREUR/ADMINIST. RÉGIME:" : "CARRIER/PLAN ADMINISTRATOR:";
 			doc.DrawString(g, text, x, 0);
-			text = primaryCarrier.CarrierName.ToUpper();//Field A05
+			text = primaryCarrier.Name.ToUpper();//Field A05
 			doc.DrawString(g, text, leftMidCol, 0);
 			if (claim != null && insplan2 != null)
 			{
-				text = secondaryCarrier.CarrierName.ToUpper();
+				text = secondaryCarrier.Name.ToUpper();
 				doc.DrawString(g, text, rightCol, 0);
 			}
 			x = doc.StartElement();
 			text = isFrench ? "NO DE POLICE:" : "POLICY#:";
 			doc.DrawString(g, text, x, 0);
-			text = insplan.GroupNum;//Field C01
+			text = insplan.GroupNumber;//Field C01
 			doc.DrawString(g, text, leftMidCol, 0);
 			doc.DrawString(g, isFrench ? "DIV/SECTION:" : "DIV/SECTION NO:", leftMidCol + 86, 0);
 			doc.DrawString(g, insplan.DivisionNo, leftMidCol + 190, 0);
 			if (claim != null && insplan2 != null)
 			{
-				text = insplan2.GroupNum;//Field E02
+				text = insplan2.GroupNumber;//Field E02
 				doc.DrawString(g, text, rightCol, 0);
 			}
 			doc.DrawString(g, isFrench ? "DIV/SECTION:" : "DIV/SECTION NO:", rightCol + 86, 0);
@@ -1741,7 +1741,7 @@ namespace OpenDental
 								{
 									//Display the Lab1 information on its own line.
 									x = doc.StartElement();
-									text = ProcedureCodes.GetProcCodeFromDb(labProcs[0].CodeNum).ProcCode.PadLeft(6, ' ');
+									text = ProcedureCodes.GetProcCodeFromDb(labProcs[0].CodeNum).Code.PadLeft(6, ' ');
 									doc.DrawString(g, text, procedureCol, 0);
 									text = labProcs[0].ProcFee.ToString("F");
 									totalLab += labProcs[0].ProcFee;
@@ -1759,7 +1759,7 @@ namespace OpenDental
 								{
 									//Display the Lab2 information on its own line.
 									x = doc.StartElement();
-									text = ProcedureCodes.GetProcCodeFromDb(labProcs[1].CodeNum).ProcCode.PadLeft(6, ' ');
+									text = ProcedureCodes.GetProcCodeFromDb(labProcs[1].CodeNum).Code.PadLeft(6, ' ');
 									doc.DrawString(g, text, procedureCol, 0);
 									text = labProcs[1].ProcFee.ToString("F");
 									totalLab += labProcs[1].ProcFee;
@@ -1794,7 +1794,7 @@ namespace OpenDental
 						x = doc.StartElement();
 						text = carrierProcs[p].valuestr.PadLeft(6, ' ');//Field G19
 						doc.DrawString(g, text, procedureCol, 0);
-						text = ProcedureCodes.GetProcCode(ProcedureCodes.GetCodeNum(text)).Descript;
+						text = ProcedureCodes.GetProcCode(ProcedureCodes.GetCodeNum(text)).Description;
 						doc.DrawString(g, text, procedureCol + procedureColWidth, 0, doc.standardFont, (int)(toothCol - procedureCol - procedureColWidth - 10));
 						text = RawMoneyStrToDisplayMoney(carrierEligibleAmts[p].valuestr);//Field G20
 						doc.DrawString(g, text, eligibleFeeCol + amountWidth - g.MeasureString(text, doc.standardFont).Width, 0);
@@ -2110,7 +2110,7 @@ namespace OpenDental
 				proc = Procedures.GetOneProc(claimproc.ProcNum, true);
 				text = claimproc.CodeSent.PadLeft(6, ' ');
 				doc.DrawString(g, text, x, 0);
-				text = ProcedureCodes.GetProcCode(proc.CodeNum).Descript;
+				text = ProcedureCodes.GetProcCode(proc.CodeNum).Description;
 				doc.DrawString(g, text, procedureCodeCol + procCodeWidth, 0, doc.standardFont, (int)(procedureToothCol - procedureCodeCol - procCodeWidth - 10));
 				text = Tooth.ToInternat(proc.ToothNum);//Field F10
 				doc.DrawString(g, text, procedureToothCol, 0);
@@ -2343,7 +2343,7 @@ namespace OpenDental
 				proc = Procedures.GetOneProc(claimproc.ProcNum, true);
 				text = claimproc.CodeSent.PadLeft(6, ' ');
 				doc.DrawString(g, text, x, 0);//procedure code
-				text = ProcedureCodes.GetProcCode(proc.CodeNum).Descript;
+				text = ProcedureCodes.GetProcCode(proc.CodeNum).Description;
 				doc.DrawString(g, text, procedureCodeCol + procCodeWidth, 0, doc.standardFont, (int)(procedureToothCol - procedureCodeCol - procCodeWidth - 10));//proc descript
 				text = Tooth.ToInternat(proc.ToothNum);//Field F10
 				doc.DrawString(g, text, procedureToothCol, 0);//Tooth number
@@ -2381,7 +2381,7 @@ namespace OpenDental
 				{//In version 2 the lab fee is rolled into the procedure amount and so there is no lab section.
 				 //List the first lab info for the current procedure on its own line.
 					x = doc.StartElement();
-					text = ProcedureCodes.GetProcCodeFromDb(labProcs[0].CodeNum).ProcCode.PadLeft(6, ' ');
+					text = ProcedureCodes.GetProcCodeFromDb(labProcs[0].CodeNum).Code.PadLeft(6, ' ');
 					doc.DrawString(g, text, procedureCodeCol, 0);//proc code
 					text = labProcs[0].ProcFee.ToString("F");
 					doc.DrawString(g, text, procedureChargeCol + amountWidth - g.MeasureString(text, doc.standardFont).Width, 0);//proc fee
@@ -2398,7 +2398,7 @@ namespace OpenDental
 				{//In version 2 the lab fee is rolled into the procedure amount and so there is no lab section.
 				 //List the second lab info for the current procedure on its own line.
 					x = doc.StartElement();
-					text = ProcedureCodes.GetProcCodeFromDb(labProcs[1].CodeNum).ProcCode.PadLeft(6, ' ');
+					text = ProcedureCodes.GetProcCodeFromDb(labProcs[1].CodeNum).Code.PadLeft(6, ' ');
 					doc.DrawString(g, text, procedureCodeCol, 0);//proc code
 					text = labProcs[1].ProcFee.ToString("F");
 					doc.DrawString(g, text, procedureChargeCol + amountWidth - g.MeasureString(text, doc.standardFont).Width, 0);//proc fee
@@ -2427,7 +2427,7 @@ namespace OpenDental
 				x = doc.StartElement();
 				text = carrierProcs[p].valuestr.PadLeft(6, ' ');//Field G19
 				doc.DrawString(g, text, x, 0);
-				text = ProcedureCodes.GetProcCode(ProcedureCodes.GetCodeNum(text)).Descript;
+				text = ProcedureCodes.GetProcCode(ProcedureCodes.GetCodeNum(text)).Description;
 				doc.DrawString(g, text, procedureCodeCol + procCodeWidth, 0, doc.standardFont, (int)(procedureToothCol - procedureCodeCol - procCodeWidth - 10));
 				text = RawMoneyStrToDisplayMoney(carrierEligibleAmts[p].valuestr);//Field G20
 				doc.DrawString(g, text, procedureEligibleCol + amountWidth - g.MeasureString(text, doc.standardFont).Width, 0);
@@ -2513,7 +2513,7 @@ namespace OpenDental
 		///<summary>Prints carrier name centered on current form row followed by a space.</summary>
 		private void PrintCarrier(Graphics g)
 		{
-			text = GetCarrier().CarrierName;
+			text = GetCarrier().Name;
 			doc.DrawString(g, text, center - g.MeasureString(text, headingFont).Width / 2, 0, headingFont);
 		}
 
@@ -2683,11 +2683,11 @@ namespace OpenDental
 			text = "";
 			if (primary)
 			{
-				text = insplan.GroupNum;//Field C01
+				text = insplan.GroupNumber;//Field C01
 			}
 			else if (insplan2 != null)
 			{
-				text = insplan2.GroupNum;//Field E02
+				text = insplan2.GroupNumber;//Field E02
 			}
 			return doc.DrawField(g, isFrench ? "NO DE POLICE" : "POLICY#", text, true, X, Y);
 		}
@@ -2933,7 +2933,7 @@ namespace OpenDental
 				doc.DrawString(g, text + (isFrench ? "Oui" : "Yes"), x, 0);
 				x = doc.StartElement();
 				PrintPolicyNo(g, x, 0, false);
-				text = secondaryCarrier.CarrierName;
+				text = secondaryCarrier.Name;
 				doc.DrawField(g, isFrench ? "Nom de l'assureur/administrateur" : "Name of Insurer/Plan Administrator", text, true, x + 200, 0);
 				x = doc.StartElement();
 				PrintCertificateNo(g, x, 0, false);
@@ -3289,11 +3289,11 @@ namespace OpenDental
 		private Carrier GetCarrier()
 		{
 			string carrierIdentificationNumber = formData.GetFieldById("A05").valuestr;//Exists in all formats but 24-Email, and 16-Payment Reconciliation Response
-			if (primaryCarrier != null && primaryCarrier.ElectID == carrierIdentificationNumber)
+			if (primaryCarrier != null && primaryCarrier.ElectronicId == carrierIdentificationNumber)
 			{
 				return primaryCarrier;
 			}
-			else if (secondaryCarrier != null && secondaryCarrier.ElectID == carrierIdentificationNumber)
+			else if (secondaryCarrier != null && secondaryCarrier.ElectronicId == carrierIdentificationNumber)
 			{
 				return secondaryCarrier;
 			}
@@ -3303,13 +3303,13 @@ namespace OpenDental
 		private bool ThisIsPrimary()
 		{
 			string carrierIdentificationNumber = formData.GetFieldById("A05").valuestr;//Exists in all formats but 24-Email, and 16-Payment Reconciliation Response
-			return (primaryCarrier != null && primaryCarrier.ElectID == carrierIdentificationNumber);
+			return (primaryCarrier != null && primaryCarrier.ElectronicId == carrierIdentificationNumber);
 		}
 
 		private bool ThisIsSecondary()
 		{
 			string carrierIdentificationNumber = formData.GetFieldById("A05").valuestr;//Exists in all formats but 24-Email, and 16-Payment Reconciliation Response
-			return (secondaryCarrier != null && secondaryCarrier.ElectID == carrierIdentificationNumber);
+			return (secondaryCarrier != null && secondaryCarrier.ElectronicId == carrierIdentificationNumber);
 		}
 
 		///<summary>The rawPercent string should be of length 3 and should be numerical digits only.</summary>
