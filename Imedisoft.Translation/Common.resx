@@ -135,6 +135,9 @@
   <data name="AndXOthers" xml:space="preserve">
     <value>And {0} others...</value>
   </data>
+  <data name="ApiKey" xml:space="preserve">
+    <value>API Key</value>
+  </data>
   <data name="Appointment" xml:space="preserve">
     <value>Appointment</value>
   </data>
@@ -225,6 +228,15 @@
   <data name="Description" xml:space="preserve">
     <value>Description</value>
   </data>
+  <data name="Developer" xml:space="preserve">
+    <value>Developer</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="DisableWithMnemonic" xml:space="preserve">
+    <value>&amp;Disable</value>
+  </data>
   <data name="Done" xml:space="preserve">
     <value>Done</value>
   </data>
@@ -233,6 +245,12 @@
   </data>
   <data name="Elapsed" xml:space="preserve">
     <value>Elapsed</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="EnableWithMnemonic" xml:space="preserve">
+    <value>&amp;Enable</value>
   </data>
   <data name="End" xml:space="preserve">
     <value>End</value>
@@ -387,6 +405,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="PleaseEnterAbbreviation" xml:space="preserve">
     <value>Please enter an abbreviation.</value>
   </data>
+  <data name="PleaseEnterApiKey" xml:space="preserve">
+    <value>Please enter an API key.</value>
+  </data>
   <data name="PleaseEnterDate" xml:space="preserve">
     <value>Please enter a date.</value>
   </data>
@@ -408,6 +429,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="PleaseEnterValidDate" xml:space="preserve">
     <value>Please enter a valid date.</value>
   </data>
+  <data name="PleaseEnterValidInterval" xml:space="preserve">
+    <value>Please enter a valid interval.</value>
+  </data>
   <data name="PleaseEnterValidPercentage" xml:space="preserve">
     <value>Please enter a valid percentage.</value>
   </data>
@@ -425,6 +449,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="PleaseSelectItemFirst" xml:space="preserve">
     <value>Please select an item first.</value>
+  </data>
+  <data name="PleaseSelectPaymentType" xml:space="preserve">
+    <value>Please select a payment type.</value>
   </data>
   <data name="PleaseSelectProvider" xml:space="preserve">
     <value>Please select a provider.</value>

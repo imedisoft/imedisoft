@@ -4583,7 +4583,7 @@ namespace OpenDental
 				return;
 			}
 			Cursor = Cursors.WaitCursor;
-			FormFHIRSetup FormFS = new FormFHIRSetup();
+			FormFhirSetup FormFS = new FormFhirSetup();
 			FormFS.ShowDialog();
 			Cursor = Cursors.Default;
 			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "FHIR");

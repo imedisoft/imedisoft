@@ -1440,16 +1440,17 @@ namespace OpenDental.UI
 		}
 
 
+		public static readonly Color ColorHeaderTop = Color.FromArgb(240, 240, 240);
+		public static readonly Color ColorHeaderBottom = Color.FromArgb(200, 200, 200);
+
 		private void DrawHeaders(Graphics g)
 		{
 			if (_heightHeader == 0) return;
 
 			using var background = new LinearGradientBrush(
 				new Point(0, titleHeight + 1), 
-				new Point(0, titleHeight + 1 + _heightHeader), 
-				Color.FromArgb(240, 240, 240), 
-				Color.FromArgb(187, 187, 187));
-
+				new Point(0, titleHeight + 1 + _heightHeader),
+				ColorHeaderTop, ColorHeaderBottom);
 
 			g.FillRectangle(background, 1, titleHeight + 1, Width, _heightHeader);
 			g.DrawLine(_penGridInnerLine, 0, titleHeight, Width, titleHeight);

@@ -1579,6 +1579,26 @@ namespace Imedisoft.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap IconToggleOff {
+            get {
+                object obj = ResourceManager.GetObject("IconToggleOff", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconToggleOn {
+            get {
+                object obj = ResourceManager.GetObject("IconToggleOn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap IconTrash {
             get {
                 object obj = ResourceManager.GetObject("IconTrash", resourceCulture);

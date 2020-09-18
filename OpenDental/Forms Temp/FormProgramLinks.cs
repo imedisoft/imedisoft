@@ -105,7 +105,7 @@ namespace Imedisoft.Forms
 					break;
 
 				case "FHIR":
-					FormFHIRSetup FormFS = new FormFHIRSetup();
+					FormFhirSetup FormFS = new FormFhirSetup();
 					dialogResult = FormFS.ShowDialog();
 					break;
 

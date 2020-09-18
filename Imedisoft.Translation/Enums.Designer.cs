@@ -68,5 +68,257 @@ namespace Imedisoft.Translation {
                 return ResourceManager.GetString("DefinitionCategoryAccountColors", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disabled (Developer).
+        /// </summary>
+        public static string FhirApiKeyStatusDisabledByDeveloper {
+            get {
+                return ResourceManager.GetString("FhirApiKeyStatusDisabledByDeveloper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disabled (HQ).
+        /// </summary>
+        public static string FhirApiKeyStatusDisabledByHQ {
+            get {
+                return ResourceManager.GetString("FhirApiKeyStatusDisabledByHQ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabled (Read Only).
+        /// </summary>
+        public static string FhirApiKeyStatusEnabledReadOnly {
+            get {
+                return ResourceManager.GetString("FhirApiKeyStatusEnabledReadOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allergy Intolerance Read.
+        /// </summary>
+        public static string FhirApiPermissionAllergyIntoleranceRead {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionAllergyIntoleranceRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Appointment Create.
+        /// </summary>
+        public static string FhirApiPermissionAppointmentCreate {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionAppointmentCreate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Appointment Delete.
+        /// </summary>
+        public static string FhirApiPermissionAppointmentDelete {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionAppointmentDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Appointment Read.
+        /// </summary>
+        public static string FhirApiPermissionAppointmentRead {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionAppointmentRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Appointment Update.
+        /// </summary>
+        public static string FhirApiPermissionAppointmentUpdate {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionAppointmentUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Capability Statement.
+        /// </summary>
+        public static string FhirApiPermissionCapabilityStatement {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionCapabilityStatement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Communication Create.
+        /// </summary>
+        public static string FhirApiPermissionCommunicationCreate {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionCommunicationCreate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Communication Read.
+        /// </summary>
+        public static string FhirApiPermissionCommunicationRead {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionCommunicationRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Condition Read.
+        /// </summary>
+        public static string FhirApiPermissionConditionRead {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionConditionRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location Read.
+        /// </summary>
+        public static string FhirApiPermissionLocationRead {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionLocationRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Medication Read.
+        /// </summary>
+        public static string FhirApiPermissionMedicationRead {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionMedicationRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Organization Read.
+        /// </summary>
+        public static string FhirApiPermissionOrganizationRead {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionOrganizationRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Patient Create.
+        /// </summary>
+        public static string FhirApiPermissionPatientCreate {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionPatientCreate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Patient Read.
+        /// </summary>
+        public static string FhirApiPermissionPatientRead {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionPatientRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Patient Update.
+        /// </summary>
+        public static string FhirApiPermissionPatientUpdate {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionPatientUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payment Create.
+        /// </summary>
+        public static string FhirApiPermissionPaymentCreate {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionPaymentCreate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payment Read.
+        /// </summary>
+        public static string FhirApiPermissionPaymentRead {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionPaymentRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Practitioner Read.
+        /// </summary>
+        public static string FhirApiPermissionPractitionerRead {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionPractitionerRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Procedure Create.
+        /// </summary>
+        public static string FhirApiPermissionProcedureCreate {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionProcedureCreate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Procedure Read.
+        /// </summary>
+        public static string FhirApiPermissionProcedureRead {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionProcedureRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Procedure Update.
+        /// </summary>
+        public static string FhirApiPermissionProcedureUpdate {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionProcedureUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schedule Read.
+        /// </summary>
+        public static string FhirApiPermissionScheduleRead {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionScheduleRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service Request Create.
+        /// </summary>
+        public static string FhirApiPermissionServiceRequestCreate {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionServiceRequestCreate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service Request Read.
+        /// </summary>
+        public static string FhirApiPermissionServiceRequestRead {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionServiceRequestRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subscriptions.
+        /// </summary>
+        public static string FhirApiPermissionSubscriptions {
+            get {
+                return ResourceManager.GetString("FhirApiPermissionSubscriptions", resourceCulture);
+            }
+        }
     }
 }

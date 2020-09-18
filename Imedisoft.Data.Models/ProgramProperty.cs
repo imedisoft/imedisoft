@@ -13,6 +13,12 @@ namespace Imedisoft.Data.Models
 		[PrimaryKey]
 		public long Id;
 
+		/// <summary>
+		/// The ID of the clinic the property applies to.
+		/// </summary>
+		//[Column("ClinicNum"), ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
+		public long ClinicId;
+
 		//[Column("ProgramNum"), ForeignKey(typeof(Program), nameof(Program.Id))]
 		public long ProgramId;
 
@@ -31,12 +37,6 @@ namespace Imedisoft.Data.Models
 		/// </summary>
 		[Nullable]
 		public string MachineName;
-
-		/// <summary>
-		/// The ID of the clinic the property applies to.
-		/// </summary>
-		//[Column("ClinicNum"), ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
-		public long ClinicId;
 
 		public ProgramProperty Copy()
 		{

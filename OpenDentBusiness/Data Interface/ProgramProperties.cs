@@ -30,10 +30,6 @@ namespace OpenDentBusiness
 		public static void RefreshCache()
 			=> cache.Refresh();
 
-		/// <summary>
-		/// Returns true if the program property was updated. 
-		/// False if no change needed. Callers need to invalidate cache as needed.
-		/// </summary>
 		public static bool UpdateProgramPropertyWithValue(ProgramProperty programProperty, string newValue)
 		{
 			if (programProperty.Value == newValue)

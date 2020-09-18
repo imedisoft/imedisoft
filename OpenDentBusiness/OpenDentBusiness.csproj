@@ -349,7 +349,6 @@
     <Compile Include="Logic\CodeMapping.cs" />
     <Compile Include="Logic\USlocales.cs" />
     <Compile Include="Misc\Authentication.cs" />
-    <Compile Include="Misc\FHIRUtils.cs" />
     <Compile Include="Misc\Introspection.cs" />
     <Compile Include="Misc\ReplaceTags.cs" />
     <Compile Include="Misc\Sftp.cs" />

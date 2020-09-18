@@ -120,4 +120,88 @@
   <data name="DefinitionCategoryAccountColors" xml:space="preserve">
     <value>Account Colors</value>
   </data>
+  <data name="FhirApiKeyStatusDisabledByDeveloper" xml:space="preserve">
+    <value>Disabled (Developer)</value>
+  </data>
+  <data name="FhirApiKeyStatusDisabledByHQ" xml:space="preserve">
+    <value>Disabled (HQ)</value>
+  </data>
+  <data name="FhirApiKeyStatusEnabledReadOnly" xml:space="preserve">
+    <value>Enabled (Read Only)</value>
+  </data>
+  <data name="FhirApiPermissionAllergyIntoleranceRead" xml:space="preserve">
+    <value>Allergy Intolerance Read</value>
+  </data>
+  <data name="FhirApiPermissionAppointmentCreate" xml:space="preserve">
+    <value>Appointment Create</value>
+  </data>
+  <data name="FhirApiPermissionAppointmentDelete" xml:space="preserve">
+    <value>Appointment Delete</value>
+  </data>
+  <data name="FhirApiPermissionAppointmentRead" xml:space="preserve">
+    <value>Appointment Read</value>
+  </data>
+  <data name="FhirApiPermissionAppointmentUpdate" xml:space="preserve">
+    <value>Appointment Update</value>
+  </data>
+  <data name="FhirApiPermissionCapabilityStatement" xml:space="preserve">
+    <value>Capability Statement</value>
+  </data>
+  <data name="FhirApiPermissionCommunicationCreate" xml:space="preserve">
+    <value>Communication Create</value>
+  </data>
+  <data name="FhirApiPermissionCommunicationRead" xml:space="preserve">
+    <value>Communication Read</value>
+  </data>
+  <data name="FhirApiPermissionConditionRead" xml:space="preserve">
+    <value>Condition Read</value>
+  </data>
+  <data name="FhirApiPermissionLocationRead" xml:space="preserve">
+    <value>Location Read</value>
+  </data>
+  <data name="FhirApiPermissionMedicationRead" xml:space="preserve">
+    <value>Medication Read</value>
+  </data>
+  <data name="FhirApiPermissionOrganizationRead" xml:space="preserve">
+    <value>Organization Read</value>
+  </data>
+  <data name="FhirApiPermissionPatientCreate" xml:space="preserve">
+    <value>Patient Create</value>
+  </data>
+  <data name="FhirApiPermissionPatientRead" xml:space="preserve">
+    <value>Patient Read</value>
+  </data>
+  <data name="FhirApiPermissionPatientUpdate" xml:space="preserve">
+    <value>Patient Update</value>
+  </data>
+  <data name="FhirApiPermissionPaymentCreate" xml:space="preserve">
+    <value>Payment Create</value>
+  </data>
+  <data name="FhirApiPermissionPaymentRead" xml:space="preserve">
+    <value>Payment Read</value>
+  </data>
+  <data name="FhirApiPermissionPractitionerRead" xml:space="preserve">
+    <value>Practitioner Read</value>
+  </data>
+  <data name="FhirApiPermissionProcedureCreate" xml:space="preserve">
+    <value>Procedure Create</value>
+  </data>
+  <data name="FhirApiPermissionProcedureRead" xml:space="preserve">
+    <value>Procedure Read</value>
+  </data>
+  <data name="FhirApiPermissionProcedureUpdate" xml:space="preserve">
+    <value>Procedure Update</value>
+  </data>
+  <data name="FhirApiPermissionScheduleRead" xml:space="preserve">
+    <value>Schedule Read</value>
+  </data>
+  <data name="FhirApiPermissionServiceRequestCreate" xml:space="preserve">
+    <value>Service Request Create</value>
+  </data>
+  <data name="FhirApiPermissionServiceRequestRead" xml:space="preserve">
+    <value>Service Request Read</value>
+  </data>
+  <data name="FhirApiPermissionSubscriptions" xml:space="preserve">
+    <value>Subscriptions</value>
+  </data>
 </root>

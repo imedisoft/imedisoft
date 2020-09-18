@@ -115,6 +115,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to API Key.
+        /// </summary>
+        public static string ApiKey {
+            get {
+                return ResourceManager.GetString("ApiKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Appointment.
         /// </summary>
         public static string Appointment {
@@ -385,6 +394,33 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Developer.
+        /// </summary>
+        public static string Developer {
+            get {
+                return ResourceManager.GetString("Developer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disabled.
+        /// </summary>
+        public static string Disabled {
+            get {
+                return ResourceManager.GetString("Disabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Disable.
+        /// </summary>
+        public static string DisableWithMnemonic {
+            get {
+                return ResourceManager.GetString("DisableWithMnemonic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Done.
         /// </summary>
         public static string Done {
@@ -408,6 +444,24 @@ namespace Imedisoft.Translation {
         public static string Elapsed {
             get {
                 return ResourceManager.GetString("Elapsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabled.
+        /// </summary>
+        public static string Enabled {
+            get {
+                return ResourceManager.GetString("Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Enable.
+        /// </summary>
+        public static string EnableWithMnemonic {
+            get {
+                return ResourceManager.GetString("EnableWithMnemonic", resourceCulture);
             }
         }
         
@@ -864,6 +918,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter an API key..
+        /// </summary>
+        public static string PleaseEnterApiKey {
+            get {
+                return ResourceManager.GetString("PleaseEnterApiKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please enter a date..
         /// </summary>
         public static string PleaseEnterDate {
@@ -927,6 +990,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter a valid interval..
+        /// </summary>
+        public static string PleaseEnterValidInterval {
+            get {
+                return ResourceManager.GetString("PleaseEnterValidInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please enter a valid percentage..
         /// </summary>
         public static string PleaseEnterValidPercentage {
@@ -977,6 +1049,15 @@ namespace Imedisoft.Translation {
         public static string PleaseSelectItemFirst {
             get {
                 return ResourceManager.GetString("PleaseSelectItemFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select a payment type..
+        /// </summary>
+        public static string PleaseSelectPaymentType {
+            get {
+                return ResourceManager.GetString("PleaseSelectPaymentType", resourceCulture);
             }
         }
         
