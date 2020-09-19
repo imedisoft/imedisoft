@@ -57,7 +57,7 @@ namespace OpenDentBusiness {
 			}
 			List<ProcedureCode> listProcedureCodes=new List<ProcedureCode>();
 			foreach(Procedure procedure in listProcs) {
-				listProcedureCodes.Add(ProcedureCodes.GetProcCode(procedure.CodeNum));
+				listProcedureCodes.Add(ProcedureCodes.GetById(procedure.CodeNum));
 			}
 			data.ListFees=Fees.GetListFromObjects(listProcedureCodes,listProcs.Select(x=>x.MedicalCode).ToList(),listProcs.Select(x=>x.ProvNum).ToList(),
 				pat.PriProv,pat.SecProv,pat.FeeSched,listInsPlans,listProcs.Select(x=>x.ClinicNum).ToList(),null,//appts can be null because provs already set

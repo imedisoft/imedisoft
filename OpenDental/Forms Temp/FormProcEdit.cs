@@ -103,7 +103,7 @@ namespace OpenDental {
 		}
 
 		private void FillFees(){
-			List<ProcedureCode> listProcedureCodes=new List<ProcedureCode>(){ ProcedureCodes.GetProcCode(_procCur.CodeNum) };
+			List<ProcedureCode> listProcedureCodes=new List<ProcedureCode>(){ ProcedureCodes.GetById(_procCur.CodeNum) };
 			List<Procedure> listProcedures=new List<Procedure>(){_procCur };
 			_listFees=Fees.GetListFromObjects(listProcedureCodes,listProcedures.Select(x=>x.MedicalCode).ToList(),listProcedures.Select(x=>x.ProvNum).ToList(),
 				_patCur.PriProv,_patCur.SecProv,_patCur.FeeSched,_listInsPlans,listProcedures.Select(x=>x.ClinicNum).ToList(),null,//appts not needed
@@ -173,7 +173,7 @@ namespace OpenDental {
 				textTaxAmt.Visible=false;
 			}
 			_listClaims=_loadData.ListClaims;
-			_procedureCode2=ProcedureCodes.GetProcCode(_procCur.CodeNum);
+			_procedureCode2=ProcedureCodes.GetById(_procCur.CodeNum);
 			if(_procCur.ProcStatus==ProcStat.C && Preferences.GetBool(PreferenceName.ProcLockingIsAllowed) && !_procCur.IsLocked) {
 				butLock.Visible=true;
 			}
@@ -1639,8 +1639,8 @@ namespace OpenDental {
 			_listFees=null;
 			_lookupFees=null;//will trigger another lazy load, later, with this new code.
 			Procedure procOld=_procCur.Copy();
-			ProcedureCode procCodeOld=ProcedureCodes.GetProcCode(_procCur.CodeNum);
-			ProcedureCode procCodeNew=ProcedureCodes.GetProcCode(FormP.SelectedCodeNum);
+			ProcedureCode procCodeOld=ProcedureCodes.GetById(_procCur.CodeNum);
+			ProcedureCode procCodeNew=ProcedureCodes.GetById(FormP.SelectedCodeNum);
 			if(procCodeOld.TreatmentArea != procCodeNew.TreatmentArea) {
 				MessageBox.Show("Not allowed due to treatment area mismatch.");
 				return;
@@ -1699,7 +1699,7 @@ namespace OpenDental {
 				}
 			}
 			#endregion
-			_procedureCode2=ProcedureCodes.GetProcCode(_procCur.CodeNum);
+			_procedureCode2=ProcedureCodes.GetById(_procCur.CodeNum);
 			textDesc.Text=_procedureCode2.Description;
 			//Update the UI now that we know the procedure code change is fine
 			switch(_procedureCode2.TreatmentArea){ 
@@ -2602,7 +2602,7 @@ namespace OpenDental {
 						break;
 				}
 				SecurityLogs.MakeLogEntry(perm,_procOld.PatNum,
-					ProcedureCodes.GetProcCode(_procOld.CodeNum).Code+" ("+_procOld.ProcStatus+"), "+_procOld.ProcFee.ToString("c")+tag);
+					ProcedureCodes.GetById(_procOld.CodeNum).Code+" ("+_procOld.ProcStatus+"), "+_procOld.ProcFee.ToString("c")+tag);
 				DialogResult=DialogResult.OK;
 				Plugins.HookAddCode(this,"FormProcEdit.butDelete_Click_end",_procCur);
 			}
@@ -3316,7 +3316,7 @@ namespace OpenDental {
 					{
 						return;//send user back to fix information or use suggested auto code.
 					}
-					_procCur=FormACLI.Proc;
+					_procCur=FormACLI.Procedure;
 					_listClaimProcsForProc=ClaimProcs.RefreshForProc(_procCur.ProcNum);//FormAutoCodeLessIntrusive may have added claimprocs.
 				}
 			}
@@ -3431,7 +3431,7 @@ namespace OpenDental {
 				//There's a possibility that we are making a second, unnecessary call to the database here but it is worth it to help meet EHR measures.
 				Procedures.UpdateCpoeForProc(_procCur.ProcNum,true);
 				//Make a log that we edited this procedure's CPOE flag.
-				SecurityLogs.MakeLogEntry(Permissions.ProcEdit,_procCur.PatNum,ProcedureCodes.GetProcCode(_procCur.CodeNum).Code
+				SecurityLogs.MakeLogEntry(Permissions.ProcEdit,_procCur.PatNum,ProcedureCodes.GetById(_procCur.CodeNum).Code
 					+", "+_procCur.ProcFee.ToString("c")+", "+"automatically flagged as CPOE.");
 			}
 			if(DialogResult==DialogResult.OK) {

@@ -88,7 +88,7 @@ namespace OpenDentBusiness.Eclaims
 				stringBuilder.Append(DutchAddressNumber(pat.Address) + t);//219 house number.  Already validated.
 				stringBuilder.Append(t);
 				stringBuilder.Append(proc.ProcDate.ToString("dd-MM-yyyy") + t);//procDate
-				procCode = ProcedureCodes.GetProcCode(proc.CodeNum);
+				procCode = ProcedureCodes.GetById(proc.CodeNum);
 				string strProcCode = procCode.Code;
 				if (strProcCode.EndsWith("00"))
 				{//ending with 00 indicates it's a lab code.

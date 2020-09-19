@@ -754,7 +754,7 @@ namespace OpenDental{
 			GridRow row;
 			foreach(Procedure proc in listProcs) {
 				row=new GridRow();
-				ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+				ProcedureCode procCode=ProcedureCodes.GetById(proc.CodeNum);
 				foreach(DisplayField displayField in listAptDisplayFields) {
 					switch (displayField.InternalName) {
 						case "Stat":
@@ -1065,11 +1065,11 @@ namespace OpenDental{
 						if(proc.ProcStatus.In(ProcStat.EO,ProcStat.EC)) {
 							perm=Permissions.ProcExistingEdit;
 						}
-						SecurityLogs.MakeLogEntry(perm,AptCur.PatNum,ProcedureCodes.GetProcCode(proc.CodeNum).Code
+						SecurityLogs.MakeLogEntry(perm,AptCur.PatNum,ProcedureCodes.GetById(proc.CodeNum).Code
 							+" ("+proc.ProcStatus+"), "+proc.ProcFee.ToString("c")+", Deleted");
 					}
 					else {
-						SecurityLogs.MakeLogEntry(Permissions.ProcDelete,AptCur.PatNum,ProcedureCodes.GetProcCode(proc.CodeNum).Code
+						SecurityLogs.MakeLogEntry(Permissions.ProcDelete,AptCur.PatNum,ProcedureCodes.GetById(proc.CodeNum).Code
 							+" ("+proc.ProcStatus+"), "+proc.ProcFee.ToString("c"));
 					}
 				}
@@ -1115,7 +1115,7 @@ namespace OpenDental{
 			if(FormP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			ProcedureCode procedureCode=ProcedureCodes.GetProcCode(FormP.SelectedCodeNum);
+			ProcedureCode procedureCode=ProcedureCodes.GetById(FormP.SelectedCodeNum);
 			List<SubstitutionLink> listSubstitutionLinks=SubstitutionLinks.GetAllForPlans(PlanList);
 			List<Fee> listFees=Fees.GetListFromObjects(new List<ProcedureCode>(){procedureCode },null,//no procs to pull medical codes from yet
 				new List<long>(){comboProv.GetSelectedProvNum()},pat.PriProv,pat.SecProv,pat.FeeSched,PlanList,new List<long>(){AptCur.ClinicNum},
@@ -2038,7 +2038,7 @@ namespace OpenDental{
 			List<Definition> listMiscColorDefs=Definitions.GetDefsForCategory(DefinitionCategory.MiscColors);
 			for(int i=0;i<procsForDay.Count;i++){
 				Procedure proc=procsForDay[i];
-				ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+				ProcedureCode procCode=ProcedureCodes.GetById(proc.CodeNum);
 				Provider prov=Providers.GetAll().First(x => x.Id==proc.ProvNum);
 				User usr=Users.GetById(proc.UserNum);
 				GridRow row=new GridRow();

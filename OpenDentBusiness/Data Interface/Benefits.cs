@@ -1698,7 +1698,7 @@ namespace OpenDentBusiness {
 				retVal=CovCats.GetDesc(benefit.CovCatNum);
 			}
 			else {
-				ProcedureCode proccode=ProcedureCodes.GetProcCode(benefit.CodeNum);
+				ProcedureCode proccode=ProcedureCodes.GetById(benefit.CodeNum);
 				retVal=proccode.Code+"-"+proccode.ShortDescription;
 			}
 			return retVal;

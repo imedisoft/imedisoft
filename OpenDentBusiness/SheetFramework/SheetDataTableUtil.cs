@@ -998,7 +998,7 @@ namespace OpenDentBusiness.SheetFramework {
 			List<TpRow> rowsMain=new List<TpRow>();
 			for(int i = 0;i<listProcs.Count;i++) {
 				DataRow dRow=retVal.NewRow();
-				ProcedureCode procCode=ProcedureCodes.GetProcCode(listProcs[i].CodeNum);
+				ProcedureCode procCode=ProcedureCodes.GetById(listProcs[i].CodeNum);
 				dRow["Date"]                                     =listProcs[i].ProcDate.ToShortDateString();
 				dRow["Prov"]                                     =Providers.GetAbbr(listProcs[i].ProcNum);
 				dRow["ProcCode"]               =procCode.Code;

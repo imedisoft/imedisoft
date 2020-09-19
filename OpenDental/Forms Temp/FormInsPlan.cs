@@ -2489,7 +2489,7 @@ namespace OpenDental{
 				checkCodeSubst.Visible=false;
 			}
 			_datePatPlanLastVerified=PIn.Date(textDateLastVerifiedPatPlan.Text);
-			_orthoAutoProc=_planCur.OrthoAutoProcCodeNumOverride==0 ? null : ProcedureCodes.GetProcCode(_planCur.OrthoAutoProcCodeNumOverride);
+			_orthoAutoProc=_planCur.OrthoAutoProcCodeNumOverride==0 ? null : ProcedureCodes.GetById(_planCur.OrthoAutoProcCodeNumOverride);
 			FillOrtho();
 			Cursor=Cursors.Default;
 		}
@@ -2521,7 +2521,7 @@ namespace OpenDental{
 				textOrthoAutoProc.Text=_orthoAutoProc.Code;
 			}
 			else {
-				textOrthoAutoProc.Text=ProcedureCodes.GetProcCode(Preferences.GetLong(PreferenceName.OrthoAutoProcCodeNum)).Code +" ("+ "Default"+")";
+				textOrthoAutoProc.Text=ProcedureCodes.GetById(Preferences.GetLong(PreferenceName.OrthoAutoProcCodeNum)).Code +" ("+ "Default"+")";
 			}
 			SetEnabledOrtho();
 		}
@@ -5336,14 +5336,14 @@ namespace OpenDental{
 			FormPC.IsSelectionMode=true;
 			FormPC.ShowDialog();
 			if(FormPC.DialogResult == DialogResult.OK) {
-				_orthoAutoProc=ProcedureCodes.GetProcCode(FormPC.SelectedCodeNum);
+				_orthoAutoProc=ProcedureCodes.GetById(FormPC.SelectedCodeNum);
 				textOrthoAutoProc.Text=_orthoAutoProc.Code;
 			}
 		}
 
 		private void butDefaultAutoOrthoProc_Click(object sender,EventArgs e) {
 			_orthoAutoProc=null;
-			textOrthoAutoProc.Text=ProcedureCodes.GetProcCode(Preferences.GetLong(PreferenceName.OrthoAutoProcCodeNum)).Code+" ("+"Default"+")";
+			textOrthoAutoProc.Text=ProcedureCodes.GetById(Preferences.GetLong(PreferenceName.OrthoAutoProcCodeNum)).Code+" ("+"Default"+")";
 		}
 
 		private void butOK_Click(object sender,System.EventArgs e) {

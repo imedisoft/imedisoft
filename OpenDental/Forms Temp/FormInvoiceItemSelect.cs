@@ -69,7 +69,7 @@ namespace OpenDental {
 					row.Cells.Add(PIn.Enum<PayPlanChargeType>(PIn.Int(tableRow["ChargeType"].ToString())).GetDescription());//Pay Plan charge type
 				}
 				else {	//It's a procedure
-					ProcedureCode procCode=ProcedureCodes.GetProcCode(PIn.Long(tableRow["Code"].ToString()),listProcCodes);
+					ProcedureCode procCode=ProcedureCodes.GetById(PIn.Long(tableRow["Code"].ToString()),listProcCodes);
 					row.Cells.Add(procCode.Code);
 					row.Cells.Add(Tooth.ToInternat(tableRow["Tooth"].ToString()));
 					row.Cells.Add(procCode.Description);

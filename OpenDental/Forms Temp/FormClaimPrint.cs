@@ -565,7 +565,7 @@ namespace OpenDental{
 				//if the missing tooth is missing because of an extraction being billed here, then exclude it
 				for(int p=0;p<ListClaimProcs.Count;p++) {
 					proc=Procedures.GetProcFromList(ListProc,ListClaimProcs[p].ProcNum);
-					procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+					procCode=ProcedureCodes.GetById(proc.CodeNum);
 					if(procCode.PaintType==ToothPaintingType.Extraction && proc.ToothNum==missingTeeth[j]) {
 						missingTeeth.RemoveAt(j);
 						break;
@@ -4409,7 +4409,7 @@ namespace OpenDental{
 				return "";
 			}
 			Procedure ProcCur=Procedures.GetProcFromList(ListProc,ListClaimProcs[procIndex].ProcNum);
-			ProcedureCode procCode=ProcedureCodes.GetProcCode(ProcCur.CodeNum);
+			ProcedureCode procCode=ProcedureCodes.GetById(ProcCur.CodeNum);
 			switch(field) {
 				case "System":
 					return "JP";
@@ -4579,7 +4579,7 @@ namespace OpenDental{
 			string area="";
 			string toothNum="";
 			string surf="";
-			switch(ProcedureCodes.GetProcCode(ProcCur.CodeNum).TreatmentArea){
+			switch(ProcedureCodes.GetById(ProcCur.CodeNum).TreatmentArea){
 				case ProcedureTreatmentArea.Surface:
 					//area blank
 					toothNum=Tooth.ToInternat(ProcCur.ToothNum);

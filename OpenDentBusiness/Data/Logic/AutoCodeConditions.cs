@@ -3,6 +3,7 @@ using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Imedisoft.Data
 {
@@ -12,7 +13,7 @@ namespace Imedisoft.Data
 		private class AutoCodeCondCache : ListCache<AutoCodeCondition>
 		{
 			protected override IEnumerable<AutoCodeCondition> Load()
-				=> SelectMany("SELECT * FROM `auto_code_conditions` ORDER BY `cond`");
+				=> SelectMany("SELECT * FROM `auto_code_conditions` ORDER BY `type`");
 		}
 
 		private static readonly AutoCodeCondCache cache = new AutoCodeCondCache();
@@ -29,15 +30,29 @@ namespace Imedisoft.Data
 		public static List<AutoCodeCondition> GetByAutoCodeItem(long autoCodeItemId)
 			=> Find(x => x.AutoCodeItemId == autoCodeItemId);
 
-		public static void DeleteForAutoCodeItemId(long autoCodeItemId)
-			=> Database.ExecuteNonQuery("DELETE FROM `auto_code_conditions` WHERE auto_code_item_id = " + autoCodeItemId);
-
-		public static void Save(AutoCodeCondition autoCodeCondition)
+        public static void Set(long autoCodeItemId, IEnumerable<AutoCodeConditionType> conditions)
         {
-			if (autoCodeCondition.Id == 0) ExecuteInsert(autoCodeCondition);
+            var conditionTypes = conditions.Select(x => (int)x).ToList();
+
+            if (conditionTypes.Count == 0)
+            {
+                Database.ExecuteNonQuery(
+                    "DELETE FROM `auto_code_conditions` " +
+                    "WHERE `auto_code_item_id` = " + autoCodeItemId);
+            }
             else
             {
-				ExecuteUpdate(autoCodeCondition);
+                Database.ExecuteNonQuery(
+                    "DELETE FROM `auto_code_conditions` " +
+                    "WHERE `auto_code_item_id` = " + autoCodeItemId + " " +
+                    "AND `type` NOT IN (" + string.Join(", ", conditionTypes) + ")");
+
+                foreach (var condition in conditionTypes)
+                {
+                    Database.ExecuteNonQuery(
+                        "INSERT IGNORE INTO `auto_code_conditions` (`auto_code_item_id`, `type`) " +
+                        "VALUES (" + autoCodeItemId + ", " + condition + ")");
+                }
             }
         }
 
@@ -64,6 +79,32 @@ namespace Imedisoft.Data
                 AutoCodeConditionType.Retainer => !willBeMissing,
                 AutoCodeConditionType.AgeOver18 => age > 18,
                 _ => false,
+            };
+        }
+
+        public static string GetDescription(AutoCodeConditionType conditionType)
+        {
+            return conditionType switch
+            {
+                AutoCodeConditionType.Anterior => "Anterior",
+                AutoCodeConditionType.Posterior => "Posterior",
+                AutoCodeConditionType.Premolar => "Premolar",
+                AutoCodeConditionType.Molar => "Molar",
+                AutoCodeConditionType.One_Surf => "1 Surface",
+                AutoCodeConditionType.Two_Surf => "2 Surfaces",
+                AutoCodeConditionType.Three_Surf => "3 Surfaces",
+                AutoCodeConditionType.Four_Surf => "4 Surfaces",
+                AutoCodeConditionType.Five_Surf => "5 Surfaces",
+                AutoCodeConditionType.First => "First",
+                AutoCodeConditionType.EachAdditional => "Each Additional",
+                AutoCodeConditionType.Maxillary => "Maxillary",
+                AutoCodeConditionType.Mandibular => "Mandibular",
+                AutoCodeConditionType.Primary => "Primary",
+                AutoCodeConditionType.Permanent => "Permanent",
+                AutoCodeConditionType.Pontic => "Pontic",
+                AutoCodeConditionType.Retainer => "Retainer",
+                AutoCodeConditionType.AgeOver18 => "Age Over 18",
+                _ => conditionType.ToString()
             };
         }
 	}

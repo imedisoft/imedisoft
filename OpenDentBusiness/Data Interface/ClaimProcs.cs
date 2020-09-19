@@ -964,7 +964,7 @@ namespace OpenDentBusiness
 			cp.Percentage = -1;
 			cp.PercentOverride = -1;
 			cp.CopayAmt = -1;
-			cp.NoBillIns = ProcedureCodes.GetProcCode(proc.CodeNum).NoInsuranceBill;
+			cp.NoBillIns = ProcedureCodes.GetById(proc.CodeNum).NoInsuranceBill;
 			cp.PaidOtherIns = -1;
 			cp.BaseEst = baseEstAmt;
 			cp.DedEst = -1;
@@ -1672,7 +1672,7 @@ namespace OpenDentBusiness
 			{
 				//no point in wasting time calculating this unless it's needed.
 				//List<Fee> listFee=lookupFees[new FeeKey2(codeNum,feeSched)].ToList();
-				double carrierAllowed = InsPlans.GetAllowed(ProcedureCodes.GetProcCode(codeNum).Code, plan.FeeSched, plan.AllowedFeeSched,
+				double carrierAllowed = InsPlans.GetAllowed(ProcedureCodes.GetById(codeNum).Code, plan.FeeSched, plan.AllowedFeeSched,
 					codeSubstNone, plan.PlanType, toothNum, proc.ProvNum, proc.ClinicNum, plan.Id, listSubstLinks, lookupFees);//lookupFees can be null
 				if (carrierAllowed != -1)
 				{
@@ -1812,7 +1812,7 @@ namespace OpenDentBusiness
 				cp.DedEst = Benefits.GetDeductibleByCode(benList, plan.Id, patPlanNum, procDate, ProcedureCodes.GetStringProcCode(codeNum)
 					, histList, loopList, plan, cp.PatNum);
 			}
-			if (Benefits.GetPercent(ProcedureCodes.GetProcCode(codeNum).Code, plan.PlanType, plan.Id, patPlanNum, benList) == 0)
+			if (Benefits.GetPercent(ProcedureCodes.GetById(codeNum).Code, plan.PlanType, plan.Id, patPlanNum, benList) == 0)
 			{//this is binary
 				cp.DedEst = 0;//Procedure is not covered. Do not apply deductible. This does not take into account percent override.
 			}
@@ -1839,7 +1839,7 @@ namespace OpenDentBusiness
 			}
 			else
 			{
-				cp.Percentage = Benefits.GetPercent(ProcedureCodes.GetProcCode(codeNum).Code, plan.PlanType, plan.Id, patPlanNum, benList);//will never =-1
+				cp.Percentage = Benefits.GetPercent(ProcedureCodes.GetById(codeNum).Code, plan.PlanType, plan.Id, patPlanNum, benList);//will never =-1
 			}
 			if (cp.PercentOverride != -1)
 			{//override, so use PercentOverride
@@ -2010,7 +2010,7 @@ namespace OpenDentBusiness
 			else if (plan.PlanType == "p"//PPO
 										 //and this is a substituted code that doesn't calculate writeoffs
 				&& !codeSubstNone && !plan.HasPpoSubstWriteoffs
-				&& ProcedureCodes.GetSubstituteCodeNum(ProcedureCodes.GetProcCode(codeNum).Code, toothNum, plan.Id, listSubstLinks) != codeNum)//there is a substitution for this code
+				&& ProcedureCodes.GetSubstituteCodeNum(ProcedureCodes.GetById(codeNum).Code, toothNum, plan.Id, listSubstLinks) != codeNum)//there is a substitution for this code
 			{
 				//Using -1 will cause the estimate to show as blank in the edit claim procedure (FormClaimProc) window.
 				//If we used 0, then the 0 would show, which might give the user the impression that we are calculating writeoffs.
@@ -2021,7 +2021,7 @@ namespace OpenDentBusiness
 			 //we can't use the allowed previously calculated, because it might be the allowed of a substituted code.
 			 //so we will calculate the allowed all over again, but this time, without using a substitution code.
 			 //AllowedFeeSched and toothNum do not need to be passed in.  codeSubstNone is set to true to not subst.
-				double carrierAllowedNoSubst = InsPlans.GetAllowed(ProcedureCodes.GetProcCode(codeNum).Code, plan.FeeSched, 0,
+				double carrierAllowedNoSubst = InsPlans.GetAllowed(ProcedureCodes.GetById(codeNum).Code, plan.FeeSched, 0,
 					true, "p", "", proc.ProvNum, proc.ClinicNum, plan.Id, listSubstLinks, lookupFees);
 				double allowedNoSubst = procFee;
 				if (carrierAllowedNoSubst != -1)

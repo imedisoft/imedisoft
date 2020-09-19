@@ -867,7 +867,7 @@ namespace OpenDentBusiness.HL7 {
 				return "";
 			}
 			string retVal="";
-			ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+			ProcedureCode procCode=ProcedureCodes.GetById(proc.CodeNum);
 			if(procCode.Code.Length>5
 				&& procCode.Code.StartsWith("D")
 				&& !hasLongDCodes)//truncate only if HasLongDCodes is false
@@ -886,7 +886,7 @@ namespace OpenDentBusiness.HL7 {
 			if(proc==null) {
 				return "";
 			}
-			ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+			ProcedureCode procCode=ProcedureCodes.GetById(proc.CodeNum);
 			return gConcat(def.ComponentSeparator,procCode.Code,procCode.Description,"CD2","","","","2014","",procCode.LaymanTerm);			
 		}
 
@@ -933,7 +933,7 @@ namespace OpenDentBusiness.HL7 {
 				return "";
 			}
 			string retVal="";
-			ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+			ProcedureCode procCode=ProcedureCodes.GetById(proc.CodeNum);
 			if(procCode.TreatmentArea==ProcedureTreatmentArea.ToothRange) {
 				retVal=gConcat(componentSep,proc.ToothRange,"");
 			}

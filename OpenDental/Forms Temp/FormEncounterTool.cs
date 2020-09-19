@@ -105,7 +105,7 @@ namespace OpenDental {
 			if(FormP.DialogResult==DialogResult.OK) {
 				EncCodeSystem="CDT";
 				comboEncCodes.SelectedIndex=-1;
-				ProcedureCode procCur=ProcedureCodes.GetProcCode(FormP.SelectedCodeNum);
+				ProcedureCode procCur=ProcedureCodes.GetById(FormP.SelectedCodeNum);
 				textEncCodeValue.Text=procCur.Code;
 				textEncCodeDescript.Text=procCur.Description;
 				labelEncWarning.Visible=true;

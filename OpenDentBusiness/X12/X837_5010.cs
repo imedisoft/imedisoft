@@ -832,7 +832,7 @@ namespace OpenDentBusiness
 						doSkip=false;
 						for(int p=0;p<claimProcs.Count;p++) {
 							proc=Procedures.GetProcFromList(procList,claimProcs[p].ProcNum);
-							procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+							procCode=ProcedureCodes.GetById(proc.CodeNum);
 							if(procCode.PaintType==ToothPaintingType.Extraction && proc.ToothNum==missingTeeth[j]) {
 								doSkip=true;
 								break;
@@ -1580,7 +1580,7 @@ namespace OpenDentBusiness
 				for(int j=0;j<claimProcs.Count;j++) {//Claim procs for this claim
 					#region Service Line
 					proc=Procedures.GetProcFromList(procList,claimProcs[j].ProcNum);
-					procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+					procCode=ProcedureCodes.GetById(proc.CodeNum);
 					//2400 LX: Service Line Number.
 					sw.Write("LX"+s+(j+1).ToString());//LX01 1/6 Assigned Number:
 					EndSegment(sw);
@@ -3138,7 +3138,7 @@ namespace OpenDentBusiness
 			for(int i=0;i<claimProcs.Count;i++) {
 				string p="proc"+(i+1).ToString()+"-";
 				proc=Procedures.GetProcFromList(procList,claimProcs[i].ProcNum);
-				procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+				procCode=ProcedureCodes.GetById(proc.CodeNum);
 				if(ProcMultiVisits.IsProcInProcess(proc.ProcNum)) {
 					//The UI blocks claims from being created with In Process procedures attached.
 					//However, it is possible to create a claim when the procedures are complete,

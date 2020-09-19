@@ -169,8 +169,8 @@ namespace OpenDentBusiness {
 			if(x.CodeNum!=y.CodeNum) {
 				//GetProcCode(...).ProcCode can be null.
 				//We do not protect the second call because comparing any string to null doesn't cause an error.
-				string procCode=ProcedureCodes.GetProcCode(x.CodeNum).Code??"";
-				return procCode.CompareTo(ProcedureCodes.GetProcCode(y.CodeNum).Code);
+				string procCode=ProcedureCodes.GetById(x.CodeNum).Code??"";
+				return procCode.CompareTo(ProcedureCodes.GetById(y.CodeNum).Code);
 			}
 			//if everything else is the same, sort by ProcNum so sort is deterministic
 			return x.ProcNum.CompareTo(y.ProcNum);

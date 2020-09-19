@@ -3809,9 +3809,9 @@ namespace OpenDentBusiness
 				//ClaimProcCur.DateCP=ProcCur.ProcDate;
 				//writeoff handled in ClaimL.CalculateAndUpdate()
 				#region CodeSent - If the logic in this region changes, then be sure to also modify Procedures.GetClaimDescript(). 
-				if (PlanCur.UseAltCode && (ProcedureCodes.GetProcCode(proc.CodeNum).AlternateCode1 != ""))
+				if (PlanCur.UseAltCode && (ProcedureCodes.GetById(proc.CodeNum).AlternateCode1 != ""))
 				{
-					claimProcs[i].CodeSent = ProcedureCodes.GetProcCode(proc.CodeNum).AlternateCode1;
+					claimProcs[i].CodeSent = ProcedureCodes.GetById(proc.CodeNum).AlternateCode1;
 				}
 				else if (PlanCur.IsMedical && proc.MedicalCode != "")
 				{
@@ -3819,7 +3819,7 @@ namespace OpenDentBusiness
 				}
 				else
 				{
-					claimProcs[i].CodeSent = ProcedureCodes.GetProcCode(proc.CodeNum).Code;
+					claimProcs[i].CodeSent = ProcedureCodes.GetById(proc.CodeNum).Code;
 					if (claimProcs[i].CodeSent.Length > 5 && claimProcs[i].CodeSent.Substring(0, 1) == "D")
 					{
 						claimProcs[i].CodeSent = claimProcs[i].CodeSent.Substring(0, 5);
@@ -3834,7 +3834,7 @@ namespace OpenDentBusiness
 				}
 				#endregion CodeSent
 				//Set the claim note to a concatenation of all the default procedure notes for new claims.
-				ProcedureCode procCodeCur = ProcedureCodes.GetProcCode(proc.CodeNum);
+				ProcedureCode procCodeCur = ProcedureCodes.GetById(proc.CodeNum);
 				if (ClaimCur.ClaimNote == null)
 				{
 					ClaimCur.ClaimNote = "";

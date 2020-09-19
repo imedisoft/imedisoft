@@ -76,7 +76,7 @@ namespace OpenDental {
 				procTP.ProcNumOrig=proc.ProcNum;
 				procTP.ToothNumTP=Tooth.ToInternat(proc.ToothNum);
 				procTP.ProcCode=ProcedureCodes.GetStringProcCode(proc.CodeNum);
-				if(ProcedureCodes.GetProcCode(proc.CodeNum).TreatmentArea==ProcedureTreatmentArea.Surface) {
+				if(ProcedureCodes.GetById(proc.CodeNum).TreatmentArea==ProcedureTreatmentArea.Surface) {
 					procTP.Surf=Tooth.SurfTidyFromDbToDisplay(proc.Surf,proc.ToothNum);
 				}
 				else {

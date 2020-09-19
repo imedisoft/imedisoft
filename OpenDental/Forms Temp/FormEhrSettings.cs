@@ -305,7 +305,7 @@ namespace OpenDental {
 			if(FormP.DialogResult==DialogResult.OK) {
 				NewEncCodeSystem="CDT";
 				comboEncCodes.SelectedIndex=-1;
-				ProcedureCode procCur=ProcedureCodes.GetProcCode(FormP.SelectedCodeNum);
+				ProcedureCode procCur=ProcedureCodes.GetById(FormP.SelectedCodeNum);
 				textEncCodeValue.Text=procCur.Code;
 				textEncCodeDescript.Text=procCur.Description;
 				//We might implement a CodeSystem column on the ProcCode table since it may have ICD9 and ICD10 codes in it.  If so, we can set the NewEncCodeSystem to the value in that new column.

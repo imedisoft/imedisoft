@@ -848,7 +848,7 @@ namespace OpenDentBusiness
 						for (int p = 0; p < claimProcs.Count; p++)
 						{
 							proc = Procedures.GetProcFromList(procList, claimProcs[p].ProcNum);
-							procCode = ProcedureCodes.GetProcCode(proc.CodeNum);
+							procCode = ProcedureCodes.GetById(proc.CodeNum);
 							if (procCode.PaintType == ToothPaintingType.Extraction && proc.ToothNum == missingTeeth[j])
 							{
 								doSkip = true;
@@ -1292,7 +1292,7 @@ namespace OpenDentBusiness
 				for (int j = 0; j < claimProcs.Count; j++)
 				{
 					proc = Procedures.GetProcFromList(procList, claimProcs[j].ProcNum);
-					procCode = ProcedureCodes.GetProcCode(proc.CodeNum);
+					procCode = ProcedureCodes.GetById(proc.CodeNum);
 					//2400 LX: Line Counter. or (medical) Service Line Number
 					seg++;
 					sw.WriteLine("LX*" + (j + 1).ToString() + "~");
@@ -2251,7 +2251,7 @@ namespace OpenDentBusiness
 			for (int i = 0; i < claimProcs.Count; i++)
 			{
 				proc = Procedures.GetProcFromList(procList, claimProcs[i].ProcNum);
-				procCode = ProcedureCodes.GetProcCode(proc.CodeNum);
+				procCode = ProcedureCodes.GetById(proc.CodeNum);
 				if (ProcMultiVisits.IsProcInProcess(proc.ProcNum))
 				{
 					//The UI blocks claims from being created with In Process procedures attached.

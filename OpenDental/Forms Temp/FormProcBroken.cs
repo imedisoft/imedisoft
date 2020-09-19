@@ -121,7 +121,7 @@ namespace OpenDental {
 			_procCur.ProvNum=comboProv.GetSelectedProvNum();
 			_procCur.ClinicNum=comboClinic.SelectedClinicNum;
 			Procedures.Update(_procCur,_procOld);
-			ProcedureCode procedureCode=ProcedureCodes.GetProcCode(_procCur.CodeNum);
+			ProcedureCode procedureCode=ProcedureCodes.GetById(_procCur.CodeNum);
 			string logText=procedureCode.Code+" ("+_procCur.ProcStatus+"), "+"Fee"+": "+_procCur.ProcFee.ToString("c")+", "+procedureCode.Description;
 			SecurityLogs.MakeLogEntry(IsNew ? Permissions.ProcComplCreate : Permissions.ProcCompleteEdit,_procCur.PatNum,logText);
 			DialogResult=DialogResult.OK;

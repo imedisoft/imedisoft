@@ -108,7 +108,7 @@ namespace OpenDentBusiness{
 			//EB12: In plan network.  Situational.  Not a Benefit field.
 			//EB13:  Procedure identifier. Situational.  We don't import this from EB, but we can show it anyway.
 			if(CodeNum != 0) {
-				ProcedureCode proccode=ProcedureCodes.GetProcCode(CodeNum);
+				ProcedureCode proccode=ProcedureCodes.GetById(CodeNum);
 				retVal+=", "+proccode.Code+" - "+proccode.ShortDescription;
 			}
 			return retVal;

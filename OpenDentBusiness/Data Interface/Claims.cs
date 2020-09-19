@@ -985,7 +985,7 @@ namespace OpenDentBusiness
 			List<ProcedureCode> listProcedureCodes = new List<ProcedureCode>();
 			for (int i = 0; i < listProcedures.Count; i++)
 			{
-				listProcedureCodes.Add(ProcedureCodes.GetProcCode(listProcedures[i].CodeNum));
+				listProcedureCodes.Add(ProcedureCodes.GetById(listProcedures[i].CodeNum));
 			}
 			List<Fee> listFees = Fees.GetListFromObjects(listProcedureCodes, listProcedures.Select(x => x.MedicalCode).ToList(), listProcedures.Select(x => x.ProvNum).ToList(),
 				patient.PriProv, patient.SecProv, patient.FeeSched, listInsPlans, listProcedures.Select(x => x.ClinicNum).ToList(),
@@ -1296,9 +1296,9 @@ namespace OpenDentBusiness
 			{
 				claimProcCur.Status = ClaimProcStatus.NotReceived;
 			}
-			if (planCur.UseAltCode && (ProcedureCodes.GetProcCode(proc.CodeNum).AlternateCode1 != ""))
+			if (planCur.UseAltCode && (ProcedureCodes.GetById(proc.CodeNum).AlternateCode1 != ""))
 			{
-				claimProcCur.CodeSent = ProcedureCodes.GetProcCode(proc.CodeNum).AlternateCode1;
+				claimProcCur.CodeSent = ProcedureCodes.GetById(proc.CodeNum).AlternateCode1;
 			}
 			else if (planCur.IsMedical && proc.MedicalCode != "")
 			{
@@ -1306,7 +1306,7 @@ namespace OpenDentBusiness
 			}
 			else
 			{
-				claimProcCur.CodeSent = ProcedureCodes.GetProcCode(proc.CodeNum).Code;
+				claimProcCur.CodeSent = ProcedureCodes.GetById(proc.CodeNum).Code;
 				if (claimProcCur.CodeSent.Length > 5 && claimProcCur.CodeSent.Substring(0, 1) == "D")
 				{
 					claimProcCur.CodeSent = claimProcCur.CodeSent.Substring(0, 5);
@@ -1440,9 +1440,9 @@ namespace OpenDentBusiness
 			{
 				claimProcCur.Status = ClaimProcStatus.NotReceived;
 			}
-			if (insPlanCur.UseAltCode && (ProcedureCodes.GetProcCode(proc.CodeNum).AlternateCode1 != ""))
+			if (insPlanCur.UseAltCode && (ProcedureCodes.GetById(proc.CodeNum).AlternateCode1 != ""))
 			{
-				claimProcCur.CodeSent = ProcedureCodes.GetProcCode(proc.CodeNum).AlternateCode1;
+				claimProcCur.CodeSent = ProcedureCodes.GetById(proc.CodeNum).AlternateCode1;
 			}
 			else if (insPlanCur.IsMedical && proc.MedicalCode != "")
 			{
@@ -1450,7 +1450,7 @@ namespace OpenDentBusiness
 			}
 			else
 			{
-				claimProcCur.CodeSent = ProcedureCodes.GetProcCode(proc.CodeNum).Code;
+				claimProcCur.CodeSent = ProcedureCodes.GetById(proc.CodeNum).Code;
 				if (claimProcCur.CodeSent.Length > 5 && claimProcCur.CodeSent.Substring(0, 1) == "D")
 				{
 					claimProcCur.CodeSent = claimProcCur.CodeSent.Substring(0, 5);

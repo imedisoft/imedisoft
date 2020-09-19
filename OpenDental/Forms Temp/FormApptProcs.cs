@@ -135,7 +135,7 @@ namespace OpenDental {
 			List<InsSub> subList=InsSubs.RefreshForFam(fam);
 			List<InsurancePlan> planList=InsPlans.RefreshForSubList(subList);
 			List<PatPlan> patPlanList=PatPlans.Refresh(pat.PatNum);
-			ProcedureCode procCodeCur=ProcedureCodes.GetProcCode(ProcCur.CodeNum);
+			ProcedureCode procCodeCur=ProcedureCodes.GetById(ProcCur.CodeNum);
 			ProcCur.MedicalCode=procCodeCur.MedicalCode;
 			if(procCodeCur.IsHygiene && pat.SecProv!=0) {
 				ProcCur.ProvNum=pat.SecProv;

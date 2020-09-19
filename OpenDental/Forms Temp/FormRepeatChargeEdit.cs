@@ -645,7 +645,7 @@ namespace OpenDental{
 					DialogResult=DialogResult.Cancel;
 					return;
 				}
-				ProcedureCode procCode=ProcedureCodes.GetProcCode(FormP.SelectedCodeNum);
+				ProcedureCode procCode=ProcedureCodes.GetById(FormP.SelectedCodeNum);
 				if(procCode.TreatmentArea!=ProcedureTreatmentArea.Mouth 
 					&& procCode.TreatmentArea!=ProcedureTreatmentArea.None){
 					MessageBox.Show("Procedure codes that require tooth numbers are not allowed.");

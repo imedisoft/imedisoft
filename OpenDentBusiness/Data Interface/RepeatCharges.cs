@@ -361,8 +361,8 @@ namespace OpenDentBusiness {
 			else {
 				procedure.ProvNum=procCode.DefaultProviderId.Value;
 			}
-			procedure.MedicalCode=ProcedureCodes.GetProcCode(procedure.CodeNum).MedicalCode;
-			procedure.BaseUnits=ProcedureCodes.GetProcCode(procedure.CodeNum).BaseUnits;
+			procedure.MedicalCode=ProcedureCodes.GetById(procedure.CodeNum).MedicalCode;
+			procedure.BaseUnits=ProcedureCodes.GetById(procedure.CodeNum).BaseUnits;
 			procedure.DiagnosticCode=Preferences.GetString(PreferenceName.ICD9DefaultForNewProcs);
 			procedure.RepeatChargeNum=repeatCharge.RepeatChargeNum;
 			procedure.PlaceService=Preferences.GetString(PreferenceName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default Proc Place of Service for the Practice is used.  

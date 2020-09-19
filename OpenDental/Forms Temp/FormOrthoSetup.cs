@@ -52,7 +52,7 @@ namespace OpenDental
 			listboxOrthoPlacementProcs.Items.Clear();
 			foreach (long orthoProcCodeNum in _listOrthoPlacementCodeNums)
 			{
-				ProcedureCode procCodeCur = ProcedureCodes.GetProcCode(orthoProcCodeNum);
+				ProcedureCode procCodeCur = ProcedureCodes.GetById(orthoProcCodeNum);
 				ODBoxItem<ProcedureCode> listBoxItem = new ODBoxItem<ProcedureCode>(procCodeCur.Code, procCodeCur);
 				listboxOrthoPlacementProcs.Items.Add(listBoxItem);
 			}

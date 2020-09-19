@@ -361,7 +361,7 @@ namespace OpenDental{
 				listADA.Items.Add(ProcedureCodes.GetStringProcCode(codeNumList[i]));
 			}
 			listAutoCodes.Items.Clear();
-			_listShortDeep=AutoCodes.GetListDeep(true);
+			_listShortDeep=AutoCodes.GetAll(true);
 			for(int i=0;i<_listShortDeep.Count;i++) {
 				listAutoCodes.Items.Add(_listShortDeep[i].Description);
 				for(int j=0;j<auto.Length;j++){

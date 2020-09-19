@@ -756,7 +756,7 @@ namespace OpenDentBusiness {
 				if(proc.ProcDate.Year<1880) {
 					continue;
 				}
-				procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+				procCode=ProcedureCodes.GetById(proc.CodeNum);
 				if(procCode.TreatmentArea!=ProcedureTreatmentArea.Tooth) {
 					continue;
 				}
@@ -1616,7 +1616,7 @@ namespace OpenDentBusiness {
 				return;
 			}
 			string message="Discount created or changed from Proc Edit window for procedure"
-					+": "+ProcedureCodes.GetProcCode(procNew.CodeNum).Code+"  "+"Dated"
+					+": "+ProcedureCodes.GetById(procNew.CodeNum).Code+"  "+"Dated"
 					+": "+procNew.ProcDate.ToShortDateString()+"  "+"With a Fee of"+": "+procNew.ProcFee.ToString("c")+".  "
 					+"Changed the discount value from"+" "+procOld.Discount.ToString("c")+" "+"to"+" "
 					+procNew.Discount.ToString("c");
@@ -1660,7 +1660,7 @@ namespace OpenDentBusiness {
 		public static void SetToothInitialForCompExtraction(Procedure proc) {
 			//No need to check RemotingRole; no call to db.
 			if(!proc.ProcStatus.In(ProcStat.C,ProcStat.EC,ProcStat.EO)
-				|| ProcedureCodes.GetProcCode(proc.CodeNum).PaintType!=ToothPaintingType.Extraction) {
+				|| ProcedureCodes.GetById(proc.CodeNum).PaintType!=ToothPaintingType.Extraction) {
 				return;
 			}
 			ToothInitials.SetValue(proc.PatNum,proc.ToothNum,ToothInitialType.Missing);
@@ -1804,7 +1804,7 @@ namespace OpenDentBusiness {
 				double provFee=Fees.GetAmount0(proc.CodeNum,Providers.GetById(provNum).FeeScheduleId,proc.ClinicNum,provNum);
 				proc.ProcFee=Math.Max(proc.ProcFee,provFee);//use greater of standard fee or ins fee
 			}
-			ProcedureCode procCodeCur=ProcedureCodes.GetProcCode(proc.CodeNum);
+			ProcedureCode procCodeCur=ProcedureCodes.GetById(proc.CodeNum);
 			proc.BaseUnits=procCodeCur.BaseUnits;
 			proc.SiteNum=pat.SiteNum;
 			proc.RevCode=procCodeCur.RevenueCodeDefault;
@@ -2056,7 +2056,7 @@ namespace OpenDentBusiness {
 		public static string ConvertProcToString(long codeNum,string surf,string toothNum,bool forAccount) {
 			//No need to check RemotingRole; no call to db.
 			string strLine="";
-			ProcedureCode code=ProcedureCodes.GetProcCode(codeNum);
+			ProcedureCode code=ProcedureCodes.GetById(codeNum);
 			switch(code.TreatmentArea) {
 				case ProcedureTreatmentArea.Surface:
 					if(!forAccount) {
@@ -2110,7 +2110,7 @@ namespace OpenDentBusiness {
 				return proc;//Don't make any changes to procedure.
 			}
 			if(proc.ProcStatus!=ProcStat.C) {
-				ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+				ProcedureCode procCode=ProcedureCodes.GetById(proc.CodeNum);
 				proc.ProvNum=GetProvNumFromAppointment(apt,proc,procCode);
 			}
 			proc.ClinicNum=apt.ClinicNum;
@@ -2829,7 +2829,7 @@ namespace OpenDentBusiness {
 				cp.DateCP=proc.ProcDate;
 				cp.AllowedOverride=-1;
 				cp.PercentOverride=-1;
-				cp.NoBillIns=ProcedureCodes.GetProcCode(proc.CodeNum).NoInsuranceBill;
+				cp.NoBillIns=ProcedureCodes.GetById(proc.CodeNum).NoInsuranceBill;
 				cp.PaidOtherIns=-1;
 				cp.CopayOverride=-1;
 				cp.ProcDate=proc.ProcDate;
@@ -2955,7 +2955,7 @@ namespace OpenDentBusiness {
 			//No need to check RemotingRole; no call to db.
 			InsurancePlan PlanCur;
 			PatPlan patplan;
-			ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+			ProcedureCode procCode=ProcedureCodes.GetById(proc.CodeNum);
 			for(int i=0;i<claimProcs.Count;i++) {
 				bool hasEstimateCalculation=true;
 				if(claimProcs[i].Status==ClaimProcStatus.Received && !Preferences.GetBool(PreferenceName.InsEstRecalcReceived)) {
@@ -3381,7 +3381,7 @@ namespace OpenDentBusiness {
 			List<SubstitutionLink> listSubstLinks=SubstitutionLinks.GetAllForPlans(planList);
 			List<ProcedureCode> listProcedureCodes=new List<ProcedureCode>();
 			for(int i=0;i<listProcsForAppt.Count;i++){
-				ProcedureCode procedureCode=ProcedureCodes.GetProcCode(listProcsForAppt[i].CodeNum);
+				ProcedureCode procedureCode=ProcedureCodes.GetById(listProcsForAppt[i].CodeNum);
 				listProcedureCodes.Add(procedureCode);//null and dups ok
 			}
 			List<Fee> listFees=Fees.GetListFromObjects(listProcedureCodes,listProcsForAppt.Select(x=>x.MedicalCode).ToList(),
@@ -3409,7 +3409,7 @@ namespace OpenDentBusiness {
 					break;//out of note loop.
 				}
 				procOld=procCur.Copy();
-				procCode=ProcedureCodes.GetProcCode(procCur.CodeNum);
+				procCode=ProcedureCodes.GetById(procCur.CodeNum);
 				if(procCode.PaintType==ToothPaintingType.Extraction) {//if an extraction, then mark previous procs hidden
 					//SetHideGraphical(procCur);//might not matter anymore
 					ToothInitials.SetValue(apt.PatNum,procCur.ToothNum,ToothInitialType.Missing);
@@ -3616,7 +3616,7 @@ namespace OpenDentBusiness {
 						Appointment apptOldPlanned=listAppointments.FirstOrDefault(x => x.AptNum==proc.PlannedAptNum && x.AptStatus==ApptStatus.Planned);
 						string apptOldPlannedDateStr=(apptOldPlanned==null ? "[INVALID #"+proc.PlannedAptNum+"]" : apptOldPlanned.AptDateTime.ToShortDateString());
 						SecurityLogs.MakeLogEntry(Permissions.AppointmentEdit,AptCur.PatNum,"Procedure"+" "
-							+ProcedureCodes.GetProcCode(proc.CodeNum).ShortDescription+" "+"moved from planned appointment created on"+" "
+							+ProcedureCodes.GetById(proc.CodeNum).ShortDescription+" "+"moved from planned appointment created on"+" "
 							+apptOldPlannedDateStr+" "+"to planned appointment created on"+" "
 							+AptCur.AptDateTime.ToShortDateString(),AptCur.AptNum,logSource,AptCur.DateTStamp);
 						UpdateOtherApptDesc(proc,AptCur,isAptPlanned,listAppointments,listProcs);
@@ -3628,7 +3628,7 @@ namespace OpenDentBusiness {
 						Appointment apptOld=listAppointments.FirstOrDefault(x => x.AptNum==proc.AptNum);
 						string apptOldDateStr=(apptOld==null ? "[INVALID #"+proc.AptNum+"]" : apptOld.AptDateTime.ToShortDateString());
 						SecurityLogs.MakeLogEntry(Permissions.AppointmentEdit,AptCur.PatNum,"Procedure"+" "
-							+ProcedureCodes.GetProcCode(proc.CodeNum).ShortDescription+" "+"moved from appointment on"+" "+apptOldDateStr
+							+ProcedureCodes.GetById(proc.CodeNum).ShortDescription+" "+"moved from appointment on"+" "+apptOldDateStr
 							+" "+"to appointment on"+" "+AptCur.AptDateTime,AptCur.AptNum,logSource,AptCur.DateTStamp);
 						UpdateOtherApptDesc(proc,AptCur,isAptPlanned,listAppointments,listProcs);
 					}
@@ -3666,7 +3666,7 @@ namespace OpenDentBusiness {
 			if(procCur==null) {
 				return;//Nothing to do.  Should never happen.
 			}
-			ProcedureCode procCode=ProcedureCodes.GetProcCode(procCur.CodeNum);
+			ProcedureCode procCode=ProcedureCodes.GetById(procCur.CodeNum);
 			string logText=procCode.Code+", ";
 			if(toothNums!=null && toothNums.Trim()!="") {
 				logText+="Teeth"+": "+toothNums+", ";
@@ -3677,7 +3677,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Creates securitylog entry for completed procedure where appointment ProvNum is different than the procedures provnum.</summary>
 		private static void LogProcComplEdit(Procedure proc,Procedure procOld,List<ProcedureCode> listProcedureCodes=null) {
-			ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum,listProcedureCodes);
+			ProcedureCode procCode=ProcedureCodes.GetById(proc.CodeNum,listProcedureCodes);
 			string logText="Completed procedure"+" "+procCode.Code.ToString()+" "
 				+"edited by setting appointment complete.";
 			if(proc.ProvNum!=procOld.ProvNum) {
@@ -3732,7 +3732,7 @@ namespace OpenDentBusiness {
 			//surf
 			proc.Priority=0;
 			proc.ProcStatus=ProcStat.TP;
-			ProcedureCode procCodeCur=ProcedureCodes.GetProcCode(proc.CodeNum);
+			ProcedureCode procCodeCur=ProcedureCodes.GetById(proc.CodeNum);
 			#region ProvNum
 			proc.ProvNum=appt.ProvNum;
 			if(procCodeCur.DefaultProviderId.HasValue) {//Override provider for procedures with a default provider
@@ -3773,7 +3773,7 @@ namespace OpenDentBusiness {
 			List<string>orthoProcCodes=OrthoCases.GetListProcTypeProcCodes(PreferenceName.OrthoBandingCodes);
 			orthoProcCodes.AddRange(OrthoCases.GetListProcTypeProcCodes(PreferenceName.OrthoVisitCodes));
 			orthoProcCodes.AddRange(OrthoCases.GetListProcTypeProcCodes(PreferenceName.OrthoDebondCodes));
-			string procCode=ProcedureCodes.GetProcCode(proc.CodeNum).Code;
+			string procCode=ProcedureCodes.GetById(proc.CodeNum).Code;
 			if(orthoProcCodes.Contains(procCode)) {
 				return true;
 			}

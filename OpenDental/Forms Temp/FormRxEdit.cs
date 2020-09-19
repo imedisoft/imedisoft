@@ -131,7 +131,7 @@ namespace Imedisoft.Forms
 
 				foreach (Procedure proc in _listInUseProcs)
 				{
-					ProcedureCode procCode = ProcedureCodes.GetProcCode(proc.CodeNum, listProcCodes);
+					ProcedureCode procCode = ProcedureCodes.GetById(proc.CodeNum, listProcCodes);
 					string itemText = proc.ProcStatus.ToString();
 					if (ProcMultiVisits.IsProcInProcess(proc.ProcNum))
 					{

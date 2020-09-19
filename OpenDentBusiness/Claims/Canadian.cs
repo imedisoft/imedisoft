@@ -749,7 +749,7 @@ namespace OpenDentBusiness.Eclaims {
 			for(int p=0;p<claimProcsClaim.Count;p++) {
 				//claimProcsClaim already excludes any claimprocs with ProcNum=0, so no payments etc.
 				proc=Procedures.GetProcFromList(procListAll,claimProcsClaim[p].ProcNum);
-				procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+				procCode=ProcedureCodes.GetById(proc.CodeNum);
 				procListLabForOne=Procedures.GetCanadianLabFees(proc.ProcNum,procListAll);
 				//F07 proc line number 1 N
 				strb.Append((p+1).ToString());
@@ -785,7 +785,7 @@ namespace OpenDentBusiness.Eclaims {
 				if(carrierReceiver.CDAnetVersion!="02") { //version 04
 					//F34 lab procedure code #1 5 AN
 					if(procListLabForOne.Count>0) {
-						strb.Append(TidyAN(ProcedureCodes.GetProcCode(procListLabForOne[0].CodeNum).Code,5).Trim().PadLeft(5,'0'));
+						strb.Append(TidyAN(ProcedureCodes.GetById(procListLabForOne[0].CodeNum).Code,5).Trim().PadLeft(5,'0'));
 					}
 					else {
 						strb.Append("     ");
@@ -810,7 +810,7 @@ namespace OpenDentBusiness.Eclaims {
 				else { //version 04
 					//F35 lab procedure code #2 5 AN
 					if(procListLabForOne.Count>1) {
-						strb.Append(TidyAN(ProcedureCodes.GetProcCode(procListLabForOne[1].CodeNum).Code,5).Trim().PadLeft(5,'0'));
+						strb.Append(TidyAN(ProcedureCodes.GetById(procListLabForOne[1].CodeNum).Code,5).Trim().PadLeft(5,'0'));
 					}
 					else {
 						strb.Append("     ");
@@ -2544,7 +2544,7 @@ namespace OpenDentBusiness.Eclaims {
 			for(int i=0;i<claimProcsClaim.Count;i++) {
 				//claimProcsClaim already excludes any claimprocs with ProcNum=0, so no payments etc.
 				proc=Procedures.GetProcFromList(procListAll,claimProcsClaim[i].ProcNum);
-				procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+				procCode=ProcedureCodes.GetById(proc.CodeNum);
 				//Procedure dates are not included in predetermination requests so we do not need to check the dates for claimtype 'PreAuth'.
 				if(claim.ClaimType!="PreAuth") {
 					if(claimProcsClaim[i].ProcDate.Year<1970 || claimProcsClaim[i].ProcDate>DateTime.Today) {
@@ -2577,7 +2577,7 @@ namespace OpenDentBusiness.Eclaims {
 					List<Procedure> labFeesForProc=Procedures.GetCanadianLabFees(proc.ProcNum,procListAll);
 					for(int j=0;j<labFeesForProc.Count;j++) {
 						if(labFeesForProc[j].ProcStatus!=ProcStat.C) {
-							ProcedureCode procCodeLab=ProcedureCodes.GetProcCode(labFeesForProc[j].CodeNum);
+							ProcedureCode procCodeLab=ProcedureCodes.GetById(labFeesForProc[j].CodeNum);
 							if(retVal!="") {
 								retVal+=", ";
 							}

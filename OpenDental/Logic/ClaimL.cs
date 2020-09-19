@@ -376,7 +376,7 @@ namespace OpenDental {
 			if(listNoBillInsProcs.Count > 0) {
 				StringBuilder sbMsg=new StringBuilder($"The following procedures were marked as NoBillIns. They will be excluded from the {claimTypeDesc} claim.\r\n");
 				foreach(Procedure proc in listNoBillInsProcs) {
-					ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+					ProcedureCode procCode=ProcedureCodes.GetById(proc.CodeNum);
 					sbMsg.AppendLine($"{procCode.Code} {(string.IsNullOrEmpty(proc.ToothNum) ? "" : ($"Tth {proc.ToothNum} "))} - {procCode.Description}");
 				}
 				MsgBox.Show(sbMsg.ToString());

@@ -1749,7 +1749,7 @@ namespace OpenDentBusiness
 					continue;
 				}
 				string procDescOne = "";
-				ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+				ProcedureCode procCode=ProcedureCodes.GetById(proc.CodeNum);
 				if(!string.IsNullOrEmpty(apt.ProcDescript)) {
 					apt.ProcDescript+=", ";
 				}
@@ -2988,7 +2988,7 @@ namespace OpenDentBusiness
 			List<ProcedureCode> listProcedureCodes=ProcedureCodes.GetListDeep();
 			List<string> listProcPatterns=new List<string>();
 			foreach(long codeNum in codeNums) {
-				if(ProcedureCodes.GetProcCode(codeNum,listProcedureCodes).IsHygiene) {
+				if(ProcedureCodes.GetById(codeNum,listProcedureCodes).IsHygiene) {
 					listProcPatterns.Add(ProcCodeNotes.GetTimePattern(provHyg,codeNum));
 				}
 				else {//dentist proc
@@ -4158,7 +4158,7 @@ namespace OpenDentBusiness
 				StringBuilder strProcs=new StringBuilder();
 				string procDescript="";
 				for(int i=0;i<listProcs.Count;i++) {
-					procCode=ProcedureCodes.GetProcCode(listProcs[i].CodeNum);
+					procCode=ProcedureCodes.GetById(listProcs[i].CodeNum);
 					if(procCode.LaymanTerm=="") {
 						procDescript=procCode.Description;
 					}

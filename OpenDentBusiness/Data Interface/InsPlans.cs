@@ -1070,7 +1070,7 @@ namespace OpenDentBusiness {
 				List<Benefit> benefitList=Benefits.Refresh(patPlans,subs);
 				List<ProcedureCode> listProcedureCodes=new List<ProcedureCode>();
 				for(int p=0;p<procs.Count;p++){
-					ProcedureCode procedureCode=ProcedureCodes.GetProcCode(procs[p].CodeNum);
+					ProcedureCode procedureCode=ProcedureCodes.GetById(procs[p].CodeNum);
 					listProcedureCodes.Add(procedureCode);//duplicates are ok
 				}
 				List<SubstitutionLink> listSubstLinks=SubstitutionLinks.GetAllForPlans(plans);

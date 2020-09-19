@@ -1649,7 +1649,7 @@ Procedures
 				End("thead");
 				Start("tbody");
 				for(int i=0;i<listProcsFiltered.Count;i++) {
-					ProcedureCode procCode=ProcedureCodes.GetProcCode(listProcsFiltered[i].CodeNum);
+					ProcedureCode procCode=ProcedureCodes.GetById(listProcsFiltered[i].CodeNum);
 					Start("tr");
 					if(Regex.IsMatch(procCode.Code,"^D[0-9]{4}$")) {//CDT code (ADA code)
 						_w.WriteElementString("td",procCode.Code+" - "+procCode.Description);
@@ -1693,7 +1693,7 @@ Procedures
 				listProcsFiltered.Add(proc);
 			}
 			for(int i=0;i<listProcsFiltered.Count;i++) {
-				ProcedureCode procCode=ProcedureCodes.GetProcCode(listProcsFiltered[i].CodeNum);
+				ProcedureCode procCode=ProcedureCodes.GetById(listProcsFiltered[i].CodeNum);
 				Start("entry","typeCode","DRIV");
 				Start("procedure","classCode","PROC","moodCode","EVN");
 				TemplateId("2.16.840.1.113883.10.20.22.4.14");//Procedure Activity Section (Page 487).
@@ -2745,7 +2745,7 @@ Vital Signs
 			List<Procedure> listProcsAll=Procedures.Refresh(patCur.PatNum);
 			List<Procedure> listProcsFiltered=new List<Procedure>();
 			for(int i=0;i<listProcsAll.Count;i++) {
-				ProcedureCode procCode=ProcedureCodes.GetProcCode(listProcsAll[i].CodeNum);
+				ProcedureCode procCode=ProcedureCodes.GetById(listProcsAll[i].CodeNum);
 				if(listProcsAll[i].ProcStatus==ProcStat.D) {
 					continue;//Ignore deleted procedures.
 				}

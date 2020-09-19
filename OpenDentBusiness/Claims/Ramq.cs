@@ -124,7 +124,7 @@ namespace OpenDentBusiness.Eclaims
 					{
 						continue;
 					}
-					ProcedureCode procCode = ProcedureCodes.GetProcCode(proc.CodeNum, listProcCodes);
+					ProcedureCode procCode = ProcedureCodes.GetById(proc.CodeNum, listProcCodes);
 					if (procCode.NoInsuranceBill)
 					{
 						continue;
@@ -149,7 +149,7 @@ namespace OpenDentBusiness.Eclaims
 						{
 							continue;
 						}
-						ProcedureCode labProcCode = ProcedureCodes.GetProcCode(labProc.CodeNum, listProcCodes);
+						ProcedureCode labProcCode = ProcedureCodes.GetById(labProc.CodeNum, listProcCodes);
 						DP_RACINDPACTE acteLab = new DP_RACINDPACTE();
 						acteLab.ACTE = labProcCode.Code;
 						if (labProcCode.Code.Length > 5)
@@ -332,7 +332,7 @@ namespace OpenDentBusiness.Eclaims
 				{
 					continue;
 				}
-				ProcedureCode procCode = ProcedureCodes.GetProcCode(proc.CodeNum, listProcCodes);
+				ProcedureCode procCode = ProcedureCodes.GetById(proc.CodeNum, listProcCodes);
 				if (procCode.NoInsuranceBill)
 				{
 					continue;
@@ -353,7 +353,7 @@ namespace OpenDentBusiness.Eclaims
 					{
 						continue;
 					}
-					ProcedureCode labProcCode = ProcedureCodes.GetProcCode(labProc.CodeNum, listProcCodes);
+					ProcedureCode labProcCode = ProcedureCodes.GetById(labProc.CodeNum, listProcCodes);
 					if (labProcCode.Code.Length < 5 || !Regex.IsMatch(labProcCode.Code.Substring(0, 5), @"^[0-9]{5}$"))
 					{
 						if (sbErrors.Length != 0)

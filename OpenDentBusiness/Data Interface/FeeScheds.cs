@@ -142,7 +142,7 @@ namespace OpenDentBusiness{
 						if(oldFee!=null)	{ 
 							isReplacementFee=true;
 						}
-						ProcedureCode procCode=ProcedureCodes.GetProcCode(fee.CodeNum);
+						ProcedureCode procCode=ProcedureCodes.GetById(fee.CodeNum);
 						string securityLogText="Fee Schedule \""+fromFeeSched.Description+"\" copied to Fee Schedule \""+toFeeSched.Description+"\", ";
 						if(clinicNumTo!=0){
 							securityLogText+="To Clinic \""+Clinics.GetDescription(clinicNumTo)+"\", ";

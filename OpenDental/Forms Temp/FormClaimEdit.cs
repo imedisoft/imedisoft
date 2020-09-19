@@ -1189,7 +1189,7 @@ namespace OpenDental
 				if(!Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 					row.Cells.Add(Tooth.ToInternat(ProcCur.ToothNum));
 				}
-				ProcedureCode procCodeCur=ProcedureCodes.GetProcCode(ProcCur.CodeNum);
+				ProcedureCode procCodeCur=ProcedureCodes.GetById(ProcCur.CodeNum);
 				ProcedureCode procCodeSent=ProcedureCodes.GetProcCode(claimProcCur.CodeSent);
 				InsurancePlan planCur=PlanList.Where(x => x.Id == claimProcCur.PlanNum).FirstOrDefault();
 				string descript=Procedures.GetClaimDescript(claimProcCur,procCodeSent,ProcCur,procCodeCur,planCur);

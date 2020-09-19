@@ -1794,7 +1794,7 @@ namespace OpenDental
 						x = doc.StartElement();
 						text = carrierProcs[p].valuestr.PadLeft(6, ' ');//Field G19
 						doc.DrawString(g, text, procedureCol, 0);
-						text = ProcedureCodes.GetProcCode(ProcedureCodes.GetCodeNum(text)).Description;
+						text = ProcedureCodes.GetById(ProcedureCodes.GetCodeNum(text)).Description;
 						doc.DrawString(g, text, procedureCol + procedureColWidth, 0, doc.standardFont, (int)(toothCol - procedureCol - procedureColWidth - 10));
 						text = RawMoneyStrToDisplayMoney(carrierEligibleAmts[p].valuestr);//Field G20
 						doc.DrawString(g, text, eligibleFeeCol + amountWidth - g.MeasureString(text, doc.standardFont).Width, 0);
@@ -2110,7 +2110,7 @@ namespace OpenDental
 				proc = Procedures.GetOneProc(claimproc.ProcNum, true);
 				text = claimproc.CodeSent.PadLeft(6, ' ');
 				doc.DrawString(g, text, x, 0);
-				text = ProcedureCodes.GetProcCode(proc.CodeNum).Description;
+				text = ProcedureCodes.GetById(proc.CodeNum).Description;
 				doc.DrawString(g, text, procedureCodeCol + procCodeWidth, 0, doc.standardFont, (int)(procedureToothCol - procedureCodeCol - procCodeWidth - 10));
 				text = Tooth.ToInternat(proc.ToothNum);//Field F10
 				doc.DrawString(g, text, procedureToothCol, 0);
@@ -2343,7 +2343,7 @@ namespace OpenDental
 				proc = Procedures.GetOneProc(claimproc.ProcNum, true);
 				text = claimproc.CodeSent.PadLeft(6, ' ');
 				doc.DrawString(g, text, x, 0);//procedure code
-				text = ProcedureCodes.GetProcCode(proc.CodeNum).Description;
+				text = ProcedureCodes.GetById(proc.CodeNum).Description;
 				doc.DrawString(g, text, procedureCodeCol + procCodeWidth, 0, doc.standardFont, (int)(procedureToothCol - procedureCodeCol - procCodeWidth - 10));//proc descript
 				text = Tooth.ToInternat(proc.ToothNum);//Field F10
 				doc.DrawString(g, text, procedureToothCol, 0);//Tooth number
@@ -2427,7 +2427,7 @@ namespace OpenDental
 				x = doc.StartElement();
 				text = carrierProcs[p].valuestr.PadLeft(6, ' ');//Field G19
 				doc.DrawString(g, text, x, 0);
-				text = ProcedureCodes.GetProcCode(ProcedureCodes.GetCodeNum(text)).Description;
+				text = ProcedureCodes.GetById(ProcedureCodes.GetCodeNum(text)).Description;
 				doc.DrawString(g, text, procedureCodeCol + procCodeWidth, 0, doc.standardFont, (int)(procedureToothCol - procedureCodeCol - procCodeWidth - 10));
 				text = RawMoneyStrToDisplayMoney(carrierEligibleAmts[p].valuestr);//Field G20
 				doc.DrawString(g, text, procedureEligibleCol + amountWidth - g.MeasureString(text, doc.standardFont).Width, 0);

@@ -42,7 +42,7 @@ namespace OpenDental {
 			if(FormPC.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			textProcedureCode.Text=ProcedureCodes.GetProcCode(FormPC.SelectedCodeNum).Code;
+			textProcedureCode.Text=ProcedureCodes.GetById(FormPC.SelectedCodeNum).Code;
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {

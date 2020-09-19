@@ -302,7 +302,7 @@ namespace OpenDentBusiness
 					ProcedureCode procCode;
 					if (!dictProcCodes.TryGetValue(rowProc["CodeNum"].ToString(), out procCode))
 					{
-						procCode = ProcedureCodes.GetProcCode(PIn.Long(rowProc["CodeNum"].ToString()));
+						procCode = ProcedureCodes.GetById(PIn.Long(rowProc["CodeNum"].ToString()));
 					}
 					row = table.NewRow();
 					row["AbbrDesc"] = rowProc["AbbrDesc"].ToString();

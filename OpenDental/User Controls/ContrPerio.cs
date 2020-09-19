@@ -1288,7 +1288,7 @@ namespace OpenDental
 			}
 			List<Procedure> listProcsForTooth=_listPatProcs.FindAll(x => x.ToothNum==toothNum.ToString() && x.ProcStatus.In(ProcStat.C,ProcStat.EC,ProcStat.EO));
 			for(int i = 0;i<listProcsForTooth.Count;i++) {
-				ProcedureCode procCode=ProcedureCodes.GetProcCode(listProcsForTooth[i].CodeNum);
+				ProcedureCode procCode=ProcedureCodes.GetById(listProcsForTooth[i].CodeNum);
 				if(procCode.PaintType==ToothPaintingType.Implant) {
 					return true;
 				}

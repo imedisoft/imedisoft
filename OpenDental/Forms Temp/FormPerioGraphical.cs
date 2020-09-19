@@ -200,7 +200,7 @@ namespace OpenDental {
 				bool isImplant=false;
 				bool isCrown=false;
 				for(int p=0;p<listProcsForTooth.Count;p++) {
-					ProcedureCode procedureCode=ProcedureCodes.GetProcCode(listProcsForTooth[p].CodeNum);
+					ProcedureCode procedureCode=ProcedureCodes.GetById(listProcsForTooth[p].CodeNum);
 					if(procedureCode.PaintType==ToothPaintingType.Implant) {
 						isImplant=true;
 					}

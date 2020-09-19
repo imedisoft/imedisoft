@@ -240,7 +240,7 @@ namespace OpenDental {
 
 		private string ConstructSecurityLogForProcType(Procedure proc,Procedure procOld) {
 			string logTextForProc="";
-			string code=ProcedureCodes.GetProcCode(proc.CodeNum).Code;
+			string code=ProcedureCodes.GetById(proc.CodeNum).Code;
 			string procDateStrOld=POut.Date(procOld.ProcDate);
 			string procDateStrNew=POut.Date(proc.ProcDate);
 			logTextForProc+=SecurityLogEntryHelper(code,SecurityLogFields.ProcDate,procDateStrOld,procDateStrNew);

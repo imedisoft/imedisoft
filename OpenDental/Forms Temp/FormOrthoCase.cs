@@ -341,7 +341,7 @@ namespace OpenDental {
 			if(_bandingProc==null) {
 				return;
 			}
-			ProcedureCode procCode=ProcedureCodes.GetProcCode(_bandingProc.CodeNum);
+			ProcedureCode procCode=ProcedureCodes.GetById(_bandingProc.CodeNum);
 			textBandingProc.Text=procCode.Code+" - "+procCode.ShortDescription;
 		}
 

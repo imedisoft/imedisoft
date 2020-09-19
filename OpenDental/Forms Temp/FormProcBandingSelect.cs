@@ -41,7 +41,7 @@ namespace OpenDental {
 			GridRow row;
 			foreach(Procedure proc in _listTpBandingProcs) {
 				row=new GridRow();
-				ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+				ProcedureCode procCode=ProcedureCodes.GetById(proc.CodeNum);
 				row.Cells.Add(procCode.Code);
 				row.Cells.Add(procCode.Description);
 				row.Tag=proc;

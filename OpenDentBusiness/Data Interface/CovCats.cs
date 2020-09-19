@@ -37,7 +37,7 @@ namespace OpenDentBusiness
 			List<ProcedureCode> listProcCodes = new List<ProcedureCode>();
 			for (int i = 0; i < listProcs.Count; i++)
 			{
-				listProcCodes.Add(ProcedureCodes.GetProcCode(listProcs[i].CodeNum));    //turn list of procedures into list of procedurecodes.
+				listProcCodes.Add(ProcedureCodes.GetById(listProcs[i].CodeNum));    //turn list of procedures into list of procedurecodes.
 			}
 			double total = 0;//CanadaTimeUnits can be decimal numbers, like 0.5.
 			for (int i = 0; i < listProcCodes.Count; i++)

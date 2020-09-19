@@ -1,6 +1,6 @@
 ﻿namespace Imedisoft.Forms
 {
-    partial class FormAutoCode
+    partial class FormAutoCodes
     {
         private System.ComponentModel.Container components = null;
 
@@ -20,37 +20,23 @@
 
 		private void InitializeComponent()
 		{
-            this.autoCodesListBox = new System.Windows.Forms.ListBox();
-            this.closeButton = new OpenDental.UI.Button();
+            this.cancelButton = new OpenDental.UI.Button();
             this.addButton = new OpenDental.UI.Button();
             this.deleteButton = new OpenDental.UI.Button();
             this.editButton = new OpenDental.UI.Button();
+            this.autoCodesGrid = new OpenDental.UI.ODGrid();
             this.SuspendLayout();
             // 
-            // autoCodesListBox
+            // cancelButton
             // 
-            this.autoCodesListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.autoCodesListBox.IntegralHeight = false;
-            this.autoCodesListBox.Location = new System.Drawing.Point(12, 12);
-            this.autoCodesListBox.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
-            this.autoCodesListBox.Name = "autoCodesListBox";
-            this.autoCodesListBox.Size = new System.Drawing.Size(290, 359);
-            this.autoCodesListBox.TabIndex = 0;
-            this.autoCodesListBox.SelectedIndexChanged += new System.EventHandler(this.AutoCodesListBox_SelectedIndexChanged);
-            this.autoCodesListBox.DoubleClick += new System.EventHandler(this.AutoCodesListBox_DoubleClick);
-            // 
-            // closeButton
-            // 
-            this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.closeButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.closeButton.Location = new System.Drawing.Point(222, 384);
-            this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(80, 25);
-            this.closeButton.TabIndex = 4;
-            this.closeButton.Text = "&Close";
-            this.closeButton.Click += new System.EventHandler(this.CloseButton_Click);
+            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.cancelButton.Location = new System.Drawing.Point(222, 384);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(80, 25);
+            this.cancelButton.TabIndex = 4;
+            this.cancelButton.Text = "&Close";
+            this.cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // addButton
             // 
@@ -84,34 +70,48 @@
             this.editButton.TabIndex = 2;
             this.editButton.Click += new System.EventHandler(this.EditButton_Click);
             // 
-            // FormAutoCode
+            // autoCodesGrid
+            // 
+            this.autoCodesGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.autoCodesGrid.ColorSelectedRow = System.Drawing.SystemColors.Highlight;
+            this.autoCodesGrid.Location = new System.Drawing.Point(12, 12);
+            this.autoCodesGrid.Name = "autoCodesGrid";
+            this.autoCodesGrid.Size = new System.Drawing.Size(290, 366);
+            this.autoCodesGrid.TabIndex = 0;
+            this.autoCodesGrid.Title = "Auto Codes";
+            this.autoCodesGrid.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.AutoCodesGrid_CellDoubleClick);
+            this.autoCodesGrid.SelectionCommitted += new System.EventHandler(this.AutoCodesGrid_SelectionCommitted);
+            // 
+            // FormAutoCodes
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.CancelButton = this.closeButton;
+            this.CancelButton = this.cancelButton;
             this.ClientSize = new System.Drawing.Size(314, 421);
+            this.Controls.Add(this.autoCodesGrid);
             this.Controls.Add(this.editButton);
             this.Controls.Add(this.deleteButton);
             this.Controls.Add(this.addButton);
-            this.Controls.Add(this.closeButton);
-            this.Controls.Add(this.autoCodesListBox);
+            this.Controls.Add(this.cancelButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(330, 460);
-            this.Name = "FormAutoCode";
+            this.Name = "FormAutoCodes";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Auto Codes";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormAutoCode_FormClosing);
-            this.Load += new System.EventHandler(this.FormAutoCode_Load);
+            this.Load += new System.EventHandler(this.FormAutoCodes_Load);
             this.ResumeLayout(false);
 
 		}
 		#endregion
-
-		private System.Windows.Forms.ListBox autoCodesListBox;
-        private OpenDental.UI.Button closeButton;
+        private OpenDental.UI.Button cancelButton;
         private OpenDental.UI.Button addButton;
         private OpenDental.UI.Button deleteButton;
         private OpenDental.UI.Button editButton;
+        private OpenDental.UI.ODGrid autoCodesGrid;
     }
 }

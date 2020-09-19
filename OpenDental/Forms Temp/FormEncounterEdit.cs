@@ -124,7 +124,7 @@ namespace OpenDental {
 			formPCs.IsSelectionMode=true;
 			if(formPCs.ShowDialog()==DialogResult.OK) {
 				_encCur.CodeSystem="CDT";
-				ProcedureCode procCode=ProcedureCodes.GetProcCode(formPCs.SelectedCodeNum);
+				ProcedureCode procCode=ProcedureCodes.GetById(formPCs.SelectedCodeNum);
 				_encCur.CodeValue=procCode.Code;
 				textCodeSystem.Text="CDT";
 				textCodeValue.Text=procCode.Code;

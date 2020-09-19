@@ -2688,7 +2688,7 @@ namespace OpenDental{
 					if(benMatrix[x,y].CoverageLevel==BenefitCoverageLevel.Family) {
 						desc+="Fam"+" ";
 					}
-					proccode=ProcedureCodes.GetProcCode(benMatrix[x,y].CodeNum);
+					proccode=ProcedureCodes.GetById(benMatrix[x,y].CodeNum);
 					if(benMatrix[x,y].BenefitType==InsBenefitType.CoInsurance && benMatrix[x,y].Percent != -1) {
 						if(benMatrix[x,y].CodeNum==0) {
 							desc+=CovCats.GetDesc(benMatrix[x,y].CovCatNum)+" % ";
@@ -2820,7 +2820,7 @@ namespace OpenDental{
 						&& !(specialFreqAdded || specialAgeLimitAdded)) 
 					{
 						if(benMatrix[x,y].CodeNum != 0) {
-							proccode=ProcedureCodes.GetProcCode(benMatrix[x,y].CodeNum);
+							proccode=ProcedureCodes.GetById(benMatrix[x,y].CodeNum);
 							val+=proccode.Code+"-"+proccode.ShortDescription+" ";
 						}
 						else if(benMatrix[x,y].CovCatNum != 0){

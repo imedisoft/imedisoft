@@ -134,7 +134,7 @@ namespace OpenDental
 				{
 					continue;
 				}
-				if (ProcedureCodes.GetProcCode(proc.CodeNum).PaintType == ToothPaintingType.Extraction && (
+				if (ProcedureCodes.GetById(proc.CodeNum).PaintType == ToothPaintingType.Extraction && (
 					proc.ProcStatus == ProcStat.C
 					|| proc.ProcStatus == ProcStat.EC
 					|| proc.ProcStatus == ProcStat.EO
@@ -142,7 +142,7 @@ namespace OpenDental
 				{
 					continue;//prevents the red X. Missing teeth already handled.
 				}
-				if (ProcedureCodes.GetProcCode(proc.CodeNum).GraphicColor == System.Drawing.Color.FromArgb(0))
+				if (ProcedureCodes.GetById(proc.CodeNum).GraphicColor == System.Drawing.Color.FromArgb(0))
 				{
 					switch (proc.ProcStatus)
 					{
@@ -177,10 +177,10 @@ namespace OpenDental
 				}
 				else
 				{
-					cDark = ProcedureCodes.GetProcCode(proc.CodeNum).GraphicColor;
-					cLight = ProcedureCodes.GetProcCode(proc.CodeNum).GraphicColor;
+					cDark = ProcedureCodes.GetById(proc.CodeNum).GraphicColor;
+					cLight = ProcedureCodes.GetById(proc.CodeNum).GraphicColor;
 				}
-				switch (ProcedureCodes.GetProcCode(proc.CodeNum).PaintType)
+				switch (ProcedureCodes.GetById(proc.CodeNum).PaintType)
 				{
 					case ToothPaintingType.BridgeDark:
 						if (ToothInitials.ToothIsMissingOrHidden(toothInitialList, proc.ToothNum))

@@ -97,7 +97,7 @@ namespace OpenDental {
 			}
 			foreach(Procedure proc in listProcs) {
 				row=new GridRow();
-				ProcedureCode proccode=ProcedureCodes.GetProcCode(proc.CodeNum);
+				ProcedureCode proccode=ProcedureCodes.GetById(proc.CodeNum);
 				string description=ProcedureCodes.GetLaymanTerm(proc.CodeNum);
 				if(proccode.IsCanadianLab) {
 					description="^ ^ "+description;

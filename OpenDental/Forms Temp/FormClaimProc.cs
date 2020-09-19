@@ -196,7 +196,7 @@ namespace OpenDental {
 				if(proc==null) {
 					proc=Procedures.GetOneProc(ClaimProcCur.ProcNum,false);
 				}
-				textDescription.Text=ProcedureCodes.GetProcCode(proc.CodeNum).Description;
+				textDescription.Text=ProcedureCodes.GetById(proc.CodeNum).Description;
 				textProcDate.ReadOnly=true;//user not allowed to edit ProcDate unless it's for a total payment
 			}
 			//get the date to use for checking whether the user has InsWriteOffEdit permission
@@ -1158,7 +1158,7 @@ namespace OpenDental {
 			//Any changes to this calculation should also consider FormClaimPayTotal.IsClaimProcGreaterThanProcFee().
 			creditRem=feeAcct-patPayAmt-insPayAmt-writeOff+adj;
 			bool isCreditGreater=creditRem.IsLessThanZero();
-			string procDescript=ProcedureCodes.GetProcCode(proc.CodeNum).Code
+			string procDescript=ProcedureCodes.GetById(proc.CodeNum).Code
 				+"\t"+"Fee"+": "+feeAcct.ToString("F")
 				+"\t"+"Credits"+": "+Math.Abs((-patPayAmt-insPayAmt-writeOff+adj)).ToString("F")
 				+"\t"+"Remaining"+": ("+Math.Abs(creditRem).ToString("F")+")";
@@ -1339,7 +1339,7 @@ namespace OpenDental {
 					+Providers.GetAbbr(ClaimProcOld.ProvNum)+" "+"to"+" "+Providers.GetAbbr(ClaimProcCur.ProvNum);
 				}
 				else {
-					strSecLog = ProcedureCodes.GetProcCode(proc.CodeNum).Code+" - "+textInsPlan.Text+". "+"Provider changed from"+" "
+					strSecLog = ProcedureCodes.GetById(proc.CodeNum).Code+" - "+textInsPlan.Text+". "+"Provider changed from"+" "
 					+Providers.GetAbbr(ClaimProcOld.ProvNum)+" "+"to"+" "+Providers.GetAbbr(ClaimProcCur.ProvNum);
 				}
 				SecurityLogs.MakeLogEntry(Permissions.ClaimProcClaimAttachedProvEdit,ClaimProcCur.PatNum,strSecLog);

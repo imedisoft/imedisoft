@@ -2325,7 +2325,7 @@ namespace OpenDental
 				discountPlan=DiscountPlans.GetPlan(PatCur.DiscountPlanNum);
 			}
 			for(int i=0;i<listProcForTP.Count;i++) {
-				ProcedureCode procCodeCur=ProcedureCodes.GetProcCode(listProcForTP[i].CodeNum);
+				ProcedureCode procCodeCur=ProcedureCodes.GetById(listProcForTP[i].CodeNum);
 				TpRow row=new TpRow();
 				row.ProcAbbr=procCodeCur.ShortDescription;
 				row.ProvNum=listProcForTP[i].ProvNum;
@@ -2448,10 +2448,10 @@ namespace OpenDental
 				//Fill TpRow object with information.
 				row.Priority=Definitions.GetName(DefinitionCategory.TxPriorities,listTreatPlanAttaches.FirstOrDefault(x => x.ProcNum==listProcForTP[i].ProcNum).Priority);//(Defs.GetName(DefinitionCategory.TxPriorities,listProcForTP[i].Priority));
 				row.Tth=(Tooth.ToInternat(listProcForTP[i].ToothNum));
-				if(ProcedureCodes.GetProcCode(listProcForTP[i].CodeNum).TreatmentArea==ProcedureTreatmentArea.Surface) {
+				if(ProcedureCodes.GetById(listProcForTP[i].CodeNum).TreatmentArea==ProcedureTreatmentArea.Surface) {
 					row.Surf=(Tooth.SurfTidyFromDbToDisplay(listProcForTP[i].Surf,listProcForTP[i].ToothNum));
 				}
-				else if(ProcedureCodes.GetProcCode(listProcForTP[i].CodeNum).TreatmentArea==ProcedureTreatmentArea.Sextant) {
+				else if(ProcedureCodes.GetById(listProcForTP[i].CodeNum).TreatmentArea==ProcedureTreatmentArea.Sextant) {
 					row.Surf=Tooth.GetSextant(listProcForTP[i].Surf,(ToothNumberingNomenclature)PrefC.GetInt(PreferenceName.UseInternationalToothNumbers));
 				}
 				else {
@@ -2498,7 +2498,7 @@ namespace OpenDental
 				procTP.ItemOrder=i;
 				procTP.Priority=listTreatPlanAttaches.FirstOrDefault(x => x.ProcNum==proc.ProcNum).Priority;//proc.Priority;
 				procTP.ToothNumTP=Tooth.ToInternat(proc.ToothNum);
-				if(ProcedureCodes.GetProcCode(proc.CodeNum).TreatmentArea==ProcedureTreatmentArea.Surface) {
+				if(ProcedureCodes.GetById(proc.CodeNum).TreatmentArea==ProcedureTreatmentArea.Surface) {
 					procTP.Surf=Tooth.SurfTidyFromDbToDisplay(proc.Surf,proc.ToothNum);
 				}
 				else {
@@ -2655,7 +2655,7 @@ namespace OpenDental
 				procTP.ItemOrder=itemNo;
 				procTP.Priority=proc.Priority;
 				procTP.ToothNumTP=Tooth.ToInternat(proc.ToothNum);
-				if(ProcedureCodes.GetProcCode(proc.CodeNum).TreatmentArea==ProcedureTreatmentArea.Surface) {
+				if(ProcedureCodes.GetById(proc.CodeNum).TreatmentArea==ProcedureTreatmentArea.Surface) {
 					procTP.Surf=Tooth.SurfTidyFromDbToDisplay(proc.Surf,proc.ToothNum);
 				}
 				else {
@@ -3073,14 +3073,14 @@ namespace OpenDental
 				if(proc.HideGraphics) {
 					continue;
 				}
-				if(ProcedureCodes.GetProcCode(proc.CodeNum).PaintType==ToothPaintingType.Extraction && (
+				if(ProcedureCodes.GetById(proc.CodeNum).PaintType==ToothPaintingType.Extraction && (
 					proc.ProcStatus==ProcStat.C
 					|| proc.ProcStatus==ProcStat.EC
 					|| proc.ProcStatus==ProcStat.EO
 					)) {
 					continue;//prevents the red X. Missing teeth already handled.
 				}
-				if(ProcedureCodes.GetProcCode(proc.CodeNum).GraphicColor==System.Drawing.Color.FromArgb(0)) {
+				if(ProcedureCodes.GetById(proc.CodeNum).GraphicColor==System.Drawing.Color.FromArgb(0)) {
 					switch(proc.ProcStatus) {
 						case ProcStat.C:
 							cDark=listDefs[1].Color;
@@ -3112,10 +3112,10 @@ namespace OpenDental
 					}
 				}
 				else {
-					cDark=ProcedureCodes.GetProcCode(proc.CodeNum).GraphicColor;
-					cLight=ProcedureCodes.GetProcCode(proc.CodeNum).GraphicColor;
+					cDark=ProcedureCodes.GetById(proc.CodeNum).GraphicColor;
+					cLight=ProcedureCodes.GetById(proc.CodeNum).GraphicColor;
 				}
-				switch(ProcedureCodes.GetProcCode(proc.CodeNum).PaintType) {
+				switch(ProcedureCodes.GetById(proc.CodeNum).PaintType) {
 					case ToothPaintingType.BridgeDark:
 						if(ToothInitials.ToothIsMissingOrHidden(ToothInitialList,proc.ToothNum)) {
 							_toothChartRelay.SetPontic(proc.ToothNum,cDark);
@@ -3231,7 +3231,7 @@ namespace OpenDental
 			List<ClaimProc> claimProcList=ClaimProcs.RefreshForTP(PatCur.PatNum);
 			List<ProcedureCode> listProcedureCodes=new List<ProcedureCode>();
 			foreach(Procedure procedure in ProcListTP) {
-				listProcedureCodes.Add(ProcedureCodes.GetProcCode(procedure.CodeNum));
+				listProcedureCodes.Add(ProcedureCodes.GetById(procedure.CodeNum));
 			}
 			List<Fee> listFees=Fees.GetListFromObjects(listProcedureCodes,ProcListTP.Select(x=>x.MedicalCode).ToList(),ProcListTP.Select(x=>x.ProvNum).ToList(),
 				PatCur.PriProv,PatCur.SecProv,PatCur.FeeSched,InsPlanList,ProcListTP.Select(x=>x.ClinicNum).ToList(),null,//listAppts not needed because procs not based on appts
@@ -3344,7 +3344,7 @@ namespace OpenDental
 					procTP.Priority=tpAttach.Priority;
 				}
 				procTP.ToothNumTP=Tooth.ToInternat(proc.ToothNum);
-				if(ProcedureCodes.GetProcCode(proc.CodeNum).TreatmentArea==ProcedureTreatmentArea.Surface){
+				if(ProcedureCodes.GetById(proc.CodeNum).TreatmentArea==ProcedureTreatmentArea.Surface){
 					procTP.Surf=Tooth.SurfTidyFromDbToDisplay(proc.Surf,proc.ToothNum);
 				}
 				else{
@@ -3633,7 +3633,7 @@ namespace OpenDental
 				if(!Providers.GetIsSec(proc.ProvNum)) {
 					ClaimCur.ProvTreat=proc.ProvNum;
 				}
-				ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+				ProcedureCode procCode=ProcedureCodes.GetById(proc.CodeNum);
 				//Check to see if the selected procedure is for Ortho and if the customer has preferences set to automatically check the "Is For Ortho" checkbox
 				if(!ClaimCur.IsOrtho && Preferences.GetBool(PreferenceName.OrthoClaimMarkAsOrtho)) {//If it's already marked as Ortho (from a previous procedure), skip this
 					CovCat orthoCategory=CovCats.GetFirstOrDefault(x => x.EbenefitCat==EbenefitCategory.Orthodontics,true);
@@ -3710,7 +3710,7 @@ namespace OpenDental
 				if(cpExisting!=null) {
 					insPayEst=cpExisting.InsPayEst;
 				}
-				ProcedureCode procCodeCur=ProcedureCodes.GetProcCode(procCur.CodeNum);
+				ProcedureCode procCodeCur=ProcedureCodes.GetById(procCur.CodeNum);
 				ClaimProcCur=new ClaimProc();
 				ClaimProcs.CreateEst(ClaimProcCur,procCur,FormIPS.SelectedPlan,FormIPS.SelectedSub,0,insPayEst,false,true);//preauth est
         ClaimProcCur.ClaimNum=ClaimCur.ClaimNum;

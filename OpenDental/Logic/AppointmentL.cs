@@ -574,7 +574,7 @@ namespace OpenDental
 			if (AptCur.ProvHyg < 1)
 			{
 				List<Procedure> myProcList = Procedures.GetProcsForSingle(AptCur.AptNum, true);
-				bool allProcsHyg = (myProcList.Count > 0 && myProcList.Select(x => ProcedureCodes.GetProcCode(x.CodeNum)).ToList().All(x => x.IsHygiene));
+				bool allProcsHyg = (myProcList.Count > 0 && myProcList.Select(x => ProcedureCodes.GetById(x.CodeNum)).ToList().All(x => x.IsHygiene));
 				//Automatically set the appointments hygienist to the secondary provider of the patient if one is set.
 				if (allProcsHyg && pat.SecProv != 0)
 				{

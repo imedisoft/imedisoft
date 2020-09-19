@@ -1145,7 +1145,7 @@ namespace OpenDental{
 			for(int i=0;i<myProcList.Count;i++){
 				if(myProcList[i].PlannedAptNum!=AptCur.AptNum)
 					continue;//only concerned with procs on this plannedAppt
-				if(!ProcedureCodes.GetProcCode(myProcList[i].CodeNum).IsHygiene){
+				if(!ProcedureCodes.GetById(myProcList[i].CodeNum).IsHygiene){
 					allProcsHyg=false;
 					break;
 				}

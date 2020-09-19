@@ -241,6 +241,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot have two Auto Code items with duplicate conditions..
+        /// </summary>
+        public static string CannotHaveAutoCodeItemsWithDuplicateConditions {
+            get {
+                return ResourceManager.GetString("CannotHaveAutoCodeItemsWithDuplicateConditions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Category.
         /// </summary>
         public static string Category {
@@ -282,6 +291,15 @@ namespace Imedisoft.Translation {
         public static string Completed {
             get {
                 return ResourceManager.GetString("Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Conditions.
+        /// </summary>
+        public static string Conditions {
+            get {
+                return ResourceManager.GetString("Conditions", resourceCulture);
             }
         }
         
@@ -691,6 +709,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Must have at least one item in the list..
+        /// </summary>
+        public static string MustHaveAtLeastOneItemInList {
+            get {
+                return ResourceManager.GetString("MustHaveAtLeastOneItemInList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Need to set up at least one allergy from EHR setup window..
         /// </summary>
         public static string NeedToSetupAtLeastOneAllergy {
@@ -1031,6 +1058,24 @@ namespace Imedisoft.Translation {
         public static string PleaseSelectAllergy {
             get {
                 return ResourceManager.GetString("PleaseSelectAllergy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select at least one condition..
+        /// </summary>
+        public static string PleaseSelectAtLeastOneCondition {
+            get {
+                return ResourceManager.GetString("PleaseSelectAtLeastOneCondition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select a code..
+        /// </summary>
+        public static string PleaseSelectCode {
+            get {
+                return ResourceManager.GetString("PleaseSelectCode", resourceCulture);
             }
         }
         

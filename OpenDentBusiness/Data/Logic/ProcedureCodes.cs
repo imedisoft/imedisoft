@@ -22,7 +22,7 @@ namespace Imedisoft.Data
 				=> item.Code;
 
 			protected override IEnumerable<ProcedureCode> Load() 
-				=> SelectMany("SELECT * FROM `proedure_codes` ORDER BY `procedure_category`, `code`");
+				=> SelectMany("SELECT * FROM `procedure_codes` ORDER BY `procedure_category`, `code`");
         }
 
         private static readonly ProcedureCodeCache cache = new ProcedureCodeCache();
@@ -194,7 +194,7 @@ namespace Imedisoft.Data
 		///<summary>Returns the first procedure code for the InsHist preference passed in.</summary>
 		public static ProcedureCode GetByInsHistPref(string prefName)
 		{
-			return GetProcCode(GetCodeNumsForPref(prefName).FirstOrDefault());
+			return GetById(GetCodeNumsForPref(prefName).FirstOrDefault());
 		}
 
 		#endregion InsHist Preference Procedures
@@ -476,7 +476,7 @@ namespace Imedisoft.Data
 
 		///<summary>The new way of getting a procCode. Uses the primary key instead of string code. Returns new instance if not found.
 		///Pass in a list of all codes to save from locking the cache if you are going to call this method repeatedly.</summary>
-		public static ProcedureCode GetProcCode(long procedureCodeId, List<ProcedureCode> procedureCodes = null)
+		public static ProcedureCode GetById(long procedureCodeId, List<ProcedureCode> procedureCodes = null)
 		{
 			if (procedureCodeId == 0)
 			{

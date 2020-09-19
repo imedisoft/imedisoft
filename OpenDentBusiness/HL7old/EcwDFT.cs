@@ -90,7 +90,7 @@ namespace OpenDentBusiness.HL7 {
 				seg.SetField(20,prov.EcwID,prov.LastName,prov.FirstName,prov.Initials);//performed by provider.
 				seg.SetField(21,prov.EcwID,prov.LastName,prov.FirstName,prov.Initials);//ordering provider.
 				seg.SetField(22,listProcs[i].ProcFee.ToString("F2"));
-				procCode=ProcedureCodes.GetProcCode(listProcs[i].CodeNum);
+				procCode=ProcedureCodes.GetById(listProcs[i].CodeNum);
 				if(procCode.Code.Length>5 && procCode.Code.StartsWith("D")) {
 					seg.SetField(25,procCode.Code.Substring(0,5));//Remove suffix from all D codes.
 				}

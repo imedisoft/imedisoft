@@ -657,9 +657,9 @@ namespace OpenDental {
 				}
 				else {
 					ProcCur=Procedures.GetProcFromList(_listProcs,claimProc.ProcNum);
-					row.Cells.Add(ProcedureCodes.GetProcCode(ProcCur.CodeNum).Code);
+					row.Cells.Add(ProcedureCodes.GetById(ProcCur.CodeNum).Code);
 					row.Cells.Add(Tooth.ToInternat(ProcCur.ToothNum));
-					row.Cells.Add(ProcedureCodes.GetProcCode(ProcCur.CodeNum).Description);
+					row.Cells.Add(ProcedureCodes.GetById(ProcCur.CodeNum).Description);
 				}
 				row.Cells.Add(claimProc.FeeBilled.ToString("F"));
 				row.Cells.Add(claimProc.DedApplied.ToString("F"));

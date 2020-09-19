@@ -1924,7 +1924,7 @@ namespace OpenDental
 				RefreshModuleScreenButtonsRight();
 				if (isCreate)
 				{//new appointment is being added to the schedule from the pinboard, trigger ScheduleProcedure automation
-					List<string> procCodes = procsForSingleApt.Select(x => ProcedureCodes.GetProcCode(x.CodeNum).Code).ToList();
+					List<string> procCodes = procsForSingleApt.Select(x => ProcedureCodes.GetById(x.CodeNum).Code).ToList();
 					AutomationL.Trigger(AutomationTrigger.ScheduleProcedure, procCodes, apptCur.PatNum);
 				}
 				AppointmentEvent.Fire(EventCategory.AppointmentEdited, apptCur);

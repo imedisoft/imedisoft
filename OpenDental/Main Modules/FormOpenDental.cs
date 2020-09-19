@@ -4375,7 +4375,7 @@ namespace OpenDental
 			{
 				return;
 			}
-			FormAutoCode FormAC = new FormAutoCode();
+			FormAutoCodes FormAC = new FormAutoCodes();
 			FormAC.ShowDialog();
 			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Auto Codes");
 		}

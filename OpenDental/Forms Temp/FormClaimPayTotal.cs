@@ -147,7 +147,7 @@ namespace OpenDental {
 				else {
 					ProcCur=Procedures.GetProcFromList(ProcList,ClaimProcsToEdit[i].ProcNum);//will return a new procedure if none found.
 					procFee=ProcCur.ProcFeeTotal.ToString("F");
-					ProcedureCode procCode=ProcedureCodes.GetProcCode(ProcCur.CodeNum);
+					ProcedureCode procCode=ProcedureCodes.GetById(ProcCur.CodeNum);
 					row.Cells.Add(procCode.Code);
 					if(!Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 						row.Cells.Add(ProcCur.ToothNum=="" ? Tooth.SurfTidyFromDbToDisplay(ProcCur.Surf,ProcCur.ToothNum) : Tooth.ToInternat(ProcCur.ToothNum));
@@ -369,7 +369,7 @@ namespace OpenDental {
 				isCreditGreater|=(creditRem.IsLessThanZero());
 				if(creditRem.IsLessThanZero()) {
 					Procedure proc=listProcs.FirstOrDefault(x=>x.ProcNum==claimProcCur.ProcNum);
-					listProcDescripts.Add((proc==null ? "" : ProcedureCodes.GetProcCode(proc.CodeNum).Code)
+					listProcDescripts.Add((proc==null ? "" : ProcedureCodes.GetById(proc.CodeNum).Code)
 						+"\t"+"Fee"+": "+feeAcct.ToString("F")
 						+"\t"+"Credits"+": "+(Math.Abs(-patPayAmt-insPayAmt-writeOff+adj)).ToString("F")
 						+"\t"+"Remaining"+": ("+Math.Abs(creditRem).ToString("F")+")");
@@ -418,7 +418,7 @@ namespace OpenDental {
 				isWriteoffGreater|=(writeoffRem.IsLessThanZero() && writeOff.IsGreaterThanZero());
 				if(writeoffRem.IsLessThanZero() && writeOff.IsGreaterThanZero()) {
 					Procedure proc=Procedures.GetProcFromList(ProcList,claimProcCur.ProcNum);//will return a new procedure if none found.
-					listProcDescripts.Add((proc==null ? "" : ProcedureCodes.GetProcCode(proc.CodeNum).Code)
+					listProcDescripts.Add((proc==null ? "" : ProcedureCodes.GetById(proc.CodeNum).Code)
 						+"\t"+"Fee"+": "+feeAcct.ToString("F")
 						+"\t"+"Adjustments"+": "+adjAcct.ToString("F")
 						+"\t"+"Write-off"+": "+(Math.Abs(-writeOff)).ToString("F")

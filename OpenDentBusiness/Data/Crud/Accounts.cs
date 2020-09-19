@@ -10,13 +10,12 @@
 using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 
 namespace Imedisoft.Data
 {
-	public partial class Accounts
+    public partial class Accounts
 	{
 		public static Account FromReader(MySqlDataReader dataReader)
 		{

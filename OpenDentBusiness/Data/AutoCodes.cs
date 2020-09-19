@@ -14,7 +14,7 @@ namespace Imedisoft.Data
 		private class AutoCodeCache : DictionaryCache<long, AutoCode>
 		{
 			protected override IEnumerable<AutoCode> Load()
-				=> SelectMany("SELECT * from autocode");
+				=> SelectMany("SELECT * FROM `auto_codes`");
 
 			protected override long GetKey(AutoCode item)
 				=> item.Id;
@@ -22,7 +22,7 @@ namespace Imedisoft.Data
 
 		private static readonly AutoCodeCache cache = new AutoCodeCache();
 
-		public static List<AutoCode> GetListDeep(bool excludeHidden = false) 
+		public static List<AutoCode> GetAll(bool excludeHidden = false) 
 			=> excludeHidden ? cache.Find(x => !x.IsHidden) : cache.GetAll();
 
 		public static AutoCode GetById(long autoCodeId) 

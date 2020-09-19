@@ -296,7 +296,7 @@ namespace OpenDental {
 			if(ProcCur.ProcStatus==ProcStat.TP) {
 				textProcDescription.Text="(TP) ";
 			}
-			textProcDescription.Text+=ProcedureCodes.GetProcCode(ProcCur.CodeNum).Description;
+			textProcDescription.Text+=ProcedureCodes.GetById(ProcCur.CodeNum).Description;
 			double procWriteoff=-ClaimProcs.ProcWriteoff(listClaimProcs,ProcCur.ProcNum);
 			double procInsPaid=-ClaimProcs.ProcInsPay(listClaimProcs,ProcCur.ProcNum);
 			double procInsEst=-ClaimProcs.ProcEstNotReceived(listClaimProcs,ProcCur.ProcNum);

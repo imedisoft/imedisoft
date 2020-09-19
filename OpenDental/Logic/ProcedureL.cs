@@ -35,7 +35,7 @@ namespace OpenDental
 			for (int i = 0; i < procs.Count; i++)
 			{
 				Procedure proc = procs[i];
-				ProcedureCode procCode = ProcedureCodes.GetProcCode(procs[i].CodeNum);
+				ProcedureCode procCode = ProcedureCodes.GetById(procs[i].CodeNum);
 				string procCodeStr = procCode.Code;
 				if (procCodeStr.Length > 5
 					&& procCodeStr.StartsWith("D")
@@ -46,7 +46,7 @@ namespace OpenDental
 				for (int j = 0; j < procsChecked.Count; j++)
 				{
 					Procedure procDup = procsChecked[j];
-					ProcedureCode procCodeDup = ProcedureCodes.GetProcCode(procsChecked[j].CodeNum);
+					ProcedureCode procCodeDup = ProcedureCodes.GetById(procsChecked[j].CodeNum);
 					string procCodeDupStr = procCodeDup.Code;
 					if (procCodeDupStr.Length > 5
 						&& procCodeDupStr.StartsWith("D")
@@ -108,7 +108,7 @@ namespace OpenDental
 				{//should all be complete already. 
 					continue;
 				}
-				ProcedureCode procCode = ProcedureCodes.GetProcCode(proc.CodeNum);
+				ProcedureCode procCode = ProcedureCodes.GetById(proc.CodeNum);
 				long provNum = Procedures.GetProvNumFromAppointment(apt, proc, procCode);
 				if (provNum != proc.ProvNum)
 				{

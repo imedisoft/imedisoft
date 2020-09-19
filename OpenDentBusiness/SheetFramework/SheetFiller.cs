@@ -1570,7 +1570,7 @@ namespace OpenDentBusiness {
 				return "";
 			}
 			Procedure proc=Procedures.GetOneProc(rx.ProcNum,false);
-			ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
+			ProcedureCode procCode=ProcedureCodes.GetById(proc.CodeNum);
 			string retVal="Procedure Code:"+" "+procCode.Code;
 			if(proc.DiagnosticCode!="") {
 				retVal+="  "+"Diagnosis:"+" "+proc.DiagnosticCode;

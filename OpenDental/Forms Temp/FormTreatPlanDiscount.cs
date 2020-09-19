@@ -59,7 +59,7 @@ namespace OpenDental {
 				}
 				if(_listProcs[j].Discount!=_oldListProcs[j].Discount) {//Discount was changed
 					string message="Discount created or changed from Treat Plan module for procedure"
-						+": "+ProcedureCodes.GetProcCode(_listProcs[j].CodeNum).Code+"  "+"Dated"
+						+": "+ProcedureCodes.GetById(_listProcs[j].CodeNum).Code+"  "+"Dated"
 						+": "+_listProcs[j].ProcDate.ToShortDateString()+"  "+"With a Fee of"+": "+_listProcs[j].ProcFee.ToString("c")+".  "+"Attributed a"+" "+percent
 					+" "+"percent discount, changing the discount value from"+" "+_oldListProcs[j].Discount.ToString("c")+" "+"to"+" "+_listProcs[j].Discount.ToString("c");
 					SecurityLogs.MakeLogEntry(Permissions.TreatPlanDiscountEdit,_listProcs[j].PatNum,message);

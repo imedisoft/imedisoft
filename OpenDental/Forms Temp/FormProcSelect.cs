@@ -140,7 +140,7 @@ namespace OpenDental{
 					continue;
 				}
 				Procedure procCur = ((ProcExtended)entry.Tag).Proc;
-				ProcedureCode procCodeCur = ProcedureCodes.GetProcCode(procCur.CodeNum);
+				ProcedureCode procCodeCur = ProcedureCodes.GetById(procCur.CodeNum);
 				row=new GridRow();
 				row.Cells.Add(procCur.ProcDate.ToShortDateString());
 				row.Cells.Add(Providers.GetAbbr(entry.ProvNum));

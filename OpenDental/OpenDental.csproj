@@ -538,8 +538,17 @@
     <Compile Include="Forms Reports\FormRpServiceDateView.designer.cs">
       <DependentUpon>FormRpServiceDateView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormCarrierEdit.Designer.cs">
+    <Compile Include="Forms Temp\FormCarrierEdit.Designer.cs">
       <DependentUpon>FormCarrierEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormAutoCodeEdit.Designer.cs">
+      <DependentUpon>FormAutoCodeEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms Temp\FormAutoCodeLessIntrusive.Designer.cs">
+      <DependentUpon>FormAutoCodeLessIntrusive.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormAutoCodeItemEdit.Designer.cs">
+      <DependentUpon>FormAutoCodeItemEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormPerioEdit.Designer.cs">
       <DependentUpon>FormPerioEdit.cs</DependentUpon>
@@ -604,8 +613,8 @@
     <Compile Include="Forms\FormProblemDefinitionEdit.Designer.cs">
       <DependentUpon>FormProblemDefinitionEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormAutoCode.Designer.cs">
-      <DependentUpon>FormAutoCode.cs</DependentUpon>
+    <Compile Include="Forms\FormAutoCodes.Designer.cs">
+      <DependentUpon>FormAutoCodes.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormInsuranceAdjustment.Designer.cs">
       <DependentUpon>FormInsuranceAdjustment.cs</DependentUpon>
@@ -4299,16 +4308,16 @@
     <Compile Include="Forms\FormAuditOneType.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormAutoCode.cs">
+    <Compile Include="Forms\FormAutoCodes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoCodeEdit.cs">
+    <Compile Include="Forms\FormAutoCodeEdit.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormAutoCodeLessIntrusive.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoItemEdit.cs">
+    <Compile Include="Forms\FormAutoCodeItemEdit.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormBackup.cs">
@@ -4326,10 +4335,10 @@
     <Compile Include="Forms Temp\FormCarrierCombine.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormCarrierEdit.cs">
+    <Compile Include="Forms Temp\FormCarrierEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormCarriers.cs">
+    <Compile Include="Forms Temp\FormCarriers.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormClaimEdit.cs">
@@ -7104,11 +7113,11 @@
       <DependentUpon>FormAuditOneType.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormAutoCode.resx">
-      <DependentUpon>FormAutoCode.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FormAutoCodes.resx">
+      <DependentUpon>FormAutoCodes.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAutoCodeEdit.resx">
+    <EmbeddedResource Include="Forms\FormAutoCodeEdit.resx">
       <DependentUpon>FormAutoCodeEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7116,8 +7125,8 @@
       <DependentUpon>FormAutoCodeLessIntrusive.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAutoItemEdit.resx">
-      <DependentUpon>FormAutoItemEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FormAutoCodeItemEdit.resx">
+      <DependentUpon>FormAutoCodeItemEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormBackup.resx">
@@ -7140,11 +7149,11 @@
       <DependentUpon>FormCarrierCombine.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormCarrierEdit.resx">
+    <EmbeddedResource Include="Forms Temp\FormCarrierEdit.resx">
       <DependentUpon>FormCarrierEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormCarriers.resx">
+    <EmbeddedResource Include="Forms Temp\FormCarriers.resx">
       <DependentUpon>FormCarriers.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -9162,7 +9171,9 @@
       <Name>SparksToothChart</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Forms T\" />
+  </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

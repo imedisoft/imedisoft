@@ -177,6 +177,9 @@
   <data name="CannotDeleteClinicInUseByUsers" xml:space="preserve">
     <value>Cannot delete clinic because the following users are using it:</value>
   </data>
+  <data name="CannotHaveAutoCodeItemsWithDuplicateConditions" xml:space="preserve">
+    <value>Cannot have two Auto Code items with duplicate conditions.</value>
+  </data>
   <data name="Category" xml:space="preserve">
     <value>Category</value>
   </data>
@@ -191,6 +194,9 @@
   </data>
   <data name="Completed" xml:space="preserve">
     <value>Completed</value>
+  </data>
+  <data name="Conditions" xml:space="preserve">
+    <value>Conditions</value>
   </data>
   <data name="ConfirmDelete" xml:space="preserve">
     <value>Delete?</value>
@@ -328,6 +334,9 @@
   <data name="MissingInfo" xml:space="preserve">
     <value>Missing Info</value>
   </data>
+  <data name="MustHaveAtLeastOneItemInList" xml:space="preserve">
+    <value>Must have at least one item in the list.</value>
+  </data>
   <data name="NeedToSetupAtLeastOneAllergy" xml:space="preserve">
     <value>Need to set up at least one allergy from EHR setup window.</value>
   </data>
@@ -443,6 +452,12 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="PleaseSelectAllergy" xml:space="preserve">
     <value>Please select an allergy.</value>
+  </data>
+  <data name="PleaseSelectAtLeastOneCondition" xml:space="preserve">
+    <value>Please select at least one condition.</value>
+  </data>
+  <data name="PleaseSelectCode" xml:space="preserve">
+    <value>Please select a code.</value>
   </data>
   <data name="PleaseSelectItem" xml:space="preserve">
     <value>Please select an item.</value>
