@@ -110,7 +110,7 @@ namespace OpenDentBusiness
 			// Get last batch number
 			DataTable table = Database.ExecuteDataTable(
 				"SELECT LastBatchNumber FROM clearinghouse " +
-				"WHERE ClearinghouseNum = " + SOut.Long(clearinghouseClin.HqClearinghouseNum));
+				"WHERE ClearinghouseNum = " + clearinghouseClin.Id);
 			
 			int batchNumber = SIn.Int(table.Rows[0][0].ToString());
 
@@ -139,7 +139,7 @@ namespace OpenDentBusiness
 
 			Database.ExecuteNonQuery(
 				"UPDATE clearinghouse SET LastBatchNumber=" + batchNumber + " " +
-				"WHERE ClearinghouseNum = " + SOut.Long(clearinghouseClin.HqClearinghouseNum));
+				"WHERE ClearinghouseNum = " + clearinghouseClin.Id);
 
 			return batchNumber;
 		}
@@ -252,7 +252,7 @@ namespace OpenDentBusiness
 		/// Will return null if invalid.
 		/// </summary>
 		public static Clearinghouse GetClearinghouse(long clearinghouseNum) 
-			=> GetFirstOrDefault(x => x.ClearinghouseNum == clearinghouseNum);
+			=> GetFirstOrDefault(x => x.Id == clearinghouseNum);
 
 		/// <summary>
 		/// Gets revealed password for a clearinghouse password.
@@ -276,7 +276,7 @@ namespace OpenDentBusiness
 				return null;
 			}
 
-			var clearingHouse = Crud.ClearinghouseCrud.SelectOne("SELECT * FROM clearinghouse WHERE HqClearinghouseNum=" + clearinghouseHq.ClearinghouseNum + " AND ClinicNum=" + clinicNum);
+			var clearingHouse = Crud.ClearinghouseCrud.SelectOne("SELECT * FROM clearinghouse WHERE HqClearinghouseNum=" + clearinghouseHq.Id + " AND ClinicNum=" + clinicNum);
 			if (clearingHouse != null)
 			{
 				clearingHouse.Password = GetRevealPassword(clearingHouse.Password);
@@ -294,7 +294,7 @@ namespace OpenDentBusiness
 		public static long Insert(Clearinghouse clearinghouse)
 		{
 			long clearinghouseNum = Crud.ClearinghouseCrud.Insert(clearinghouse);
-			clearinghouse.HqClearinghouseNum = clearinghouseNum;
+			clearinghouse.ParentId = clearinghouseNum;
 			Crud.ClearinghouseCrud.Update(clearinghouse);
 			return clearinghouseNum;
 		}
@@ -326,9 +326,9 @@ namespace OpenDentBusiness
 		///<summary>Deletes the passed-in Hq clearinghouse for all clinics.  Only pass in clearinghouses with ClinicNum==0.</summary>
 		public static void Delete(Clearinghouse clearinghouseHq)
 		{
-			string command = "DELETE FROM clearinghouse WHERE ClearinghouseNum = '" + POut.Long(clearinghouseHq.ClearinghouseNum) + "'";
+			string command = "DELETE FROM clearinghouse WHERE ClearinghouseNum = '" + POut.Long(clearinghouseHq.Id) + "'";
 			Database.ExecuteNonQuery(command);
-			command = "DELETE FROM clearinghouse WHERE HqClearinghouseNum='" + POut.Long(clearinghouseHq.ClearinghouseNum) + "'";
+			command = "DELETE FROM clearinghouse WHERE HqClearinghouseNum='" + POut.Long(clearinghouseHq.Id) + "'";
 			Database.ExecuteNonQuery(command);
 		}
 		#endregion
@@ -367,11 +367,11 @@ namespace OpenDentBusiness
 				return clearinghouseRetVal;
 			}
 			//HqClearinghouseNum must be set for refreshing the cache when deleting.
-			clearinghouseRetVal.HqClearinghouseNum = clearinghouseClin.HqClearinghouseNum;
+			clearinghouseRetVal.ParentId = clearinghouseClin.ParentId;
 			//ClearinghouseNum must be set so that updates do not create new entries every time.
-			clearinghouseRetVal.ClearinghouseNum = clearinghouseClin.ClearinghouseNum;
+			clearinghouseRetVal.Id = clearinghouseClin.Id;
 			//ClinicNum must be set so that the correct clinic is assigned when inserting new clinic level clearinghouses.
-			clearinghouseRetVal.ClinicNum = clearinghouseClin.ClinicNum;
+			clearinghouseRetVal.ClinicId = clearinghouseClin.ClinicId;
 			clearinghouseRetVal.IsEraDownloadAllowed = clearinghouseClin.IsEraDownloadAllowed;
 			clearinghouseRetVal.IsClaimExportAllowed = clearinghouseClin.IsClaimExportAllowed;
 			//fields that should not be replaced are commented out.
@@ -918,23 +918,23 @@ namespace OpenDentBusiness
 		public static void SyncOverridesForClinic(ref List<Clearinghouse> listClearinghouseOverrides, Clearinghouse clearinghouseNew)
 		{
 			//No need to check RemotingRole; no call to db and uses an out parameter.
-			if (clearinghouseNew.ClinicNum == 0)
+			if (clearinghouseNew.ClinicId == 0)
 			{
 				return;//Nothing to do when the ClinicNum associated to clearinghouseNew is 0.
 			}
 			//Get all clearinghouse overrides that are associated to the same HQ clearinghouse and clinic.
 			for (int i = 0; i < listClearinghouseOverrides.Count; i++)
 			{
-				if (listClearinghouseOverrides[i].HqClearinghouseNum != clearinghouseNew.HqClearinghouseNum
-					|| listClearinghouseOverrides[i].ClinicNum != clearinghouseNew.ClinicNum)
+				if (listClearinghouseOverrides[i].ParentId != clearinghouseNew.ParentId
+					|| listClearinghouseOverrides[i].ClinicId != clearinghouseNew.ClinicId)
 				{
 					continue;
 				}
 				//Take all of the values from clearinghouseNew and put them into the current clearinghouseOverride (sync them).
 				//Make sure to preserve the ClearinghouseNum of the override before syncing the values.
-				long clearinghouseNumOverride = listClearinghouseOverrides[i].ClearinghouseNum;
+				long clearinghouseNumOverride = listClearinghouseOverrides[i].Id;
 				listClearinghouseOverrides[i] = clearinghouseNew.Copy();
-				listClearinghouseOverrides[i].ClearinghouseNum = clearinghouseNumOverride;
+				listClearinghouseOverrides[i].Id = clearinghouseNumOverride;
 			}
 		}
 

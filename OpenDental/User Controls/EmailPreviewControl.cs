@@ -353,7 +353,7 @@ namespace OpenDental {
 				//Only null when failed to match from address. If we do not know the from address then we can't load anything useful.
 				return;
 			}
-			EmailAddress emailAddressPreview=EmailAddressPreview.Clone();
+			EmailAddress emailAddressPreview=EmailAddressPreview;
 			ODThread thread=new ODThread(o => {
 				List<string> listHistoricContacts;
 				if(listEmailMessages==null) {

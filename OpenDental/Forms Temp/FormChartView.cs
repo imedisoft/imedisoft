@@ -705,7 +705,7 @@ namespace OpenDental{
 			checkAudit.Checked=ChartViewCur.IsAudit;
 			checkTPChart.Checked=ChartViewCur.IsTpCharting;
 			DisplayFields.RefreshCache();
-			ListShowing=DisplayFields.GetForChartView(ChartViewCur.ChartViewNum);//This will be zero for a new ChartView
+			ListShowing=DisplayFields.GetForChartView(ChartViewCur.Id);//This will be zero for a new ChartView
 			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				checkShowTeeth.Visible=false;
 			}
@@ -984,8 +984,8 @@ namespace OpenDental{
 				return;
 			}
 			try {
-				ChartViews.Delete(ChartViewCur.ChartViewNum);
-				DisplayFields.DeleteForChartView(ChartViewCur.ChartViewNum);
+				ChartViews.Delete(ChartViewCur.Id);
+				DisplayFields.DeleteForChartView(ChartViewCur.Id);
 				DialogResult=DialogResult.OK;
 			}
 			catch(Exception ex) {
@@ -1104,7 +1104,7 @@ namespace OpenDental{
 				ChartViewCur.ItemOrder=-1;
 				ChartViews.Insert(ChartViewCur);
 			}
-			DisplayFields.SaveListForChartView(ListShowing,ChartViewCur.ChartViewNum);
+			DisplayFields.SaveListForChartView(ListShowing,ChartViewCur.Id);
 			DisplayFields.RefreshCache();
 			DialogResult=DialogResult.OK;
 		}

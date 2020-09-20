@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Imedisoft.Claims
 {
-    public abstract class ClaimProgramBridge : ClaimBridge
+	public abstract class ClaimProgramBridge : ClaimBridge
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ClaimProgramBridge"/> class.
@@ -15,8 +15,8 @@ namespace Imedisoft.Claims
 		{
 		}
 
-        protected override bool OnSend(Clearinghouse clearingHouse, long batchNumber, List<ClaimSendQueueItem> queueItems, EnumClaimMedType medType)
-        {
+		protected override bool OnSend(Clearinghouse clearingHouse, long batchNumber, List<ClaimSendQueueItem> queueItems, EnumClaimMedType medType)
+		{
 			try
 			{
 				Process.Start(clearingHouse.ClientProgram);

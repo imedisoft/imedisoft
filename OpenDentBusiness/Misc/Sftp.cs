@@ -4,7 +4,6 @@ using Renci.SshNet.Common;
 using Renci.SshNet.Sftp;
 using System;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace OpenDentBusiness
 {

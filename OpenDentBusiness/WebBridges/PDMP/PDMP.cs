@@ -1,22 +1,12 @@
 ﻿using CodeBase;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using System.Xml;
-using OpenDentBusiness.UI;
-using Imedisoft.Data.Models;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using System;
+using System.Text;
 
 namespace OpenDentBusiness
 {
-	public class PDMP
+    public class PDMP
 	{
 		/// <summary>
 		/// Returns true if we got a URL from PDMP.

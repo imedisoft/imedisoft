@@ -1060,11 +1060,7 @@ namespace Imedisoft.Forms
 		{
 			if (GetHasAutoNotePrompt())
 			{
-                using var formAutoNoteCompose = new FormAutoNoteCompose
-                {
-                    MainTextNote = descriptionTextBox.Text
-                };
-
+				using var formAutoNoteCompose = new FormAutoNoteCompose(descriptionTextBox.Text);
                 if (formAutoNoteCompose.ShowDialog(this) == DialogResult.OK)
 				{
 					descriptionTextBox.Text = formAutoNoteCompose.CompletedNote;

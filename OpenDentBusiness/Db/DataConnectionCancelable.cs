@@ -1,24 +1,17 @@
-using CodeBase;
-using DataConnectionBase;
 using Imedisoft.Data;
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
-using System.Reflection;
-using System.Text;
-using System.Threading;
 
 namespace OpenDentBusiness
 {
-	/// <summary>
-	/// Should only be used for running user queries.
-	/// 
-	/// A list of current MySqlConnections is kept so that we can cancel queries running on specific server threads in that list if need be.
-	/// </summary>
-	public class DataConnectionCancelable
+    /// <summary>
+    /// Should only be used for running user queries.
+    /// 
+    /// A list of current MySqlConnections is kept so that we can cancel queries running on specific server threads in that list if need be.
+    /// </summary>
+    public class DataConnectionCancelable
 	{
 		/// <summary>
 		/// A static dictionary of connections via their ServerThread IDs.

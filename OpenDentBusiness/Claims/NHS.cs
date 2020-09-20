@@ -1,18 +1,4 @@
-﻿using OpenDentBusiness;
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Text;
-using System.Web;
-using System.Web.Services;
-using System.Web.Services.Protocols;
-using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Serialization;
-using System.Xml.XPath;
-
-namespace OpenDentBusiness.Eclaims
+﻿namespace OpenDentBusiness.Eclaims
 {
     /// <summary>
     /// United Kindgdom National Health Service (NHS).

@@ -689,7 +689,7 @@ namespace OpenDentBusiness.HL7 {
 			else {
 				vaccineDef=VaccineDefs.GetOne(vaccine.VaccineDefNum);
 				Cvx cvx=Cvxs.GetByCode(vaccineDef.CVXCode);
-				WriteCE(5,cvx.CvxCode,cvx.Description,"CVX");
+				WriteCE(5,cvx.Code,cvx.Description,"CVX");
 			}
 			//RXA-6 Administered Amount.  Required (length 1..20).  If amount is not known or not meaningful, then use "999".
 			if(vaccine.AdministeredAmt>0) {

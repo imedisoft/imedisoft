@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RS232;
+using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using RS232;
 
-namespace OpenDentBusiness.Eclaims {
-	public class TerminalConnector:ITerminalConnector {
+namespace OpenDentBusiness.Eclaims
+{
+    public class TerminalConnector:ITerminalConnector {
 
 		public delegate void TextReceivedEventHandler(object sender,TextReceivedEventArgs e);
 		///<summary>Event is fired when the terminal receives text from the host.</summary>

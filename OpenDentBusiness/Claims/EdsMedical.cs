@@ -1,26 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Net.Security;
-using System.Net.Sockets;
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Permissions;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Web;
-using System.Web.Services;
-using System.Web.Services.Protocols;
-using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Serialization;
-using System.Xml.XPath;
-using CodeBase;
-using OpenDentBusiness;
-using Tamir.SharpSsh.jsch;
 
 namespace OpenDentBusiness.Eclaims
 {

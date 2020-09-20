@@ -93,7 +93,7 @@ namespace OpenDentBusiness{
 			if(tempFileName==null) {
 				return;
 			}
-			Dictionary<string,Cdcrec> dictCdcrecs=Cdcrecs.GetAll().ToDictionary(x => x.CdcrecCode,x => x);
+			Dictionary<string,Cdcrec> dictCdcrecs=Cdcrecs.GetAll().ToDictionary(x => x.Code,x => x);
 			string[] lines=File.ReadAllLines(tempFileName);
 			string[] arrayCDCREC;
 			Cdcrec cdcrec=new Cdcrec();
@@ -108,18 +108,18 @@ namespace OpenDentBusiness{
 				if(dictCdcrecs.ContainsKey(arrayCDCREC[0])) {//code already exists
 					cdcrec=dictCdcrecs[arrayCDCREC[0]];
 					if(updateExisting &&
-						(cdcrec.HeirarchicalCode!=arrayCDCREC[1] 
+						(cdcrec.HierarchicalCode!=arrayCDCREC[1] 
 						|| cdcrec.Description!=arrayCDCREC[2])) 
 					{
-						cdcrec.HeirarchicalCode=arrayCDCREC[1];
+						cdcrec.HierarchicalCode=arrayCDCREC[1];
 						cdcrec.Description=arrayCDCREC[2];
 						Cdcrecs.Update(cdcrec);
 						numCodesUpdated++;
 					}
 					continue;
 				}
-				cdcrec.CdcrecCode				=arrayCDCREC[0];
-				cdcrec.HeirarchicalCode	=arrayCDCREC[1];
+				cdcrec.Code				=arrayCDCREC[0];
+				cdcrec.HierarchicalCode	=arrayCDCREC[1];
 				cdcrec.Description			=arrayCDCREC[2];
 				Cdcrecs.Insert(cdcrec);
 				numCodesImported++;
@@ -182,7 +182,7 @@ namespace OpenDentBusiness{
 			if(tempFileName==null) {
 				return;
 			}
-			Dictionary<string,Cvx> dictCodes=Cvxs.GetAll().ToDictionary(x => x.CvxCode,x => x);
+			Dictionary<string,Cvx> dictCodes=Cvxs.GetAll().ToDictionary(x => x.Code,x => x);
 			string[] lines=File.ReadAllLines(tempFileName);
 			string[] arrayCvx;
 			Cvx cvx=new Cvx();
@@ -203,7 +203,7 @@ namespace OpenDentBusiness{
 					}
 					continue;
 				}
-				cvx.CvxCode			=arrayCvx[0];
+				cvx.Code			=arrayCvx[0];
 				cvx.Description	=arrayCvx[1];
 				Cvxs.Insert(cvx);
 				numCodesImported++;

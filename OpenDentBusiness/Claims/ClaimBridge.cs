@@ -32,6 +32,7 @@ namespace Imedisoft.Claims
         protected virtual bool OnSend(Clearinghouse clearingHouse, long batchNumber, List<ClaimSendQueueItem> queueItems, EnumClaimMedType medType)
         {
             Logger.LogDebug($"{GetType().FullName} has not implemented {nameof(OnSend)}.");
+
             return false;
         }
 

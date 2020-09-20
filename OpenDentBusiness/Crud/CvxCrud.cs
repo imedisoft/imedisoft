@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 			foreach(DataRow row in table.Rows) {
 				cvx=new Cvx();
 				cvx.Id     = PIn.Long  (row["CvxNum"].ToString());
-				cvx.CvxCode    = PIn.String(row["CvxCode"].ToString());
+				cvx.Code    = PIn.String(row["CvxCode"].ToString());
 				cvx.Description= PIn.String(row["Description"].ToString());
 				cvx.IsActive   = PIn.String(row["IsActive"].ToString());
 				retVal.Add(cvx);
@@ -65,7 +65,7 @@ namespace OpenDentBusiness.Crud{
 			foreach(Cvx cvx in listCvxs) {
 				table.Rows.Add(new object[] {
 					POut.Long  (cvx.Id),
-					            cvx.CvxCode,
+					            cvx.Code,
 					            cvx.Description,
 					            cvx.IsActive,
 				});
@@ -92,7 +92,7 @@ namespace OpenDentBusiness.Crud{
 				command+=POut.Long(cvx.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(cvx.CvxCode)+"',"
+				 "'"+POut.String(cvx.Code)+"',"
 				+"'"+POut.String(cvx.Description)+"',"
 				+"'"+POut.String(cvx.IsActive)+"')";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -124,7 +124,7 @@ namespace OpenDentBusiness.Crud{
 				command+=POut.Long(cvx.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(cvx.CvxCode)+"',"
+				 "'"+POut.String(cvx.Code)+"',"
 				+"'"+POut.String(cvx.Description)+"',"
 				+"'"+POut.String(cvx.IsActive)+"')";
 			if(useExistingPK) {
@@ -139,7 +139,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one Cvx in the database.</summary>
 		public static void Update(Cvx cvx) {
 			string command="UPDATE cvx SET "
-				+"CvxCode    = '"+POut.String(cvx.CvxCode)+"', "
+				+"CvxCode    = '"+POut.String(cvx.Code)+"', "
 				+"Description= '"+POut.String(cvx.Description)+"', "
 				+"IsActive   = '"+POut.String(cvx.IsActive)+"' "
 				+"WHERE CvxNum = "+POut.Long(cvx.Id);
@@ -149,9 +149,9 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one Cvx in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(Cvx cvx,Cvx oldCvx) {
 			string command="";
-			if(cvx.CvxCode != oldCvx.CvxCode) {
+			if(cvx.Code != oldCvx.Code) {
 				if(command!="") { command+=",";}
-				command+="CvxCode = '"+POut.String(cvx.CvxCode)+"'";
+				command+="CvxCode = '"+POut.String(cvx.Code)+"'";
 			}
 			if(cvx.Description != oldCvx.Description) {
 				if(command!="") { command+=",";}
@@ -173,7 +173,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(Cvx,Cvx) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(Cvx cvx,Cvx oldCvx) {
-			if(cvx.CvxCode != oldCvx.CvxCode) {
+			if(cvx.Code != oldCvx.Code) {
 				return true;
 			}
 			if(cvx.Description != oldCvx.Description) {

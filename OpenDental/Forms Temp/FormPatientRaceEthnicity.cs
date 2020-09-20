@@ -29,11 +29,11 @@ namespace OpenDental {
 				List<PatientRace> listPatRaces=new List<PatientRace>();
 				foreach(Cdcrec cdcrec in _listPatRaces.Union(_listPatEthnicities)) {
 					PatientRace patRace=new PatientRace();
-					patRace.CdcrecCode=cdcrec.CdcrecCode;
+					patRace.CdcrecCode=cdcrec.Code;
 					patRace.PatNum=_patCur.PatNum;
 					patRace.Description=cdcrec.Description;
-					patRace.IsEthnicity=(cdcrec.HeirarchicalCode!=null && cdcrec.HeirarchicalCode.StartsWith("E")) 
-						|| cdcrec.CdcrecCode==PatientRace.DECLINE_SPECIFY_ETHNICITY_CODE;
+					patRace.IsEthnicity=(cdcrec.HierarchicalCode!=null && cdcrec.HierarchicalCode.StartsWith("E")) 
+						|| cdcrec.Code==PatientRace.DECLINE_SPECIFY_ETHNICITY_CODE;
 					listPatRaces.Add(patRace);
 				}
 				return listPatRaces;
@@ -59,38 +59,38 @@ namespace OpenDental {
 		///for the patient.</summary>
 		private void FillRaceData() {
 			List<Cdcrec> listCdcrecs=Cdcrecs.GetAll();
-			_listAllRaces=listCdcrecs.FindAll(x => x.HeirarchicalCode.StartsWith("R") && x.HeirarchicalCode!="R")//Race codes start with R. 
-				.OrderBy(x => x.HeirarchicalCode).ToList();
-			_listAllEthnicities=listCdcrecs.FindAll(x => x.HeirarchicalCode.StartsWith("E") && x.HeirarchicalCode!="E")//Ethnicity codes start with E.
-				.OrderBy(x => x.HeirarchicalCode).ToList();
+			_listAllRaces=listCdcrecs.FindAll(x => x.HierarchicalCode.StartsWith("R") && x.HierarchicalCode!="R")//Race codes start with R. 
+				.OrderBy(x => x.HierarchicalCode).ToList();
+			_listAllEthnicities=listCdcrecs.FindAll(x => x.HierarchicalCode.StartsWith("E") && x.HierarchicalCode!="E")//Ethnicity codes start with E.
+				.OrderBy(x => x.HierarchicalCode).ToList();
 			Cdcrec declinedSpecify=new Cdcrec {
 				Description="DECLINED TO SPECIFY",
-				CdcrecCode=PatientRace.DECLINE_SPECIFY_RACE_CODE,
-				HeirarchicalCode=""
+				Code=PatientRace.DECLINE_SPECIFY_RACE_CODE,
+				HierarchicalCode=""
 			};
 			_listAllRaces.Add(declinedSpecify);
 			declinedSpecify=new Cdcrec {
 				Description="DECLINED TO SPECIFY",
-				CdcrecCode=PatientRace.DECLINE_SPECIFY_ETHNICITY_CODE,
-				HeirarchicalCode=""
+				Code=PatientRace.DECLINE_SPECIFY_ETHNICITY_CODE,
+				HierarchicalCode=""
 			};
 			_listAllEthnicities.Add(declinedSpecify);
 			_listPatRaces=new List<Cdcrec>();
 			_listPatEthnicities=new List<Cdcrec>();
 			foreach(PatientRace patRace in _listAllPatientRaces) {
-				Cdcrec cdcrec=_listAllRaces.FirstOrDefault(x => x.CdcrecCode==patRace.CdcrecCode);
+				Cdcrec cdcrec=_listAllRaces.FirstOrDefault(x => x.Code==patRace.CdcrecCode);
 				if(cdcrec!=null) {
 					_listPatRaces.Add(cdcrec);
 				}
-				cdcrec=_listAllEthnicities.FirstOrDefault(x => x.CdcrecCode==patRace.CdcrecCode);
+				cdcrec=_listAllEthnicities.FirstOrDefault(x => x.Code==patRace.CdcrecCode);
 				if(cdcrec!=null) {
 					_listPatEthnicities.Add(cdcrec);
 				}
 				if(patRace.CdcrecCode==PatientRace.MULTI_RACE_CODE) {
 					cdcrec=new Cdcrec {
 						Description="MULTIRACIAL",
-						CdcrecCode=PatientRace.MULTI_RACE_CODE,
-						HeirarchicalCode=""
+						Code=PatientRace.MULTI_RACE_CODE,
+						HierarchicalCode=""
 					};
 					_listPatRaces.Add(cdcrec);
 				}
@@ -113,13 +113,13 @@ namespace OpenDental {
 			GridRow row;
 			foreach(Cdcrec cdcrec in listCdcRecs) {
 				row=new GridRow();
-				if(cdcrec.CdcrecCode.StartsWith("ASKU")
-					|| cdcrec.CdcrecCode==PatientRace.MULTI_RACE_CODE) 
+				if(cdcrec.Code.StartsWith("ASKU")
+					|| cdcrec.Code==PatientRace.MULTI_RACE_CODE) 
 				{
 					row.Cells.Add("");
 				}
 				else {
-					row.Cells.Add(cdcrec.CdcrecCode);
+					row.Cells.Add(cdcrec.Code);
 				}
 				row.Cells.Add(cdcrec.Description);
 				row.Tag=cdcrec;
@@ -139,11 +139,11 @@ namespace OpenDental {
 			TreeNode node6=null;
 			TreeNode prevNode=null;
 			foreach(Cdcrec cdcrec in _listCdcrecs) {
-				int curNodeLevel=cdcrec.HeirarchicalCode.Count(x => x=='.')+1;
+				int curNodeLevel=cdcrec.HierarchicalCode.Count(x => x=='.')+1;
 				AddNodesRange(curNodeLevel,GetNodeLevel(prevNode),treeView,node1,node2,node3,node4,node5,node6);
 				string nodeText=cdcrec.Description;
-				if(!cdcrec.CdcrecCode.StartsWith("ASKU")) {//If not Declined to Specify, include the CdcrecCode.
-					nodeText=cdcrec.CdcrecCode+" "+nodeText;
+				if(!cdcrec.Code.StartsWith("ASKU")) {//If not Declined to Specify, include the CdcrecCode.
+					nodeText=cdcrec.Code+" "+nodeText;
 				}
 				prevNode=new TreeNode(nodeText);//We need to know the previous node so that we can know when we need to add the current node.
 				prevNode.Tag=cdcrec;
@@ -200,19 +200,19 @@ namespace OpenDental {
 			if(node==null) {
 				return 0;
 			}
-			return ((Cdcrec)node.Tag).HeirarchicalCode.Count(x => x=='.')+1;
+			return ((Cdcrec)node.Tag).HierarchicalCode.Count(x => x=='.')+1;
 		}
 
 		private void butLeft_Click(object sender,EventArgs e) {
 			//Add the selected race node to the Race grid
 			TreeNode selectedNode=treeRaces.SelectedNode;
-			if(selectedNode!=null && !_listPatRaces.Any(x => x.CdcrecCode==((Cdcrec)selectedNode.Tag).CdcrecCode)) {
+			if(selectedNode!=null && !_listPatRaces.Any(x => x.Code==((Cdcrec)selectedNode.Tag).Code)) {
 				_listPatRaces.Add((Cdcrec)selectedNode.Tag);
 				FillGrid(gridRace,_listPatRaces);
 			}
 			//Add the selected ethnicity node to the Ethnicity grid
 			selectedNode=treeEthnicities.SelectedNode;
-			if(selectedNode!=null && !_listPatEthnicities.Any(x => x.CdcrecCode==((Cdcrec)selectedNode.Tag).CdcrecCode)) {
+			if(selectedNode!=null && !_listPatEthnicities.Any(x => x.Code==((Cdcrec)selectedNode.Tag).Code)) {
 				_listPatEthnicities.Add((Cdcrec)selectedNode.Tag);
 				FillGrid(gridEthnicity,_listPatEthnicities);
 			}
@@ -222,26 +222,26 @@ namespace OpenDental {
 			//Remove the selected rows in the Race grid
 			foreach(int selectedIndex in gridRace.SelectedIndices) {
 				Cdcrec race=(Cdcrec)gridRace.Rows[selectedIndex].Tag;
-				_listPatRaces.RemoveAll(x => x.CdcrecCode==race.CdcrecCode);
+				_listPatRaces.RemoveAll(x => x.Code==race.Code);
 			}
 			FillGrid(gridRace,_listPatRaces);
 			//Remove the selected rows in the Ethnicities grid
 			foreach(int selectedIndex in gridEthnicity.SelectedIndices) {
 				Cdcrec ethnicity=(Cdcrec)gridEthnicity.Rows[selectedIndex].Tag;
-				_listPatEthnicities.RemoveAll(x => x.CdcrecCode==ethnicity.CdcrecCode);
+				_listPatEthnicities.RemoveAll(x => x.Code==ethnicity.Code);
 			}
 			FillGrid(gridEthnicity,_listPatEthnicities);
 		}
 
 		private void treeRaces_NodeMouseDoubleClick(object sender,TreeNodeMouseClickEventArgs e) {
-			if(!_listPatRaces.Any(x => x.CdcrecNum==((Cdcrec)e.Node.Tag).CdcrecNum)) {
+			if(!_listPatRaces.Any(x => x.Id==((Cdcrec)e.Node.Tag).Id)) {
 				_listPatRaces.Add((Cdcrec)e.Node.Tag);
 				FillGrid(gridRace,_listPatRaces);
 			}
 		}
 
 		private void treeEthnicities_NodeMouseDoubleClick(object sender,TreeNodeMouseClickEventArgs e) {
-			if(!_listPatEthnicities.Any(x => x.CdcrecNum==((Cdcrec)e.Node.Tag).CdcrecNum)) {
+			if(!_listPatEthnicities.Any(x => x.Id==((Cdcrec)e.Node.Tag).Id)) {
 				_listPatEthnicities.Add((Cdcrec)e.Node.Tag);
 				FillGrid(gridEthnicity,_listPatEthnicities);
 			}
@@ -259,15 +259,15 @@ namespace OpenDental {
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
-			if(_listPatRaces.Count>1 && _listPatRaces.Any(x => x.CdcrecCode==PatientRace.DECLINE_SPECIFY_RACE_CODE)) {
+			if(_listPatRaces.Count>1 && _listPatRaces.Any(x => x.Code==PatientRace.DECLINE_SPECIFY_RACE_CODE)) {
 				MessageBox.Show("Cannot select 'DECLINED TO SPECIFY' and any other race.");
 				return;
 			}
-			if(_listPatEthnicities.Count>1 && _listPatEthnicities.Any(x => x.CdcrecCode==PatientRace.DECLINE_SPECIFY_ETHNICITY_CODE)) {
+			if(_listPatEthnicities.Count>1 && _listPatEthnicities.Any(x => x.Code==PatientRace.DECLINE_SPECIFY_ETHNICITY_CODE)) {
 				MessageBox.Show("Cannot select 'DECLINED TO SPECIFY' and any other ethnicity.");
 				return;
 			}
-			if(_listPatEthnicities.Count>1 && _listPatEthnicities.Any(x => x.CdcrecCode=="2186-5")) {
+			if(_listPatEthnicities.Count>1 && _listPatEthnicities.Any(x => x.Code=="2186-5")) {
 				MessageBox.Show("Cannot select 'NOT HISPANIC OR LATINO' and a Hispanic or Latino ethnicity.");
 				return;
 			}

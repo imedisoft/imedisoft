@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
 
 namespace OpenDentBusiness
 {
-	public class PatientLogic
+    public class PatientLogic
 	{
 		/// <summary>
 		/// Returns a formatted name, Last, First.

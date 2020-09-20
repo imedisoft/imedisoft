@@ -7,6 +7,7 @@ using OpenDentBusiness;
 using System.Linq;
 using Imedisoft.Data;
 using Imedisoft.Data.Models;
+using Imedisoft.Forms;
 
 namespace OpenDental
 {
@@ -692,7 +693,7 @@ namespace OpenDental
 		private void FillAutographs()
 		{
 			listAutographs.Items.Clear();
-			_listEmailAutographs = EmailAutographs.GetDeepCopy();
+			_listEmailAutographs = EmailAutographs.GetAll();
 			for (int i = 0; i < _listEmailAutographs.Count; i++)
 			{
 				listAutographs.Items.Add(_listEmailAutographs[i].Description);
@@ -714,18 +715,18 @@ namespace OpenDental
 			}
 			string emailUserName = EmailMessages.GetAddressSimple(emailOutgoing.SmtpUsername);
 			string emailSender = EmailMessages.GetAddressSimple(emailOutgoing.SenderAddress);
-			string autographEmail;
-			for (int i = 0; i < _listEmailAutographs.Count; i++)
-			{
-				autographEmail = EmailMessages.GetAddressSimple(_listEmailAutographs[i].EmailAddress.Trim());
-				//Use Contains() because an autograph can theoretically have multiple email addresses associated with it.
-				if ((!string.IsNullOrWhiteSpace(emailUserName) && autographEmail.Contains(emailUserName))
-					|| (!string.IsNullOrWhiteSpace(emailSender) && autographEmail.Contains(emailSender)))
-				{
-					InsertAutograph(_listEmailAutographs[i]);
-					break;
-				}
-			}
+			//string autographEmail;
+			//for (int i = 0; i < _listEmailAutographs.Count; i++)
+			//{
+			//	autographEmail = EmailMessages.GetAddressSimple(_listEmailAutographs[i].EmailAddress.Trim());
+			//	//Use Contains() because an autograph can theoretically have multiple email addresses associated with it.
+			//	if ((!string.IsNullOrWhiteSpace(emailUserName) && autographEmail.Contains(emailUserName))
+			//		|| (!string.IsNullOrWhiteSpace(emailSender) && autographEmail.Contains(emailSender)))
+			//	{
+			//		InsertAutograph(_listEmailAutographs[i]);
+			//		break;
+			//	}
+			//}
 		}
 
 		///<summary>Currently just appends an autograph to the bottom of the email message.  When the functionality to reply to emails is implemented, 
@@ -733,7 +734,7 @@ namespace OpenDental
 		///history.</summary>
 		private void InsertAutograph(EmailAutograph emailAutograph)
 		{
-			emailPreview.BodyText += "\r\n\r\n" + emailAutograph.AutographText;
+			emailPreview.BodyText += "\r\n\r\n" + emailAutograph.Autograph;
 		}
 
 		private void listAutographs_DoubleClick(object sender, EventArgs e)
@@ -755,7 +756,6 @@ namespace OpenDental
 		{ //add a new autograph
 			EmailAutograph emailAutograph = new EmailAutograph();
 			FormEmailAutographEdit FormEAE = new FormEmailAutographEdit(emailAutograph);
-			FormEAE.IsNew = true;
 			FormEAE.ShowDialog();
 			if (FormEAE.DialogResult == DialogResult.OK)
 			{

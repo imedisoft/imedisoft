@@ -5,30 +5,38 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
-namespace OpenDental {
-	public partial class FormImages:ODForm {
+namespace OpenDental
+{
+	public partial class FormImages : ODForm
+	{
 		///<summary>Right now, this form only supports claimpayment and amendment mode.   Others will be added later.</summary>
 		public long ClaimPaymentNum;
 		public EhrAmendment EhrAmendmentCur;
 
-		public FormImages() {
+		public FormImages()
+		{
 			InitializeComponent();
-			
-			contrImagesMain.CloseClick+=new EventHandler(contrImagesMain_CloseClick);
+
+			contrImagesMain.CloseClick += new EventHandler(contrImagesMain_CloseClick);
 		}
 
-		private void FormImages_Load(object sender,EventArgs e) {
-			if(ClaimPaymentNum!=0) {
+		private void FormImages_Load(object sender, EventArgs e)
+		{
+			if (ClaimPaymentNum != 0)
+			{
 				contrImagesMain.ModuleSelectedClaimPayment(ClaimPaymentNum);
 			}
-			else if(EhrAmendmentCur!=null) {
+			else if (EhrAmendmentCur != null)
+			{
 				contrImagesMain.ModuleSelectedAmendment(EhrAmendmentCur);
 			}
 		}
 
-		void contrImagesMain_CloseClick(object sender,EventArgs e) {
+		void contrImagesMain_CloseClick(object sender, EventArgs e)
+		{
 			Close();
 		}
 	}

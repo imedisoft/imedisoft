@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenDentBusiness
 {
-	public class CreditCardUtils
+    public class CreditCardUtils
 	{
 		public static string GetCardType(string creditCardNumber)
 		{

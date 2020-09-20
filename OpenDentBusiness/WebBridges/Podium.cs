@@ -1,20 +1,18 @@
-using OpenDentBusiness;
+using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Text;
-using System.Linq;
-using CodeBase;
-using System.Reflection;
-using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
-	/// <summary>
-	/// RESTful bridge to podium service. Without using REST Sharp or JSON libraries this code might not work properly.
-	/// </summary>
-	public static class Podium
+    /// <summary>
+    /// RESTful bridge to podium service. Without using REST Sharp or JSON libraries this code might not work properly.
+    /// </summary>
+    public static class Podium
 	{
 		public static DateTime DateTimeLastRan = DateTime.MinValue;
 

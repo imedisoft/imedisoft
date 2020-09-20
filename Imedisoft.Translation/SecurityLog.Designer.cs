@@ -88,6 +88,24 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auto Note Export.
+        /// </summary>
+        public static string AutoNoteExport {
+            get {
+                return ResourceManager.GetString("AutoNoteExport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto Note Import. Imported {0} new note(s) and {1} new prompt(s)..
+        /// </summary>
+        public static string AutoNoteImport {
+            get {
+                return ResourceManager.GetString("AutoNoteImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User &apos;{0}&apos; has logged on..
         /// </summary>
         public static string UserHasLoggedOn {

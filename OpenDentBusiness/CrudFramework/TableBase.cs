@@ -1,18 +1,12 @@
-﻿using DataConnectionBase;
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Xml;
-using System.Xml.Serialization;
+﻿using System;
 
 namespace OpenDentBusiness
 {
-	/// <summary>
-	/// The base class for classes that correspond to a table in the database.
-	/// Make sure to mark each derived class [Serializable].
-	/// </summary>
-	public abstract class TableBase
+    /// <summary>
+    /// The base class for classes that correspond to a table in the database.
+    /// Make sure to mark each derived class [Serializable].
+    /// </summary>
+    public abstract class TableBase
 	{
 		private static int maxAllowedPacketSize = 0;
 

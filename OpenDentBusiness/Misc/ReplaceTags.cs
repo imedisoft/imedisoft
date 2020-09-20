@@ -1,12 +1,12 @@
-﻿using System;
-using System.Text;
-using CodeBase;
+﻿using CodeBase;
 using Imedisoft.Data;
 using Imedisoft.Data.Models;
+using System;
+using System.Text;
 
 namespace OpenDentBusiness
 {
-	public class ReplaceTags
+    public class ReplaceTags
 	{
 		///<summary>Replaces one individual tag. Case insensitive.</summary>
 		public static void ReplaceOneTag(StringBuilder template, string tagToReplace, string replaceWith, bool isHtmlEmail)

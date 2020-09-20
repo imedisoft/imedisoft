@@ -603,7 +603,7 @@ namespace OpenDental{
 
 		private void menuItemClearinghouse_Click(object sender, System.EventArgs e){
 			MenuItem menuitem=(MenuItem)sender;
-			SendEclaimsToClearinghouse(_listClearinghouses[menuitem.Index].ClearinghouseNum);
+			SendEclaimsToClearinghouse(_listClearinghouses[menuitem.Index].Id);
 		}
 
 		private void FillGrid(bool rememberSelection=false,bool isRefreshRequired=true) {

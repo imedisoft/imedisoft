@@ -12,9 +12,8 @@ using System.Xml.Serialization;
 
 namespace OpenDentBusiness.Eclaims
 {
-    public class Ramq
+	public class Ramq
 	{
-		///<summary></summary>
 		public static string ErrorMessage = "";
 
 		public Ramq()
@@ -30,7 +29,7 @@ namespace OpenDentBusiness.Eclaims
 			List<Etrans> listEtrans = new List<Etrans>();
 			foreach (ClaimSendQueueItem queueItem in queueItems)
 			{
-				Etrans etrans = Etranss.SetClaimSentOrPrinted(queueItem.ClaimNum, queueItem.PatNum, clearinghouseClin.HqClearinghouseNum, EtransType.Claim_Ramq, batchNum, Security.CurrentUser.Id);
+				Etrans etrans = Etranss.SetClaimSentOrPrinted(queueItem.ClaimNum, queueItem.PatNum, clearinghouseClin.Id, EtransType.Claim_Ramq, batchNum, Security.CurrentUser.Id);
 				listEtrans.Add(etrans);
 				//Now we need to update our cache of claims to reflect the change that took place in the database above in Etranss.SetClaimSentOrPrinted()
 				queueItem.ClaimStatus = "S";

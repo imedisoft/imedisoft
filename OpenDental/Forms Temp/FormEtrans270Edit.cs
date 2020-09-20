@@ -89,7 +89,7 @@ namespace OpenDental {
 			}
 			long patNum=(EtransCur.PatNum==0?_subPatNum:EtransCur.PatNum);//Older 270/217s were always for the subscriber and have etrans.PatNum of 0.
 			this.Text+=": "+Patients.GetNameLF(patNum);
-			if(Clearinghouses.GetFirstOrDefault(x => x.ClearinghouseNum==EtransCur.ClearingHouseNum)?.CommBridge==EclaimsCommBridge.EDS
+			if(Clearinghouses.GetFirstOrDefault(x => x.Id==EtransCur.ClearingHouseNum)?.CommBridge==EclaimsCommBridge.EDS
 			 && EtransAck271!=null && EtransAck271.AckEtransNum!=0)
 			{
 				_htmlResponse=EtransMessageTexts.GetMessageText(Etranss.GetEtrans(EtransAck271.AckEtransNum).EtransMessageTextNum);

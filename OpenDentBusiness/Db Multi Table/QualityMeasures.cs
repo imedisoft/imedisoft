@@ -6475,7 +6475,7 @@ BMI 18.5-25.";
 				End("text");
 				#endregion TEXT SECTION
 				#region ENTRY SECTION
-				Dictionary<string,Cdcrec> dictRaces=Cdcrecs.GetAll().ToDictionary(x => x.CdcrecCode,x => x);//Used to find HierarchicalCodes and Descriptions
+				Dictionary<string,Cdcrec> dictRaces=Cdcrecs.GetAll().ToDictionary(x => x.Code,x => x);//Used to find HierarchicalCodes and Descriptions
 				for(int i=0;i<listQMs.Count;i++) {
 					//_listExtraPopIndxs will contain all of the Type2014 enum types that are stratifications or extra populations of other measures, so skip them here
 					if(_listExtraPopIndxs.Contains(i)) {
@@ -6865,7 +6865,7 @@ BMI 18.5-25.";
 										if(!dictRaces.TryGetValue(kvpair.Key,out cdcRec)) {//dictRaces's key is cdcrec.CdcrecCode
 											throw new ApplicationException("Error in creating QRDA Category III in Measure Data Components section. Unknown CDCREC code.");
 										}
-										if(cdcRec.HeirarchicalCode.StartsWith("E")) {
+										if(cdcRec.HierarchicalCode.StartsWith("E")) {
 											//**************Ethnicity Supplemental Data**************
 											#region Ethnicity Supplemental Data Entry
 											_w.WriteComment("Ethnicity Supplemental Data entryRelationship");
@@ -6877,12 +6877,12 @@ BMI 18.5-25.";
 											StartAndEnd("statusCode","code","completed");
 											Start("value");
 											_w.WriteAttributeString("xsi","type",null,"CD");
-											Attribs("code",cdcRec.CdcrecCode,"displayName",cdcRec.Description);
+											Attribs("code",cdcRec.Code,"displayName",cdcRec.Description);
 											Attribs("codeSystem","2.16.840.1.113883.6.238","codeSystemName","Race &amp; Ethnicity - CDC");
 											End("value");
 											#endregion Ethnicity Supplemental Data Entry
 										}
-										else if(cdcRec.HeirarchicalCode.StartsWith("R")) {
+										else if(cdcRec.HierarchicalCode.StartsWith("R")) {
 											//**************Race Supplemental Data**************
 											#region Race Supplemental Data Entry
 											_w.WriteComment("Race Supplemental Data entryRelationship");
@@ -6894,7 +6894,7 @@ BMI 18.5-25.";
 											StartAndEnd("statusCode","code","completed");
 											Start("value");
 											_w.WriteAttributeString("xsi","type",null,"CD");
-											Attribs("code",cdcRec.CdcrecCode,"displayName",cdcRec.Description);
+											Attribs("code",cdcRec.Code,"displayName",cdcRec.Description);
 											Attribs("codeSystem","2.16.840.1.113883.6.238","codeSystemName","Race &amp; Ethnicity - CDC");
 											End("value");
 											#endregion Race Supplemental Data Entry

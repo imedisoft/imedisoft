@@ -10,7 +10,7 @@ using System.Text;
 
 namespace OpenDentBusiness
 {
-    public class Google
+	public class Google
 	{
 		/// <summary>
 		/// Returns the full URL according to the route/route id(s) given.  RouteIDs must be added in order left to right as they appear in the API call.

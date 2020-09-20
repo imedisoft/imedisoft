@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormProcNoteAppend:ODForm {

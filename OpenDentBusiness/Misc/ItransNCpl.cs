@@ -13,7 +13,7 @@ using WebServiceSerializer;
 
 namespace OpenDentBusiness
 {
-	public class ItransNCpl
+    public class ItransNCpl
 	{
 		///<summary></summary>
 		[JsonProperty("Carriers")]
@@ -84,7 +84,7 @@ namespace OpenDentBusiness
 				}
 			}
 			//Save json as new etrans entry.
-			Etrans etrans = Etranss.CreateEtrans(dateTimeTrans, clearinghouse.HqClearinghouseNum, json, 0);
+			Etrans etrans = Etranss.CreateEtrans(dateTimeTrans, clearinghouse.Id, json, 0);
 			etrans.Etype = EtransType.ItransNcpl;
 			Etranss.Insert(etrans);
 			ItransNCpl iTransNCpl = null;

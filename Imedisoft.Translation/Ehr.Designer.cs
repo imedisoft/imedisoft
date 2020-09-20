@@ -106,6 +106,24 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter a source name..
+        /// </summary>
+        public static string PleaseEnterAmendmentSourceName {
+            get {
+                return ResourceManager.GetString("PleaseEnterAmendmentSourceName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select an amendment source..
+        /// </summary>
+        public static string PleaseSelectAmendmentSource {
+            get {
+                return ResourceManager.GetString("PleaseSelectAmendmentSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trigger Categories.
         /// </summary>
         public static string TriggerCategories {

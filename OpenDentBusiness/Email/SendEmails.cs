@@ -1,24 +1,20 @@
-﻿using System;
+﻿using CDO;
+using CodeBase;
+using Google;
+using MimeKit;
+using System;
 using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Web;
-using CDO;
-using CodeBase;
-using MimeKit;
-using MailKit.Security;
-using GmailApi=Google.Apis.Gmail.v1;
-using Google;
-using System.Text.RegularExpressions;
-using System.Linq;
+using GmailApi = Google.Apis.Gmail.v1;
 
 namespace OpenDentBusiness.Email
 {
-
-	public static class SendEmail
+    public static class SendEmail
 	{
-
 		///<summary>Throws exceptions. Attempts to physically send the message over the network wire. This is used from wherever email needs to be 
 		///sent throughout the program. If a message must be encrypted, then encrypt it before calling this function. nameValueCollectionHeaders can 
 		///be null.</summary>
@@ -284,7 +280,7 @@ namespace OpenDentBusiness.Email
 			GmailApi.Data.Message gMsg = new GmailApi.Data.Message();
 			string rawString = sr.ReadToEnd();
 			byte[] raw = System.Text.Encoding.UTF8.GetBytes(rawString);
-			gMsg.Raw = System.Convert.ToBase64String(raw);
+			gMsg.Raw = Convert.ToBase64String(raw);
 			//What we send to Gmail must be a Base64 File/URL safe string.  We must convert our base64 to be URL safe. (replace - and _ with + and / respectively)
 			gMsg.Raw = gMsg.Raw.Replace("+", "-");
 			gMsg.Raw = gMsg.Raw.Replace("/", "_");

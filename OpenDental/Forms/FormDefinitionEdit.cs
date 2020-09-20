@@ -259,7 +259,7 @@ namespace Imedisoft.Forms
 			}
 
 			bool isAutoNoteRefresh = false;
-			if (definition.Category == DefinitionCategory.AutoNoteCats && AutoNotes.GetExists(x => x.Category == definition.Id))
+			if (definition.Category == DefinitionCategory.AutoNoteCats && AutoNotes.Exists(x => x.AutoNoteCategoryId == definition.Id))
 			{
 				if (!Confirm("Deleting this Auto Note Category will uncategorize some auto notes. Delete anyway?"))
 				{

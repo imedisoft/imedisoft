@@ -131,7 +131,7 @@ namespace OpenDental{
 			_listHqClearinghouses=Clearinghouses.GetDeepCopy();
 			for(int i=0;i<_listHqClearinghouses.Count;i++){
 				comboClearhouse.Items.Add(_listHqClearinghouses[i].Description);
-				if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent)==_listHqClearinghouses[i].ClearinghouseNum){
+				if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent)==_listHqClearinghouses[i].Id){
 					comboClearhouse.SelectedIndex=i;
 				}
 			}
@@ -174,7 +174,7 @@ namespace OpenDental{
 			//For Tesia, user wouldn't normally manually retrieve.
 			if(clearhouseHq.ISA08=="113504607") {
 				if((PrefC.RandomKeys && PrefC.HasClinicsEnabled)//See FormClaimsSend_Load
-					|| Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent)!=clearhouseHq.ClearinghouseNum) //default
+					|| Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent)!=clearhouseHq.Id) //default
 				{
 					//But they might need to in these situations.
 					string errorMessage=Clearinghouses.RetrieveAndImport(clearinghouseClin,false,progressbar);

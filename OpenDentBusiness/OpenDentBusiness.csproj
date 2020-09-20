@@ -212,6 +212,8 @@
     <Compile Include="Cache\CacheDictNonPkAbs.cs" />
     <Compile Include="Cache\CacheListAbs.cs" />
     <Compile Include="Cache\FeeCache.cs" />
+    <Compile Include="Data Temp\Crud\AutoNoteCategories.cs" />
+    <Compile Include="Data Temp\Logic\AutoNoteCategories.cs" />
     <Compile Include="Data\Cemt\Crud\ConnectionGroups.cs" />
     <Compile Include="Data\Crud\AlertCategories.cs" />
     <Compile Include="Data\Crud\AlertCategoryLinks.cs" />
@@ -269,41 +271,6 @@
     <Compile Include="Claims\ClaimBridgeManager.cs" />
     <Compile Include="Claims\ClaimProgramBridge.cs" />
     <Compile Include="Claims\IClaimBridge.cs" />
-    <Compile Include="Email\EmailHosting\Account\AccountApi.cs" />
-    <Compile Include="Email\EmailHosting\Account\IAccountApi.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\AppendAttachmentDataRequest.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\AppendAttachmentDataResponse.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\CreateDomainIdentityRequest.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\CreateDomainIdentityResponse.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\CreateTemplateRequest.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\CreateTemplateResponse.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\DeleteIdentityRequest.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\DeleteIdentityResponse.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\DeleteTemplateRequest.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\DeleteTemplateResponse.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\EmailResource.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\GetChainEmailsRequest.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\GetChainEmailsResponse.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\GetDomainDKIMTokensRequest.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\GetDomainDKIMTokensResponse.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\GetEmailRequest.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\GetEmailResponse.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\GetIdentityRequest.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\GetIdentityResponse.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\GetTemplateRequest.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\GetTemplateResponse.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\IdentityResource.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\IdentityVerificationStatus.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\SendMassEmailRequest.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\SendMassEmailResponse.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\SendNewEmailRequest.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\SendNewEmailResponse.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\SendReplyRequest.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\SendReplyResponse.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\Template.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\TemplateDestination.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\UpdateTemplateRequest.cs" />
-    <Compile Include="Email\EmailHosting\Account\Models\UpdateTemplateResponse.cs" />
     <Compile Include="Data Interface\ApptThankYouSents.cs" />
     <Compile Include="Data Interface\AsapComms.cs" />
     <Compile Include="Data Interface\ClaimTrackings.cs" />
@@ -372,7 +339,6 @@
     <Compile Include="SheetFramework\SheetPrinting2.cs" />
     <Compile Include="SheetFramework\SheetUtil.cs" />
     <Compile Include="TableTypes\ApptThankYouSent.cs" />
-    <Compile Include="TableTypes\CareCreditWebResponse.cs" />
     <Compile Include="TableTypes\EClipboardSheetDef.cs" />
     <Compile Include="TableTypes\EmailHostingTemplate.cs" />
     <Compile Include="Data Temp\FeeScheduleGroup.cs" />
@@ -499,8 +465,8 @@
     <Compile Include="Data\Crud\AutoCodeItems.cs" />
     <Compile Include="Crud\AutomationConditionCrud.cs" />
     <Compile Include="Data\Crud\Automations.cs" />
-    <Compile Include="Crud\AutoNoteControlCrud.cs" />
-    <Compile Include="Crud\AutoNoteCrud.cs" />
+    <Compile Include="Data Temp\Crud\AutoNotePrompts.cs" />
+    <Compile Include="Data Temp\Crud\AutoNotes.cs" />
     <Compile Include="Data\Ehr\Crud\CdsPermissions.cs" />
     <Compile Include="Crud\ClaimSnapshotCrud.cs" />
     <Compile Include="Crud\ConfirmationRequestCrud.cs" />
@@ -566,7 +532,7 @@
     <Compile Include="Crud\DrugUnitCrud.cs" />
     <Compile Include="Crud\DunningCrud.cs" />
     <Compile Include="Crud\EduResourceCrud.cs" />
-    <Compile Include="Crud\EhrAmendmentCrud.cs" />
+    <Compile Include="Data Temp\Crud\EhrAmendments.cs" />
     <Compile Include="Crud\EhrCodeCrud.cs" />
     <Compile Include="Crud\EhrMeasureCrud.cs" />
     <Compile Include="Crud\EhrMeasureEventCrud.cs" />
@@ -579,7 +545,7 @@
     <Compile Include="Crud\ElectIDCrud.cs" />
     <Compile Include="Data\Crud\EmailAddresses.cs" />
     <Compile Include="Crud\EmailAttachCrud.cs" />
-    <Compile Include="Crud\EmailAutographCrud.cs" />
+    <Compile Include="Data Temp\Crud\EmailAutographs.cs" />
     <Compile Include="Crud\EmailMessageCrud.cs" />
     <Compile Include="Crud\EmailMessageUidCrud.cs" />
     <Compile Include="Crud\EmailTemplateCrud.cs" />
@@ -749,7 +715,7 @@
     <Compile Include="Data Interface\DashboardLayouts.cs" />
     <Compile Include="Data Interface\DisplayReports.cs" />
     <Compile Include="Data Interface\Ebills.cs" />
-    <Compile Include="Data Interface\EmailAutographs.cs" />
+    <Compile Include="Data Temp\Logic\EmailAutographs.cs" />
     <Compile Include="Data Interface\FamAgings.cs" />
     <Compile Include="Data Interface\FHIRContactPoints.cs" />
     <Compile Include="Data Interface\FHIRSubscriptions.cs" />
@@ -843,7 +809,7 @@
     <Compile Include="Data Interface\CodeSystems.cs" />
     <Compile Include="Data Interface\Cpts.cs" />
     <Compile Include="Data Interface\Cvxs.cs" />
-    <Compile Include="Data Interface\EhrAmendments.cs" />
+    <Compile Include="Data Temp\Logic\EhrAmendments.cs" />
     <Compile Include="Data Interface\EhrCodes.cs" />
     <Compile Include="Data Interface\EhrNotPerformeds.cs">
       <SubType>Code</SubType>
@@ -1001,8 +967,8 @@
     <Compile Include="Data\Logic\AutoCodeConditions.cs" />
     <Compile Include="Data\Logic\AutoCodeItems.cs" />
     <Compile Include="Data\AutoCodes.cs" />
-    <Compile Include="Data Interface\AutoNoteControls.cs" />
-    <Compile Include="Data Interface\AutoNotes.cs" />
+    <Compile Include="Data Temp\Logic\AutoNotePrompts.cs" />
+    <Compile Include="Data Temp\Logic\AutoNotes.cs" />
     <Compile Include="Data Interface\Benefits.cs" />
     <Compile Include="Data Interface\CanadianNetworks.cs" />
     <Compile Include="Data Interface\Carriers.cs" />
@@ -1242,7 +1208,6 @@
     <Compile Include="TableTypes\InsVerifyHist.cs" />
     <Compile Include="TableTypes\TreatPlanAttach.cs" />
     <Compile Include="TableTypes\Ebill.cs" />
-    <Compile Include="TableTypes\EmailAutograph.cs" />
     <Compile Include="TableTypes\EServiceSignal.cs" />
     <Compile Include="TableTypes\ProviderErx.cs" />
     <Compile Include="TableTypes\RequiredField.cs" />
@@ -1283,7 +1248,6 @@
     <Compile Include="TableTypes\EmailMessageUid.cs" />
     <Compile Include="TableTypes\EhrTrigger.cs" />
     <Compile Include="TableTypes\MapArea.cs" />
-    <Compile Include="TableTypes\EhrAmendment.cs" />
     <Compile Include="TableTypes\ApptField.cs" />
     <Compile Include="TableTypes\AutomationCondition.cs" />
     <Compile Include="TableTypes\ChartView.cs" />
@@ -1439,7 +1403,6 @@
     <Compile Include="WebTypes\WebForms\WebUtils.cs" />
     <Compile Include="WebTypes\WebSched\TimeSlot\TimeSlot.cs" />
     <Compile Include="WebTypes\WebSched\TimeSlot\TimeSlots.cs" />
-    <Compile Include="WebTypes\WebBase.cs" />
     <Compile Include="X12\Codes\PlaceOfService.cs" />
     <Compile Include="X12\Codes\ServiceTypeCodes.cs" />
     <Compile Include="X12\X834.cs" />
@@ -1484,8 +1447,6 @@
     <Compile Include="TableTypes\AppointmentRule.cs" />
     <Compile Include="TableTypes\ApptView.cs" />
     <Compile Include="TableTypes\ApptViewItem.cs" />
-    <Compile Include="TableTypes\AutoNote.cs" />
-    <Compile Include="TableTypes\AutoNoteControl.cs" />
     <Compile Include="TableTypes\Benefit.cs" />
     <Compile Include="TableTypes\Carrier.cs" />
     <Compile Include="TableTypes\Claim.cs" />
@@ -2084,10 +2045,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data Temp\Crud\" />
-    <Folder Include="Data Temp\Logic\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

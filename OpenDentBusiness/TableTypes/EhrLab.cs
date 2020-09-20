@@ -10,8 +10,10 @@ namespace OpenDentBusiness {
 		///<summary>Primary key.</summary>
 		[CrudColumn(IsPriKey=true)]
 		public long EhrLabNum;
+
 		///<summary>FK to patient.PatNum.  PID-3.1</summary>
 		public long PatNum;
+
 		/////<summary>FK to EhrLabMessage.EhrLabMessageNum.  Internal use.</summary>
 		//public long EhrLabMessageNum;
 		#region ORC fields
@@ -333,10 +335,12 @@ namespace OpenDentBusiness {
 
 }
 
-namespace EhrLaboratories {
+namespace EhrLaboratories
+{
 
 	///<summary>Specimen Action Code. Constrained to AGLO. OID:2.16.840.1.113883.12.119  HL70369 code:HL70119.  Source HL7 2.5.1 Labratory Reporting Interface documentation.</summary>
-	public enum HL70065 {
+	public enum HL70065
+	{
 		///<summary>0 - Add ordered tests to the existing specimen.</summary>
 		A,
 		///<summary>1 - Generated order; reflex order.</summary>
@@ -348,7 +352,8 @@ namespace EhrLaboratories {
 	}
 
 	///<summary>Order Control Code.  We only use RE.  OID:2.16.840.1.113883.12.119  HL70369 code:HL70119.  Source phinvads.cdc.gov</summary>
-	public enum HL70119 {
+	public enum HL70119
+	{
 		///<summary>0 - Cancel order/service request</summary>
 		CA,
 		///<summary>1 - Canceled as requested</summary>
@@ -452,7 +457,8 @@ namespace EhrLaboratories {
 	}
 
 	///<summary>Result Status.  OID:2.16.840.1.113883.12.123  HL70369 code:HL70123.  Source HL7 2.5.1 Labratory Reporting Interface documentation.</summary>
-	public enum HL70123 {
+	public enum HL70123
+	{
 		///<summary>0 - Some but not all results available.</summary>
 		A,
 		///<summary>1 - Correction to results.</summary>
@@ -474,7 +480,8 @@ namespace EhrLaboratories {
 	}
 
 	///<summary>Name Type Code.  OID:2.16.840.1.113883.12.200  HL70369 code:HL70200.  Source phinvads.cdc.gov</summary>
-	public enum HL70200 {
+	public enum HL70200
+	{
 		///<summary>0 - Adopted Name</summary>
 		C,
 		///<summary>1 - Alias Name</summary>
@@ -504,7 +511,8 @@ namespace EhrLaboratories {
 	}
 
 	///<summary>Identifier Type.  OID:2.16.840.1.113883.12.203  HL70369 code:HL70203.  Source phinvads.cdc.gov</summary>
-	public enum HL70203 {
+	public enum HL70203
+	{
 		///<summary>0 - Account number</summary>
 		AN,
 		///<summary>1 - Account number Creditor</summary>
@@ -680,18 +688,21 @@ namespace EhrLaboratories {
 	}
 
 	///<summary>Identifier Type.  OID:2.16.840.1.113883...  HL70369 code:HL70361.  Source phinvads.cdc.gov</summary>
-	public enum HL70361 {
+	public enum HL70361
+	{
 		//Used in ACK messages
 	}
 
 	///<summary>Identifier Type.  OID:2.16.840.1.113883...  HL70369 code:HL70362.  Source phinvads.cdc.gov</summary>
-	public enum HL70362 {
+	public enum HL70362
+	{
 		//Used in ACK messages
 	}
 
 	///<summary>Coding Systems.  OID:2.16.840.1.113883.12.369  Source phinvads.cdc.gov
 	///<para>This enum is not stored directly in the DB because of variable enum values, instead it is used to fill controls to allow users to pick from, or type their own.</para></summary>
-	public enum HL70369 {
+	public enum HL70369
+	{
 		///<summary>0 - Local general code (where z is an alphanumeric character). Actual value does not contain an underscore, but enumerations cannot start with a number.
 		///<para>Source:Locally defined codes for purpose of sender or receiver. Local codes can be identified by L (for backward compatibility) or 99zzz (where z is an alphanumeric character).</para>
 		///<para>Category:General Codes</para>
@@ -1608,5 +1619,4 @@ namespace EhrLaboratories {
 		///<para>Status:Active</para></summary>
 		X12DEnnnn
 	}
-
 }

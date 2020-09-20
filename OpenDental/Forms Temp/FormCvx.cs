@@ -47,7 +47,7 @@ namespace OpenDental {
 			listCvxs=Cvxs.GetBySearchText(textCode.Text);
 			for(int i=0;i<listCvxs.Count;i++) {
 				row=new GridRow();
-				row.Cells.Add(listCvxs[i].CvxCode);
+				row.Cells.Add(listCvxs[i].Code);
 				row.Cells.Add(listCvxs[i].Description);
 				row.Tag=listCvxs[i];
 				gridMain.Rows.Add(row);

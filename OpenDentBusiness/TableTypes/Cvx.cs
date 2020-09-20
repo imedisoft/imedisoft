@@ -1,30 +1,23 @@
 ﻿using Imedisoft.Data.Annotations;
+using System;
 
 namespace OpenDentBusiness
 {
     /// <summary>
-    /// Vaccines administered. Other tables generally use the CvxCode as their foreign key.
+    /// Vaccines administered.
     /// </summary>
     [Table]
-	public class Cvx : TableBase
+	public class Cvx
 	{
 		[PrimaryKey]
 		public long Id;
 
-		/// <summary>
-		/// Cvx code. Not allowed to edit this column once saved in the database.
-		/// </summary>
-		public string CvxCode;
+		[Column(ReadOnly = true)]
+		public string Code;
 
-		/// <summary>
-		/// Short Description provided by Cvx documentation.
-		/// </summary>
 		public string Description;
 
-		/// <summary>
-		/// Not currently in use.  Might not need this column. 
-		/// If we use this in the future, then convert from string to bool. 1 if the code is an active code, 0 if the code is inactive.
-		/// </summary>
+		[Ignore, Obsolete]
 		public string IsActive;
 	}
 }

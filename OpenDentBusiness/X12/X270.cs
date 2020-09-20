@@ -114,7 +114,7 @@ namespace OpenDentBusiness
 				string ref4aSegment="";
 				Clearinghouse clearinghouseDentiCalHQ=Clearinghouses.GetFirstOrDefault(x => IsDentiCalClearinghouse(x),true);
 				if(clearinghouseDentiCalHQ!=null) {
-					Clearinghouse clearinghouseDentiCalClin=Clearinghouses.OverrideFields(clearinghouseDentiCalHQ,clearinghouseClin.ClinicNum);
+					Clearinghouse clearinghouseDentiCalClin=Clearinghouses.OverrideFields(clearinghouseDentiCalHQ,clearinghouseClin.ClinicId??0);
 					if(clearinghouseDentiCalClin!=null){
 						ref4aSegment=clearinghouseDentiCalClin.Password;
 					}

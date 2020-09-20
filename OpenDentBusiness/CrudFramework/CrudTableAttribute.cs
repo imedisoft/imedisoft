@@ -1,15 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace OpenDentBusiness
 {
-	/// <summary>
-	/// Crud table attributes cannot be used by inherited classes because some properties would not
-	/// work if they were inherited. Simply add the desired attributes to the "inheriting" class 
-	/// which will effectively override the attribute.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    /// <summary>
+    /// Crud table attributes cannot be used by inherited classes because some properties would not
+    /// work if they were inherited. Simply add the desired attributes to the "inheriting" class 
+    /// which will effectively override the attribute.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 	public class CrudTableAttribute : Attribute
 	{
 		public CrudTableAttribute()

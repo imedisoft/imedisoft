@@ -11,32 +11,34 @@ namespace OpenDentBusiness.HL7
 			//ok to pass in null
 			if (def == null)
 			{//wasn't in the database
-				def = new HL7Def();
-				def.IsNew = true;
-				def.Description = "eCW Full";
-				def.ModeTx = ModeTxHL7.File;
-				def.IncomingFolder = "";
-				def.OutgoingFolder = "";
-				def.IncomingPort = "";
-				def.OutgoingIpPort = "";
-				def.SftpInSocket = "";
-				def.SftpUsername = "";
-				def.SftpPassword = "";
-				def.FieldSeparator = "|";
-				def.ComponentSeparator = "^";
-				def.SubcomponentSeparator = "&";
-				def.RepetitionSeparator = "~";
-				def.EscapeCharacter = @"\";
-				def.IsInternal = true;
-				def.InternalType = HL7InternalType.eCWFull;
-				def.InternalTypeVersion = Assembly.GetAssembly(typeof(Database)).GetName().Version.ToString();
-				def.IsEnabled = false;
-				def.Note = "";
-				def.ShowDemographics = HL7ShowDemographics.Show;
-				def.ShowAccount = true;
-				def.ShowAppts = false;//for now
-				def.IsQuadAsToothNum = false;
-			}
+                def = new HL7Def
+                {
+                    IsNew = true,
+                    Description = "eCW Full",
+                    ModeTx = ModeTxHL7.File,
+                    IncomingFolder = "",
+                    OutgoingFolder = "",
+                    IncomingPort = "",
+                    OutgoingIpPort = "",
+                    SftpInSocket = "",
+                    SftpUsername = "",
+                    SftpPassword = "",
+                    FieldSeparator = "|",
+                    ComponentSeparator = "^",
+                    SubcomponentSeparator = "&",
+                    RepetitionSeparator = "~",
+                    EscapeCharacter = @"\",
+                    IsInternal = true,
+                    InternalType = HL7InternalType.eCWFull,
+                    InternalTypeVersion = Assembly.GetAssembly(typeof(Database)).GetName().Version.ToString(),
+                    IsEnabled = false,
+                    Note = "",
+                    ShowDemographics = HL7ShowDemographics.Show,
+                    ShowAccount = true,
+                    ShowAppts = false,//for now
+                    IsQuadAsToothNum = false
+                };
+            }
 			def.hl7DefMessages = new List<HL7DefMessage>();//so that if this is called repeatedly, it won't pile on duplicate messages.
 														   //in either case, now get all child objects, which can't be in the database.
 			#region Inbound Messages

@@ -132,6 +132,12 @@
   <data name="InvalidProviderKey" xml:space="preserve">
     <value>Invalid provider key.</value>
   </data>
+  <data name="PleaseEnterAmendmentSourceName" xml:space="preserve">
+    <value>Please enter a source name.</value>
+  </data>
+  <data name="PleaseSelectAmendmentSource" xml:space="preserve">
+    <value>Please select an amendment source.</value>
+  </data>
   <data name="TriggerCategories" xml:space="preserve">
     <value>Trigger Categories</value>
   </data>

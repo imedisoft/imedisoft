@@ -7,61 +7,76 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 
-namespace OpenDental {
-	public partial class FormDrugUnitEdit:ODForm {
+namespace OpenDental
+{
+	public partial class FormDrugUnitEdit : ODForm
+	{
 		public DrugUnit DrugUnitCur;
 		public bool IsNew;
 
-		public FormDrugUnitEdit() {
+		public FormDrugUnitEdit()
+		{
 			InitializeComponent();
-			
+
 		}
 
-		private void FormDrugUnitEdit_Load(object sender,EventArgs e) {
-			textUnitIdentifier.Text=DrugUnitCur.UnitIdentifier;
-			textUnitText.Text=DrugUnitCur.UnitText;
+		private void FormDrugUnitEdit_Load(object sender, EventArgs e)
+		{
+			textUnitIdentifier.Text = DrugUnitCur.UnitIdentifier;
+			textUnitText.Text = DrugUnitCur.UnitText;
 		}
 
-		private void butDelete_Click(object sender,EventArgs e) {
-			if(IsNew) {
-				DialogResult=DialogResult.Cancel;
+		private void butDelete_Click(object sender, EventArgs e)
+		{
+			if (IsNew)
+			{
+				DialogResult = DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")){
+			if (!MsgBox.Show(MsgBoxButtons.OKCancel, "Delete?"))
+			{
 				return;
 			}
-			try {
+			try
+			{
 				DrugUnits.Delete(DrugUnitCur.Id);
 			}
-			catch(ApplicationException ex) {
+			catch (ApplicationException ex)
+			{
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			DialogResult=DialogResult.OK;
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butOK_Click(object sender,EventArgs e) {
-			if(textUnitIdentifier.Text=="" || textUnitText.Text=="") {
+		private void butOK_Click(object sender, EventArgs e)
+		{
+			if (textUnitIdentifier.Text == "" || textUnitText.Text == "")
+			{
 				MessageBox.Show("Bank fields are not allowed.");
 				return;
 			}
-			DrugUnitCur.UnitIdentifier=textUnitIdentifier.Text;
-			DrugUnitCur.UnitText=textUnitText.Text;
-			if(IsNew) {
-				if(DrugUnits.GetExists(x => x.UnitIdentifier==textUnitIdentifier.Text)) {
+			DrugUnitCur.UnitIdentifier = textUnitIdentifier.Text;
+			DrugUnitCur.UnitText = textUnitText.Text;
+			if (IsNew)
+			{
+				if (DrugUnits.GetExists(x => x.UnitIdentifier == textUnitIdentifier.Text))
+				{
 					MessageBox.Show("Unit with this identifier already exists.");
 					return;
 				}
 				DrugUnits.Insert(DrugUnitCur);
 			}
-			else {
+			else
+			{
 				DrugUnits.Update(DrugUnitCur);
 			}
-			DialogResult=DialogResult.OK;
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butCancel_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butCancel_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
 	}
 }

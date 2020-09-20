@@ -201,7 +201,7 @@ namespace OpenDentBusiness
 					cvx = (Cvx)triggerObject;
 					//TODO: TriggerObjectMessage
 					command = "SELECT * FROM ehrtrigger"
-					+ " WHERE CvxList LIKE '% " + POut.String(cvx.CvxCode) + " %'";// '% <code> %' so that we can get exact matches.
+					+ " WHERE CvxList LIKE '% " + POut.String(cvx.Code) + " %'";// '% <code> %' so that we can get exact matches.
 					break;
 				case "AllergyDef":
 					allergyDef = (AllergyDef)triggerObject;

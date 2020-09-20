@@ -1,18 +1,14 @@
-﻿using System;
+﻿using CodeBase;
+using DataConnectionBase;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using CodeBase;
-using DataConnectionBase;
 
 namespace OpenDentBusiness
 {
-
-	public static class TsiMsgConstructor
+    public static class TsiMsgConstructor
 	{
-
 		///<summary>Returns a message string used to place a patient or guarantor account with TSI for collection.</summary>
 		public static string GeneratePlacement(PatAging patAge, string clientID, TsiDemandType demandType)
 		{

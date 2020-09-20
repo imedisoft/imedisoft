@@ -7,50 +7,58 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 
-namespace OpenDental {
-	public partial class FormDrugManufacturerSetup:ODForm {
+namespace OpenDental
+{
+	public partial class FormDrugManufacturerSetup : ODForm
+	{
 		private List<DrugManufacturer> _listDrugManufacturers;
 
-		public FormDrugManufacturerSetup() {
+		public FormDrugManufacturerSetup()
+		{
 			InitializeComponent();
-			
 		}
 
-		private void FormDrugManufacturerSetup_Load(object sender,EventArgs e) {
+		private void FormDrugManufacturerSetup_Load(object sender, EventArgs e)
+		{
 			FillGrid();
 		}
 
-		private void FillGrid() {
+		private void FillGrid()
+		{
 			DrugManufacturers.RefreshCache();
-			_listDrugManufacturers=DrugManufacturers.GetDeepCopy();
+			_listDrugManufacturers = DrugManufacturers.GetDeepCopy();
 			listMain.Items.Clear();
-			for(int i=0;i<_listDrugManufacturers.Count;i++) {
+			for (int i = 0; i < _listDrugManufacturers.Count; i++)
+			{
 				listMain.Items.Add(_listDrugManufacturers[i].ManufacturerCode + " - " + _listDrugManufacturers[i].ManufacturerName);
 			}
 		}
 
-		private void listMain_DoubleClick(object sender,EventArgs e) {
-			if(listMain.SelectedIndex==-1) {
+		private void listMain_DoubleClick(object sender, EventArgs e)
+		{
+			if (listMain.SelectedIndex == -1)
+			{
 				return;
 			}
-			FormDrugManufacturerEdit FormD=new FormDrugManufacturerEdit();
-			FormD.DrugManufacturerCur=_listDrugManufacturers[listMain.SelectedIndex];
+
+			FormDrugManufacturerEdit FormD = new FormDrugManufacturerEdit();
+			FormD.DrugManufacturerCur = _listDrugManufacturers[listMain.SelectedIndex];
 			FormD.ShowDialog();
 			FillGrid();
 		}
 
-		private void butAdd_Click(object sender,EventArgs e) {
-			FormDrugManufacturerEdit FormD=new FormDrugManufacturerEdit();
-			FormD.DrugManufacturerCur=new DrugManufacturer();
-			FormD.IsNew=true;
+		private void butAdd_Click(object sender, EventArgs e)
+		{
+			FormDrugManufacturerEdit FormD = new FormDrugManufacturerEdit();
+			FormD.DrugManufacturerCur = new DrugManufacturer();
+			FormD.IsNew = true;
 			FormD.ShowDialog();
 			FillGrid();
 		}
 
-		private void butClose_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butClose_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
-
-
 	}
 }

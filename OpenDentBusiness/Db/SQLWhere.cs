@@ -3,15 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenDentBusiness
 {
-	/// <summary>
-	/// This class is used to dynamically construct WHERE clauses for SQL queries.
-	/// </summary>
-	public class SQLWhere
+    /// <summary>
+    /// This class is used to dynamically construct WHERE clauses for SQL queries.
+    /// </summary>
+    public class SQLWhere
 	{
 		/// <summary>
 		/// The clause that can be appended to the query. Public so that it can be serialized for middle tier.

@@ -2,11 +2,7 @@
 using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Globalization;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 
 namespace OpenDentBusiness
 {
@@ -76,8 +72,8 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.AutoNotes) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.AutoNotes.ToString());
-				AutoNotes.GetTableFromCache(true);
-				AutoNoteControls.GetTableFromCache(true);
+				AutoNotes.RefreshCache();
+				AutoNotePrompts.RefreshCache();
 			}
 
 			if (invalidTypes.Contains(InvalidType.Carriers) || refreshAll)
@@ -170,7 +166,7 @@ namespace OpenDentBusiness
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Email.ToString());
 				EmailAddresses.RefreshCache();
 				EmailTemplates.GetTableFromCache(true);
-				EmailAutographs.GetTableFromCache(true);
+				EmailAutographs.RefreshCache();
 			}
 			if (invalidTypes.Contains(InvalidType.Employees) || refreshAll)
 			{

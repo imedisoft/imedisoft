@@ -14,13 +14,14 @@ using System.Collections.Generic;
 
 namespace Imedisoft.Data
 {
-    public partial class EmailAddresses
+	public partial class EmailAddresses
 	{
 		public static EmailAddress FromReader(MySqlDataReader dataReader)
 		{
 			return new EmailAddress
 			{
 				Id = (long)dataReader["id"],
+				EmailAutographId = dataReader["email_autograph_id"] as long?,
 				SmtpServer = (string)dataReader["smtp_server"],
 				SmtpUsername = (string)dataReader["smtp_username"],
 				SmtpPassword = (string)dataReader["smtp_password"],
@@ -65,10 +66,11 @@ namespace Imedisoft.Data
 		private static long ExecuteInsert(EmailAddress emailAddress)
 			=> emailAddress.Id = Database.ExecuteInsert(
 				"INSERT INTO `email_addresses` " +
-				"(`smtp_server`, `smtp_username`, `smtp_password`, `smtp_port`, `use_ssl`, `sender_address`, `pop3_server`, `pop3_port`, `user_id`, `access_token`, `refresh_token`) " +
+				"(`email_autograph_id`, `smtp_server`, `smtp_username`, `smtp_password`, `smtp_port`, `use_ssl`, `sender_address`, `pop3_server`, `pop3_port`, `user_id`, `access_token`, `refresh_token`) " +
 				"VALUES (" +
-					"@smtp_server, @smtp_username, @smtp_password, @smtp_port, @use_ssl, @sender_address, @pop3_server, @pop3_port, @user_id, @access_token, @refresh_token" +
+					"@email_autograph_id, @smtp_server, @smtp_username, @smtp_password, @smtp_port, @use_ssl, @sender_address, @pop3_server, @pop3_port, @user_id, @access_token, @refresh_token" +
 				")",
+					new MySqlParameter("email_autograph_id", (emailAddress.EmailAutographId.HasValue ? (object)emailAddress.EmailAutographId.Value : DBNull.Value)),
 					new MySqlParameter("smtp_server", emailAddress.SmtpServer ?? ""),
 					new MySqlParameter("smtp_username", emailAddress.SmtpUsername ?? ""),
 					new MySqlParameter("smtp_password", emailAddress.SmtpPassword ?? ""),
@@ -88,6 +90,7 @@ namespace Imedisoft.Data
 		private static void ExecuteUpdate(EmailAddress emailAddress)
 			=> Database.ExecuteNonQuery(
 				"UPDATE `email_addresses` SET " +
+					"`email_autograph_id` = @email_autograph_id, " +
 					"`smtp_server` = @smtp_server, " +
 					"`smtp_username` = @smtp_username, " +
 					"`smtp_password` = @smtp_password, " +
@@ -101,6 +104,7 @@ namespace Imedisoft.Data
 					"`refresh_token` = @refresh_token " +
 				"WHERE `id` = @id",
 					new MySqlParameter("id", emailAddress.Id),
+					new MySqlParameter("email_autograph_id", (emailAddress.EmailAutographId.HasValue ? (object)emailAddress.EmailAutographId.Value : DBNull.Value)),
 					new MySqlParameter("smtp_server", emailAddress.SmtpServer ?? ""),
 					new MySqlParameter("smtp_username", emailAddress.SmtpUsername ?? ""),
 					new MySqlParameter("smtp_password", emailAddress.SmtpPassword ?? ""),

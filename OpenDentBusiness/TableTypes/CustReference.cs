@@ -1,14 +1,12 @@
 using Imedisoft.Data.Annotations;
 using System;
-using System.Collections;
-using System.Drawing;
 
 namespace OpenDentBusiness
 {
-	/// <summary>
-	/// One to one relation with the patient table representing each customer as a reference.
-	/// </summary>
-	[Table]
+    /// <summary>
+    /// One to one relation with the patient table representing each customer as a reference.
+    /// </summary>
+    [Table]
 	public class CustReference : TableBase
 	{
 		[PrimaryKey]

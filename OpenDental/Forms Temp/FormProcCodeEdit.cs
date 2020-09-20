@@ -1299,7 +1299,7 @@ namespace OpenDental{
 			FormAN.IsSelectionMode=true;
 			if(FormAN.ShowDialog()==DialogResult.OK) {
 				//3. Put the selected AutoNote title into the text at the cursor's index (FormAN.AutoNoteCur.AutoNoteName) surrounded by brackets.
-				textBox.Text=textBox.Text.Insert(cursorIdx,"[["+FormAN.AutoNoteCur.AutoNoteName+"]]");
+				textBox.Text=textBox.Text.Insert(cursorIdx,"[["+FormAN.SelectedAutoNote.Name+"]]");
 			}
 		}
 

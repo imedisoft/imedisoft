@@ -5,14 +5,16 @@ using System.ComponentModel;
 using System.Data;
 using System.Text;
 
-namespace OpenDentBusiness{
+namespace OpenDentBusiness
+{
 
 	///<summary>The claim table holds information about individual claims.  Each row represents one claim.</summary>
 	[Serializable()]
-	[CrudTable(AuditPerms=CrudAuditPerm.ClaimHistoryEdit,IsSecurityStamped=true)]
-	public class Claim:TableBase{
+	[CrudTable(AuditPerms = CrudAuditPerm.ClaimHistoryEdit, IsSecurityStamped = true)]
+	public class Claim : TableBase
+	{
 		///<summary>Primary key</summary>
-		[CrudColumn(IsPriKey=true)]
+		[CrudColumn(IsPriKey = true)]
 		public long ClaimNum;
 		///<summary>FK to patient.PatNum.  Must always match claimProc.PatNum</summary>
 		public long PatNum;//
@@ -166,14 +168,14 @@ namespace OpenDentBusiness{
 		///enters a value.  This field was added for Denti-Cal certification, but can go out for any clearinghouse.</summary>
 		public double ShareOfCost;
 		///<summary>FK to userod.UserNum.  Set to the user logged in when the row was inserted at SecDateEntry date and time.</summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.ExcludeFromUpdate)]
+		[CrudColumn(SpecialType = CrudSpecialColType.ExcludeFromUpdate)]
 		public long SecUserNumEntry;
 		///<summary>Timestamp automatically generated and user not allowed to change.  The actual date of entry.</summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.DateEntry)]
+		[CrudColumn(SpecialType = CrudSpecialColType.DateEntry)]
 		public DateTime SecDateEntry;
 		///<summary>Automatically updated by MySQL every time a row is added or changed. Could be changed due to user editing, custom queries or program
 		///updates.  Not user editable with the UI.</summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.TimeStamp)]
+		[CrudColumn(SpecialType = CrudSpecialColType.TimeStamp)]
 		public DateTime SecDateTEdit;
 		///<summary>FK to referral.ReferralNum.  Goes hand-in-hand with ProvOrderOverride.  Medical eclaims only.  Defaults to zero.
 		///If set, and the ProvOrderOverride is not set, then this referral will go out at the ordering provider on medical e-claims.</summary>
@@ -194,43 +196,50 @@ namespace OpenDentBusiness{
 		public bool IsOutsideLab;
 
 		///<summary>Not a data column.</summary>
-		[CrudColumn(IsNotDbColumn=true)]
+		[CrudColumn(IsNotDbColumn = true)]
 		public List<ClaimAttach> Attachments;
 
-		public Claim(){
-			AttachedFlags="";
-			CanadianMaterialsForwarded="";
-			CanadianIsInitialLower="";
-			CanadianIsInitialUpper="";
-			Attachments=new List<ClaimAttach>();
+		public Claim()
+		{
+			AttachedFlags = "";
+			CanadianMaterialsForwarded = "";
+			CanadianIsInitialLower = "";
+			CanadianIsInitialUpper = "";
+			Attachments = new List<ClaimAttach>();
 		}
 
 		///<summary>Returns a copy of the claim.</summary>
-		public Claim Copy() {
-			Claim c=(Claim)MemberwiseClone();
-			c.Attachments=new List<ClaimAttach>();
-			for(int i=0;i<Attachments.Count;i++){
+		public Claim Copy()
+		{
+			Claim c = (Claim)MemberwiseClone();
+			c.Attachments = new List<ClaimAttach>();
+			for (int i = 0; i < Attachments.Count; i++)
+			{
 				c.Attachments.Add(Attachments[i].Copy());
 			}
 			return c;
 		}
 
-		public override bool Equals(object obj){
-			if(obj == null || GetType() != obj.GetType()){
+		public override bool Equals(object obj)
+		{
+			if (obj == null || GetType() != obj.GetType())
+			{
 				return false;
 			}
 			Claim c = (Claim)obj;
 			return (ClaimNum == c.ClaimNum);
 		}
 
-		public override int GetHashCode() {
+		public override int GetHashCode()
+		{
 			return base.GetHashCode();
 		}
 
 	}
 
 	///<summary></summary>
-	public enum EnumClaimMedType {
+	public enum EnumClaimMedType
+	{
 		///<summary>0</summary>
 		Dental,
 		///<summary>1</summary>
@@ -240,23 +249,25 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>0=none, 1=EPSDT_1, 2=Handicapped_2, 3=SpecialFederal_3, (no 4), 5=Disability_5, 9=SecondOpinion_9</summary>
-	public enum EnumClaimSpecialProgram {
+	public enum EnumClaimSpecialProgram
+	{
 		///<summary></summary>
-		none=0,
+		none = 0,
 		///<summary></summary>
-		EPSDT_1=1,
+		EPSDT_1 = 1,
 		///<summary></summary>
-		Handicapped_2=2,
+		Handicapped_2 = 2,
 		///<summary></summary>
-		SpecialFederal_3=3,
+		SpecialFederal_3 = 3,
 		///<summary></summary>
-		Disability_5=5,
+		Disability_5 = 5,
 		///<summary></summary>
-		SecondOpinion_9=9
+		SecondOpinion_9 = 9
 	}
 
 	///<summary></summary>
-	public enum ClaimCorrectionType {
+	public enum ClaimCorrectionType
+	{
 		///<summary>0 - X12 1. Use for claims that are not ongoing.</summary>
 		Original,
 		///<summary>1 - X12 7. Use to entirely replace an original claim. A claim reference number will be required.</summary>
@@ -276,50 +287,51 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>Used for 1500 Medical Claim Form, 'Qual' box portion of fields 14 and 15.  Populate with 3 digit enum value. Non-standard enum numbering.</summary>
-	public enum DateOtherQualifier {
+	public enum DateOtherQualifier
+	{
 		///<summary>0 - None</summary>
 		[Description("None")]
-		None=0,
+		None = 0,
 		///<summary>090 - Report Start</summary>
 		[Description("Report Start (Assumed Care Date)")]
-		ReportStart=090,
+		ReportStart = 090,
 		///<summary>091 - Report End</summary>
 		[Description("Report End (Relinquished Care Date)")]
-		ReportEnd=091,
+		ReportEnd = 091,
 		///<summary>304 - Latest Visit or Consultation</summary>
 		[Description("Latest Visit or Consultation")]
-		LatestVisitConsult=304,
+		LatestVisitConsult = 304,
 		///<summary>439 - Accident</summary>
 		[Description("Accident")]
-		Accident=439,
+		Accident = 439,
 		///<summary>444 - First Visit or Consultation</summary>
 		[Description("First Visit or Consultation")]
-		FirstVisitConsult=444,
+		FirstVisitConsult = 444,
 		///<summary>453 - Acute Manifestation of a Chronic Condition</summary>
 		[Description("Acute Manifestation of a Chronic Condition")]
-		ChronicCondManifest=453,
+		ChronicCondManifest = 453,
 		///<summary>454 - Initial Treatment</summary>
 		[Description("Initial Treatment")]
-		InitialTreatment=454,
+		InitialTreatment = 454,
 		///<summary>455 - Last X-ray</summary>
 		[Description("Last X-ray")]
-		LastXray=455,
+		LastXray = 455,
 		///<summary>471 - Prescription</summary>
 		[Description("Prescription")]
-		Prescription=471
+		Prescription = 471
 	}
 
 	///<summary>Non-standard enum numbering.</summary>
-	public enum DateIllnessInjuryPregQualifier {
+	public enum DateIllnessInjuryPregQualifier
+	{
 		///<summary>0 - None</summary>
 		[Description("None")]
-		None=0,
+		None = 0,
 		///<summary>431 - Onset of Current Symptoms or Illness</summary>
 		[Description("Onset of Current Symptoms or Illness")]
-		OnsetCurSymptoms=431,
+		OnsetCurSymptoms = 431,
 		///<summary>484 - Last Menstrual Period</summary>
 		[Description("Last Menstrual Period")]
-		LastMenstrualPeriod=484
+		LastMenstrualPeriod = 484
 	}
-
 }

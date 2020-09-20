@@ -1,12 +1,6 @@
-﻿using CodeBase;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Security.Cryptography;
-using System.Security.RightsManagement;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace OpenDentBusiness
 {
@@ -101,7 +95,7 @@ namespace OpenDentBusiness
 				return false;
             }
 
-			if (Enum.TryParse<PasswordAlgorithm>(hash.Substring(0, i), out var result))
+			if (!Enum.TryParse<PasswordAlgorithm>(hash.Substring(0, i), out var result))
 			{
 				return false;
 			}

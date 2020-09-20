@@ -1274,8 +1274,7 @@ namespace OpenDental{
 
 		private void ButEditAutoNote_Click(object sender,EventArgs e) {
 			if(HasAutoNotePrompt()) {
-				FormAutoNoteCompose FormA=new FormAutoNoteCompose();
-				FormA.MainTextNote=textNotes.Text;
+				FormAutoNoteCompose FormA=new FormAutoNoteCompose(textNotes.Text);
 				FormA.ShowDialog();
 				if(FormA.DialogResult==DialogResult.OK) {
 					textNotes.Text=FormA.CompletedNote;

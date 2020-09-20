@@ -1,32 +1,35 @@
 ﻿using Imedisoft.Data.Annotations;
-using System;
 
 namespace OpenDentBusiness
 {
-	/// <summary>
-	/// CDC Race and Ethnicity. About 200 rows. This table is not used anywhere right now.
-	/// </summary>
-	[Serializable]
-	public class Cdcrec : TableBase
+    /// <summary>
+    /// CDC Race and Ethnicity.
+    /// </summary>
+    [Table("cdcrecs")]
+	public class Cdcrec
 	{
 		[PrimaryKey]
-		public long CdcrecNum;
+		public long Id;
+
+		[Column(ReadOnly = true)]
+		public string Code;
 
 		/// <summary>
-		/// CDCREC Code.  Example: 1002-5.  Not allowed to edit this column once saved in the database.
+		///		Hierarchical Code. Example:
+		///		<list type="table">
+		///			<item>
+		///				<term>R1</term> "American Indian or alaska Native"
+		///			</item>
+		///			<item>
+		///				<term>R1.01</term> "American Indian"
+		///			</item>
+		///			<item>
+		///				<term>R1.01.001</term> "Abenaki"
+		///			</item>
+		///		</list>
 		/// </summary>
 		[Column(ReadOnly = true)]
-		public string CdcrecCode;
-
-		/// <summary>
-		/// Heirarchical Code. Example:
-		///		<para>R1 == "American Indian or alaska Native"</para>
-		///		<para>R1.01 == "American Indian"</para>
-		///		<para>R1.01.001 == "Abenaki"</para>
-		///		<para>Not allowed to edit this column once saved in the database.</para>
-		/// </summary>
-		public string HeirarchicalCode;
-
+		public string HierarchicalCode;
 
 		public string Description;
 	}

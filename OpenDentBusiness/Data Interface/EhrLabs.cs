@@ -703,7 +703,7 @@ namespace OpenDentBusiness{
 			//Insert new child elements
 			for(int i=0;i<ehrLab.ListEhrLabNotes.Count;i++) {//must be before lab results.
 				ehrLab.ListEhrLabNotes[i].EhrLabNum=ehrLab.EhrLabNum;
-				ehrLab.ListEhrLabNotes[i].EhrLabNoteNum=EhrLabNotes.Insert(ehrLab.ListEhrLabNotes[i]);
+				ehrLab.ListEhrLabNotes[i].Id=EhrLabNotes.Insert(ehrLab.ListEhrLabNotes[i]);
 			}
 			for(int i=0;i<ehrLab.ListEhrLabResults.Count;i++) {
 				ehrLab.ListEhrLabResults[i].EhrLabNum=ehrLab.EhrLabNum;

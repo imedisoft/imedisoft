@@ -1,630 +1,320 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using System.Windows.Forms;
-using System.Resources;
-
 namespace OpenDentBusiness.Eclaims
 {
-	public class CCDerror
+    public class CCDerror
 	{
-		///<summary>Get the version 4 error message for the given CDA error code.</summary>
-		public static string message(int errorCode, bool useFrench)
-		{
-			if (useFrench)
-			{
-				return MessageFr4(errorCode);
-			}
-			return MessageEn4(errorCode);
-		}
+		/// <summary>
+        /// Get the version 4 error message for the given CDA error code.
+        /// </summary>
+		public static string message(int errorCode, bool useFrench) 
+            => useFrench ? GetErrorMessageFr(errorCode) : GetErrorMessageEn(errorCode);
 
-		//English error messages for version 4.
-		private static string MessageEn4(int errorCode)
+		private static string GetErrorMessageEn(int errorCode)
 		{
-			switch (errorCode)
-			{
-				default:
-					break;
-				case 1:
-					return "Missing/Invalid Transaction Prefix";
-				case 2:
-					return "Missing/Invalid Dental Claim # or Office Sequence #";
-				case 3:
-					return "Missing/Invalid Version Number";
-				case 4:
-					return "Missing/Invalid Transaction Code";
-				case 5:
-					return "Missing/Invalid Carrier Identification Number";
-				case 6:
-					return "Missing/Invalid Software System ID";
-				case 7:
-					return "Missing/Invalid Dentist Unique ID (Provider Number)";
-				case 8:
-					return "Missing/Invalid Dental Office Number";
-				case 9:
-					return "Missing/Invalid Primary Policy/Plan Number";
-				case 10:
-					return "Missing/Invalid Division/Section Number";
-				case 11:
-					return "Missing/Invalid Subscriber Identification Number";
-				case 12:
-					return "Missing/Invalid Relationship Code";
-				case 13:
-					return "Missing/Invalid Patient's Sex";
-				case 14:
-					return "Missing/Invalid Patient's Birthday";
-				case 15:
-					return "Missing Patient's Last Name";
-				case 16:
-					return "Missing Patient's First Name";
-				case 17:
-					return "Missing/Invalid Eligibility Exception Code";
-				case 18:
-					return "Missing Name of School";
-				case 19:
-					return "Missing Subscriber's Last Name or Name did not match to the one on file";
-				case 20:
-					return "Missing Subscriber's First Name or Name did not match to the one on file";
-				case 21:
-					return "Missing Subscriber's Address";
-				case 22:
-					return "Missing Subscriber's City";
-				case 23:
-					return "Missing/Invalid Subscriber's Postal Code";
-				case 24:
-					return "Invalid Language of Insured";
-				case 25:
-					return "Missing/Invalid Subscriber's Birthday";
-				case 26:
-					return "Invalid Secondary Carrier ID Number";
-				case 27:
-					return "Missing/Invalid Secondary Policy/Plan Number";
-				case 28:
-					return "Missing/Invalid Secondary Division/Section Number";
-				case 29:
-					return "Missing/Invalid Secondary Plan Subscriber Number";
-				case 30:
-					return "Missing/Invalid Secondary Subscriber's Birthday";
-				case 31:
-					return "Claim should be submitted to the Secondary Carrier first. (The secondary is the primary carrier)";
-				case 32:
-					return "Missing/Invalid Payee";
-				case 33:
-					return "Invalid Accident Date";
-				case 34:
-					return "Missing/Invalid Number of Procedures Performed";
-				case 35:
-					return "Missing/Invalid Procedure Code";
-				case 36:
-					return "Missing/Invalid Date of Service";
-				case 37:
-					return "Missing/Invalid International Tooth, Sextant, Quadrant or Arch Designation";
-				case 38:
-					return "Missing/Invalid Tooth Surface";
-				case 39:
-					return "Invalid Date of Initial Placement (Upper )";
-				case 40:
-					return "Missing/Invalid Response re: Treatment Required for Orthodontic Purposes";
-				case 41:
-					return "Missing/Invalid Dentist's Fee Claimed";
-				case 42:
-					return "Missing/Invalid Lab Fee";
-				case 43:
-					return "Missing/Invalid Units of Time";
-				case 44:
-					return "Message Length Field did not match length of message received";
-				case 45:
-					return "Missing/Invalid E-Mail / Materials Forwarded Flag";
-				case 46:
-					return "Missing/Invalid Claim Reference Number";
-				case 47:
-					return "Provider is not Authorized to access CDAnet";
-				case 48:
-					return "Please Submit Claim Manually";
-				case 49:
-					return "No outstanding responses from the network requested";
-				case 50:
-					return "Missing/Invalid Procedure Line Number";
-				case 51:
-					return "Predetermination number not found";
-				case 52:
-					return "At least one service must be entered for a claim/predetermination";
-				case 53:
-					return "Missing/Invalid Subscriber's province";
-				case 54:
-					return "Subscriber ID on reversal did not match that on the original claim";
-				case 55:
-					return "Reversal not for today's transaction";
-				case 56:
-					return "Provider's specialty code does not match that on file";
-				case 57:
-					return "Missing/Invalid response to Question re: Is this an initial placement (Upper)";
-				case 58:
-					return "Number of procedures found did not match with number indicated";
-				case 59:
-					return "Dental Office Software is not certified to submit transactions to CDAnet";
-				case 60:
-					return "Claim Reversal Transaction cannot be accepted now, please try again later today";
-				case 61:
-					return "Network error, please re-submit transaction";
-				case 62:
-					return "Missing/Invalid Payee CDA Provider Number";
-				case 63:
-					return "Missing/Invalid Payee Provider Office Number";
-				case 64:
-					return "Missing/Invalid Referring Provider";
-				case 65:
-					return "Missing/Invalid Referral Reason Code";
-				case 66:
-					return "Missing/Invalid Plan Flag";
-				case 67:
-					return "Missing NIHB Plan fields";
-				case 68:
-					return "Missing/Invalid Band Number";
-				case 69:
-					return "Missing/Invalid Family Number";
-				case 70:
-					return "Missing/Invalid Missing Teeth Map";
-				case 71:
-					return "Missing/Invalid Secondary Relationship Code";
-				case 72:
-					return "Missing/Invalid Procedure Type Codes";
-				case 73:
-					return "Missing/Invalid Remarks Code";
-				case 74:
-					return "Date of Service is a future date";
-				case 75:
-					return "Date of Service is more than one week old";
-				case 76:
-					return "Group not acceptable through EDI";
-				case 77:
-					return "Procedure Type not supported by carrier";
-				case 78:
-					return "Please submit pre-authorization manually";
-				case 79:
-					return "Duplicate Claim";
-				case 80:
-					return "Missing/Invalid Carrier Transaction Counter";
-				case 81:
-					return "Invalid Eligibility Date";
-				case 82:
-					return "Invalid Card Sequence/Version Number";
-				case 83:
-					return "Missing/Invalid Secondary Subscriber's Last Name";
-				case 84:
-					return "Missing/Invalid Secondary Subscriber's First Name";
-				case 85:
-					return "Invalid Secondary Subscriber's Middle Initial";
-				case 86:
-					return "Missing Secondary Subscriber's Address Line 1";
-				case 87:
-					return "Missing Secondary Subscriber's City";
-				case 88:
-					return "Missing Secondary Subscriber's Province/State Code";
-				case 89:
-					return "Invalid Secondary Subscriber's Postal/Zip Code";
-				case 90:
-					return "Missing/Invalid response to Question: Is this an Initial Placement Lower";
-				case 91:
-					return "Missing/Invalid Date of Initial Placement Lower";
-				case 92:
-					return "Missing/Invalid Maxillary Prosthesis Material";
-				case 93:
-					return "Missing/Invalid Mandibular Prosthesis Material";
-				case 94:
-					return "Missing/Invalid Extracted Teeth Count";
-				case 95:
-					return "Missing/Invalid Extracted Tooth Number";
-				case 96:
-					return "Missing/Invalid Extraction Date";
-				case 97:
-					return "Invalid Reconciliation Date";
-				case 98:
-					return "Missing/Invalid Lab Procedure Code";
-				case 99:
-					return "Invalid Encryption Code";
-				case 100:
-					return "Invalid Encryption";
-				case 101:
-					return "Invalid Subscriber's Middle Initial";
-				case 102:
-					return "Invalid Patient’s Middle Initial";
-				case 103:
-					return "Missing/Invalid Primary Dependant Code";
-				case 104:
-					return "Missing/Invalid Secondary Dependant Code";
-				case 105:
-					return "Missing/Invalid Secondary Card Sequence/Version Number";
-				case 106:
-					return "Missing/Invalid Secondary Language";
-				case 107:
-					return "Missing/Invalid Secondary Coverage Flag";
-				case 108:
-					return "Secondary Coverage Fields Missing";
-				case 109:
-					return "Missing/Invalid Secondary Sequence Number";
-				case 110:
-					return "Missing/Invalid Orthodontic Record Flag";
-				case 111:
-					return "Missing/Invalid First Examination Fee";
-				case 112:
-					return "Missing/Invalid Diagnostic Phase Fee";
-				case 113:
-					return "Missing/Invalid Initial Payment";
-				case 114:
-					return "Missing/Invalid Payment Mode";
-				case 115:
-					return "Missing/Invalid Treatment Duration";
-				case 116:
-					return "Missing/Invalid Number of Anticipated Payments";
-				case 117:
-					return "Missing/Invalid Anticipated Payment Amount";
-				case 118:
-					return "Missing/Invalid Lab Procedure Code # 2";
-				case 119:
-					return "Missing/Invalid Lab Procedure Fee # 2";
-				case 120:
-					return "Missing/Invalid Estimated Treatment Starting Date";
-				case 121:
-					return "Primary EOB Altered from the Original";
-				case 122:
-					return "Data no longer available";
-				case 123:
-					return "Missing/Invalid Reconciliation Page Number";
-				case 124:
-					return "Transaction Type not supported by the carrier";
-				case 125:
-					return "Transaction Version not supported";
-				case 126:
-					return "Missing/Invalid Diagnostic Code";
-				case 127:
-					return "Missing/Invalid Institution Code";
-				case 128:
-					return "Missing/Invalid Current Predetermination Page Number";
-				case 129:
-					return "Missing/Invalid Last Predetermination Page Number";
-				case 130:
-					return "Missing/Invalid Plan Record Count";
-				case 131:
-					return "Missing/Invalid Plan Record";
-				case 132:
-					return "Missing/Invalid Secondary Record Count";
-				case 133:
-					return "Missing/Invalid Embedded Transaction Length";
-				case 134:
-					return "Invalid Secondary Address Line # 2";
-				case 135:
-					return "Missing / Invalid Receiving Provider Number";
-				case 136:
-					return "Missing / Invalid Receiving Office Number";
-				case 137:
-					return "Missing / Invalid Original Office Sequence Number";
-				case 138:
-					return "Missing / Invalid Original Transaction Reference Number";
-				case 139:
-					return "Missing / Invalid Attachment Source";
-				case 140:
-					return "Missing / Invalid Attachment Count";
-				case 141:
-					return "Missing / Invalid Attachment Type";
-				case 142:
-					return "Missing / Invalid Attachment Length";
-				case 143:
-					return "Missing / Invalid Attachment";
-				case 144:
-					return "Missing / Invalid Attachment File Date";
-				case 145:
-					return "Submitted Claim’s Predetermination number indicates claim must be made manually";
-				case 146:
-					return "Submitted Claim’s Predetermination number has expired";
-				case 147:
-					return "Overage dependant is not a student or disabled";
-				case 148:
-					return "Subscriber does not have dental coverage";
-				case 149:
-					return "Patient is not eligible";
-				case 150:
-					return "Lab bill is not allowed";
-				case 151:
-					return "Patient’s name / birth year does not match our files";
-				case 152:
-					return "Lab bill must be submitted on the same line as the associated professional fee";
-				case 153:
-					return "Our records indicate another payor should be primary";
-				case 997:
-					return "Last Transaction Unreadable";
-				case 998:
-					return "Reserved by CDAnet for future use";
-				case 999:
-					return "Host Processing Error - Resubmit Claim Manually";
-			}
-			return "UNKNOWN ERROR";
-		}
+            return errorCode switch
+            {
+                1 => "Missing/Invalid Transaction Prefix",
+                2 => "Missing/Invalid Dental Claim # or Office Sequence #",
+                3 => "Missing/Invalid Version Number",
+                4 => "Missing/Invalid Transaction Code",
+                5 => "Missing/Invalid Carrier Identification Number",
+                6 => "Missing/Invalid Software System ID",
+                7 => "Missing/Invalid Dentist Unique ID (Provider Number)",
+                8 => "Missing/Invalid Dental Office Number",
+                9 => "Missing/Invalid Primary Policy/Plan Number",
+                10 => "Missing/Invalid Division/Section Number",
+                11 => "Missing/Invalid Subscriber Identification Number",
+                12 => "Missing/Invalid Relationship Code",
+                13 => "Missing/Invalid Patient's Sex",
+                14 => "Missing/Invalid Patient's Birthday",
+                15 => "Missing Patient's Last Name",
+                16 => "Missing Patient's First Name",
+                17 => "Missing/Invalid Eligibility Exception Code",
+                18 => "Missing Name of School",
+                19 => "Missing Subscriber's Last Name or Name did not match to the one on file",
+                20 => "Missing Subscriber's First Name or Name did not match to the one on file",
+                21 => "Missing Subscriber's Address",
+                22 => "Missing Subscriber's City",
+                23 => "Missing/Invalid Subscriber's Postal Code",
+                24 => "Invalid Language of Insured",
+                25 => "Missing/Invalid Subscriber's Birthday",
+                26 => "Invalid Secondary Carrier ID Number",
+                27 => "Missing/Invalid Secondary Policy/Plan Number",
+                28 => "Missing/Invalid Secondary Division/Section Number",
+                29 => "Missing/Invalid Secondary Plan Subscriber Number",
+                30 => "Missing/Invalid Secondary Subscriber's Birthday",
+                31 => "Claim should be submitted to the Secondary Carrier first. (The secondary is the primary carrier)",
+                32 => "Missing/Invalid Payee",
+                33 => "Invalid Accident Date",
+                34 => "Missing/Invalid Number of Procedures Performed",
+                35 => "Missing/Invalid Procedure Code",
+                36 => "Missing/Invalid Date of Service",
+                37 => "Missing/Invalid International Tooth, Sextant, Quadrant or Arch Designation",
+                38 => "Missing/Invalid Tooth Surface",
+                39 => "Invalid Date of Initial Placement (Upper )",
+                40 => "Missing/Invalid Response re: Treatment Required for Orthodontic Purposes",
+                41 => "Missing/Invalid Dentist's Fee Claimed",
+                42 => "Missing/Invalid Lab Fee",
+                43 => "Missing/Invalid Units of Time",
+                44 => "Message Length Field did not match length of message received",
+                45 => "Missing/Invalid E-Mail / Materials Forwarded Flag",
+                46 => "Missing/Invalid Claim Reference Number",
+                47 => "Provider is not Authorized to access CDAnet",
+                48 => "Please Submit Claim Manually",
+                49 => "No outstanding responses from the network requested",
+                50 => "Missing/Invalid Procedure Line Number",
+                51 => "Predetermination number not found",
+                52 => "At least one service must be entered for a claim/predetermination",
+                53 => "Missing/Invalid Subscriber's province",
+                54 => "Subscriber ID on reversal did not match that on the original claim",
+                55 => "Reversal not for today's transaction",
+                56 => "Provider's specialty code does not match that on file",
+                57 => "Missing/Invalid response to Question re: Is this an initial placement (Upper)",
+                58 => "Number of procedures found did not match with number indicated",
+                59 => "Dental Office Software is not certified to submit transactions to CDAnet",
+                60 => "Claim Reversal Transaction cannot be accepted now, please try again later today",
+                61 => "Network error, please re-submit transaction",
+                62 => "Missing/Invalid Payee CDA Provider Number",
+                63 => "Missing/Invalid Payee Provider Office Number",
+                64 => "Missing/Invalid Referring Provider",
+                65 => "Missing/Invalid Referral Reason Code",
+                66 => "Missing/Invalid Plan Flag",
+                67 => "Missing NIHB Plan fields",
+                68 => "Missing/Invalid Band Number",
+                69 => "Missing/Invalid Family Number",
+                70 => "Missing/Invalid Missing Teeth Map",
+                71 => "Missing/Invalid Secondary Relationship Code",
+                72 => "Missing/Invalid Procedure Type Codes",
+                73 => "Missing/Invalid Remarks Code",
+                74 => "Date of Service is a future date",
+                75 => "Date of Service is more than one week old",
+                76 => "Group not acceptable through EDI",
+                77 => "Procedure Type not supported by carrier",
+                78 => "Please submit pre-authorization manually",
+                79 => "Duplicate Claim",
+                80 => "Missing/Invalid Carrier Transaction Counter",
+                81 => "Invalid Eligibility Date",
+                82 => "Invalid Card Sequence/Version Number",
+                83 => "Missing/Invalid Secondary Subscriber's Last Name",
+                84 => "Missing/Invalid Secondary Subscriber's First Name",
+                85 => "Invalid Secondary Subscriber's Middle Initial",
+                86 => "Missing Secondary Subscriber's Address Line 1",
+                87 => "Missing Secondary Subscriber's City",
+                88 => "Missing Secondary Subscriber's Province/State Code",
+                89 => "Invalid Secondary Subscriber's Postal/Zip Code",
+                90 => "Missing/Invalid response to Question: Is this an Initial Placement Lower",
+                91 => "Missing/Invalid Date of Initial Placement Lower",
+                92 => "Missing/Invalid Maxillary Prosthesis Material",
+                93 => "Missing/Invalid Mandibular Prosthesis Material",
+                94 => "Missing/Invalid Extracted Teeth Count",
+                95 => "Missing/Invalid Extracted Tooth Number",
+                96 => "Missing/Invalid Extraction Date",
+                97 => "Invalid Reconciliation Date",
+                98 => "Missing/Invalid Lab Procedure Code",
+                99 => "Invalid Encryption Code",
+                100 => "Invalid Encryption",
+                101 => "Invalid Subscriber's Middle Initial",
+                102 => "Invalid Patient’s Middle Initial",
+                103 => "Missing/Invalid Primary Dependant Code",
+                104 => "Missing/Invalid Secondary Dependant Code",
+                105 => "Missing/Invalid Secondary Card Sequence/Version Number",
+                106 => "Missing/Invalid Secondary Language",
+                107 => "Missing/Invalid Secondary Coverage Flag",
+                108 => "Secondary Coverage Fields Missing",
+                109 => "Missing/Invalid Secondary Sequence Number",
+                110 => "Missing/Invalid Orthodontic Record Flag",
+                111 => "Missing/Invalid First Examination Fee",
+                112 => "Missing/Invalid Diagnostic Phase Fee",
+                113 => "Missing/Invalid Initial Payment",
+                114 => "Missing/Invalid Payment Mode",
+                115 => "Missing/Invalid Treatment Duration",
+                116 => "Missing/Invalid Number of Anticipated Payments",
+                117 => "Missing/Invalid Anticipated Payment Amount",
+                118 => "Missing/Invalid Lab Procedure Code # 2",
+                119 => "Missing/Invalid Lab Procedure Fee # 2",
+                120 => "Missing/Invalid Estimated Treatment Starting Date",
+                121 => "Primary EOB Altered from the Original",
+                122 => "Data no longer available",
+                123 => "Missing/Invalid Reconciliation Page Number",
+                124 => "Transaction Type not supported by the carrier",
+                125 => "Transaction Version not supported",
+                126 => "Missing/Invalid Diagnostic Code",
+                127 => "Missing/Invalid Institution Code",
+                128 => "Missing/Invalid Current Predetermination Page Number",
+                129 => "Missing/Invalid Last Predetermination Page Number",
+                130 => "Missing/Invalid Plan Record Count",
+                131 => "Missing/Invalid Plan Record",
+                132 => "Missing/Invalid Secondary Record Count",
+                133 => "Missing/Invalid Embedded Transaction Length",
+                134 => "Invalid Secondary Address Line # 2",
+                135 => "Missing / Invalid Receiving Provider Number",
+                136 => "Missing / Invalid Receiving Office Number",
+                137 => "Missing / Invalid Original Office Sequence Number",
+                138 => "Missing / Invalid Original Transaction Reference Number",
+                139 => "Missing / Invalid Attachment Source",
+                140 => "Missing / Invalid Attachment Count",
+                141 => "Missing / Invalid Attachment Type",
+                142 => "Missing / Invalid Attachment Length",
+                143 => "Missing / Invalid Attachment",
+                144 => "Missing / Invalid Attachment File Date",
+                145 => "Submitted Claim’s Predetermination number indicates claim must be made manually",
+                146 => "Submitted Claim’s Predetermination number has expired",
+                147 => "Overage dependant is not a student or disabled",
+                148 => "Subscriber does not have dental coverage",
+                149 => "Patient is not eligible",
+                150 => "Lab bill is not allowed",
+                151 => "Patient’s name / birth year does not match our files",
+                152 => "Lab bill must be submitted on the same line as the associated professional fee",
+                153 => "Our records indicate another payor should be primary",
+                997 => "Last Transaction Unreadable",
+                998 => "Reserved by CDAnet for future use",
+                999 => "Host Processing Error - Resubmit Claim Manually",
+                _ => "UNKNOWN ERROR",
+            };
+        }
 
-		//French error messages for version 4.
-		private static string MessageFr4(int errorCode)
+		private static string GetErrorMessageFr(int errorCode)
 		{
-			switch (errorCode)
-			{
-				default:
-					break;
-				case 1:
-					return "Préfixe de la transaction absent ou invalide";
-				case 2:
-					return "Numéro de demande de prestations ou de transaction du cabinet absent ou invalide";
-				case 3:
-					return "Numéro de version absent ou invalide";
-				case 4:
-					return "Code de la transaction absent ou invalide";
-				case 5:
-					return "Numéro de l'assureur absent ou invalide";
-				case 6:
-					return "Numéro du logiciel dentaire absent ou invalide";
-				case 7:
-					return "Numéro du dentiste attribué par l'ADC absent ou invalide";
-				case 8:
-					return "Numéro du cabinet attribué par l'ADC absent ou invalide";
-				case 9:
-					return "Numéro de police ou régime (premier assureur) absent ou invalide";
-				case 10:
-					return "Numéro de section ou de division absent ou invalide";
-				case 11:
-					return "Numéro du titulaire de l'assurance absent ou invalide";
-				case 12:
-					return "Code indiquant lien de parenté patient-titulaire absent ou invalide";
-				case 13:
-					return "Sexe du patient absent ou invalide";
-				case 14:
-					return "Date de naissance du patient absente ou invalide";
-				case 15:
-					return "Nom de famille du patient absent ou invalide";
-				case 16:
-					return "Prénom du patient absent ou invalide";
-				case 17:
-					return "Code indiquant exception quant à l'admissibilité absent ou invalide";
-				case 18:
-					return "Nom de l'établissement scolaire absent";
-				case 19:
-					return "Nom de famille du titulaire de l'assurance absent ou non conforme au dossier";
-				case 20:
-					return "Prénom du titulaire de l'assurance absent ou non conforme au dossier";
-				case 21:
-					return "Adresse du titulaire de l'assurance absente";
-				case 22:
-					return "Ville du titulaire de l'assurance absente";
-				case 23:
-					return "Code postal du titulaire de l'assurance absent ou invalide";
-				case 24:
-					return "Langue première du titulaire de l'assurance invalide";
-				case 25:
-					return "Date de naissance du titulaire de l'assurance absente ou invalide";
-				case 26:
-					return "Numéro du second assureur invalide";
-				case 27:
-					return "Numéro de police ou régime (second assureur) absent ou invalide";
-				case 28:
-					return "Numéro de division ou section (second assureur) absent ou invalide";
-				case 29:
-					return "Numéro du titulaire (second assureur) absent ou invalide";
-				case 30:
-					return "Date de naissance du titulaire (second assureur) absente ou invalide";
-				case 31:
-					return "Demande doit d'abord être soumise au second assureur (second assureur = premier assureur)";
-				case 32:
-					return "Destinataire du paiement absent ou invalide";
-				case 33:
-					return "Date de l'accident invalide";
-				case 34:
-					return "Nombre d'actes exécutés absent ou invalide";
-				case 35:
-					return "Code de l'acte absent ou invalide";
-				case 36:
-					return "Date à laquelle l'acte a été exécuté absente ou invalide";
-				case 37:
-					return "Numéro de dent international, sextant, quadrant ou site absent ou invalide";
-				case 38:
-					return "Surface de la dent absente ou invalide";
-				case 39:
-					return "Date de la mise en bouche initiale au maxillaire invalide";
-				case 40:
-					return "Réponse absente ou invalide : Le traitement est-il requis en vue de soins d'orthodontie ?";
-				case 41:
-					return "Honoraires demandés par le dentiste absents ou invalides";
-				case 42:
-					return "Frais de laboratoire absents ou invalides";
-				case 43:
-					return "Unité de temps absente ou invalide";
-				case 44:
-					return "Longueur du message indiquée non identique à longueur du message reçu";
-				case 45:
-					return "Indicateur de courrier électronique ou d'informations supplémentaires absent ou invalide";
-				case 46:
-					return "Numéro de référence de la demande de prestations absent ou invalide";
-				case 47:
-					return "Dentiste n'a pas accès au réseau CDAnet";
-				case 48:
-					return "Veuillez soumettre demande manuellement";
-				case 49:
-					return "Pas de réponse en suspens provenant du réseau demandée";
-				case 50:
-					return "Numéro de ligne de l'acte absent ou invalide";
-				case 51:
-					return "Numéro du plan de traitement introuvable";
-				case 52:
-					return "Demande de prestations ou plan de traitement doit contenir au moins un acte";
-				case 53:
-					return "Province du titulaire de l'assurance absente ou invalide";
-				case 54:
-					return "Numéro du titulaire sur Refus non conforme à demande originale";
-				case 55:
-					return "Annulation ne concerne pas transaction du jour";
-				case 56:
-					return "Code de spécialité du dentiste non conforme au dossier";
-				case 57:
-					return "Réponse absente ou invalide : S'agit-il de la mise en bouche initiale au maxillaire ?";
-				case 58:
-					return "Nombre d'actes non conforme au nombre indiqué";
-				case 59:
-					return "Logiciel dentaire du cabinet non autorisé à transmettre transactions au CDAnet";
-				case 60:
-					return "Annulation ne peut être acceptée maintenant - Réessayer plus tard aujourd'hui";
-				case 61:
-					return "Erreur du réseau - Veuillez recommencer";
-				case 62:
-					return "Numéro du dentiste destinataire du paiement absent ou invalide";
-				case 63:
-					return "Numéro du cabinet destinataire du paiement absent ou invalide";
-				case 64:
-					return "Dentiste ayant adressé (référé) patient absent ou invalide";
-				case 65:
-					return "Code indiquant motif de la recommandation absent ou invalide";
-				case 66:
-					return "Indicateur d'un régime de soins absent ou invalide";
-				case 67:
-					return "Champs se rapportant au régime NNSA absents";
-				case 68:
-					return "Numéro de la bande absent ou invalide";
-				case 69:
-					return "Numéro de la famille absent ou invalide";
-				case 70:
-					return "Odontogramme des dents manquantes absent ou invalide";
-				case 71:
-					return "Code indiquant parenté patient-titulaire (second assureur) absent ou invalide";
-				case 72:
-					return "Code indiquant type d'acte absent ou invalide";
-				case 73:
-					return "Série de dents absente ou invalide";
-				case 74:
-					return "Date à laquelle l'acte a été exécuté est une date ultérieure";
-				case 75:
-					return "Date à laquelle l'acte a été exécuté est au-delà d'un an";
-				case 76:
-					return "Groupe non accepté par l'EDI";
-				case 77:
-					return "Type d'acte non couvert par l'assureur";
-				case 78:
-					return "Veuillez soumettre plan de traitement manuellement";
-				case 79:
-					return "Duplicata d'une demande de prestations";
-				case 80:
-					return "Compteur des transactions par assureur absent ou invalide";
-				case 81:
-					return "Date d'admissibilité invalide";
-				case 82:
-					return "Numéro de séquence ou version de la carte invalide";
-				case 83:
-					return "Nom de famille du titulaire (second assureur) absent ou invalide";
-				case 84:
-					return "Prénom du titulaire (second assureur) absent ou invalide";
-				case 85:
-					return "Lettre initiale du second prénom du titulaire (second assureur) invalide";
-				case 86:
-					return "Première ligne de l'adresse du titulaire (second assureur) absente";
-				case 87:
-					return "Ville du titulaire (second assureur) absente";
-				case 88:
-					return "Province ou État du titulaire (second assureur) absent";
-				case 89:
-					return "Code postal ou zip du titulaire (second assureur) invalide";
-				case 90:
-					return "Réponse absente ou invalide : S'agit-il de la mise en bouche initiale à la mandibule ?";
-				case 91:
-					return "Date de la mise en bouche initiale à la mandibule absente ou invalide";
-				case 92:
-					return "Matériau de la prothèse au maxillaire absent ou invalide";
-				case 93:
-					return "Matériau de la prothèse à la mandibule absent ou invalide";
-				case 94:
-					return "Nombre de dents extraites absent ou invalide";
-				case 95:
-					return "Numéro de la dent extraite absent ou invalide";
-				case 96:
-					return "Date de l'extraction absente ou invalide";
-				case 97:
-					return "Décalage du rapprochement invalide";
-				case 98:
-					return "Code pour frais de laboratoire absent ou invalide";
-				case 99:
-					return "Code pour chiffrement invalide";
-				case 100:
-					return "Chiffrement invalide";
-				case 101:
-					return "Initiale du second prénom du titulaire invalide";
-				case 102:
-					return "Initiale du second prénom du patient invalide";
-				case 103:
-					return "Code de la personne à charge (première assurance) absent ou invalide";
-				case 104:
-					return "Code de la personne à charge (seconde assurance) absent ou invalide";
-				case 105:
-					return "Numéro de séquence/version de la carte (seconde assurance) absent ou invalide";
-				case 106:
-					return "Langue de titulaire (seconde assurance) absente ou invalide";
-				case 107:
-					return "Indicateur de régime (seconde assurance) absente ou invalide";
-				case 108:
-					return "Champs portant sur la seconde assurance absents";
-				case 109:
-					return "Numéro de séquence (seconde assurance) absent ou invalide";
-				case 110:
-					return "Indicateur de Plan de traitement d’orthodontie absent ou invalide";
-				case 111:
-					return "Tarif du premier examen absent ou invalide";
-				case 112:
-					return "Tarif de la phase diagnostique absent ou invalide";
-				case 113:
-					return "Paiement initial absent ou invalide";
-				case 114:
-					return "Mode de paiement absent ou invalide";
-				case 115:
-					return "Durée du traitement absente ou invalide";
-				case 116:
-					return "Nombre prévu de paiements absent ou invalide";
-				case 117:
-					return "Montant prévue du paiement absent ou invalide";
-				case 118:
-					return "Code des frais de laboratoire #2 absent ou invalide";
-				case 119:
-					return "Frais de laboratoire #2 absents ou invalide";
-				case 120:
-					return "Début prévue de traitement";
-				case 121:
-					return "Détail des prestations (première assurance) modifié, différent de l’original";
-				case 122:
-					return "Date plus disponible";
-				case 123:
-					return "Numéro de page du rapprochement absent ou invalide";
-				case 124:
-					return "Transaction non acceptée par l’assureur";
-				case 125:
-					return "Version de transaction non acceptée";
-				case 126:
-					return "Code diagnostique absent ou invalide";
-				case 127:
-					return "Code institutionnelle absent ou invalide";
-				case 128:
-					return "Numéro de page du plan de traitement courant absent ou invalide";
-				case 129:
-					return "Numéro de page du dernier plan de traitement absent ou invalide";
-				case 130:
-					return "Nombre du plan du dossier gouvernemental absent ou invalide";
-				case 131:
-					return "Plan du dossier gouvernemental absent ou invalide";
-				case 132:
-					return "Nombre du dossier secondaire absent ou invalide";
-				case 133:
-					return "";
-				case 134:
-					return "";
-				case 997:
-					return "Dernière transaction illisible";
-				case 998:
-					return "Pour usage futur par l'ADC";
-				case 999:
-					return "Erreur du système central - Veuillez recommencer manuellement";
-			}
-			return "CODE D'ERREUR INCONNU";//UNKNOWN ERROR
-		}
+            return errorCode switch
+            {
+                1 => "Préfixe de la transaction absent ou invalide",
+                2 => "Numéro de demande de prestations ou de transaction du cabinet absent ou invalide",
+                3 => "Numéro de version absent ou invalide",
+                4 => "Code de la transaction absent ou invalide",
+                5 => "Numéro de l'assureur absent ou invalide",
+                6 => "Numéro du logiciel dentaire absent ou invalide",
+                7 => "Numéro du dentiste attribué par l'ADC absent ou invalide",
+                8 => "Numéro du cabinet attribué par l'ADC absent ou invalide",
+                9 => "Numéro de police ou régime (premier assureur) absent ou invalide",
+                10 => "Numéro de section ou de division absent ou invalide",
+                11 => "Numéro du titulaire de l'assurance absent ou invalide",
+                12 => "Code indiquant lien de parenté patient-titulaire absent ou invalide",
+                13 => "Sexe du patient absent ou invalide",
+                14 => "Date de naissance du patient absente ou invalide",
+                15 => "Nom de famille du patient absent ou invalide",
+                16 => "Prénom du patient absent ou invalide",
+                17 => "Code indiquant exception quant à l'admissibilité absent ou invalide",
+                18 => "Nom de l'établissement scolaire absent",
+                19 => "Nom de famille du titulaire de l'assurance absent ou non conforme au dossier",
+                20 => "Prénom du titulaire de l'assurance absent ou non conforme au dossier",
+                21 => "Adresse du titulaire de l'assurance absente",
+                22 => "Ville du titulaire de l'assurance absente",
+                23 => "Code postal du titulaire de l'assurance absent ou invalide",
+                24 => "Langue première du titulaire de l'assurance invalide",
+                25 => "Date de naissance du titulaire de l'assurance absente ou invalide",
+                26 => "Numéro du second assureur invalide",
+                27 => "Numéro de police ou régime (second assureur) absent ou invalide",
+                28 => "Numéro de division ou section (second assureur) absent ou invalide",
+                29 => "Numéro du titulaire (second assureur) absent ou invalide",
+                30 => "Date de naissance du titulaire (second assureur) absente ou invalide",
+                31 => "Demande doit d'abord être soumise au second assureur (second assureur = premier assureur)",
+                32 => "Destinataire du paiement absent ou invalide",
+                33 => "Date de l'accident invalide",
+                34 => "Nombre d'actes exécutés absent ou invalide",
+                35 => "Code de l'acte absent ou invalide",
+                36 => "Date à laquelle l'acte a été exécuté absente ou invalide",
+                37 => "Numéro de dent international, sextant, quadrant ou site absent ou invalide",
+                38 => "Surface de la dent absente ou invalide",
+                39 => "Date de la mise en bouche initiale au maxillaire invalide",
+                40 => "Réponse absente ou invalide : Le traitement est-il requis en vue de soins d'orthodontie ?",
+                41 => "Honoraires demandés par le dentiste absents ou invalides",
+                42 => "Frais de laboratoire absents ou invalides",
+                43 => "Unité de temps absente ou invalide",
+                44 => "Longueur du message indiquée non identique à longueur du message reçu",
+                45 => "Indicateur de courrier électronique ou d'informations supplémentaires absent ou invalide",
+                46 => "Numéro de référence de la demande de prestations absent ou invalide",
+                47 => "Dentiste n'a pas accès au réseau CDAnet",
+                48 => "Veuillez soumettre demande manuellement",
+                49 => "Pas de réponse en suspens provenant du réseau demandée",
+                50 => "Numéro de ligne de l'acte absent ou invalide",
+                51 => "Numéro du plan de traitement introuvable",
+                52 => "Demande de prestations ou plan de traitement doit contenir au moins un acte",
+                53 => "Province du titulaire de l'assurance absente ou invalide",
+                54 => "Numéro du titulaire sur Refus non conforme à demande originale",
+                55 => "Annulation ne concerne pas transaction du jour",
+                56 => "Code de spécialité du dentiste non conforme au dossier",
+                57 => "Réponse absente ou invalide : S'agit-il de la mise en bouche initiale au maxillaire ?",
+                58 => "Nombre d'actes non conforme au nombre indiqué",
+                59 => "Logiciel dentaire du cabinet non autorisé à transmettre transactions au CDAnet",
+                60 => "Annulation ne peut être acceptée maintenant - Réessayer plus tard aujourd'hui",
+                61 => "Erreur du réseau - Veuillez recommencer",
+                62 => "Numéro du dentiste destinataire du paiement absent ou invalide",
+                63 => "Numéro du cabinet destinataire du paiement absent ou invalide",
+                64 => "Dentiste ayant adressé (référé) patient absent ou invalide",
+                65 => "Code indiquant motif de la recommandation absent ou invalide",
+                66 => "Indicateur d'un régime de soins absent ou invalide",
+                67 => "Champs se rapportant au régime NNSA absents",
+                68 => "Numéro de la bande absent ou invalide",
+                69 => "Numéro de la famille absent ou invalide",
+                70 => "Odontogramme des dents manquantes absent ou invalide",
+                71 => "Code indiquant parenté patient-titulaire (second assureur) absent ou invalide",
+                72 => "Code indiquant type d'acte absent ou invalide",
+                73 => "Série de dents absente ou invalide",
+                74 => "Date à laquelle l'acte a été exécuté est une date ultérieure",
+                75 => "Date à laquelle l'acte a été exécuté est au-delà d'un an",
+                76 => "Groupe non accepté par l'EDI",
+                77 => "Type d'acte non couvert par l'assureur",
+                78 => "Veuillez soumettre plan de traitement manuellement",
+                79 => "Duplicata d'une demande de prestations",
+                80 => "Compteur des transactions par assureur absent ou invalide",
+                81 => "Date d'admissibilité invalide",
+                82 => "Numéro de séquence ou version de la carte invalide",
+                83 => "Nom de famille du titulaire (second assureur) absent ou invalide",
+                84 => "Prénom du titulaire (second assureur) absent ou invalide",
+                85 => "Lettre initiale du second prénom du titulaire (second assureur) invalide",
+                86 => "Première ligne de l'adresse du titulaire (second assureur) absente",
+                87 => "Ville du titulaire (second assureur) absente",
+                88 => "Province ou État du titulaire (second assureur) absent",
+                89 => "Code postal ou zip du titulaire (second assureur) invalide",
+                90 => "Réponse absente ou invalide : S'agit-il de la mise en bouche initiale à la mandibule ?",
+                91 => "Date de la mise en bouche initiale à la mandibule absente ou invalide",
+                92 => "Matériau de la prothèse au maxillaire absent ou invalide",
+                93 => "Matériau de la prothèse à la mandibule absent ou invalide",
+                94 => "Nombre de dents extraites absent ou invalide",
+                95 => "Numéro de la dent extraite absent ou invalide",
+                96 => "Date de l'extraction absente ou invalide",
+                97 => "Décalage du rapprochement invalide",
+                98 => "Code pour frais de laboratoire absent ou invalide",
+                99 => "Code pour chiffrement invalide",
+                100 => "Chiffrement invalide",
+                101 => "Initiale du second prénom du titulaire invalide",
+                102 => "Initiale du second prénom du patient invalide",
+                103 => "Code de la personne à charge (première assurance) absent ou invalide",
+                104 => "Code de la personne à charge (seconde assurance) absent ou invalide",
+                105 => "Numéro de séquence/version de la carte (seconde assurance) absent ou invalide",
+                106 => "Langue de titulaire (seconde assurance) absente ou invalide",
+                107 => "Indicateur de régime (seconde assurance) absente ou invalide",
+                108 => "Champs portant sur la seconde assurance absents",
+                109 => "Numéro de séquence (seconde assurance) absent ou invalide",
+                110 => "Indicateur de Plan de traitement d’orthodontie absent ou invalide",
+                111 => "Tarif du premier examen absent ou invalide",
+                112 => "Tarif de la phase diagnostique absent ou invalide",
+                113 => "Paiement initial absent ou invalide",
+                114 => "Mode de paiement absent ou invalide",
+                115 => "Durée du traitement absente ou invalide",
+                116 => "Nombre prévu de paiements absent ou invalide",
+                117 => "Montant prévue du paiement absent ou invalide",
+                118 => "Code des frais de laboratoire #2 absent ou invalide",
+                119 => "Frais de laboratoire #2 absents ou invalide",
+                120 => "Début prévue de traitement",
+                121 => "Détail des prestations (première assurance) modifié, différent de l’original",
+                122 => "Date plus disponible",
+                123 => "Numéro de page du rapprochement absent ou invalide",
+                124 => "Transaction non acceptée par l’assureur",
+                125 => "Version de transaction non acceptée",
+                126 => "Code diagnostique absent ou invalide",
+                127 => "Code institutionnelle absent ou invalide",
+                128 => "Numéro de page du plan de traitement courant absent ou invalide",
+                129 => "Numéro de page du dernier plan de traitement absent ou invalide",
+                130 => "Nombre du plan du dossier gouvernemental absent ou invalide",
+                131 => "Plan du dossier gouvernemental absent ou invalide",
+                132 => "Nombre du dossier secondaire absent ou invalide",
+                133 => "",
+                134 => "",
+                997 => "Dernière transaction illisible",
+                998 => "Pour usage futur par l'ADC",
+                999 => "Erreur du système central - Veuillez recommencer manuellement",
+                _ => "CODE D'ERREUR INCONNU",
+            };
+        }
 	}
 }

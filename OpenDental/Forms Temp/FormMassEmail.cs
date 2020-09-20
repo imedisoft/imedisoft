@@ -340,23 +340,25 @@ namespace OpenDental {
 		}
 
 		private void butDeleteTemplate_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you want to delete the selected template? This cannot be undone.")) {
-				return;
-			}
-			//Create an API instance with the clinic num for this template.
-			IAccountApi api=EmailHostingTemplates.GetAccountApi(_templateCur.ClinicNum);
-			try {
-				api.DeleteTemplate(new DeleteTemplateRequest {
-					TemplateNum=_templateCur.TemplateId,
-				});
-			}
-			catch(Exception ex) {
-				FriendlyException.Show("Failed to delete template. Please try again.",ex);
-				return;
-			}
-			EmailHostingTemplates.Delete(_templateCur.EmailHostingTemplateNum);
-			FillGridTemplates();
-			SelectAndLoadFirstTemplate();
+			// TODO: Fix me...
+
+			//if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you want to delete the selected template? This cannot be undone.")) {
+			//	return;
+			//}
+			////Create an API instance with the clinic num for this template.
+			//IAccountApi api=EmailHostingTemplates.GetAccountApi(_templateCur.ClinicNum);
+			//try {
+			//	api.DeleteTemplate(new DeleteTemplateRequest {
+			//		TemplateNum=_templateCur.TemplateId,
+			//	});
+			//}
+			//catch(Exception ex) {
+			//	FriendlyException.Show("Failed to delete template. Please try again.",ex);
+			//	return;
+			//}
+			//EmailHostingTemplates.Delete(_templateCur.EmailHostingTemplateNum);
+			//FillGridTemplates();
+			//SelectAndLoadFirstTemplate();
 		}
 
 		private void butCopy_Click(object sender,EventArgs e) {
@@ -606,31 +608,34 @@ namespace OpenDental {
 						}
 					}
 				}
-				//most likely case for this scenario, someone is sending one of the templates that came in the convert, without modifying it.
-				//Create an API instance with the clinic num for this template.
-				IAccountApi api=EmailHostingTemplates.GetAccountApi(_templateCur.ClinicNum);
-				try {
-					CreateTemplateResponse response=api.CreateTemplate(new CreateTemplateRequest { 
-						Template=new Template { 
-							TemplateName=_templateCur.TemplateName,
-							TemplateBodyHtml=xhtml,
-							TemplateBodyPlainText=_templateCur.BodyPlainText,
-							TemplateSubject=_templateCur.Subject,
-						},
-					});
-					//This is how we can update the template later
-					_templateCur.TemplateId=response.TemplateNum;
-					if(_templateCur.EmailHostingTemplateNum==0) {//New (not expected, should only execute when it's an existing that hasn't been added to backend.)
-						EmailHostingTemplates.Insert(_templateCur);
-					}
-					else {
-						EmailHostingTemplates.Update(_templateCur);
-					}
-				}
-				catch(Exception ex) {
-					FriendlyException.Show("Failed to create email from template. Please try again.",ex);
-					return;
-				}
+				
+				// TODO: Fix this...
+
+				////most likely case for this scenario, someone is sending one of the templates that came in the convert, without modifying it.
+				////Create an API instance with the clinic num for this template.
+				//IAccountApi api=EmailHostingTemplates.GetAccountApi(_templateCur.ClinicNum);
+				//try {
+				//	CreateTemplateResponse response=api.CreateTemplate(new CreateTemplateRequest { 
+				//		Template=new Template { 
+				//			TemplateName=_templateCur.TemplateName,
+				//			TemplateBodyHtml=xhtml,
+				//			TemplateBodyPlainText=_templateCur.BodyPlainText,
+				//			TemplateSubject=_templateCur.Subject,
+				//		},
+				//	});
+				//	//This is how we can update the template later
+				//	_templateCur.TemplateId=response.TemplateNum;
+				//	if(_templateCur.EmailHostingTemplateNum==0) {//New (not expected, should only execute when it's an existing that hasn't been added to backend.)
+				//		EmailHostingTemplates.Insert(_templateCur);
+				//	}
+				//	else {
+				//		EmailHostingTemplates.Update(_templateCur);
+				//	}
+				//}
+				//catch(Exception ex) {
+				//	FriendlyException.Show("Failed to create email from template. Please try again.",ex);
+				//	return;
+				//}
 			}
 			FormMassEmailSend formMassEmailSend=new FormMassEmailSend(_templateCur,_listPatientsSelected);
 			if(formMassEmailSend.ShowDialog()!=DialogResult.OK) {

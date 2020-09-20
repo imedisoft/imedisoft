@@ -13,8 +13,10 @@ using System.Xml;
 using System.Xml.Schema;
 using Imedisoft.Data.Models;
 
-namespace OpenDentBusiness {
-	public class PDMPLogicoy {
+namespace OpenDentBusiness
+{
+	public class PDMPLogicoy
+	{
 		private string _clientUsername;
 		private string _clientPassword;
 		private Patient _pat;
@@ -23,36 +25,41 @@ namespace OpenDentBusiness {
 		private string _strDeaNum;
 		private string _facilityId;
 
-		public PDMPLogicoy(string clientUsername,string clientPassword,Patient pat,Provider prov,string stateWhereLicensed,string strDeaNum,string facilityId) {
-			_pat=pat;
-			_stateWhereLicensed=stateWhereLicensed;
-			_clientUsername=clientUsername;
-			_clientPassword=clientPassword;
-			_prov=prov;
-			_strDeaNum=strDeaNum;
-			_facilityId=facilityId;
+		public PDMPLogicoy(string clientUsername, string clientPassword, Patient pat, Provider prov, string stateWhereLicensed, string strDeaNum, string facilityId)
+		{
+			_pat = pat;
+			_stateWhereLicensed = stateWhereLicensed;
+			_clientUsername = clientUsername;
+			_clientPassword = clientPassword;
+			_prov = prov;
+			_strDeaNum = strDeaNum;
+			_facilityId = facilityId;
 		}
 
 		///<summary>Submits a request to the appropriate API and returns a string containing the URL supplied by the API.  Throws exceptions.</summary>
-		public string GetURL() {
-			PDMPScript.PrescriptionSummaryRequestType request=new PDMPScript.PrescriptionSummaryRequestType();
-			request.Requester=MakeRequester();
-			request.PrescriptionRequest=MakePrescriptionRequest();
-			PDMPScript.PrescriptionSummaryResponseType response=Request(ApiRoute.PrescriptionSummary,HttpMethod.Post
-				,MakeBasicAuthHeader(),Serialize(request),new PDMPScript.PrescriptionSummaryResponseType());
-			if(response.Error!=null) {
+		public string GetURL()
+		{
+			PDMPScript.PrescriptionSummaryRequestType request = new PDMPScript.PrescriptionSummaryRequestType();
+			request.Requester = MakeRequester();
+			request.PrescriptionRequest = MakePrescriptionRequest();
+			PDMPScript.PrescriptionSummaryResponseType response = Request(ApiRoute.PrescriptionSummary, HttpMethod.Post
+				, MakeBasicAuthHeader(), Serialize(request), new PDMPScript.PrescriptionSummaryResponseType());
+			if (response.Error != null)
+			{
 				throw new ApplicationException(response.Error.Message);//Request resulted in an error.
 			}
 			return response.Report.ReportRequestURLs.ViewableReport.Value;
 		}
 
 		///<summary>Throws exception if the response from the server returned an http code of 300 or greater.</summary>
-		private T Request<T>(ApiRoute route,HttpMethod method,string authHeader,string body,T responseType) {
-			using(WebClient client=new WebClient()) {
-				client.Headers[HttpRequestHeader.Accept]="application/xml";
-				client.Headers[HttpRequestHeader.ContentType]="application/xml";
-				client.Headers[HttpRequestHeader.Authorization]=authHeader;
-				client.Encoding=UnicodeEncoding.UTF8;
+		private T Request<T>(ApiRoute route, HttpMethod method, string authHeader, string body, T responseType)
+		{
+			using (WebClient client = new WebClient())
+			{
+				client.Headers[HttpRequestHeader.Accept] = "application/xml";
+				client.Headers[HttpRequestHeader.ContentType] = "application/xml";
+				client.Headers[HttpRequestHeader.Authorization] = authHeader;
+				client.Encoding = UnicodeEncoding.UTF8;
 				try
 				{
 					string res = "";
@@ -104,7 +111,7 @@ namespace OpenDentBusiness {
 					string errorMsg = wex.Message + (string.IsNullOrWhiteSpace(res) ? "" : "\r\nRaw response:\r\n" + res);
 					throw new Exception(errorMsg, wex);//If we got this far and haven't rethrown, simply throw the entire exception.
 				}
-				catch 
+				catch
 				{
 					//WebClient returned an http status code >= 300
 
@@ -115,31 +122,38 @@ namespace OpenDentBusiness {
 			}
 		}
 
-		private string Serialize<T>(T request) {
-			using(MemoryStream memoryStream=new MemoryStream()) {
-				XmlSerializer xmlSerializer=new XmlSerializer(request.GetType());
-				xmlSerializer.Serialize(memoryStream,request);
-				byte[] memoryStreamInBytes=memoryStream.ToArray();
-				return Encoding.UTF8.GetString(memoryStreamInBytes,0,memoryStreamInBytes.Length);
+		private string Serialize<T>(T request)
+		{
+			using (MemoryStream memoryStream = new MemoryStream())
+			{
+				XmlSerializer xmlSerializer = new XmlSerializer(request.GetType());
+				xmlSerializer.Serialize(memoryStream, request);
+				byte[] memoryStreamInBytes = memoryStream.ToArray();
+				return Encoding.UTF8.GetString(memoryStreamInBytes, 0, memoryStreamInBytes.Length);
 			}
 		}
 
-		private T Deserialize<T>(string strXml,T responseType) {
-			XmlDocument doc=new XmlDocument();
+		private T Deserialize<T>(string strXml, T responseType)
+		{
+			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(strXml);
-			using(XmlReader reader=new XmlNodeReader(doc)) {
-				XmlSerializer xmlSerializer=new XmlSerializer(typeof(T));
+			using (XmlReader reader = new XmlNodeReader(doc))
+			{
+				XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
 				T response;
-				try {
-					response=(T)xmlSerializer.Deserialize(reader);
+				try
+				{
+					response = (T)xmlSerializer.Deserialize(reader);
 				}
-				catch {
+				catch
+				{
 					reader.Close();
 					//Responses from PDMP Logicoy have contained "xsi:type" attributes in the Pmp node.  This causes deserialization to fail.  
 					//Removing it has been the only thing that has worked in our extensive testing when this occurs.
-					StripAttributeFromNode(doc.ChildNodes,"Pmp","xsi:type");
-					using(XmlReader strippedReader=new XmlNodeReader(doc)){
-						response=(T)xmlSerializer.Deserialize(strippedReader);
+					StripAttributeFromNode(doc.ChildNodes, "Pmp", "xsi:type");
+					using (XmlReader strippedReader = new XmlNodeReader(doc))
+					{
+						response = (T)xmlSerializer.Deserialize(strippedReader);
 						strippedReader.Close();
 					}
 				}
@@ -149,85 +163,108 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary>Strips out an attribute of Name=strAttributeName from XmlNode.Name=nodeName in an XmlNodeList nodeList, and sub lists.</summary>
-		private void StripAttributeFromNode(XmlNodeList nodeList,string nodeName,params string[] arrAttributeNames) {
-			if(nodeList==null) {
+		private void StripAttributeFromNode(XmlNodeList nodeList, string nodeName, params string[] arrAttributeNames)
+		{
+			if (nodeList == null)
+			{
 				return;
 			}
-			foreach(XmlNode node in nodeList) {
-				StripAttributeFromNode(node.ChildNodes,nodeName,arrAttributeNames);//Recursively process all ChildNodes.
-				if(node.Name!=nodeName) {
+			foreach (XmlNode node in nodeList)
+			{
+				StripAttributeFromNode(node.ChildNodes, nodeName, arrAttributeNames);//Recursively process all ChildNodes.
+				if (node.Name != nodeName)
+				{
 					continue;
 				}
-				for(int i=node.Attributes.Count-1;i>=0;i--) {
-					if(node.Attributes[i].Name.In(arrAttributeNames)) {
+				for (int i = node.Attributes.Count - 1; i >= 0; i--)
+				{
+					if (node.Attributes[i].Name.In(arrAttributeNames))
+					{
 						node.Attributes.RemoveAt(i);
 					}
 				}
 			}
 		}
 
-		private PDMPScript.RequesterType MakeRequester() {
+		private PDMPScript.RequesterType MakeRequester()
+		{
 			//There is no documentation identifying what the use case of "RoleType" is.  Setting to Dentist for now seems like the safe choice.
-			PDMPScript.RoleType role=PDMPScript.RoleType.Dentist;
-			string[] arrRequestDestinations=new string[] { _stateWhereLicensed };
-			PDMPScript.RequesterType requester=new PDMPScript.RequesterType {
-				SenderSoftware=new PDMPScript.SenderSoftware {
-					Developer="Open Dental Software",
-					Product="PDMP-LINK",
-					Version="v1",
+			PDMPScript.RoleType role = PDMPScript.RoleType.Dentist;
+			string[] arrRequestDestinations = new string[] { _stateWhereLicensed };
+			PDMPScript.RequesterType requester = new PDMPScript.RequesterType
+			{
+				SenderSoftware = new PDMPScript.SenderSoftware
+				{
+					Developer = "Open Dental Software",
+					Product = "PDMP-LINK",
+					Version = "v1",
 				},
-				RequestDestinations=arrRequestDestinations,
-				Provider=new PDMPScript.Provider {
-					Role=role,
-					FirstName=_prov.FirstName,
-					LastName=_prov.LastName,
-					DEANumber=new PDMPScript.DEANumberType {
-						Value=_strDeaNum,
+				RequestDestinations = arrRequestDestinations,
+				Provider = new PDMPScript.Provider
+				{
+					Role = role,
+					FirstName = _prov.FirstName,
+					LastName = _prov.LastName,
+					DEANumber = new PDMPScript.DEANumberType
+					{
+						Value = _strDeaNum,
 					},
-					NPINumber=new PDMPScript.NPINumberType {
-						Value=_prov.NationalProviderID,
+					NPINumber = new PDMPScript.NPINumberType
+					{
+						Value = _prov.NationalProviderID,
 					},
 				},
-				Location=new PDMPScript.Location {
-					Name=_facilityId,
-					DEANumber=new PDMPScript.DEANumberType {
-						Value=_strDeaNum,
+				Location = new PDMPScript.Location
+				{
+					Name = _facilityId,
+					DEANumber = new PDMPScript.DEANumberType
+					{
+						Value = _strDeaNum,
 					},
-					NPINumber=new PDMPScript.NPINumberType {
-						Value=_prov.NationalProviderID,
+					NPINumber = new PDMPScript.NPINumberType
+					{
+						Value = _prov.NationalProviderID,
 					},
 				},
 			};
 			return requester;
 		}
 
-		private PDMPScript.PrescriptionSummaryRequestTypePrescriptionRequest MakePrescriptionRequest() {
+		private PDMPScript.PrescriptionSummaryRequestTypePrescriptionRequest MakePrescriptionRequest()
+		{
 			PDMPScript.SexCodeBaseType sex;
-			switch(_pat.Gender) {
+			switch (_pat.Gender)
+			{
 				case PatientGender.Female:
-					sex=PDMPScript.SexCodeBaseType.F;
+					sex = PDMPScript.SexCodeBaseType.F;
 					break;
 				case PatientGender.Male:
-					sex=PDMPScript.SexCodeBaseType.M;
+					sex = PDMPScript.SexCodeBaseType.M;
 					break;
 				case PatientGender.Unknown:
 				default:
-					sex=PDMPScript.SexCodeBaseType.U;
+					sex = PDMPScript.SexCodeBaseType.U;
 					break;
 			}
-			PDMPScript.PrescriptionSummaryRequestTypePrescriptionRequest prescrRequest=new PDMPScript.PrescriptionSummaryRequestTypePrescriptionRequest {
-				Patient=new PDMPScript.RequestPatientType {
-					Name=new PDMPScript.RequestPatientTypeName {
-						First=new PDMPScript.LimitedStringType {
-							Value=_pat.FName,
+			PDMPScript.PrescriptionSummaryRequestTypePrescriptionRequest prescrRequest = new PDMPScript.PrescriptionSummaryRequestTypePrescriptionRequest
+			{
+				Patient = new PDMPScript.RequestPatientType
+				{
+					Name = new PDMPScript.RequestPatientTypeName
+					{
+						First = new PDMPScript.LimitedStringType
+						{
+							Value = _pat.FName,
 						},
-						Last=new PDMPScript.LimitedStringType {
-							Value=_pat.LName,
+						Last = new PDMPScript.LimitedStringType
+						{
+							Value = _pat.LName,
 						},
 					},
-					Birthdate=_pat.Birthdate,
-					SexCode=new PDMPScript.SexCodeType {
-						Value=sex,
+					Birthdate = _pat.Birthdate,
+					SexCode = new PDMPScript.SexCodeType
+					{
+						Value = sex,
 					},
 				},
 			};
@@ -247,17 +284,19 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary>Returns the full URL according to the route given.</summary>
-		private string GetApiUrl(ApiRoute route) {
-			string apiUrl=Introspection.GetOverride(Introspection.IntrospectionEntity.PDMPURL,"https://www.ilpmp.org/rxhistorySumAdp/getReport");
+		private string GetApiUrl(ApiRoute route)
+		{
+			string apiUrl = Introspection.GetOverride(Introspection.IntrospectionEntity.PDMPURL, "https://www.ilpmp.org/rxhistorySumAdp/getReport");
 #if DEBUG
-			apiUrl="https://openid.logicoy.com/ilpdmp/test/getReport";
+			apiUrl = "https://openid.logicoy.com/ilpdmp/test/getReport";
 #endif
-			switch(route) {
+			switch (route)
+			{
 				case ApiRoute.Root:
 					//Do nothing.  This is to allow someone to quickly grab the URL without having to make a copy+paste reference.
 					break;
 				case ApiRoute.PrescriptionSummary:
-					apiUrl+="/prescriptionSummary";
+					apiUrl += "/prescriptionSummary";
 					break;
 				default:
 					break;
@@ -265,10 +304,10 @@ namespace OpenDentBusiness {
 			return apiUrl;
 		}
 
-		protected enum ApiRoute {
+		protected enum ApiRoute
+		{
 			Root,
 			PrescriptionSummary,
 		}
-
 	}
 }

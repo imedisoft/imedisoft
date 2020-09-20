@@ -147,62 +147,65 @@ namespace OpenDental {
 				MsgBox.Show("The replacements in the HTML template did not exactly match the replacements in the Plain Text template.");
 				return false;
 			}
-			//Create an API instance with the clinic num for this template.
-			IAccountApi api=EmailHostingTemplates.GetAccountApi(_templateCur.ClinicNum);
-			if(_templateCur.IsNew || _templateCur.TemplateId==0) {//templates inserted during convert didn't have their Id's set, we need to create them.
-				try {
-					CreateTemplateResponse response=api.CreateTemplate(new CreateTemplateRequest { 
-						Template=new Template { 
-							TemplateName=textTemplateName.Text,
-							TemplateBodyHtml=xhtml,
-							TemplateBodyPlainText=textboxPlainText.Text,
-							TemplateSubject=textSubject.Text,
-						},
-					});
-					//This is how we can update the template later
-					_templateCur.TemplateId=response.TemplateNum;
-				}
-				catch(Exception e) {
-					FriendlyException.Show("Failed to create template. Please try again.",e);
-					return false;
-				}
-				_templateCur.Subject=textSubject.Text;
-				_templateCur.TemplateName=textTemplateName.Text;
-				_templateCur.BodyPlainText=textboxPlainText.Text;
-				//_htmlText might be wiki html, which is intended to be saved (vs raw html) in case the user wants to modify their template later.
-				_templateCur.BodyHTML=_htmlText;
-				_templateCur.EmailTemplateType=_emailType;
-				if(_templateCur.IsNew) {
-					NewTemplateCurPriKey=EmailHostingTemplates.Insert(_templateCur);
-				}
-				else {
-					EmailHostingTemplates.Update(_templateCur);
-				}
-			}
-			else {
-				//We must update the template with the api before we can update our template.
-				try {
-					api.UpdateTemplate(new UpdateTemplateRequest {//is back end expecting that template name can be changed now?
-						TemplateNum=_templateCur.TemplateId,
-						Template=new Template {
-							TemplateName=textTemplateName.Text,
-							TemplateBodyHtml=xhtml,
-							TemplateBodyPlainText=textboxPlainText.Text,
-							TemplateSubject=textSubject.Text,
-						},
-					});
-				}
-				catch(Exception e) {
-					FriendlyException.Show("Failed to update template. Please try again.",e);
-					return false;
-				}
-				_templateCur.Subject=textSubject.Text;
-				_templateCur.TemplateName=textTemplateName.Text;
-				_templateCur.BodyPlainText=textboxPlainText.Text;
-				_templateCur.BodyHTML=_htmlText;
-				_templateCur.EmailTemplateType=_emailType;
-				EmailHostingTemplates.Update(_templateCur);
-			}
+
+			// TODO: Fix me.
+
+			////Create an API instance with the clinic num for this template.
+			//IAccountApi api=EmailHostingTemplates.GetAccountApi(_templateCur.ClinicNum);
+			//if(_templateCur.IsNew || _templateCur.TemplateId==0) {//templates inserted during convert didn't have their Id's set, we need to create them.
+			//	try {
+			//		CreateTemplateResponse response=api.CreateTemplate(new CreateTemplateRequest { 
+			//			Template=new Template { 
+			//				TemplateName=textTemplateName.Text,
+			//				TemplateBodyHtml=xhtml,
+			//				TemplateBodyPlainText=textboxPlainText.Text,
+			//				TemplateSubject=textSubject.Text,
+			//			},
+			//		});
+			//		//This is how we can update the template later
+			//		_templateCur.TemplateId=response.TemplateNum;
+			//	}
+			//	catch(Exception e) {
+			//		FriendlyException.Show("Failed to create template. Please try again.",e);
+			//		return false;
+			//	}
+			//	_templateCur.Subject=textSubject.Text;
+			//	_templateCur.TemplateName=textTemplateName.Text;
+			//	_templateCur.BodyPlainText=textboxPlainText.Text;
+			//	//_htmlText might be wiki html, which is intended to be saved (vs raw html) in case the user wants to modify their template later.
+			//	_templateCur.BodyHTML=_htmlText;
+			//	_templateCur.EmailTemplateType=_emailType;
+			//	if(_templateCur.IsNew) {
+			//		NewTemplateCurPriKey=EmailHostingTemplates.Insert(_templateCur);
+			//	}
+			//	else {
+			//		EmailHostingTemplates.Update(_templateCur);
+			//	}
+			//}
+			//else {
+			//	//We must update the template with the api before we can update our template.
+			//	try {
+			//		api.UpdateTemplate(new UpdateTemplateRequest {//is back end expecting that template name can be changed now?
+			//			TemplateNum=_templateCur.TemplateId,
+			//			Template=new Template {
+			//				TemplateName=textTemplateName.Text,
+			//				TemplateBodyHtml=xhtml,
+			//				TemplateBodyPlainText=textboxPlainText.Text,
+			//				TemplateSubject=textSubject.Text,
+			//			},
+			//		});
+			//	}
+			//	catch(Exception e) {
+			//		FriendlyException.Show("Failed to update template. Please try again.",e);
+			//		return false;
+			//	}
+			//	_templateCur.Subject=textSubject.Text;
+			//	_templateCur.TemplateName=textTemplateName.Text;
+			//	_templateCur.BodyPlainText=textboxPlainText.Text;
+			//	_templateCur.BodyHTML=_htmlText;
+			//	_templateCur.EmailTemplateType=_emailType;
+			//	EmailHostingTemplates.Update(_templateCur);
+			//}
 			return true;//save successful
 		}
 

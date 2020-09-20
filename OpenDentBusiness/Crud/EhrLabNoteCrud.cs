@@ -45,7 +45,7 @@ namespace OpenDentBusiness.Crud{
 			EhrLabNote ehrLabNote;
 			foreach(DataRow row in table.Rows) {
 				ehrLabNote=new EhrLabNote();
-				ehrLabNote.EhrLabNoteNum  = PIn.Long  (row["EhrLabNoteNum"].ToString());
+				ehrLabNote.Id  = PIn.Long  (row["EhrLabNoteNum"].ToString());
 				ehrLabNote.EhrLabNum      = PIn.Long  (row["EhrLabNum"].ToString());
 				ehrLabNote.EhrLabResultNum= PIn.Long  (row["EhrLabResultNum"].ToString());
 				ehrLabNote.Comments       = PIn.String(row["Comments"].ToString());
@@ -66,7 +66,7 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("Comments");
 			foreach(EhrLabNote ehrLabNote in listEhrLabNotes) {
 				table.Rows.Add(new object[] {
-					POut.Long  (ehrLabNote.EhrLabNoteNum),
+					POut.Long  (ehrLabNote.Id),
 					POut.Long  (ehrLabNote.EhrLabNum),
 					POut.Long  (ehrLabNote.EhrLabResultNum),
 					            ehrLabNote.Comments,
@@ -83,7 +83,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one EhrLabNote into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(EhrLabNote ehrLabNote,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				ehrLabNote.EhrLabNoteNum=ReplicationServers.GetKey("ehrlabnote","EhrLabNoteNum");
+				ehrLabNote.Id=ReplicationServers.GetKey("ehrlabnote","EhrLabNoteNum");
 			}
 			string command="INSERT INTO ehrlabnote (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -91,7 +91,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="EhrLabNum,EhrLabResultNum,Comments) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(ehrLabNote.EhrLabNoteNum)+",";
+				command+=POut.Long(ehrLabNote.Id)+",";
 			}
 			command+=
 				     POut.Long  (ehrLabNote.EhrLabNum)+","
@@ -105,9 +105,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramComments);
 			}
 			else {
-				ehrLabNote.EhrLabNoteNum=Database.ExecuteInsert(command,paramComments);
+				ehrLabNote.Id=Database.ExecuteInsert(command,paramComments);
 			}
-			return ehrLabNote.EhrLabNoteNum;
+			return ehrLabNote.Id;
 		}
 
 		///<summary>Inserts one EhrLabNote into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -120,14 +120,14 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO ehrlabnote (";
 			if(!useExistingPK) {
-				ehrLabNote.EhrLabNoteNum=ReplicationServers.GetKeyNoCache("ehrlabnote","EhrLabNoteNum");
+				ehrLabNote.Id=ReplicationServers.GetKeyNoCache("ehrlabnote","EhrLabNoteNum");
 			}
 			if(useExistingPK) {
 				command+="EhrLabNoteNum,";
 			}
 			command+="EhrLabNum,EhrLabResultNum,Comments) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(ehrLabNote.EhrLabNoteNum)+",";
+				command+=POut.Long(ehrLabNote.Id)+",";
 			}
 			command+=
 				     POut.Long  (ehrLabNote.EhrLabNum)+","
@@ -141,9 +141,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramComments);
 			}
 			else {
-				ehrLabNote.EhrLabNoteNum=Database.ExecuteInsert(command,paramComments);
+				ehrLabNote.Id=Database.ExecuteInsert(command,paramComments);
 			}
-			return ehrLabNote.EhrLabNoteNum;
+			return ehrLabNote.Id;
 		}
 
 		///<summary>Updates one EhrLabNote in the database.</summary>
@@ -152,7 +152,7 @@ namespace OpenDentBusiness.Crud{
 				+"EhrLabNum      =  "+POut.Long  (ehrLabNote.EhrLabNum)+", "
 				+"EhrLabResultNum=  "+POut.Long  (ehrLabNote.EhrLabResultNum)+", "
 				+"Comments       =  "+DbHelper.ParamChar+"paramComments "
-				+"WHERE EhrLabNoteNum = "+POut.Long(ehrLabNote.EhrLabNoteNum);
+				+"WHERE EhrLabNoteNum = "+POut.Long(ehrLabNote.Id);
 			if(ehrLabNote.Comments==null) {
 				ehrLabNote.Comments="";
 			}
@@ -183,7 +183,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			var paramComments = new MySqlParameter("paramComments", POut.StringParam(ehrLabNote.Comments));
 			command="UPDATE ehrlabnote SET "+command
-				+" WHERE EhrLabNoteNum = "+POut.Long(ehrLabNote.EhrLabNoteNum);
+				+" WHERE EhrLabNoteNum = "+POut.Long(ehrLabNote.Id);
 			Database.ExecuteNonQuery(command,paramComments);
 			return true;
 		}

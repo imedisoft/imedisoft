@@ -126,6 +126,12 @@
   <data name="AgingStart" xml:space="preserve">
     <value>Starting Aging - Aging Form</value>
   </data>
+  <data name="AutoNoteExport" xml:space="preserve">
+    <value>Auto Note Export</value>
+  </data>
+  <data name="AutoNoteImport" xml:space="preserve">
+    <value>Auto Note Import. Imported {0} new note(s) and {1} new prompt(s).</value>
+  </data>
   <data name="UserHasLoggedOn" xml:space="preserve">
     <value>User '{0}' has logged on.</value>
   </data>

@@ -1,13 +1,10 @@
 ﻿using CodeBase;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace OpenDentBusiness
 {
-	public class TelephoneNumbers
+    public class TelephoneNumbers
 	{
 		/// <summary>
 		/// Formatting is only allowed when computer is set to en-US, en-CA, or fr-CA.

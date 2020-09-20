@@ -1,17 +1,13 @@
 using CodeBase;
 using Imedisoft.Data;
 using Imedisoft.Data.Models;
-using OpenDentBusiness;
 using OpenDentBusiness.FileIO;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 
@@ -343,13 +339,12 @@ namespace OpenDentBusiness
 		/// </summary>
 		private static string GetImageFileExtensionByMimeType(string mimeType)
 		{
-			switch (mimeType)
-			{
-				case "image/png": return ".png";
-			}
-
-			return ".jpg";
-		}
+            return mimeType switch
+            {
+                "image/png" => ".png",
+                _ => ".jpg",
+            };
+        }
 
 		public static Document ImportForm(string form, long documentCategory, Patient patient)
 		{
@@ -501,11 +496,11 @@ namespace OpenDentBusiness
 
 		public static EhrAmendment ImportAmdAttach(Bitmap image, EhrAmendment amd)
 		{
-			amd.FileName = DateTime.Now.ToString("yyyyMMdd_HHmmss_") + amd.EhrAmendmentNum + ".jpg";
-			amd.DateTAppend = DateTime.Now;
+			amd.FileName = DateTime.Now.ToString("yyyyMMdd_HHmmss_") + amd.Id + ".jpg";
+			amd.AppendedOn = DateTime.Now;
 			EhrAmendments.Update(amd);
 
-			amd = EhrAmendments.GetOne(amd.EhrAmendmentNum);
+			amd = EhrAmendments.GetOne(amd.Id);
 
 			ImageCodecInfo imageCodecInfo = null;
 			foreach (var encoder in ImageCodecInfo.GetImageEncoders())
@@ -530,8 +525,8 @@ namespace OpenDentBusiness
 		{
 			string amdFilename = amd.FileName;
 
-			amd.DateTAppend = DateTime.Now;
-			amd.FileName = DateTime.Now.ToString("yyyyMMdd_HHmmss_") + amd.EhrAmendmentNum + Path.GetExtension(importFileName);
+			amd.AppendedOn = DateTime.Now;
+			amd.FileName = DateTime.Now.ToString("yyyyMMdd_HHmmss_") + amd.Id + Path.GetExtension(importFileName);
 			if (string.IsNullOrEmpty(Path.GetExtension(importFileName)))
 			{
 				amd.FileName += ".jpg";
@@ -690,9 +685,8 @@ namespace OpenDentBusiness
 				return;
             }
 
-			amendment.DateTAppend = DateTime.MinValue;
+			amendment.AppendedOn = DateTime.MinValue;
 			amendment.FileName = "";
-			amendment.RawBase64 = "";
 			EhrAmendments.Update(amendment);
 		}
 

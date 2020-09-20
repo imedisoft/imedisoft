@@ -3373,7 +3373,7 @@ namespace OpenDental {
 				if(_chartViewCurDisplay==null) {
 					_chartViewCurDisplay=ChartViews.GetFirst();
 				}
-				listDisplayFields=DisplayFields.GetForChartView(_chartViewCurDisplay.ChartViewNum);
+				listDisplayFields=DisplayFields.GetForChartView(_chartViewCurDisplay.Id);
 				gridProg.Title=_chartViewCurDisplay.Description;
 				if(!chartCustViewChanged) {
 					checkSheets.Checked=(_chartViewCurDisplay.ObjectTypes & ChartViewObjs.Sheets)==ChartViewObjs.Sheets;
@@ -9571,7 +9571,7 @@ namespace OpenDental {
 				listDisFields=DisplayFields.GetDefaultList(DisplayFieldCategory.None);
 			}
 			else {
-				listDisFields=DisplayFields.GetForChartView(_chartViewCurDisplay.ChartViewNum);
+				listDisFields=DisplayFields.GetForChartView(_chartViewCurDisplay.Id);
 			}
 			DataTable table=new DataTable();
 			//If the current search is the last search with more added on, only search the currently selected rows. Helps with speed for long progress notes.

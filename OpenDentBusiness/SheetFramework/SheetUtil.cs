@@ -375,13 +375,13 @@ namespace OpenDentBusiness{
 						int minGridWidth=-1;
 						long minChartViewNum=-1;
 						foreach(ChartView view in ChartViews.GetDeepCopy()) {
-							List<DisplayField> listDisplayFields=DisplayFields.GetForChartView(view.ChartViewNum);
+							List<DisplayField> listDisplayFields=DisplayFields.GetForChartView(view.Id);
 							int widthGridTotal=listDisplayFields.Sum(x => x.ColumnWidth);
 							if(widthGridTotal>minGridWidth) {
 								continue;
 							}
 							minGridWidth=widthGridTotal;
-							minChartViewNum=view.ChartViewNum;
+							minChartViewNum=view.Id;
 						}
 						retVal.AddRange(DisplayFields.GetForChartView(minChartViewNum));
 					}

@@ -1,11 +1,8 @@
 using CodeBase;
 using Imedisoft.Claims;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Windows.Forms;
 
 namespace OpenDentBusiness.Eclaims
@@ -27,29 +24,29 @@ namespace OpenDentBusiness.Eclaims
 		{
 			var claimBridge = ClaimBridgeManager.GetBridgeByType(clearingHouse.TypeName);
 			if (null == claimBridge)
-            {
+			{
 				return;
-            }
+			}
 
 			int batchNumber = Clearinghouses.GetNextBatchNumber(clearingHouse);
 
 			if (!claimBridge.Send(clearingHouse, batchNumber, queueItems, medType))
-            {
+			{
 				if (string.IsNullOrEmpty(claimBridge.ErrorMessage))
-                {
+				{
 					MessageBox.Show(
-						claimBridge.ErrorMessage, "Imedisoft", 
-						MessageBoxButtons.OK, 
+						claimBridge.ErrorMessage, "Imedisoft",
+						MessageBoxButtons.OK,
 						MessageBoxIcon.Error);
-                }
-                else
-                {
+				}
+				else
+				{
 					MessageBox.Show(
 						"Failed to send.", "Imedisoft",
 						MessageBoxButtons.OK,
 						MessageBoxIcon.Error);
 				}
-            }
+			}
 
 			////---------------------------------------------------------------------------------------
 			////Create the claim file for this clearinghouse

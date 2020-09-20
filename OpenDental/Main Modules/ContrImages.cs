@@ -1064,7 +1064,7 @@ namespace OpenDental {
 			else if(_ehrAmendmentCur!=null) {
 				if(_ehrAmendmentCur.FileName!=null && _ehrAmendmentCur.FileName!="") {
 					TreeNode treeNode=new TreeNode(_ehrAmendmentCur.FileName);
-					treeNode.Tag=MakeIdAmd(_ehrAmendmentCur.EhrAmendmentNum);
+					treeNode.Tag=MakeIdAmd(_ehrAmendmentCur.Id);
 					treeNode.ImageIndex=2;
 					treeNode.SelectedImageIndex=treeNode.ImageIndex;//redundant?
 					treeMain.Nodes.Add(treeNode);
@@ -1968,7 +1968,7 @@ namespace OpenDental {
 					FillTree(false);
 				}
 				if(_ehrAmendmentCur!=null) {
-					SelectTreeNode(GetTreeNode(MakeIdAmd(_ehrAmendmentCur.EhrAmendmentNum)),fileNames[fileNames.Length-1]);
+					SelectTreeNode(GetTreeNode(MakeIdAmd(_ehrAmendmentCur.Id)),fileNames[fileNames.Length-1]);
 				}
 			}
 			else {//regular Images module
@@ -2086,7 +2086,7 @@ namespace OpenDental {
 					return;
 				}
 				FillTree(false);
-				SelectTreeNode(GetTreeNode(MakeIdAmd(amd.EhrAmendmentNum)));
+				SelectTreeNode(GetTreeNode(MakeIdAmd(amd.Id)));
 			}
 			else if(nodeIdTag.NodeType==EnumNodeType.Mount && _idxSelectedInMount>=0) {//Pasting into the mount item of the currently selected mount.
 				if(_arrayDocumentsInMount[_idxSelectedInMount]!=null) {
@@ -2384,7 +2384,7 @@ namespace OpenDental {
 				Cursor=Cursors.Default;
 				if(saved) {
 					FillTree(false);
-					SelectTreeNode(GetTreeNode(MakeIdAmd(_ehrAmendmentCur.EhrAmendmentNum)));
+					SelectTreeNode(GetTreeNode(MakeIdAmd(_ehrAmendmentCur.Id)));
 				}
 			}
 			else {//regular Images module
@@ -2522,7 +2522,7 @@ namespace OpenDental {
 				}
 				if(copied) {
 					FillTree(false);
-					SelectTreeNode(GetTreeNode(MakeIdAmd(_ehrAmendmentCur.EhrAmendmentNum)));
+					SelectTreeNode(GetTreeNode(MakeIdAmd(_ehrAmendmentCur.Id)));
 				}
 				ImageStore.TryDeleteFile(tempFile
 					,(msg) => MsgBox.Show(msg)//Informs user when a 'file is in use' exception occurs.

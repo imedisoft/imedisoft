@@ -42,7 +42,7 @@ namespace OpenDentBusiness.Crud{
 			Clearinghouse clearinghouse;
 			foreach(DataRow row in table.Rows) {
 				clearinghouse=new Clearinghouse();
-				clearinghouse.ClearinghouseNum       = PIn.Long  (row["ClearinghouseNum"].ToString());
+				clearinghouse.Id       = PIn.Long  (row["ClearinghouseNum"].ToString());
 				clearinghouse.Description            = PIn.String(row["Description"].ToString());
 				clearinghouse.ExportPath             = PIn.String(row["ExportPath"].ToString());
 				clearinghouse.Payors                 = PIn.String(row["Payors"].ToString());
@@ -67,8 +67,8 @@ namespace OpenDentBusiness.Crud{
 				clearinghouse.ISA16                  = PIn.String(row["ISA16"].ToString());
 				clearinghouse.SeparatorData          = PIn.String(row["SeparatorData"].ToString());
 				clearinghouse.SeparatorSegment       = PIn.String(row["SeparatorSegment"].ToString());
-				clearinghouse.ClinicNum              = PIn.Long  (row["ClinicNum"].ToString());
-				clearinghouse.HqClearinghouseNum     = PIn.Long  (row["HqClearinghouseNum"].ToString());
+				clearinghouse.ClinicId              = PIn.Long  (row["ClinicNum"].ToString());
+				clearinghouse.ParentId     = PIn.Long  (row["HqClearinghouseNum"].ToString());
 				clearinghouse.IsEraDownloadAllowed   = (OpenDentBusiness.EraBehaviors)PIn.Int(row["IsEraDownloadAllowed"].ToString());
 				clearinghouse.IsClaimExportAllowed   = PIn.Bool  (row["IsClaimExportAllowed"].ToString());
 				clearinghouse.IsAttachmentSendAllowed= PIn.Bool  (row["IsAttachmentSendAllowed"].ToString());
@@ -115,7 +115,7 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("IsAttachmentSendAllowed");
 			foreach(Clearinghouse clearinghouse in listClearinghouses) {
 				table.Rows.Add(new object[] {
-					POut.Long  (clearinghouse.ClearinghouseNum),
+					POut.Long  (clearinghouse.Id),
 					            clearinghouse.Description,
 					            clearinghouse.ExportPath,
 					            clearinghouse.Payors,
@@ -140,8 +140,8 @@ namespace OpenDentBusiness.Crud{
 					            clearinghouse.ISA16,
 					            clearinghouse.SeparatorData,
 					            clearinghouse.SeparatorSegment,
-					POut.Long  (clearinghouse.ClinicNum),
-					POut.Long  (clearinghouse.HqClearinghouseNum),
+					POut.Long  (clearinghouse.ClinicId??0),
+					POut.Long  (clearinghouse.ParentId??0),
 					POut.Int   ((int)clearinghouse.IsEraDownloadAllowed),
 					POut.Bool  (clearinghouse.IsClaimExportAllowed),
 					POut.Bool  (clearinghouse.IsAttachmentSendAllowed),
@@ -158,7 +158,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one Clearinghouse into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(Clearinghouse clearinghouse,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				clearinghouse.ClearinghouseNum=ReplicationServers.GetKey("clearinghouse","ClearinghouseNum");
+				clearinghouse.Id=ReplicationServers.GetKey("clearinghouse","ClearinghouseNum");
 			}
 			string command="INSERT INTO clearinghouse (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -166,7 +166,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="Description,ExportPath,Payors,Eformat,ISA05,SenderTIN,ISA07,ISA08,ISA15,Password,ResponsePath,CommBridge,ClientProgram,LastBatchNumber,ModemPort,LoginID,SenderName,SenderTelephone,GS03,ISA02,ISA04,ISA16,SeparatorData,SeparatorSegment,ClinicNum,HqClearinghouseNum,IsEraDownloadAllowed,IsClaimExportAllowed,IsAttachmentSendAllowed) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(clearinghouse.ClearinghouseNum)+",";
+				command+=POut.Long(clearinghouse.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(clearinghouse.Description)+"',"
@@ -193,8 +193,8 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(clearinghouse.ISA16)+"',"
 				+"'"+POut.String(clearinghouse.SeparatorData)+"',"
 				+"'"+POut.String(clearinghouse.SeparatorSegment)+"',"
-				+    POut.Long  (clearinghouse.ClinicNum)+","
-				+    POut.Long  (clearinghouse.HqClearinghouseNum)+","
+				+    POut.Long  (clearinghouse.ClinicId ?? 0) +","
+				+    POut.Long  (clearinghouse.ParentId ?? 0) +","
 				+    POut.Int   ((int)clearinghouse.IsEraDownloadAllowed)+","
 				+    POut.Bool  (clearinghouse.IsClaimExportAllowed)+","
 				+    POut.Bool  (clearinghouse.IsAttachmentSendAllowed)+")";
@@ -210,9 +210,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramExportPath,paramPayors);
 			}
 			else {
-				clearinghouse.ClearinghouseNum=Database.ExecuteInsert(command,paramExportPath,paramPayors);
+				clearinghouse.Id=Database.ExecuteInsert(command,paramExportPath,paramPayors);
 			}
-			return clearinghouse.ClearinghouseNum;
+			return clearinghouse.Id;
 		}
 
 		///<summary>Inserts one Clearinghouse into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -225,14 +225,14 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO clearinghouse (";
 			if(!useExistingPK) {
-				clearinghouse.ClearinghouseNum=ReplicationServers.GetKeyNoCache("clearinghouse","ClearinghouseNum");
+				clearinghouse.Id=ReplicationServers.GetKeyNoCache("clearinghouse","ClearinghouseNum");
 			}
 			if(useExistingPK) {
 				command+="ClearinghouseNum,";
 			}
 			command+="Description,ExportPath,Payors,Eformat,ISA05,SenderTIN,ISA07,ISA08,ISA15,Password,ResponsePath,CommBridge,ClientProgram,LastBatchNumber,ModemPort,LoginID,SenderName,SenderTelephone,GS03,ISA02,ISA04,ISA16,SeparatorData,SeparatorSegment,ClinicNum,HqClearinghouseNum,IsEraDownloadAllowed,IsClaimExportAllowed,IsAttachmentSendAllowed) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(clearinghouse.ClearinghouseNum)+",";
+				command+=POut.Long(clearinghouse.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(clearinghouse.Description)+"',"
@@ -259,8 +259,8 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(clearinghouse.ISA16)+"',"
 				+"'"+POut.String(clearinghouse.SeparatorData)+"',"
 				+"'"+POut.String(clearinghouse.SeparatorSegment)+"',"
-				+    POut.Long  (clearinghouse.ClinicNum)+","
-				+    POut.Long  (clearinghouse.HqClearinghouseNum)+","
+				+    POut.Long  (clearinghouse.ClinicId ?? 0) +","
+				+    POut.Long  (clearinghouse.ParentId ?? 0) +","
 				+    POut.Int   ((int)clearinghouse.IsEraDownloadAllowed)+","
 				+    POut.Bool  (clearinghouse.IsClaimExportAllowed)+","
 				+    POut.Bool  (clearinghouse.IsAttachmentSendAllowed)+")";
@@ -276,9 +276,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramExportPath,paramPayors);
 			}
 			else {
-				clearinghouse.ClearinghouseNum=Database.ExecuteInsert(command,paramExportPath,paramPayors);
+				clearinghouse.Id=Database.ExecuteInsert(command,paramExportPath,paramPayors);
 			}
-			return clearinghouse.ClearinghouseNum;
+			return clearinghouse.Id;
 		}
 
 		///<summary>Updates one Clearinghouse in the database.</summary>
@@ -308,12 +308,12 @@ namespace OpenDentBusiness.Crud{
 				+"ISA16                  = '"+POut.String(clearinghouse.ISA16)+"', "
 				+"SeparatorData          = '"+POut.String(clearinghouse.SeparatorData)+"', "
 				+"SeparatorSegment       = '"+POut.String(clearinghouse.SeparatorSegment)+"', "
-				+"ClinicNum              =  "+POut.Long  (clearinghouse.ClinicNum)+", "
-				+"HqClearinghouseNum     =  "+POut.Long  (clearinghouse.HqClearinghouseNum)+", "
+				+"ClinicNum              =  "+POut.Long  (clearinghouse.ClinicId ?? 0) +", "
+				+"HqClearinghouseNum     =  "+POut.Long  (clearinghouse.ParentId ?? 0) +", "
 				+"IsEraDownloadAllowed   =  "+POut.Int   ((int)clearinghouse.IsEraDownloadAllowed)+", "
 				+"IsClaimExportAllowed   =  "+POut.Bool  (clearinghouse.IsClaimExportAllowed)+", "
 				+"IsAttachmentSendAllowed=  "+POut.Bool  (clearinghouse.IsAttachmentSendAllowed)+" "
-				+"WHERE ClearinghouseNum = "+POut.Long(clearinghouse.ClearinghouseNum);
+				+"WHERE ClearinghouseNum = "+POut.Long(clearinghouse.Id);
 			if(clearinghouse.ExportPath==null) {
 				clearinghouse.ExportPath="";
 			}
@@ -421,13 +421,13 @@ namespace OpenDentBusiness.Crud{
 				if(command!="") { command+=",";}
 				command+="SeparatorSegment = '"+POut.String(clearinghouse.SeparatorSegment)+"'";
 			}
-			if(clearinghouse.ClinicNum != oldClearinghouse.ClinicNum) {
+			if(clearinghouse.ClinicId != oldClearinghouse.ClinicId) {
 				if(command!="") { command+=",";}
-				command+="ClinicNum = "+POut.Long(clearinghouse.ClinicNum)+"";
+				command+="ClinicNum = "+POut.Long(clearinghouse.ClinicId ?? 0) +"";
 			}
-			if(clearinghouse.HqClearinghouseNum != oldClearinghouse.HqClearinghouseNum) {
+			if(clearinghouse.ParentId != oldClearinghouse.ParentId) {
 				if(command!="") { command+=",";}
-				command+="HqClearinghouseNum = "+POut.Long(clearinghouse.HqClearinghouseNum)+"";
+				command+="HqClearinghouseNum = "+POut.Long(clearinghouse.ParentId ?? 0) +"";
 			}
 			if(clearinghouse.IsEraDownloadAllowed != oldClearinghouse.IsEraDownloadAllowed) {
 				if(command!="") { command+=",";}
@@ -453,7 +453,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			var paramPayors = new MySqlParameter("paramPayors", POut.StringParam(clearinghouse.Payors));
 			command="UPDATE clearinghouse SET "+command
-				+" WHERE ClearinghouseNum = "+POut.Long(clearinghouse.ClearinghouseNum);
+				+" WHERE ClearinghouseNum = "+POut.Long(clearinghouse.Id);
 			Database.ExecuteNonQuery(command,paramExportPath,paramPayors);
 			return true;
 		}
@@ -531,10 +531,10 @@ namespace OpenDentBusiness.Crud{
 			if(clearinghouse.SeparatorSegment != oldClearinghouse.SeparatorSegment) {
 				return true;
 			}
-			if(clearinghouse.ClinicNum != oldClearinghouse.ClinicNum) {
+			if(clearinghouse.ClinicId != oldClearinghouse.ClinicId) {
 				return true;
 			}
-			if(clearinghouse.HqClearinghouseNum != oldClearinghouse.HqClearinghouseNum) {
+			if(clearinghouse.ParentId != oldClearinghouse.ParentId) {
 				return true;
 			}
 			if(clearinghouse.IsEraDownloadAllowed != oldClearinghouse.IsEraDownloadAllowed) {
@@ -563,8 +563,8 @@ namespace OpenDentBusiness.Crud{
 			List<Clearinghouse> listUpdNew =new List<Clearinghouse>();
 			List<Clearinghouse> listUpdDB  =new List<Clearinghouse>();
 			List<Clearinghouse> listDel    =new List<Clearinghouse>();
-			listNew.Sort((Clearinghouse x,Clearinghouse y) => { return x.ClearinghouseNum.CompareTo(y.ClearinghouseNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
-			listDB.Sort((Clearinghouse x,Clearinghouse y) => { return x.ClearinghouseNum.CompareTo(y.ClearinghouseNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listNew.Sort((Clearinghouse x,Clearinghouse y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listDB.Sort((Clearinghouse x,Clearinghouse y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
 			int idxNew=0;
 			int idxDB=0;
 			int rowsUpdatedCount=0;
@@ -592,12 +592,12 @@ namespace OpenDentBusiness.Crud{
 					idxDB++;
 					continue;
 				}
-				else if(fieldNew.ClearinghouseNum<fieldDB.ClearinghouseNum) {//newPK less than dbPK, newItem is 'next'
+				else if(fieldNew.Id<fieldDB.Id) {//newPK less than dbPK, newItem is 'next'
 					listIns.Add(fieldNew);
 					idxNew++;
 					continue;
 				}
-				else if(fieldNew.ClearinghouseNum>fieldDB.ClearinghouseNum) {//dbPK less than newPK, dbItem is 'next'
+				else if(fieldNew.Id>fieldDB.Id) {//dbPK less than newPK, dbItem is 'next'
 					listDel.Add(fieldDB);
 					idxDB++;
 					continue;
@@ -618,7 +618,7 @@ namespace OpenDentBusiness.Crud{
 				}
 			}
 			for(int i=0;i<listDel.Count;i++) {
-				Delete(listDel[i].ClearinghouseNum);
+				Delete(listDel[i].Id);
 			}
 			if(rowsUpdatedCount>0 || listIns.Count>0 || listDel.Count>0) {
 				return true;

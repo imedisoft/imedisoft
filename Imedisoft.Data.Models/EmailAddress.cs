@@ -1,15 +1,16 @@
 ﻿using Imedisoft.Data.Annotations;
+using System;
 
 namespace Imedisoft.Data.Models
 {
-    /// <summary>
-    /// Stores all the connection details for one email address. 
-    /// </summary>
     [Table("email_addresses")]
 	public class EmailAddress
 	{
 		[PrimaryKey]
 		public long Id;
+
+		[ForeignKey(typeof(EmailAutograph), nameof(EmailAutograph.Id))]
+		public long? EmailAutographId;
 
 		public string SmtpServer;
 
@@ -47,10 +48,9 @@ namespace Imedisoft.Data.Models
 		public long? UserId;
 
 		/// <summary>
-		/// Webmail ProvNum. 
 		/// Just makes it easier to know what email address the user picked in the inbox. Not a DB column.
 		/// </summary>
-		[Ignore]
+		[Ignore, Obsolete]
 		public long WebmailProviderId;
 
 		/// <summary>
@@ -66,16 +66,11 @@ namespace Imedisoft.Data.Models
 		/// <summary>
 		/// We assume the email settings are implicit if the server port is 465.
 		/// </summary>
-		public bool IsImplicitSsl 
-			=> SmtpPort == 465;
-
-		public EmailAddress Clone() 
-			=> (EmailAddress)MemberwiseClone();
+		public bool IsImplicitSsl => SmtpPort == 465;
 
 		/// <summary>
 		/// Returns the SenderAddress if it is not blank, otherwise returns the EmailUsername.
 		/// </summary>
-		public string GetFrom() 
-			=> string.IsNullOrEmpty(SenderAddress) ? SmtpUsername : SenderAddress;
+		public string GetFrom() => string.IsNullOrEmpty(SenderAddress) ? SmtpUsername : SenderAddress;
 	}
 }

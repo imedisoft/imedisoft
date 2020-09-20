@@ -357,7 +357,7 @@ namespace OpenDental{
 		private void FillGrid(){
 			_listClearinghousesClinicCur.Clear();
 			for(int i=0;i<_listClearinghousesClinicAll.Count;i++) {
-				if(_listClearinghousesClinicAll[i].ClinicNum==comboClinic.SelectedClinicNum) {
+				if(_listClearinghousesClinicAll[i].ClinicId==comboClinic.SelectedClinicNum) {
 					_listClearinghousesClinicCur.Add(_listClearinghousesClinicAll[i]);
 				}
 			}
@@ -380,7 +380,7 @@ namespace OpenDental{
 				listClearinghouseTag[0]=_listClearinghousesHq[i].Copy(); //clearinghousehq.
 				listClearinghouseTag[2]=_listClearinghousesHq[i].Copy();//clearinghouseCur. will be clearinghouseHq if clearinghouseClinic doesn't exist.
 				for(int j=0;j<_listClearinghousesClinicCur.Count;j++) {
-					if(_listClearinghousesClinicCur[j].HqClearinghouseNum==_listClearinghousesHq[i].ClearinghouseNum) {
+					if(_listClearinghousesClinicCur[j].ParentId==_listClearinghousesHq[i].Id) {
 						listClearinghouseTag[1]=_listClearinghousesClinicCur[j];//clearinghouseClin
 						listClearinghouseTag[2]=Clearinghouses.OverrideFields(_listClearinghousesHq[i],_listClearinghousesClinicCur[j]);
 						break;
@@ -393,16 +393,16 @@ namespace OpenDental{
 				row.Cells.Add(clearinghouseCur.ExportPath);
 				row.Cells.Add(clearinghouseCur.TypeName);
 				string s="";
-				if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent)==_listClearinghousesHq[i].ClearinghouseNum) {
+				if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent)==_listClearinghousesHq[i].Id) {
 					s+="Dent";
 				}
-				if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultMed)==_listClearinghousesHq[i].ClearinghouseNum) {
+				if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultMed)==_listClearinghousesHq[i].Id) {
 					if(s!="") {
 						s+=",";
 					}
 					s+="Med";
 				}
-				if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultEligibility)==_listClearinghousesHq[i].ClearinghouseNum 
+				if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultEligibility)==_listClearinghousesHq[i].Id 
 					&& !CultureInfo.CurrentCulture.Name.EndsWith("CA")) //Canadian. en-CA or fr-CA
 				{
 					if(s!="") {
@@ -426,7 +426,7 @@ namespace OpenDental{
 			FormCE.ListClearinghousesClinCur=new List<Clearinghouse>();
 			FormCE.ListClearinghousesClinOld=new List<Clearinghouse>();
 			for(int i=0;i<_listClearinghousesClinicAll.Count;i++) {
-				if(_listClearinghousesClinicAll[i].HqClearinghouseNum==clearinghouseHq.ClearinghouseNum) {
+				if(_listClearinghousesClinicAll[i].ParentId==clearinghouseHq.Id) {
 					FormCE.ListClearinghousesClinCur.Add(_listClearinghousesClinicAll[i].Copy());
 					FormCE.ListClearinghousesClinOld.Add(_listClearinghousesClinicAll[i].Copy());
 				}
@@ -441,7 +441,7 @@ namespace OpenDental{
 			else { //Not deleted.  Both the non-HQ and HQ lists need to be updated.
 				_listClearinghousesHq[e.Row]=FormCE.ClearinghouseHq; //update Hq Clearinghouse.
 				//Update the clinical clearinghouse list by deleting all of the entries for the selected clearinghouse,
-				_listClearinghousesClinicAll.RemoveAll(x => x.HqClearinghouseNum==clearinghouseHq.ClearinghouseNum);
+				_listClearinghousesClinicAll.RemoveAll(x => x.ParentId==clearinghouseHq.Id);
 				//then adding the updated versions back to the list.
 				_listClearinghousesClinicAll.AddRange(FormCE.ListClearinghousesClinCur);
 			}
@@ -482,11 +482,11 @@ namespace OpenDental{
 			bool isInvalid=false;
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA") 
 				&& Preferences.GetLong(PreferenceName.ClearinghouseDefaultEligibility)==0
-				&& Preferences.Set(PreferenceName.ClearinghouseDefaultEligibility,ch.ClearinghouseNum)) 
+				&& Preferences.Set(PreferenceName.ClearinghouseDefaultEligibility,ch.Id)) 
 			{
 				isInvalid=true;
 			}
-			if(Preferences.Set(PreferenceName.ClearinghouseDefaultDent,ch.ClearinghouseNum)) {
+			if(Preferences.Set(PreferenceName.ClearinghouseDefaultDent,ch.Id)) {
 				isInvalid=true;
 			}
 			if(isInvalid) {
@@ -508,11 +508,11 @@ namespace OpenDental{
 			bool isInvalid=false;
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA") 
 				&& Preferences.GetLong(PreferenceName.ClearinghouseDefaultEligibility)==0
-				&& Preferences.Set(PreferenceName.ClearinghouseDefaultEligibility,ch.ClearinghouseNum)) 
+				&& Preferences.Set(PreferenceName.ClearinghouseDefaultEligibility,ch.Id)) 
 			{
 				isInvalid=true;
 			}
-			if(Preferences.Set(PreferenceName.ClearinghouseDefaultMed,ch.ClearinghouseNum)) {
+			if(Preferences.Set(PreferenceName.ClearinghouseDefaultMed,ch.Id)) {
 				isInvalid=true;
 			}
 			if(isInvalid) {
@@ -527,7 +527,7 @@ namespace OpenDental{
 					return;
 			}
 			Clearinghouse ch=_listClearinghousesHq[gridMain.GetSelectedIndex()];
-			if(Preferences.Set(PreferenceName.ClearinghouseDefaultEligibility,ch.ClearinghouseNum)) {
+			if(Preferences.Set(PreferenceName.ClearinghouseDefaultEligibility,ch.Id)) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			FillGrid();

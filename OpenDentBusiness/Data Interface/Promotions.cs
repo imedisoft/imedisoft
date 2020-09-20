@@ -100,7 +100,7 @@ namespace OpenDentBusiness{
 			#endregion
 			List<string> listSubjectReplacements=EmailHostingTemplates.GetListReplacements(templateCur.Subject).Distinct().ToList();
 			List<string> listBodyReplacements=EmailHostingTemplates.GetListReplacements(templateCur.BodyHTML).Distinct().ToList();
-			List<TemplateDestination> listTemplateDestinations=new List<TemplateDestination>();
+			//List<TemplateDestination> listTemplateDestinations=new List<TemplateDestination>();
 			//Dictionary of patnum -> the replaced subject and body. Used afterwords to save the emails as EmailMessages.
 			Dictionary<long,(string subject,string body)> dictReplaced=new Dictionary<long,(string,string)>();
 			//if there are multiple patients with the same email address, last in will win.
@@ -148,65 +148,67 @@ namespace OpenDentBusiness{
 				foreach(string replacement in listBodyReplacements) {
 					bodyReplacements[replacement]=GetReplacementValue(replacement);
 				}
-				listTemplateDestinations.Add(new TemplateDestination {
-					UniqueID=dest.PatNum.ToString(),
-					Destination=pat.Email,
-					SubjectReplacements=subjectReplacements,
-					BodyReplacements=bodyReplacements,
-				});
+				//listTemplateDestinations.Add(new TemplateDestination {
+				//	UniqueID=dest.PatNum.ToString(),
+				//	Destination=pat.Email,
+				//	SubjectReplacements=subjectReplacements,
+				//	BodyReplacements=bodyReplacements,
+				//});
 				dictReplaced[dest.PatNum]=(PerformAllReplacements(templateCur.Subject)
 					,PerformAllReplacements(string.IsNullOrWhiteSpace(templateCur.BodyHTML) ? templateCur.BodyPlainText : templateCur.BodyHTML));
 			}
-			IAccountApi api=EmailHostingTemplates.GetAccountApi(Clinics.Active.Id);
-			SendMassEmailResponse response;
-			try {
-				response=api.SendMassEmail(new SendMassEmailRequest {
-					TemplateNum=templateCur.TemplateId,
-					SenderName=senderName,
-					ReplyToAddress=replyToAddress,
-					//Verifying domains is currently not supported.
-					FromEmailAddress="",
-					ListDestinations=listTemplateDestinations,
-				});
-			}
-			catch(Exception e) {
-				return e.Message;
-			}
-			Promotion promotion=new Promotion {
-				ClinicNum=Clinics.Active.Id,
-				DateTimeCreated=DateTime.Now,
-				PromotionName=promotionName,
-				TypePromotion=type,
-			};
-			Insert(promotion);
-			List<PromotionLog> listLogs=new List<PromotionLog>();
-			foreach(KeyValuePair<string,long> uniqueIdPair in response.DictionaryUniqueIDToHostingID) {
-				long patNum=PIn.Long(uniqueIdPair.Key);
-				(string subject,string body)=dictReplaced[patNum];
-				EmailMessage message=new EmailMessage {
-					BodyText=body,
-					HideIn=HideInFlags.EmailInbox | HideInFlags.ApptEdit,
-					HtmlType=templateCur.EmailTemplateType,
-					MsgDateTime=DateTime.Now,
-					PatNum=patNum,
-					PatNumSubj=patNum,
-					RecipientAddress=uniqueIdPair.Key,
-					SentOrReceived=EmailSentOrReceived.Sent,
-					ToAddress=uniqueIdPair.Key,
-					UserNum=Security.CurrentUser?.Id??0,
-					Subject=subject,
-				};
-				//Insert so we have the primary key available.
-				EmailMessages.Insert(message);
-				listLogs.Add(new PromotionLog {
-					EmailHostingFK=uniqueIdPair.Value,
-					PatNum=patNum,
-					PromotionNum=promotion.PromotionNum,
-					PromotionStatus=PromotionLogStatus.Pending,
-					EmailMessageNum=message.EmailMessageNum,
-				});
-			}
-			PromotionLogs.InsertMany(listLogs);
+
+			// TODO: Fix:
+			//IAccountApi api=EmailHostingTemplates.GetAccountApi(Clinics.Active.Id);
+			//SendMassEmailResponse response;
+			//try {
+			//	response=api.SendMassEmail(new SendMassEmailRequest {
+			//		TemplateNum=templateCur.TemplateId,
+			//		SenderName=senderName,
+			//		ReplyToAddress=replyToAddress,
+			//		//Verifying domains is currently not supported.
+			//		FromEmailAddress="",
+			//		ListDestinations=listTemplateDestinations,
+			//	});
+			//}
+			//catch(Exception e) {
+			//	return e.Message;
+			//}
+			//Promotion promotion=new Promotion {
+			//	ClinicNum=Clinics.Active.Id,
+			//	DateTimeCreated=DateTime.Now,
+			//	PromotionName=promotionName,
+			//	TypePromotion=type,
+			//};
+			//Insert(promotion);
+			//List<PromotionLog> listLogs=new List<PromotionLog>();
+			//foreach(KeyValuePair<string,long> uniqueIdPair in response.DictionaryUniqueIDToHostingID) {
+			//	long patNum=PIn.Long(uniqueIdPair.Key);
+			//	(string subject,string body)=dictReplaced[patNum];
+			//	EmailMessage message=new EmailMessage {
+			//		BodyText=body,
+			//		HideIn=HideInFlags.EmailInbox | HideInFlags.ApptEdit,
+			//		HtmlType=templateCur.EmailTemplateType,
+			//		MsgDateTime=DateTime.Now,
+			//		PatNum=patNum,
+			//		PatNumSubj=patNum,
+			//		RecipientAddress=uniqueIdPair.Key,
+			//		SentOrReceived=EmailSentOrReceived.Sent,
+			//		ToAddress=uniqueIdPair.Key,
+			//		UserNum=Security.CurrentUser?.Id??0,
+			//		Subject=subject,
+			//	};
+			//	//Insert so we have the primary key available.
+			//	EmailMessages.Insert(message);
+			//	listLogs.Add(new PromotionLog {
+			//		EmailHostingFK=uniqueIdPair.Value,
+			//		PatNum=patNum,
+			//		PromotionNum=promotion.PromotionNum,
+			//		PromotionStatus=PromotionLogStatus.Pending,
+			//		EmailMessageNum=message.EmailMessageNum,
+			//	});
+			//}
+			//PromotionLogs.InsertMany(listLogs);
 			return "";
 		}
 

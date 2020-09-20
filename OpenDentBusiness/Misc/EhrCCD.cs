@@ -1,23 +1,19 @@
-﻿using System;
-using System.IO;
+﻿using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using OpenDentBusiness.FileIO;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
-using CodeBase;
-using System.Xml;
-using System.Xml.XPath;
 using System.Text.RegularExpressions;
-using OpenDentBusiness.FileIO;
-using Imedisoft.Data.Models;
-using Imedisoft.Data;
+using System.Xml;
 
-namespace OpenDentBusiness {
-	public class EhrCCD {
+namespace OpenDentBusiness
+{
+    public class EhrCCD {
 
 		///<summary>OID: 2.16.840.1.113883.6.96</summary>
 		private const string strCodeSystemSnomed="2.16.840.1.113883.6.96";
@@ -1083,11 +1079,11 @@ Immunizations
 					else {
 						cvx=Cvxs.GetOneFromDb(vaccineDef.CVXCode);
 					}
-					if(String.IsNullOrEmpty(cvx.CvxCode)) {
+					if(String.IsNullOrEmpty(cvx.Code)) {
 						_w.WriteElementString("td","");
 					}
 					else {
-						_w.WriteElementString("td",cvx.CvxCode+" - "+cvx.Description);
+						_w.WriteElementString("td",cvx.Code+" - "+cvx.Description);
 					}
 					if(listVaccinePatsFiltered[i].DateTimeStart.Year<1880) {
 						_w.WriteElementString("td","");
@@ -1142,7 +1138,7 @@ Immunizations
 				}
 				else {
 					Cvx cvx=Cvxs.GetOneFromDb(vaccineDef.CVXCode);
-					StartAndEnd("code","code",cvx.CvxCode,"codeSystem",strCodeSystemCvx,"displayName",cvx.Description,"codeSystemName",strCodeSystemNameCvx);
+					StartAndEnd("code","code",cvx.Code,"codeSystem",strCodeSystemCvx,"displayName",cvx.Description,"codeSystemName",strCodeSystemNameCvx);
 				}
 				End("manufacturedMaterial");
 				End("manufacturedProduct");

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormCommItem : ODForm {
@@ -333,8 +334,7 @@ namespace OpenDental {
 
 		private void butEditAutoNote_Click(object sender,EventArgs e) {
 			if(GetHasAutoNotePrompt()) {
-				FormAutoNoteCompose FormA=new FormAutoNoteCompose();
-				FormA.MainTextNote=textNote.Text;
+				FormAutoNoteCompose FormA=new FormAutoNoteCompose(textNote.Text);
 				FormA.ShowDialog();
 				if(FormA.DialogResult==DialogResult.OK) {
 					textNote.Text=FormA.CompletedNote;

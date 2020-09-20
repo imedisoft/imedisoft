@@ -3,12 +3,12 @@ using System.ComponentModel;
 
 namespace OpenDentBusiness
 {
-	/// <summary>
-	/// This is an enumeration of all the enumeration types that are used in the database.
-	/// This is used in the reporting classes to make the data human-readable.
-	/// May need to be updated with recent additions.
-	/// </summary>
-	public enum EnumType
+    /// <summary>
+    /// This is an enumeration of all the enumeration types that are used in the database.
+    /// This is used in the reporting classes to make the data human-readable.
+    /// May need to be updated with recent additions.
+    /// </summary>
+    public enum EnumType
 	{
 		YN,
 		Relat,

@@ -541,6 +541,15 @@
     <Compile Include="Forms Temp\FormCarrierEdit.Designer.cs">
       <DependentUpon>FormCarrierEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms T\FormAutoNotePromptBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms T\FormAutoNotes.Designer.cs">
+      <DependentUpon>FormAutoNotes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms T\FormEmailAutographEdit.Designer.cs">
+      <DependentUpon>FormEmailAutographEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormAutoCodeEdit.Designer.cs">
       <DependentUpon>FormAutoCodeEdit.cs</DependentUpon>
     </Compile>
@@ -769,10 +778,10 @@
     <Compile Include="Forms Temp\FormOrthoCase.designer.cs">
       <DependentUpon>FormOrthoCase.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNoteExport.cs">
+    <Compile Include="Forms T\FormAutoNoteExport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNoteExport.Designer.cs">
+    <Compile Include="Forms T\FormAutoNoteExport.Designer.cs">
       <DependentUpon>FormAutoNoteExport.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormFeeSchedGroups.cs">
@@ -1084,6 +1093,9 @@
       <DependentUpon>FormOpenDental.cs</DependentUpon>
     </Compile>
     <Compile Include="Misc\WebServiceRequest.cs" />
+    <Compile Include="Models\Dtos\AutoNoteDto.cs" />
+    <Compile Include="Models\Dtos\AutoNoteExportDto.cs" />
+    <Compile Include="Models\Dtos\AutoNotePromptDto.cs" />
     <Compile Include="ODR\Aggregate.cs" />
     <Compile Include="ODR\ValidDate.cs">
       <SubType>Component</SubType>
@@ -1199,10 +1211,10 @@
     <Compile Include="Forms Reports\FormRpDiscountPlan.designer.cs">
       <DependentUpon>FormRpDiscountPlan.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNoteResponsePicker.cs">
+    <Compile Include="Forms T\FormAutoNoteResponsePicker.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNoteResponsePicker.designer.cs">
+    <Compile Include="Forms T\FormAutoNoteResponsePicker.designer.cs">
       <DependentUpon>FormAutoNoteResponsePicker.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormApptSearchAdvanced.cs">
@@ -1997,7 +2009,7 @@
     <Compile Include="Forms Temp\FormErxAccess.designer.cs">
       <DependentUpon>FormErxAccess.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEmailAutographEdit.cs">
+    <Compile Include="Forms T\FormEmailAutographEdit.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormWikiDrafts.cs">
@@ -2741,16 +2753,16 @@
     <Compile Include="Forms Temp\FormEHR.Designer.cs">
       <DependentUpon>FormEHR.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrAmendmentEdit.cs">
+    <Compile Include="Forms T\FormEhrAmendmentEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrAmendmentEdit.Designer.cs">
+    <Compile Include="Forms T\FormEhrAmendmentEdit.Designer.cs">
       <DependentUpon>FormEhrAmendmentEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrAmendments.cs">
+    <Compile Include="Forms T\FormEhrAmendments.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrAmendments.Designer.cs">
+    <Compile Include="Forms T\FormEhrAmendments.Designer.cs">
       <DependentUpon>FormEhrAmendments.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormFamilyHealthEdit.cs">
@@ -3755,41 +3767,35 @@
     <Compile Include="Forms Temp\FormClaimPayPreAuth.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNotePromptPreview.cs">
+    <Compile Include="Forms T\FormAutoNotePromptPreview.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNotePromptPreview.designer.cs">
+    <Compile Include="Forms T\FormAutoNotePromptPreview.designer.cs">
       <DependentUpon>FormAutoNotePromptPreview.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNotePromptMultiResp.cs">
+    <Compile Include="Forms T\FormAutoNotePromptMultiResponse.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNotePromptMultiResp.designer.cs">
-      <DependentUpon>FormAutoNotePromptMultiResp.cs</DependentUpon>
+    <Compile Include="Forms T\FormAutoNotePromptMultiResponse.designer.cs">
+      <DependentUpon>FormAutoNotePromptMultiResponse.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNotePromptOneResp.cs">
+    <Compile Include="Forms T\FormAutoNotePromptOneResponse.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNotePromptOneResp.designer.cs">
-      <DependentUpon>FormAutoNotePromptOneResp.cs</DependentUpon>
+    <Compile Include="Forms T\FormAutoNotePromptOneResponse.designer.cs">
+      <DependentUpon>FormAutoNotePromptOneResponse.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNotePromptText.cs">
+    <Compile Include="Forms T\FormAutoNotePromptText.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNotePromptText.designer.cs">
+    <Compile Include="Forms T\FormAutoNotePromptText.designer.cs">
       <DependentUpon>FormAutoNotePromptText.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNoteCompose.cs">
+    <Compile Include="Forms T\FormAutoNoteCompose.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNoteCompose.designer.cs">
+    <Compile Include="Forms T\FormAutoNoteCompose.designer.cs">
       <DependentUpon>FormAutoNoteCompose.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormAutoNoteControls.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormAutoNoteControls.designer.cs">
-      <DependentUpon>FormAutoNoteControls.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormRecallMessageEdit.cs">
       <SubType>Form</SubType>
@@ -4140,12 +4146,6 @@
     <Compile Include="Forms Temp\FormPopupEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNoteBuild.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormAutoNoteBuild.designer.cs">
-      <DependentUpon>FormAutoNoteBuild.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms Temp\FormDisplayFieldEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -4173,19 +4173,19 @@
     <Compile Include="Forms Temp\FormEtransEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNoteControlEdit.cs">
+    <Compile Include="Forms T\FormAutoNotePromptEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNoteControlEdit.designer.cs">
-      <DependentUpon>FormAutoNoteControlEdit.cs</DependentUpon>
+    <Compile Include="Forms T\FormAutoNotePromptEdit.designer.cs">
+      <DependentUpon>FormAutoNotePromptEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNoteEdit.cs">
+    <Compile Include="Forms T\FormAutoNoteEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNoteEdit.designer.cs">
+    <Compile Include="Forms T\FormAutoNoteEdit.designer.cs">
       <DependentUpon>FormAutoNoteEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoNotes.cs">
+    <Compile Include="Forms T\FormAutoNotes.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormXchargeSetup.cs">
@@ -5299,7 +5299,7 @@
     <EmbeddedResource Include="Forms Temp\FormOrthoCase.resx">
       <DependentUpon>FormOrthoCase.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAutoNoteExport.resx">
+    <EmbeddedResource Include="Forms T\FormAutoNoteExport.resx">
       <DependentUpon>FormAutoNoteExport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormFeeSchedGroups.resx">
@@ -5422,7 +5422,7 @@
     <EmbeddedResource Include="Forms Reports\FormRpDiscountPlan.resx">
       <DependentUpon>FormRpDiscountPlan.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAutoNoteResponsePicker.resx">
+    <EmbeddedResource Include="Forms T\FormAutoNoteResponsePicker.resx">
       <DependentUpon>FormAutoNoteResponsePicker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormApptSearchAdvanced.resx">
@@ -5845,7 +5845,7 @@
     <EmbeddedResource Include="Forms Temp\FormErxAccess.resx">
       <DependentUpon>FormErxAccess.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEmailAutographEdit.resx">
+    <EmbeddedResource Include="Forms T\FormEmailAutographEdit.resx">
       <DependentUpon>FormEmailAutographEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -6240,10 +6240,10 @@
     <EmbeddedResource Include="Forms Temp\FormEHR.resx">
       <DependentUpon>FormEHR.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrAmendmentEdit.resx">
+    <EmbeddedResource Include="Forms T\FormEhrAmendmentEdit.resx">
       <DependentUpon>FormEhrAmendmentEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrAmendments.resx">
+    <EmbeddedResource Include="Forms T\FormEhrAmendments.resx">
       <DependentUpon>FormEhrAmendments.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormFamilyHealthEdit.resx">
@@ -6901,10 +6901,6 @@
       <DependentUpon>FormPopupEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAutoNoteBuild.resx">
-      <DependentUpon>FormAutoNoteBuild.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormDisplayFieldEdit.resx">
       <DependentUpon>FormDisplayFieldEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -6941,15 +6937,15 @@
       <DependentUpon>FormEtransEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAutoNoteControlEdit.resx">
-      <DependentUpon>FormAutoNoteControlEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Forms T\FormAutoNotePromptEdit.resx">
+      <DependentUpon>FormAutoNotePromptEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAutoNoteEdit.resx">
+    <EmbeddedResource Include="Forms T\FormAutoNoteEdit.resx">
       <DependentUpon>FormAutoNoteEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAutoNotes.resx">
+    <EmbeddedResource Include="Forms T\FormAutoNotes.resx">
       <DependentUpon>FormAutoNotes.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -8786,28 +8782,24 @@
       <DependentUpon>FormClaimPayPreAuth.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAutoNotePromptPreview.resx">
+    <EmbeddedResource Include="Forms T\FormAutoNotePromptPreview.resx">
       <DependentUpon>FormAutoNotePromptPreview.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAutoNotePromptMultiResp.resx">
-      <DependentUpon>FormAutoNotePromptMultiResp.cs</DependentUpon>
+    <EmbeddedResource Include="Forms T\FormAutoNotePromptMultiResponse.resx">
+      <DependentUpon>FormAutoNotePromptMultiResponse.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAutoNotePromptOneResp.resx">
-      <DependentUpon>FormAutoNotePromptOneResp.cs</DependentUpon>
+    <EmbeddedResource Include="Forms T\FormAutoNotePromptOneResponse.resx">
+      <DependentUpon>FormAutoNotePromptOneResponse.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAutoNotePromptText.resx">
+    <EmbeddedResource Include="Forms T\FormAutoNotePromptText.resx">
       <DependentUpon>FormAutoNotePromptText.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAutoNoteCompose.resx">
+    <EmbeddedResource Include="Forms T\FormAutoNoteCompose.resx">
       <DependentUpon>FormAutoNoteCompose.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAutoNoteControls.resx">
-      <DependentUpon>FormAutoNoteControls.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormRecallMessageEdit.resx">
@@ -9171,9 +9163,7 @@
       <Name>SparksToothChart</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Forms T\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

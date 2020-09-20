@@ -1047,7 +1047,7 @@ namespace OpenDental{
 		private void FillFields() {
 			ClearinghouseClin=null;//Default to null so that if no clinic is found below we will use the defualt HQ options.
 			for(int i=0;i<ListClearinghousesClinCur.Count;i++) {
-				if(ListClearinghousesClinCur[i].ClinicNum==ClinicNum)	{
+				if(ListClearinghousesClinCur[i].ClinicId==ClinicNum)	{
 					ClearinghouseClin=ListClearinghousesClinCur[i];
 				}
 			}
@@ -1258,8 +1258,8 @@ namespace OpenDental{
 					ClearinghouseClin=new Clearinghouse();
 				}
 				//Save Clin Values to ClearinghouseClin, then update ListClinicClearinghousesCur.
-				ClearinghouseClin.HqClearinghouseNum=ClearinghouseHq.ClearinghouseNum;
-				ClearinghouseClin.ClinicNum=ClinicNum;
+				ClearinghouseClin.ParentId=ClearinghouseHq.Id;
+				ClearinghouseClin.ClinicId=ClinicNum;
 				ClearinghouseClin.IsClaimExportAllowed=checkIsClaimExportAllowed.Checked;
 				ClearinghouseClin.IsEraDownloadAllowed=((ODBoxItem<EraBehaviors>)listBoxEraBehavior.SelectedItem).Tag;
 				ClearinghouseClin.IsAttachmentSendAllowed=checkAllowAttachSend.Checked;
@@ -1311,7 +1311,7 @@ namespace OpenDental{
 				else {
 					ClearinghouseClin.SenderTelephone=textSenderTelephone.Text;
 				}
-				if(ListClearinghousesClinCur.Exists(x => x.ClinicNum==ClinicNum)) {
+				if(ListClearinghousesClinCur.Exists(x => x.ClinicId==ClinicNum)) {
 					//Update the corresponding clinic entry within the current list of clearinghouses.
 					//The clearinghouse overrides feature operates under the assumption that there exists only 1
 					//clearinghouse override per clinic. The method UpdateOverridesForClinic() was introduced to simply update all duplicate rows
@@ -1534,11 +1534,11 @@ namespace OpenDental{
 				return;
 			}
 			Clearinghouses.Delete(ClearinghouseHq);
-			if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent)==ClearinghouseHq.ClearinghouseNum) {
+			if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent)==ClearinghouseHq.Id) {
 				Preferences.Set(PreferenceName.ClearinghouseDefaultDent,0);
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
-			if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultMed)==ClearinghouseHq.ClearinghouseNum) {
+			if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultMed)==ClearinghouseHq.Id) {
 				Preferences.Set(PreferenceName.ClearinghouseDefaultMed,0);
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
@@ -1562,7 +1562,7 @@ namespace OpenDental{
 			if(IsNew) {
 				long clearinghouseNumNew=Clearinghouses.Insert(ClearinghouseHq);
 				for(int i=0;i<ListClearinghousesClinCur.Count;i++) {
-					ListClearinghousesClinCur[i].HqClearinghouseNum=clearinghouseNumNew;
+					ListClearinghousesClinCur[i].ParentId=clearinghouseNumNew;
 				}
 			}
 			else {

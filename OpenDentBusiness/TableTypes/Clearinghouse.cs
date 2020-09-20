@@ -10,11 +10,25 @@ namespace OpenDentBusiness
 	/// Will eventually be used for individual carriers as well if they accept
 	/// </summary>
 	[Table]
-	[CrudTable(IsSynchable = true)]
 	public class Clearinghouse : TableBase
 	{
 		[PrimaryKey]
-		public long ClearinghouseNum;
+		public long Id;
+
+		/// <summary>
+		/// The ID of the parent clearinghouse. NULL if this is a base clearinghouse.
+		/// </summary>
+		public long? ParentId;
+
+		/// <summary>
+		///		<para>
+		///			The ID of the clinic the clearinghouse is associated with.
+		///		</para>
+		///		<para>
+		///			NULL if the clearinghouse is available to all clinics.
+		///		</para>
+		/// </summary>
+		public long? ClinicId;
 
 		/// <summary>
 		/// A description of the clearinghouse.
@@ -158,17 +172,10 @@ namespace OpenDentBusiness
 		/// </summary>
 		public string SeparatorSegment;
 
-		/// <summary>
-		/// FK to clinic.ClinicNum.  ClinicNum=0 for HQ.
-		/// </summary>
-		public long ClinicNum;
 
-		/// <summary>
-		/// FK to clearinghouse.ClearingHouseNum.  Never 0. 
-		/// Points to the HQ copy of this clearinghouse.
-		/// If this copy is the HQ copy, then HqClearinghouseNum=ClearinghouseNum.
-		/// </summary>
-		public long HqClearinghouseNum;
+		
+
+
 
 		/// <summary>
 		/// EraBehaviors.DownloadAndReceive by default. 

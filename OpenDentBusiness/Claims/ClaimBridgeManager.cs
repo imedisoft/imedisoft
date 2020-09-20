@@ -45,7 +45,6 @@ namespace Imedisoft.Claims
         /// <summary>
         /// Enumerates all avaialble e-Claims bridges.
         /// </summary>
-        /// <returns></returns>
         public static IEnumerable<IClaimBridge> EnumerateBridges() => bridges;
 
         /// <summary>

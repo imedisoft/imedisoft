@@ -90,6 +90,12 @@
     <Compile Include="Automation.cs" />
     <Compile Include="AutomationAction.cs" />
     <Compile Include="AutomationTrigger.cs" />
+    <Compile Include="AutoNote.cs" />
+    <Compile Include="AutoNoteCategory.cs" />
+    <Compile Include="AutoNotePrompt.cs" />
+    <Compile Include="AutoNotePromptType.cs" />
+    <Compile Include="Ehr\EhrAmendment.cs" />
+    <Compile Include="Ehr\EhrAmendmentSource.cs" />
     <Compile Include="Ehr\EhrProviderKey.cs" />
     <Compile Include="Ehr\CdsPermission.cs" />
     <Compile Include="Cemt\Connection.cs" />
@@ -103,6 +109,7 @@
     <Compile Include="DentalSchools\EvaluationCriterionDef.cs" />
     <Compile Include="DentalSchools\EvaluationDef.cs" />
     <Compile Include="EmailAddress.cs" />
+    <Compile Include="EmailAutograph.cs" />
     <Compile Include="Employee.cs" />
     <Compile Include="DentalSchools\GradingScale.cs" />
     <Compile Include="DentalSchools\GradingScaleItem.cs" />

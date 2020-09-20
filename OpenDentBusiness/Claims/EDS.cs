@@ -1,30 +1,18 @@
-﻿using System;
-using System.Diagnostics;
+﻿using CodeBase;
+using System;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Web;
-using System.Web.Services;
-using System.Web.Services.Protocols;
-using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Serialization;
-using System.Xml.XPath;
-using OpenDentBusiness;
-using System.Collections.Generic;
-using CodeBase;
 
 namespace OpenDentBusiness.Eclaims
 {
 	public class EDS
 	{
-
 		public static string ErrorMessage = "";
 
-		///<summary></summary>
 		public EDS()
 		{
-
 		}
 
 		///<summary>Sends an X12 270 request and returns X12 271 response or an error message.</summary>
@@ -81,7 +69,7 @@ namespace OpenDentBusiness.Eclaims
 				string htmlMessage = xmlDoc.SelectSingleNode(@"content/body/htmlData")?.InnerText.ToString();//can be null
 				if (!string.IsNullOrEmpty(htmlMessage))
 				{
-					etransHtml = Etranss.CreateEtrans(DateTime.Now, clearinghouseClin.HqClearinghouseNum, htmlMessage, Security.CurrentUser.Id);
+					etransHtml = Etranss.CreateEtrans(DateTime.Now, clearinghouseClin.Id, htmlMessage, Security.CurrentUser.Id);
 					etransHtml.Etype = EtransType.HTML;
 					Etranss.Insert(etransHtml);
 				}

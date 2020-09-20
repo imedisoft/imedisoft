@@ -7,6 +7,8 @@ using System.Linq;
 using CodeBase;
 using System.Diagnostics;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using Imedisoft.Forms;
 
 namespace OpenDental
 {
@@ -198,7 +200,7 @@ namespace OpenDental
 		private void FillAutographDropdown()
 		{
 			menuAutographDropdown.MenuItems.Clear();
-			foreach (EmailAutograph autograph in EmailAutographs.GetDeepCopy())
+			foreach (EmailAutograph autograph in EmailAutographs.GetAll())
 			{
 				MenuItem menuCur = new MenuItem();
 				menuCur.Tag = autograph;
@@ -324,12 +326,13 @@ namespace OpenDental
 
 		private void Autograph_Click()
 		{
-			FormEmailAutographEdit formEAE = new FormEmailAutographEdit(new EmailAutograph(), isNew: true);
+			var autograph = new EmailAutograph();
+			FormEmailAutographEdit formEAE = new FormEmailAutographEdit(autograph);
 			if (formEAE.ShowDialog() == DialogResult.OK)
 			{
 				EmailAutographs.RefreshCache();
 				FillAutographDropdown();
-				InsertAutograph(formEAE.EmailAutographCur);
+				InsertAutograph(autograph);
 			}
 		}
 
@@ -373,7 +376,7 @@ namespace OpenDental
 		private void InsertAutograph(EmailAutograph autograph)
 		{
 			textContentEmail.SelectionLength = 0;
-			textContentEmail.SelectedText = autograph.AutographText;
+			textContentEmail.SelectedText = autograph.Autograph;
 		}
 
 		///<summary>This is called both when a user double clicks anywhere in the edit box, or when the click the Table button in the toolbar.  This ONLY 

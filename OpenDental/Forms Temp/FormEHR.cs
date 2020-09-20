@@ -608,8 +608,7 @@ namespace OpenDental {
 		}
 
 		private void butAmendments_Click(object sender,EventArgs e) {
-			FormEhrAmendments FormAmd=new FormEhrAmendments();
-			FormAmd.PatCur=PatCur;
+			FormEhrAmendments FormAmd=new FormEhrAmendments(PatCur);
 			FormAmd.ShowDialog();
 		}
 

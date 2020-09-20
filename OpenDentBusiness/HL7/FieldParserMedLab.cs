@@ -1,12 +1,10 @@
 ﻿using System;
-using CodeBase;
 
 namespace OpenDentBusiness.HL7
 {
 	///<summary>Parses a single incoming MedLab HL7 field.</summary>
 	public class FieldParserMedLab
 	{
-
 		///<summary>yyyyMMdd[[[HH]mm]ss].  Hours, minutes, and seconds are optional.  Can have more precision than seconds and won't break.
 		///If less than 8 digits, returns MinVal.</summary>
 		public static DateTime DateTimeParse(string str)

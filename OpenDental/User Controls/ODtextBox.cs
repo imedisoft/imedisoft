@@ -16,6 +16,7 @@ using System.Text;
 using System.Linq;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	/// <summary>This is used instead of a regular textbox when quickpaste functionality is needed.</summary>
@@ -629,8 +630,7 @@ namespace OpenDental {
 
 		///<summary></summary>
 		private void EditAutoNote() {
-			FormAutoNoteCompose FormA=new FormAutoNoteCompose();
-			FormA.MainTextNote=SelectedText!=""?SelectedText:Text;
+			FormAutoNoteCompose FormA=new FormAutoNoteCompose(SelectedText != "" ? SelectedText : Text);
 			FormA.ShowDialog();
 			if(FormA.DialogResult==DialogResult.OK) {
 				if(SelectedText!=""){

@@ -37,7 +37,7 @@ namespace OpenDental {
 			if(FormC.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			textCVXCode.Text=FormC.SelectedCvx.CvxCode;
+			textCVXCode.Text=FormC.SelectedCvx.Code;
 			textVaccineName.Text=FormC.SelectedCvx.Description;
 		}
 

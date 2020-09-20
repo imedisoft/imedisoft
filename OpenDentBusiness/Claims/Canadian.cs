@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections;
+﻿using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing.Printing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using OpenDentBusiness;
-using System.Linq;
-using CodeBase;
-using System.Xml;
-using Imedisoft.Data;
-using Imedisoft.Data.Models;
 
-namespace OpenDentBusiness.Eclaims {
-	public class Canadian {
+namespace OpenDentBusiness.Eclaims
+{
+    public class Canadian {
 
 		public delegate void FormCCDPrintDelegate(Etrans pEtrans,string messageText,bool pAutoPrint);
 		public delegate void ShowProviderTransferWindowDelegate(Claim claimCur,Patient patCur,Family famCur);
@@ -85,11 +81,11 @@ namespace OpenDentBusiness.Eclaims {
 			long insSubNum2=claim.InsSubNum2;
 			Relat patRelat2=claim.PatRelat2;
 			if(claim.ClaimType=="PreAuth") {
-				etrans=CreateEtransForSendClaim(queueItem.ClaimNum,queueItem.PatNum,clearinghouseClin.HqClearinghouseNum,EtransType.Predeterm_CA);//Can throw exception
+				etrans=CreateEtransForSendClaim(queueItem.ClaimNum,queueItem.PatNum,clearinghouseClin.Id, EtransType.Predeterm_CA);//Can throw exception
 			}
 			else if(claim.ClaimType=="S") {//Secondary
 				//We first need to verify that the claimprocs on the secondary/cob claim are the same as the claimprocs on the primary claim.
-				etrans=CreateEtransForSendClaim(queueItem.ClaimNum,queueItem.PatNum,clearinghouseClin.HqClearinghouseNum,EtransType.ClaimCOB_CA);//Can throw exception
+				etrans=CreateEtransForSendClaim(queueItem.ClaimNum,queueItem.PatNum,clearinghouseClin.Id, EtransType.ClaimCOB_CA);//Can throw exception
 				long claimNumPrimary=0;
 				for(int i=0;i<claimProcsClaim.Count;i++) {
 					List<ClaimProc> claimProcsForProc=ClaimProcs.GetForProc(claimProcList,claimProcsClaim[i].ProcNum);
@@ -153,7 +149,7 @@ namespace OpenDentBusiness.Eclaims {
 				patRelat2=claimPrimary.PatRelat2;
 			}
 			else { //primary claim
-				etrans=CreateEtransForSendClaim(queueItem.ClaimNum,queueItem.PatNum,clearinghouseClin.HqClearinghouseNum,EtransType.Claim_CA);//Can throw exception
+				etrans=CreateEtransForSendClaim(queueItem.ClaimNum,queueItem.PatNum,clearinghouseClin.Id, EtransType.Claim_CA);//Can throw exception
 			}
 			claim=Claims.GetClaim(claim.ClaimNum);
 			clinic=Clinics.GetById(claim.ClinicNum);
@@ -1852,7 +1848,7 @@ namespace OpenDentBusiness.Eclaims {
 				}
 			}
 			//Return the default dental clearinghouse if it is a Canadian clearinghouse.
-			Clearinghouse clearinghouse = Clearinghouses.GetFirstOrDefault(x => Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent) == x.ClearinghouseNum
+			Clearinghouse clearinghouse = Clearinghouses.GetFirstOrDefault(x => Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent) == x.Id
 				  && x.TypeName == typeName);
 			if (clearinghouse == null)
 			{

@@ -41,7 +41,7 @@ namespace OpenDentBusiness.Crud{
 			ChartView chartView;
 			foreach(DataRow row in table.Rows) {
 				chartView=new ChartView();
-				chartView.ChartViewNum     = PIn.Long  (row["ChartViewNum"].ToString());
+				chartView.Id     = PIn.Long  (row["ChartViewNum"].ToString());
 				chartView.Description      = PIn.String(row["Description"].ToString());
 				chartView.ItemOrder        = PIn.Int   (row["ItemOrder"].ToString());
 				chartView.ProcStatuses     = (OpenDentBusiness.ChartViewProcStat)PIn.Int(row["ProcStatuses"].ToString());
@@ -76,7 +76,7 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("IsTpCharting");
 			foreach(ChartView chartView in listChartViews) {
 				table.Rows.Add(new object[] {
-					POut.Long  (chartView.ChartViewNum),
+					POut.Long  (chartView.Id),
 					            chartView.Description,
 					POut.Int   (chartView.ItemOrder),
 					POut.Int   ((int)chartView.ProcStatuses),
@@ -100,7 +100,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one ChartView into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(ChartView chartView,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				chartView.ChartViewNum=ReplicationServers.GetKey("chartview","ChartViewNum");
+				chartView.Id=ReplicationServers.GetKey("chartview","ChartViewNum");
 			}
 			string command="INSERT INTO chartview (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -108,7 +108,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="Description,ItemOrder,ProcStatuses,ObjectTypes,ShowProcNotes,IsAudit,SelectedTeethOnly,OrionStatusFlags,DatesShowing,IsTpCharting) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(chartView.ChartViewNum)+",";
+				command+=POut.Long(chartView.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(chartView.Description)+"',"
@@ -125,9 +125,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				chartView.ChartViewNum=Database.ExecuteInsert(command);
+				chartView.Id=Database.ExecuteInsert(command);
 			}
-			return chartView.ChartViewNum;
+			return chartView.Id;
 		}
 
 		///<summary>Inserts one ChartView into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -140,14 +140,14 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO chartview (";
 			if(!useExistingPK) {
-				chartView.ChartViewNum=ReplicationServers.GetKeyNoCache("chartview","ChartViewNum");
+				chartView.Id=ReplicationServers.GetKeyNoCache("chartview","ChartViewNum");
 			}
 			if(useExistingPK) {
 				command+="ChartViewNum,";
 			}
 			command+="Description,ItemOrder,ProcStatuses,ObjectTypes,ShowProcNotes,IsAudit,SelectedTeethOnly,OrionStatusFlags,DatesShowing,IsTpCharting) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(chartView.ChartViewNum)+",";
+				command+=POut.Long(chartView.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(chartView.Description)+"',"
@@ -164,9 +164,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				chartView.ChartViewNum=Database.ExecuteInsert(command);
+				chartView.Id=Database.ExecuteInsert(command);
 			}
-			return chartView.ChartViewNum;
+			return chartView.Id;
 		}
 
 		///<summary>Updates one ChartView in the database.</summary>
@@ -182,7 +182,7 @@ namespace OpenDentBusiness.Crud{
 				+"OrionStatusFlags =  "+POut.Int   ((int)chartView.OrionStatusFlags)+", "
 				+"DatesShowing     =  "+POut.Int   ((int)chartView.DatesShowing)+", "
 				+"IsTpCharting     =  "+POut.Bool  (chartView.IsTpCharting)+" "
-				+"WHERE ChartViewNum = "+POut.Long(chartView.ChartViewNum);
+				+"WHERE ChartViewNum = "+POut.Long(chartView.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
@@ -233,7 +233,7 @@ namespace OpenDentBusiness.Crud{
 				return false;
 			}
 			command="UPDATE chartview SET "+command
-				+" WHERE ChartViewNum = "+POut.Long(chartView.ChartViewNum);
+				+" WHERE ChartViewNum = "+POut.Long(chartView.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}

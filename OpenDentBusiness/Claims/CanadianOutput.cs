@@ -3,67 +3,77 @@ using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace OpenDentBusiness.Eclaims {
-	public class CanadianOutput {
+namespace OpenDentBusiness.Eclaims
+{
+	public class CanadianOutput
+	{
 
 		public delegate void PrintCdaClaimForm(Claim claim);
-		public delegate void PrintCCD(Etrans pEtrans,string messageText,bool pAutoPrint);
+		public delegate void PrintCCD(Etrans pEtrans, string messageText, bool pAutoPrint);
 
 		///<summary>The result is the etransNum of the response message.  Or it might throw an exception if invalid data.  
 		///This class is also responsible for saving the returned message to the etrans table, and for printing out the required form.</summary>
-		public static long SendElegibility(Clearinghouse clearinghouseClin,long patNum,InsurancePlan plan,DateTime date,Relat relat,string patID,bool doPrint,
-			InsSub insSub,bool isAutomatic,PrintCCD printCCD) {
+		public static long SendElegibility(Clearinghouse clearinghouseClin, long patNum, InsurancePlan plan, DateTime date, Relat relat, string patID, bool doPrint,
+			InsSub insSub, bool isAutomatic, PrintCCD printCCD)
+		{
 			//string electID,long patNum,string groupNumber,string divisionNo,
 			//string subscriberID,string patID,Relat patRelat,long subscNum,string dentaideCardSequence)
 			//Note: This might be the only class of this kind that returns a string.  It's a special situation.
 			//We are simply not going to bother with language translation here.
-			Carrier carrier=Carriers.GetCarrier(plan.CarrierId);
-			if(carrier==null) {
+			Carrier carrier = Carriers.GetCarrier(plan.CarrierId);
+			if (carrier == null)
+			{
 				throw new ApplicationException("Invalid carrier.");
 			}
-			if((carrier.CanadianSupportedTypes&CanSupTransTypes.EligibilityTransaction_08)!=CanSupTransTypes.EligibilityTransaction_08) {
+			if ((carrier.CanadianSupportedTypes & CanSupTransTypes.EligibilityTransaction_08) != CanSupTransTypes.EligibilityTransaction_08)
+			{
 				throw new ApplicationException("The carrier does not support eligibility transactions.");
 			}
-			if(carrier.CanadianNetworkId==0) {
+			if (carrier.CanadianNetworkId == 0)
+			{
 				throw new ApplicationException("Carrier network not set.");
 			}
-			CanadianNetwork network=CanadianNetworks.GetNetwork(carrier.CanadianNetworkId,clearinghouseClin);
-			Patient patient=Patients.GetPat(patNum);
-			Patient subscriber=Patients.GetPat(insSub.Subscriber);
-			Provider provDefaultTreat=Providers.GetById(Preferences.GetLong(PreferenceName.PracticeDefaultProv));
-			if(clearinghouseClin==null) {
+			CanadianNetwork network = CanadianNetworks.GetNetwork(carrier.CanadianNetworkId, clearinghouseClin);
+			Patient patient = Patients.GetPat(patNum);
+			Patient subscriber = Patients.GetPat(insSub.Subscriber);
+			Provider provDefaultTreat = Providers.GetById(Preferences.GetLong(PreferenceName.PracticeDefaultProv));
+			if (clearinghouseClin == null)
+			{
 				throw new ApplicationException("Canadian clearinghouse not found.");
 			}
-			string saveFolder=clearinghouseClin.ExportPath;
-			if(!Directory.Exists(saveFolder)) {
-				throw new ApplicationException(saveFolder+" not found.");
+			string saveFolder = clearinghouseClin.ExportPath;
+			if (!Directory.Exists(saveFolder))
+			{
+				throw new ApplicationException(saveFolder + " not found.");
 			}
 			//validate----------------------------------------------------------------------------------------------------
-			string error="";
+			string error = "";
 			//if(carrier.CanadianNetworkNum==0){
 			//	if(error!="") error+=", ";
 			//	error+="Carrier does not have network specified";
 			//}
-			if(!Regex.IsMatch(carrier.ElectronicId,@"^[0-9]{6}$")) {//not necessary, but nice
-				if(error!="") error+=", ";
-				error+="CarrierId 6 digits";
+			if (!Regex.IsMatch(carrier.ElectronicId, @"^[0-9]{6}$"))
+			{//not necessary, but nice
+				if (error != "") error += ", ";
+				error += "CarrierId 6 digits";
 			}
-			if(!provDefaultTreat.IsCDAnet) {
-				error+="Prov not setup as CDA provider";
+			if (!provDefaultTreat.IsCDAnet)
+			{
+				error += "Prov not setup as CDA provider";
 			}
-			if(provDefaultTreat.NationalProviderID.Length!=9) {
-				if(error!="") error+=", ";
-				error+="Prov CDA num 9 digits";
+			if (provDefaultTreat.NationalProviderID.Length != 9)
+			{
+				if (error != "") error += ", ";
+				error += "Prov CDA num 9 digits";
 			}
-			if(provDefaultTreat.CanadianOfficeNumber.Length!=4) {
-				if(error!="") error+=", ";
-				error+="Prov office num 4 char";
+			if (provDefaultTreat.CanadianOfficeNumber.Length != 4)
+			{
+				if (error != "") error += ", ";
+				error += "Prov office num 4 char";
 			}
 			//if(plan.GroupNum.Length==0 || groupNumber.Length>12 || groupNumber.Contains(" ")){
 			//	if(error!="") error+=", ";
@@ -73,151 +83,179 @@ namespace OpenDentBusiness.Eclaims {
 			//	if(error!="") error+=", ";
 			//	error+="SubscriberID";
 			//}
-			if(patNum != insSub.Subscriber && relat==Relat.Self) {//if patient is not subscriber, and relat is self
-				if(error!="") error+=", ";
-				error+="Relationship cannot be self";
+			if (patNum != insSub.Subscriber && relat == Relat.Self)
+			{//if patient is not subscriber, and relat is self
+				if (error != "") error += ", ";
+				error += "Relationship cannot be self";
 			}
-			if(patient.Gender==PatientGender.Unknown) {
-				if(error!="") error+=", ";
-				error+="Patient gender";
+			if (patient.Gender == PatientGender.Unknown)
+			{
+				if (error != "") error += ", ";
+				error += "Patient gender";
 			}
-			if(patient.Birthdate.Year<1880 || patient.Birthdate>DateTime.Today) {
-				if(error!="") error+=", ";
-				error+="Patient birthdate";
+			if (patient.Birthdate.Year < 1880 || patient.Birthdate > DateTime.Today)
+			{
+				if (error != "") error += ", ";
+				error += "Patient birthdate";
 			}
-			if(patient.LName=="") {
-				if(error!="") error+=", ";
-				error+="Patient lastname";
+			if (patient.LName == "")
+			{
+				if (error != "") error += ", ";
+				error += "Patient lastname";
 			}
-			if(patient.FName=="") {
-				if(error!="") error+=", ";
-				error+="Patient firstname";
+			if (patient.FName == "")
+			{
+				if (error != "") error += ", ";
+				error += "Patient firstname";
 			}
-			if(patient.CanadianEligibilityCode==0) {
-				if(error!="") error+=", ";
-				error+="Patient eligibility exception code";
+			if (patient.CanadianEligibilityCode == 0)
+			{
+				if (error != "") error += ", ";
+				error += "Patient eligibility exception code";
 			}
-			if(subscriber.Birthdate.Year<1880 || subscriber.Birthdate>DateTime.Today) {
-				if(error!="") error+=", ";
-				error+="Subscriber birthdate";
+			if (subscriber.Birthdate.Year < 1880 || subscriber.Birthdate > DateTime.Today)
+			{
+				if (error != "") error += ", ";
+				error += "Subscriber birthdate";
 			}
-			if(subscriber.LName=="") {
-				if(error!="") error+=", ";
-				error+="Subscriber lastname";
+			if (subscriber.LName == "")
+			{
+				if (error != "") error += ", ";
+				error += "Subscriber lastname";
 			}
-			if(subscriber.FName=="") {
-				if(error!="") error+=", ";
-				error+="Subscriber firstname";
+			if (subscriber.FName == "")
+			{
+				if (error != "") error += ", ";
+				error += "Subscriber firstname";
 			}
-			if(error!="") {
+			if (error != "")
+			{
 				throw new ApplicationException(error);
 			}
-			Etrans etrans=Etranss.CreateCanadianOutput(patNum,carrier.Id,0,
-				clearinghouseClin.HqClearinghouseNum,EtransType.Eligibility_CA,plan.Id,insSub.InsSubNum,Security.CurrentUser.Id);
-			StringBuilder strb=new StringBuilder();
+			Etrans etrans = Etranss.CreateCanadianOutput(patNum, carrier.Id, 0,
+				clearinghouseClin.Id, EtransType.Eligibility_CA, plan.Id, insSub.InsSubNum, Security.CurrentUser.Id);
+			StringBuilder strb = new StringBuilder();
 			//create message----------------------------------------------------------------------------------------------
 			//A01 transaction prefix 12 AN
-			strb.Append(Canadian.TidyAN(network.TransactionPrefix,12));
+			strb.Append(Canadian.TidyAN(network.TransactionPrefix, 12));
 			//A02 office sequence number 6 N
-			strb.Append(Canadian.TidyN(etrans.OfficeSequenceNumber,6));
+			strb.Append(Canadian.TidyN(etrans.OfficeSequenceNumber, 6));
 			//A03 format version number 2 N
 			strb.Append(carrier.CDAnetVersion);//eg. "04", validated in UI
-																				 //A04 transaction code 2 N
-			if(carrier.CDAnetVersion=="02") {
+											   //A04 transaction code 2 N
+			if (carrier.CDAnetVersion == "02")
+			{
 				strb.Append("00");//eligibility
 			}
-			else {
+			else
+			{
 				strb.Append("08");//eligibility
 			}
 			//A05 carrier id number 6 N
 			strb.Append(carrier.ElectronicId);//already validated as 6 digit number.
-																	 //A06 software system id 3 AN
+											  //A06 software system id 3 AN
 			strb.Append(Canadian.SoftwareSystemId());
-			if(carrier.CDAnetVersion=="04") {
+			if (carrier.CDAnetVersion == "04")
+			{
 				//A10 encryption method 1 N
 				strb.Append(carrier.CanadianEncryptionMethod);//validated in UI
 			}
 			//A07 message length 5 N
 			int len;
-			bool C19PlanRecordPresent=false;
-			if(carrier.CDAnetVersion=="02") {
-				len=178;
-				strb.Append(Canadian.TidyN(len,4));
+			bool C19PlanRecordPresent = false;
+			if (carrier.CDAnetVersion == "02")
+			{
+				len = 178;
+				strb.Append(Canadian.TidyN(len, 4));
 			}
-			else {
-				len=214;
-				if(plan.CanadianPlanFlag=="A") {// || plan.CanadianPlanFlag=="N"){
-					C19PlanRecordPresent=true;
+			else
+			{
+				len = 214;
+				if (plan.CanadianPlanFlag == "A")
+				{// || plan.CanadianPlanFlag=="N"){
+					C19PlanRecordPresent = true;
 				}
-				if(C19PlanRecordPresent) {
-					len+=30;
+				if (C19PlanRecordPresent)
+				{
+					len += 30;
 				}
-				strb.Append(Canadian.TidyN(len,5));
+				strb.Append(Canadian.TidyN(len, 5));
 				//A09 carrier transaction counter 5 N, only version 04
-				strb.Append(Canadian.TidyN(etrans.CarrierTransCounter,5));
+				strb.Append(Canadian.TidyN(etrans.CarrierTransCounter, 5));
 			}
 			//B01 CDA provider number 9 AN
-			strb.Append(Canadian.TidyAN(provDefaultTreat.NationalProviderID,9));//already validated
-																																			//B02 provider office number 4 AN
-			strb.Append(Canadian.TidyAN(provDefaultTreat.CanadianOfficeNumber,4));//already validated
-			if(carrier.CDAnetVersion=="04") {
+			strb.Append(Canadian.TidyAN(provDefaultTreat.NationalProviderID, 9));//already validated
+																				 //B02 provider office number 4 AN
+			strb.Append(Canadian.TidyAN(provDefaultTreat.CanadianOfficeNumber, 4));//already validated
+			if (carrier.CDAnetVersion == "04")
+			{
 				//B03 billing provider number 9 AN
-				Provider provBilling=Providers.GetById(Providers.GetBillingProviderId(provDefaultTreat.Id,patient.ClinicNum));
-				strb.Append(Canadian.TidyAN(provBilling.NationalProviderID,9));//already validated
+				Provider provBilling = Providers.GetById(Providers.GetBillingProviderId(provDefaultTreat.Id, patient.ClinicNum));
+				strb.Append(Canadian.TidyAN(provBilling.NationalProviderID, 9));//already validated
 			}
-			if(carrier.CDAnetVersion=="02") {
+			if (carrier.CDAnetVersion == "02")
+			{
 				//C01 primary policy/plan number 8 AN (group number)
 				//No special validation for version 02
-				strb.Append(Canadian.TidyAN(plan.GroupNumber,8));
+				strb.Append(Canadian.TidyAN(plan.GroupNumber, 8));
 			}
-			else {
+			else
+			{
 				//C01 primary policy/plan number 12 AN (group number)
 				//only validated to ensure that it's not blank and is less than 12. Also that no spaces.
-				strb.Append(Canadian.TidyAN(plan.GroupNumber,12));
+				strb.Append(Canadian.TidyAN(plan.GroupNumber, 12));
 			}
 			//C11 primary division/section number 10 AN
-			strb.Append(Canadian.TidyAN(plan.DivisionNo,10));
-			if(carrier.CDAnetVersion=="02") {
+			strb.Append(Canadian.TidyAN(plan.DivisionNo, 10));
+			if (carrier.CDAnetVersion == "02")
+			{
 				//C02 subscriber id number 11 AN
-				strb.Append(Canadian.TidyAN(insSub.SubscriberID.Replace("-",""),11));//no extra validation for version 02
+				strb.Append(Canadian.TidyAN(insSub.SubscriberID.Replace("-", ""), 11));//no extra validation for version 02
 			}
-			else {
+			else
+			{
 				//C02 subscriber id number 12 AN
-				strb.Append(Canadian.TidyAN(insSub.SubscriberID.Replace("-",""),12));//validated
+				strb.Append(Canadian.TidyAN(insSub.SubscriberID.Replace("-", ""), 12));//validated
 			}
-			if(carrier.CDAnetVersion=="04") {
+			if (carrier.CDAnetVersion == "04")
+			{
 				//C17 primary dependant code 2 N. Optional
-				strb.Append(Canadian.TidyN(patID,2));
+				strb.Append(Canadian.TidyN(patID, 2));
 			}
 			//C03 relationship code 1 N
 			//User interface does not only show Canadian options, but all options are handled.
 			strb.Append(Canadian.GetRelationshipCode(relat));
 			//C04 patient's sex 1 A
 			//validated to not include "unknown"
-			if(patient.Gender==PatientGender.Male) {
+			if (patient.Gender == PatientGender.Male)
+			{
 				strb.Append("M");
 			}
-			else {
+			else
+			{
 				strb.Append("F");
 			}
 			//C05 patient birthday 8 N
 			strb.Append(patient.Birthdate.ToString("yyyyMMdd"));//validated
-																													//C06 patient last name 25 AE
-			strb.Append(Canadian.TidyAE(patient.LName,25,true));//validated
-																													//C07 patient first name 15 AE
-			strb.Append(Canadian.TidyAE(patient.FName,15,true));//validated
-																													//C08 patient middle initial 1 AE
-			strb.Append(Canadian.TidyAE(patient.MiddleI,1));
+																//C06 patient last name 25 AE
+			strb.Append(Canadian.TidyAE(patient.LName, 25, true));//validated
+																  //C07 patient first name 15 AE
+			strb.Append(Canadian.TidyAE(patient.FName, 15, true));//validated
+																  //C08 patient middle initial 1 AE
+			strb.Append(Canadian.TidyAE(patient.MiddleI, 1));
 			//C09 eligibility exception code 1 N
-			strb.Append(Canadian.GetEligibilityCode(patient.CanadianEligibilityCode,carrier.CDAnetVersion=="02"));//validated
-			if(carrier.CDAnetVersion=="04") {
+			strb.Append(Canadian.GetEligibilityCode(patient.CanadianEligibilityCode, carrier.CDAnetVersion == "02"));//validated
+			if (carrier.CDAnetVersion == "04")
+			{
 				//C12 plan flag 1 A
 				strb.Append(Canadian.GetPlanFlag(plan.CanadianPlanFlag));
 				//C18 plan record count 1 N
-				if(C19PlanRecordPresent) {
+				if (C19PlanRecordPresent)
+				{
 					strb.Append("1");
 				}
-				else {
+				else
+				{
 					strb.Append("0");
 				}
 				//C16 Eligibility date. 8 N.
@@ -225,82 +263,93 @@ namespace OpenDentBusiness.Eclaims {
 			}
 			//D01 subscriber birthday 8 N
 			strb.Append(subscriber.Birthdate.ToString("yyyyMMdd"));//validated
-																														 //D02 subscriber last name 25 AE
-			strb.Append(Canadian.TidyAE(subscriber.LName,25,true));//validated
-																														 //D03 subscriber first name 15 AE
-			strb.Append(Canadian.TidyAE(subscriber.FName,15,true));//validated
-																														 //D04 subscriber middle initial 1 AE
-			strb.Append(Canadian.TidyAE(subscriber.MiddleI,1));
-			if(carrier.CDAnetVersion=="04") {
+																   //D02 subscriber last name 25 AE
+			strb.Append(Canadian.TidyAE(subscriber.LName, 25, true));//validated
+																	 //D03 subscriber first name 15 AE
+			strb.Append(Canadian.TidyAE(subscriber.FName, 15, true));//validated
+																	 //D04 subscriber middle initial 1 AE
+			strb.Append(Canadian.TidyAE(subscriber.MiddleI, 1));
+			if (carrier.CDAnetVersion == "04")
+			{
 				//D10 language of insured 1 A
-				if(subscriber.Language=="fr") {
+				if (subscriber.Language == "fr")
+				{
 					strb.Append("F");
 				}
-				else {
+				else
+				{
 					strb.Append("E");
 				}
 				//D11 card sequence/version number 2 N
 				//Not validated against type of carrier.  Might need to check if Dentaide.
-				strb.Append(Canadian.TidyN(plan.DentaideCardSequence,2));
+				strb.Append(Canadian.TidyN(plan.DentaideCardSequence, 2));
 				//C19 plan record 30 AN
-				if(C19PlanRecordPresent) {
+				if (C19PlanRecordPresent)
+				{
 					//todo: what text goes here?  Not documented
-					strb.Append(Canadian.TidyAN("",30));
+					strb.Append(Canadian.TidyAN("", 30));
 				}
 			}
-			string errorMsg="";
-			string result=Canadian.PassToIca(strb.ToString(),clearinghouseClin,network,isAutomatic,out errorMsg);
-			//Attach an ack to the etrans
-			Etrans etransAck=new Etrans();
-			etransAck.PatNum=etrans.PatNum;
-			etransAck.PlanNum=etrans.PlanNum;
-			etransAck.InsSubNum=etrans.InsSubNum;
-			etransAck.CarrierNum=etrans.CarrierNum;
-			etransAck.DateTimeTrans=DateTime.Now;
-			etransAck.UserNum=Security.CurrentUser.Id;
-			CCDFieldInputter fieldInputter=null;
-			if(errorMsg!="") {
-				etransAck.Etype=EtransType.AckError;
-				etransAck.Note=errorMsg;
-				etrans.Note="failed";
+            string result = Canadian.PassToIca(strb.ToString(), clearinghouseClin, network, isAutomatic, out string errorMsg);
+            //Attach an ack to the etrans
+            Etrans etransAck = new Etrans
+            {
+                PatNum = etrans.PatNum,
+                PlanNum = etrans.PlanNum,
+                InsSubNum = etrans.InsSubNum,
+                CarrierNum = etrans.CarrierNum,
+                DateTimeTrans = DateTime.Now,
+                UserNum = Security.CurrentUser.Id
+            };
+            CCDFieldInputter fieldInputter = null;
+			if (errorMsg != "")
+			{
+				etransAck.Etype = EtransType.AckError;
+				etransAck.Note = errorMsg;
+				etrans.Note = "failed";
 			}
-			else {
-				fieldInputter=new CCDFieldInputter(result);
-				CCDField fieldG05=fieldInputter.GetFieldById("G05");
-				if(fieldG05!=null) {
-					etransAck.AckCode=fieldG05.valuestr;
+			else
+			{
+				fieldInputter = new CCDFieldInputter(result);
+				CCDField fieldG05 = fieldInputter.GetFieldById("G05");
+				if (fieldG05 != null)
+				{
+					etransAck.AckCode = fieldG05.valuestr;
 				}
-				etransAck.Etype=fieldInputter.GetEtransType();
+				etransAck.Etype = fieldInputter.GetEtransType();
 			}
 			Etranss.Insert(etransAck);
-			Etranss.SetMessage(etransAck.EtransNum,result);
-			etrans.AckEtransNum=etransAck.EtransNum;
+			Etranss.SetMessage(etransAck.EtransNum, result);
+			etrans.AckEtransNum = etransAck.EtransNum;
 			Etranss.Update(etrans);
-			Etranss.SetMessage(etrans.EtransNum,strb.ToString());
-			if(errorMsg!="") {
+			Etranss.SetMessage(etrans.EtransNum, strb.ToString());
+			if (errorMsg != "")
+			{
 				throw new ApplicationException(errorMsg);
 			}
-			if(doPrint && printCCD != null) {
-				printCCD(etrans,result,true);//Physically print the form.
+			if (doPrint && printCCD != null)
+			{
+				printCCD(etrans, result, true);//Physically print the form.
 			}
 			//Now we will process the 'result' here to extract the important data.  Basically Yes or No on the eligibility.
 			//We might not do this for any other trans type besides eligibility.
-			string strResponse="";//"Eligibility check on "+DateTime.Today.ToShortDateString()+"\r\n";
-														//CCDField field=fieldInputter.GetFieldById("G05");//response status
-			string valuestr=fieldInputter.GetValue("G05");//response status
-			switch(valuestr) {
+			string strResponse = "";//"Eligibility check on "+DateTime.Today.ToShortDateString()+"\r\n";
+									//CCDField field=fieldInputter.GetFieldById("G05");//response status
+			string valuestr = fieldInputter.GetValue("G05");//response status
+			switch (valuestr)
+			{
 				case "E":
-					strResponse+="Patient is eligible.";
+					strResponse += "Patient is eligible.";
 					break;
 				case "R":
-					strResponse+="Patient not eligible, or error in data.";
+					strResponse += "Patient not eligible, or error in data.";
 					break;
 				case "M":
-					strResponse+="Manual claimform should be submitted for employer certified plan.";
+					strResponse += "Manual claimform should be submitted for employer certified plan.";
 					break;
 			}
-			etrans=Etranss.GetEtrans(etrans.EtransNum);
-			etrans.Note=strResponse;
+			etrans = Etranss.GetEtrans(etrans.EtransNum);
+			etrans.Note = strResponse;
 			Etranss.Update(etrans);
 			return etransAck.EtransNum;
 			/*
@@ -318,89 +367,105 @@ namespace OpenDentBusiness.Eclaims {
 		}
 
 		///<summary></summary>
-		public static long SendClaimReversal(Clearinghouse clearinghouseClin,Claim claim,InsurancePlan plan,InsSub insSub,bool isAutomatic,PrintCCD printCCD) {
-			StringBuilder strb=new StringBuilder();
-			Carrier carrier=Carriers.GetCarrier(plan.CarrierId);
-			if(clearinghouseClin==null) {
+		public static long SendClaimReversal(Clearinghouse clearinghouseClin, Claim claim, InsurancePlan plan, InsSub insSub, bool isAutomatic, PrintCCD printCCD)
+		{
+			StringBuilder strb = new StringBuilder();
+			Carrier carrier = Carriers.GetCarrier(plan.CarrierId);
+			if (clearinghouseClin == null)
+			{
 				throw new ApplicationException("Canadian clearinghouse not found.");
 			}
-			string saveFolder=clearinghouseClin.ExportPath;
-			if(!Directory.Exists(saveFolder)) {
-				throw new ApplicationException(saveFolder+" not found.");
+			string saveFolder = clearinghouseClin.ExportPath;
+			if (!Directory.Exists(saveFolder))
+			{
+				throw new ApplicationException(saveFolder + " not found.");
 			}
-			if((carrier.CanadianSupportedTypes&CanSupTransTypes.ClaimReversal_02)!=CanSupTransTypes.ClaimReversal_02) {
+			if ((carrier.CanadianSupportedTypes & CanSupTransTypes.ClaimReversal_02) != CanSupTransTypes.ClaimReversal_02)
+			{
 				throw new ApplicationException("The carrier does not support reversal transactions.");
 			}
-			if(carrier.CanadianNetworkId==0) {
+			if (carrier.CanadianNetworkId == 0)
+			{
 				throw new ApplicationException("Carrier network not set.");
 			}
-			CanadianNetwork network=CanadianNetworks.GetNetwork(carrier.CanadianNetworkId,clearinghouseClin);
-			Etrans etrans=Etranss.CreateCanadianOutput(claim.PatNum,carrier.Id,carrier.CanadianNetworkId,
-				clearinghouseClin.HqClearinghouseNum,EtransType.ClaimReversal_CA,plan.Id,insSub.InsSubNum,Security.CurrentUser.Id);
-			etrans.ClaimNum=claim.ClaimNum;//We don't normally use a claim number with Etranss.CreateCanadianOutput(), but here we need the claim number so that we can show the claim reversal in the claim history.
+			CanadianNetwork network = CanadianNetworks.GetNetwork(carrier.CanadianNetworkId, clearinghouseClin);
+			Etrans etrans = Etranss.CreateCanadianOutput(claim.PatNum, carrier.Id, carrier.CanadianNetworkId,
+				clearinghouseClin.Id, EtransType.ClaimReversal_CA, plan.Id, insSub.InsSubNum, Security.CurrentUser.Id);
+			etrans.ClaimNum = claim.ClaimNum;//We don't normally use a claim number with Etranss.CreateCanadianOutput(), but here we need the claim number so that we can show the claim reversal in the claim history.
 			Etranss.Update(etrans);
-			Patient patient=Patients.GetPat(claim.PatNum);
-			Provider prov=Providers.GetById(claim.ProvTreat);
-			if(!prov.IsCDAnet) {
+			Patient patient = Patients.GetPat(claim.PatNum);
+			Provider prov = Providers.GetById(claim.ProvTreat);
+			if (!prov.IsCDAnet)
+			{
 				throw new ApplicationException("Treating provider is not setup to use CDANet.");
 			}
-			Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-			Provider billProv=Providers.FirstOrDefault(x => x.Id==claim.ProvBill)??providerFirst;
-			if(!billProv.IsCDAnet) {
+			Provider providerFirst = Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
+			Provider billProv = Providers.FirstOrDefault(x => x.Id == claim.ProvBill) ?? providerFirst;
+			if (!billProv.IsCDAnet)
+			{
 				throw new ApplicationException("Billing provider is not setup to use CDANet.");
 			}
-			InsurancePlan insPlan=InsPlans.GetPlan(claim.PlanNum,new List<InsurancePlan>());
-			Patient subscriber=Patients.GetPat(insSub.Subscriber);
+			InsurancePlan insPlan = InsPlans.GetPlan(claim.PlanNum, new List<InsurancePlan>());
+			Patient subscriber = Patients.GetPat(insSub.Subscriber);
 			//create message----------------------------------------------------------------------------------------------
 			//A01 transaction prefix 12 AN
-			strb.Append(Canadian.TidyAN(network.TransactionPrefix,12));
+			strb.Append(Canadian.TidyAN(network.TransactionPrefix, 12));
 			//A02 office sequence number 6 N
 			//We are required to use the same office sequence number as the original claim.
-			etrans.OfficeSequenceNumber=0;//Clear the randomly generated office sequence number.
-			List<Etrans> claimTransactions=Etranss.GetAllForOneClaim(claim.ClaimNum);
-			DateTime originalEtransDateTime=DateTime.MinValue;//So we can get the latest matching transaction.
-			for(int i = 0;i<claimTransactions.Count;i++) {
-				if(claimTransactions[i].Etype==EtransType.Claim_CA || claimTransactions[i].Etype==EtransType.ClaimCOB_CA) {
-					Etrans ack=Etranss.GetEtrans(claimTransactions[i].AckEtransNum);
-					if(ack==null) {//For those claims sent that didn't receive a response (i.e. when there is an exception while sending a claim).
+			etrans.OfficeSequenceNumber = 0;//Clear the randomly generated office sequence number.
+			List<Etrans> claimTransactions = Etranss.GetAllForOneClaim(claim.ClaimNum);
+			DateTime originalEtransDateTime = DateTime.MinValue;//So we can get the latest matching transaction.
+			for (int i = 0; i < claimTransactions.Count; i++)
+			{
+				if (claimTransactions[i].Etype == EtransType.Claim_CA || claimTransactions[i].Etype == EtransType.ClaimCOB_CA)
+				{
+					Etrans ack = Etranss.GetEtrans(claimTransactions[i].AckEtransNum);
+					if (ack == null)
+					{//For those claims sent that didn't receive a response (i.e. when there is an exception while sending a claim).
 						continue;
 					}
-					string messageText=EtransMessageTexts.GetMessageText(ack.EtransMessageTextNum,false);
-					CCDFieldInputter messageData=new CCDFieldInputter(messageText);
-					CCDField transRefNum=messageData.GetFieldById("G01");
-					if(transRefNum!=null && transRefNum.valuestr==claim.CanadaTransRefNum && claimTransactions[i].DateTimeTrans>originalEtransDateTime) {
-						etrans.OfficeSequenceNumber=PIn.Int(messageData.GetFieldById("A02").valuestr);
-						originalEtransDateTime=claimTransactions[i].DateTimeTrans;
+					string messageText = EtransMessageTexts.GetMessageText(ack.EtransMessageTextNum, false);
+					CCDFieldInputter messageData = new CCDFieldInputter(messageText);
+					CCDField transRefNum = messageData.GetFieldById("G01");
+					if (transRefNum != null && transRefNum.valuestr == claim.CanadaTransRefNum && claimTransactions[i].DateTimeTrans > originalEtransDateTime)
+					{
+						etrans.OfficeSequenceNumber = PIn.Int(messageData.GetFieldById("A02").valuestr);
+						originalEtransDateTime = claimTransactions[i].DateTimeTrans;
 					}
 				}
 			}
-			DateTime serverDate=MiscData.GetNowDateTime().Date;
-			if(originalEtransDateTime.Date!=serverDate) {
+			DateTime serverDate = MiscData.GetNowDateTime().Date;
+			if (originalEtransDateTime.Date != serverDate)
+			{
 				throw new ApplicationException("Claims can only be reversed on the day that they were sent. The claim can only be manually reversed.");
 			}
-			strb.Append(Canadian.TidyN(etrans.OfficeSequenceNumber,6));
+			strb.Append(Canadian.TidyN(etrans.OfficeSequenceNumber, 6));
 			//A03 format version number 2 N
 			strb.Append(carrier.CDAnetVersion);//eg. "04", validated in UI
-																				 //A04 transaction code 2 N
+											   //A04 transaction code 2 N
 			strb.Append("02");//Same for both versions 02 and 04.
-												//A05 carrier id number 6 N
+							  //A05 carrier id number 6 N
 			strb.Append(carrier.ElectronicId);//already validated as 6 digit number.
-																	 //A06 software system id 3 AN
+											  //A06 software system id 3 AN
 			strb.Append(Canadian.SoftwareSystemId());
-			if(carrier.CDAnetVersion!="02") { //version 04
-																				//A10 encryption method 1 N
+			if (carrier.CDAnetVersion != "02")
+			{ //version 04
+			  //A10 encryption method 1 N
 				strb.Append(carrier.CanadianEncryptionMethod);//validated in UI
 			}
-			if(carrier.CDAnetVersion=="02") {
+			if (carrier.CDAnetVersion == "02")
+			{
 				//A07 message length N4
-				strb.Append(Canadian.TidyN("133",4));
+				strb.Append(Canadian.TidyN("133", 4));
 			}
-			else { //version 04
-						 //A07 message length N 5
-				strb.Append(Canadian.TidyN("164",5));
+			else
+			{ //version 04
+			  //A07 message length N 5
+				strb.Append(Canadian.TidyN("164", 5));
 			}
-			if(carrier.CDAnetVersion!="02") { //version 04
-																				//A09 carrier transaction counter 5 N
+			if (carrier.CDAnetVersion != "02")
+			{ //version 04
+			  //A09 carrier transaction counter 5 N
 #if DEBUG
 				strb.Append("11111");
 #else
@@ -408,318 +473,370 @@ namespace OpenDentBusiness.Eclaims {
 #endif
 			}
 			//B01 CDA provider number 9 AN
-			strb.Append(Canadian.TidyAN(prov.NationalProviderID,9));//already validated
-																													//B02 provider office number 4 AN
-			strb.Append(Canadian.TidyAN(prov.CanadianOfficeNumber,4));//already validated
-			if(carrier.CDAnetVersion!="02") { //version 04
-																				//B03 billing provider number 9 AN
-																				//might need to account for possible 5 digit prov id assigned by carrier
-				strb.Append(Canadian.TidyAN(billProv.NationalProviderID,9));//already validated
-																																//B04 billing provider office number 4 AN
-				strb.Append(Canadian.TidyAN(billProv.CanadianOfficeNumber,4));//already validated
+			strb.Append(Canadian.TidyAN(prov.NationalProviderID, 9));//already validated
+																	 //B02 provider office number 4 AN
+			strb.Append(Canadian.TidyAN(prov.CanadianOfficeNumber, 4));//already validated
+			if (carrier.CDAnetVersion != "02")
+			{ //version 04
+			  //B03 billing provider number 9 AN
+			  //might need to account for possible 5 digit prov id assigned by carrier
+				strb.Append(Canadian.TidyAN(billProv.NationalProviderID, 9));//already validated
+																			 //B04 billing provider office number 4 AN
+				strb.Append(Canadian.TidyAN(billProv.CanadianOfficeNumber, 4));//already validated
 			}
-			if(carrier.CDAnetVersion=="02") {
+			if (carrier.CDAnetVersion == "02")
+			{
 				//C01 primary policy/plan number 8 AN
 				//only validated to ensure that it's not blank and is less than 8. Also that no spaces.
-				strb.Append(Canadian.TidyAN(insPlan.GroupNumber,8));
+				strb.Append(Canadian.TidyAN(insPlan.GroupNumber, 8));
 			}
-			else { //version 04
-						 //C01 primary policy/plan number 12 AN
-						 //only validated to ensure that it's not blank and is less than 12. Also that no spaces.
-				strb.Append(Canadian.TidyAN(insPlan.GroupNumber,12));
+			else
+			{ //version 04
+			  //C01 primary policy/plan number 12 AN
+			  //only validated to ensure that it's not blank and is less than 12. Also that no spaces.
+				strb.Append(Canadian.TidyAN(insPlan.GroupNumber, 12));
 			}
 			//C11 primary division/section number 10 AN
-			strb.Append(Canadian.TidyAN(insPlan.DivisionNo,10));
-			if(carrier.CDAnetVersion=="02") {
+			strb.Append(Canadian.TidyAN(insPlan.DivisionNo, 10));
+			if (carrier.CDAnetVersion == "02")
+			{
 				//C02 subscriber id number 11 AN
-				strb.Append(Canadian.TidyAN(insSub.SubscriberID.Replace("-",""),11));//validated
+				strb.Append(Canadian.TidyAN(insSub.SubscriberID.Replace("-", ""), 11));//validated
 			}
-			else { //version 04
-						 //C02 subscriber id number 12 AN
-				strb.Append(Canadian.TidyAN(insSub.SubscriberID.Replace("-",""),12));//validated
+			else
+			{ //version 04
+			  //C02 subscriber id number 12 AN
+				strb.Append(Canadian.TidyAN(insSub.SubscriberID.Replace("-", ""), 12));//validated
 			}
 			//C03 relationship code 1 N
 			//User interface does not only show Canadian options, but all options are handled.
 			strb.Append(Canadian.GetRelationshipCode(claim.PatRelat));
-			if(carrier.CDAnetVersion=="02") {
+			if (carrier.CDAnetVersion == "02")
+			{
 				//D02 subscriber last name 25 A
-				strb.Append(Canadian.TidyA(subscriber.LName,25));//validated
+				strb.Append(Canadian.TidyA(subscriber.LName, 25));//validated
 			}
-			else { //version 04
-						 //D02 subscriber last name 25 AE
-				strb.Append(Canadian.TidyAE(subscriber.LName,25,true));//validated
+			else
+			{ //version 04
+			  //D02 subscriber last name 25 AE
+				strb.Append(Canadian.TidyAE(subscriber.LName, 25, true));//validated
 			}
-			if(carrier.CDAnetVersion=="02") {
+			if (carrier.CDAnetVersion == "02")
+			{
 				//D03 subscriber first name 15 A
-				strb.Append(Canadian.TidyA(subscriber.FName,15));//validated
+				strb.Append(Canadian.TidyA(subscriber.FName, 15));//validated
 			}
-			else { //version 04
-						 //D03 subscriber first name 15 AE
-				strb.Append(Canadian.TidyAE(subscriber.FName,15,true));//validated
+			else
+			{ //version 04
+			  //D03 subscriber first name 15 AE
+				strb.Append(Canadian.TidyAE(subscriber.FName, 15, true));//validated
 			}
-			if(carrier.CDAnetVersion=="02") {
+			if (carrier.CDAnetVersion == "02")
+			{
 				//D04 subscriber middle initial 1 A
-				strb.Append(Canadian.TidyA(subscriber.MiddleI,1));
+				strb.Append(Canadian.TidyA(subscriber.MiddleI, 1));
 			}
-			else { //version 04
-						 //D04 subscriber middle initial 1 AE
-				strb.Append(Canadian.TidyAE(subscriber.MiddleI,1));
+			else
+			{ //version 04
+			  //D04 subscriber middle initial 1 AE
+				strb.Append(Canadian.TidyAE(subscriber.MiddleI, 1));
 			}
-			if(carrier.CDAnetVersion!="02") { //version 04
-																				//For Future Use
+			if (carrier.CDAnetVersion != "02")
+			{ //version 04
+			  //For Future Use
 				strb.Append("000000");
 			}
 			//G01 transaction reference number of original claim AN 14
-			strb.Append(Canadian.TidyAN(claim.CanadaTransRefNum,14));
-			string errorMsg="";
-			string result=Canadian.PassToIca(strb.ToString(),clearinghouseClin,network,isAutomatic,out errorMsg);
-			//Attach an ack to the etrans
-			Etrans etransAck=new Etrans();
-			etransAck.PatNum=etrans.PatNum;
-			etransAck.PlanNum=etrans.PlanNum;
-			etransAck.InsSubNum=etrans.InsSubNum;
-			etransAck.CarrierNum=etrans.CarrierNum;
-			etransAck.DateTimeTrans=DateTime.Now;
-			etransAck.UserNum=Security.CurrentUser.Id;
-			if(errorMsg!="") {
-				etransAck.AckCode="R";//To allow the user to try and reverse the claim again.
-				etransAck.Etype=EtransType.AckError;
-				etransAck.Note=errorMsg;
-				etrans.Note="failed";
+			strb.Append(Canadian.TidyAN(claim.CanadaTransRefNum, 14));
+            string result = Canadian.PassToIca(strb.ToString(), clearinghouseClin, network, isAutomatic, out string errorMsg);
+            //Attach an ack to the etrans
+            Etrans etransAck = new Etrans
+            {
+                PatNum = etrans.PatNum,
+                PlanNum = etrans.PlanNum,
+                InsSubNum = etrans.InsSubNum,
+                CarrierNum = etrans.CarrierNum,
+                DateTimeTrans = DateTime.Now,
+                UserNum = Security.CurrentUser.Id
+            };
+            if (errorMsg != "")
+			{
+				etransAck.AckCode = "R";//To allow the user to try and reverse the claim again.
+				etransAck.Etype = EtransType.AckError;
+				etransAck.Note = errorMsg;
+				etrans.Note = "failed";
 			}
-			else {
-				try {
-					CCDFieldInputter fieldInputter=new CCDFieldInputter(result);
-					CCDField fieldG05=fieldInputter.GetFieldById("G05");
-					if(fieldG05!=null) {
-						etransAck.AckCode=fieldG05.valuestr;
+			else
+			{
+				try
+				{
+					CCDFieldInputter fieldInputter = new CCDFieldInputter(result);
+					CCDField fieldG05 = fieldInputter.GetFieldById("G05");
+					if (fieldG05 != null)
+					{
+						etransAck.AckCode = fieldG05.valuestr;
 					}
-					etransAck.Etype=fieldInputter.GetEtransType();
+					etransAck.Etype = fieldInputter.GetEtransType();
 				}
-				catch {
-					etransAck.AckCode="R";//To allow the user to try and reverse the claim again.
-					etransAck.Etype=EtransType.AckError;
-					etrans.Note="Could not parse response from ITRANS.";
+				catch
+				{
+					etransAck.AckCode = "R";//To allow the user to try and reverse the claim again.
+					etransAck.Etype = EtransType.AckError;
+					etrans.Note = "Could not parse response from ITRANS.";
 				}
 			}
 			Etranss.Insert(etransAck);
-			Etranss.SetMessage(etransAck.EtransNum,result);
-			etrans.AckEtransNum=etransAck.EtransNum;
+			Etranss.SetMessage(etransAck.EtransNum, result);
+			etrans.AckEtransNum = etransAck.EtransNum;
 			Etranss.Update(etrans);
-			Etranss.SetMessage(etrans.EtransNum,strb.ToString());
-			if(errorMsg!="") {
+			Etranss.SetMessage(etrans.EtransNum, strb.ToString());
+			if (errorMsg != "")
+			{
 				throw new ApplicationException(errorMsg);
 			}
-			if(!isAutomatic && printCCD != null) {
-				printCCD(etrans,result,true);//Physically print the form.
+			if (!isAutomatic && printCCD != null)
+			{
+				printCCD(etrans, result, true);//Physically print the form.
 			}
-			if(etrans.AckCode=="R") {
+			if (etrans.AckCode == "R")
+			{
 				throw new ApplicationException("Reversal was rejected by clearinghouse. The claim must be reversed manually.");
 			}
 			return etransAck.EtransNum;
 		}
 
 		///<summary>Each payment reconciliation request can return up to 9 pages. Each request is to one carrier only, so carrier cannot be null. This function will return one etrans ack for each page in the result, since each page must be requested individually. Only for version 04, no such transaction exists for version 02. The provTreat and provBilling must be validated as CDANet providers before calling this function.</summary>
-		public static List<Etrans> GetPaymentReconciliations(Clearinghouse clearinghouseClin,Carrier carrier,Provider provTreat,Provider provBilling,
-			DateTime reconciliationDate,long clinicNum,bool isAutomatic,PrintCCD printCCD) {
-			if(clearinghouseClin==null) {
+		public static List<Etrans> GetPaymentReconciliations(Clearinghouse clearinghouseClin, Carrier carrier, Provider provTreat, Provider provBilling,
+			DateTime reconciliationDate, long clinicNum, bool isAutomatic, PrintCCD printCCD)
+		{
+			if (clearinghouseClin == null)
+			{
 				throw new ApplicationException("Canadian clearinghouse not found.");
 			}
-			string saveFolder=clearinghouseClin.ExportPath;
-			if(!Directory.Exists(saveFolder)) {
-				throw new ApplicationException(saveFolder+" not found.");
+			string saveFolder = clearinghouseClin.ExportPath;
+			if (!Directory.Exists(saveFolder))
+			{
+				throw new ApplicationException(saveFolder + " not found.");
 			}
-			List<Etrans> etransAcks=new List<Etrans>();
-			int pageNumber=1;
-			int totalPages=1;
-			do {
-				StringBuilder strb=new StringBuilder();
-				if((carrier.CanadianSupportedTypes&CanSupTransTypes.RequestForPaymentReconciliation_06)!=CanSupTransTypes.RequestForPaymentReconciliation_06) {
+			List<Etrans> etransAcks = new List<Etrans>();
+			int pageNumber = 1;
+            int totalPages;
+            do
+			{
+				StringBuilder strb = new StringBuilder();
+				if ((carrier.CanadianSupportedTypes & CanSupTransTypes.RequestForPaymentReconciliation_06) != CanSupTransTypes.RequestForPaymentReconciliation_06)
+				{
 					throw new ApplicationException("The carrier does not support payment reconciliation transactions.");
 				}
-				if(carrier.CanadianNetworkId==0) {
+				if (carrier.CanadianNetworkId == 0)
+				{
 					throw new ApplicationException("Carrier network not set.");
 				}
-				CanadianNetwork network=CanadianNetworks.GetNetwork(carrier.CanadianNetworkId,clearinghouseClin);
-				Etrans etrans=Etranss.CreateCanadianOutput(0,carrier.Id,carrier.CanadianNetworkId,
-					clearinghouseClin.HqClearinghouseNum,EtransType.RequestPay_CA,0,0,Security.CurrentUser.Id);
+				CanadianNetwork network = CanadianNetworks.GetNetwork(carrier.CanadianNetworkId, clearinghouseClin);
+				Etrans etrans = Etranss.CreateCanadianOutput(0, carrier.Id, carrier.CanadianNetworkId,
+					clearinghouseClin.Id, EtransType.RequestPay_CA, 0, 0, Security.CurrentUser.Id);
 				//A01 transaction prefix 12 AN
-				strb.Append(Canadian.TidyAN(network.TransactionPrefix,12));
+				strb.Append(Canadian.TidyAN(network.TransactionPrefix, 12));
 				//A02 office sequence number 6 N
-				strb.Append(Canadian.TidyN(etrans.OfficeSequenceNumber,6));
+				strb.Append(Canadian.TidyN(etrans.OfficeSequenceNumber, 6));
 				//A03 format version number 2 N
 				strb.Append("04");
 				//A04 transaction code 2 N
 				strb.Append("06");//payment reconciliation request
-													//A05 carrier id number 6 N
-				if(network.IsRprHandler) {
+								  //A05 carrier id number 6 N
+				if (network.IsRprHandler)
+				{
 					strb.Append("999999");//Always 999999 if the network handles the RPR requests instead of the carriers in the network.
 				}
-				else {
+				else
+				{
 					strb.Append(carrier.ElectronicId);//already validated as 6 digit number.
 				}
 				//A06 software system id 3 AN
 				strb.Append(Canadian.SoftwareSystemId());
 				//A10 encryption method 1 N
-				if(carrier!=null) {
+				if (carrier != null)
+				{
 					strb.Append(carrier.CanadianEncryptionMethod);//validated in UI
 				}
-				else {
+				else
+				{
 					strb.Append("1");//No encryption when sending to a network.
 				}
 				//A07 message length N4
-				strb.Append(Canadian.TidyN("77",5));
+				strb.Append(Canadian.TidyN("77", 5));
 				//A09 carrier transaction counter 5 N
-				strb.Append(Canadian.TidyN(etrans.CarrierTransCounter,5));
+				strb.Append(Canadian.TidyN(etrans.CarrierTransCounter, 5));
 				//B01 CDA provider number 9 AN
-				strb.Append(Canadian.TidyAN(provTreat.NationalProviderID,9));//already validated
-																																 //B02 (treating) provider office number 4 AN
-				strb.Append(Canadian.TidyAN(provTreat.CanadianOfficeNumber,4));//already validated
-																																		//B03 billing provider number 9 AN
-																																		//might need to account for possible 5 digit prov id assigned by carrier
-				strb.Append(Canadian.TidyAN(provBilling.NationalProviderID,9));//already validated
-																																	 //B04 billing provider office number 4 AN
-				strb.Append(Canadian.TidyAN(provBilling.CanadianOfficeNumber,4));//already validated
-																																			//F33 Reconciliation Date 8 N
+				strb.Append(Canadian.TidyAN(provTreat.NationalProviderID, 9));//already validated
+																			  //B02 (treating) provider office number 4 AN
+				strb.Append(Canadian.TidyAN(provTreat.CanadianOfficeNumber, 4));//already validated
+																				//B03 billing provider number 9 AN
+																				//might need to account for possible 5 digit prov id assigned by carrier
+				strb.Append(Canadian.TidyAN(provBilling.NationalProviderID, 9));//already validated
+																				//B04 billing provider office number 4 AN
+				strb.Append(Canadian.TidyAN(provBilling.CanadianOfficeNumber, 4));//already validated
+																				  //F33 Reconciliation Date 8 N
 				strb.Append(reconciliationDate.ToString("yyyyMMdd"));
 				//F38 Current Reconciliation Page Number N 1
-				strb.Append(Canadian.TidyN(pageNumber,1));
-				//End of message construction.
-				string errorMsg="";
-				string result=Canadian.PassToIca(strb.ToString(),clearinghouseClin,network,isAutomatic,out errorMsg);
-				//Attach an ack to the etrans
-				Etrans etransAck=new Etrans();
-				etransAck.PatNum=etrans.PatNum;
-				etransAck.PlanNum=etrans.PlanNum;
-				etransAck.InsSubNum=etrans.InsSubNum;
-				etransAck.CarrierNum=etrans.CarrierNum;
-				etransAck.DateTimeTrans=DateTime.Now;
-				etransAck.UserNum=Security.CurrentUser.Id;
-				CCDFieldInputter fieldInputter=null;
-				if(errorMsg!="") {
-					etransAck.Etype=EtransType.AckError;
-					etransAck.Note=errorMsg;
-					etrans.Note="failed";
+				strb.Append(Canadian.TidyN(pageNumber, 1));
+                //End of message construction.
+                string result = Canadian.PassToIca(strb.ToString(), clearinghouseClin, network, isAutomatic, out string errorMsg);
+                //Attach an ack to the etrans
+                Etrans etransAck = new Etrans
+                {
+                    PatNum = etrans.PatNum,
+                    PlanNum = etrans.PlanNum,
+                    InsSubNum = etrans.InsSubNum,
+                    CarrierNum = etrans.CarrierNum,
+                    DateTimeTrans = DateTime.Now,
+                    UserNum = Security.CurrentUser.Id
+                };
+                CCDFieldInputter fieldInputter = null;
+				if (errorMsg != "")
+				{
+					etransAck.Etype = EtransType.AckError;
+					etransAck.Note = errorMsg;
+					etrans.Note = "failed";
 				}
-				else {
-					fieldInputter=new CCDFieldInputter(result);
-					CCDField fieldG05=fieldInputter.GetFieldById("G05");
-					if(fieldG05!=null) {
-						etransAck.AckCode=fieldG05.valuestr;
+				else
+				{
+					fieldInputter = new CCDFieldInputter(result);
+					CCDField fieldG05 = fieldInputter.GetFieldById("G05");
+					if (fieldG05 != null)
+					{
+						etransAck.AckCode = fieldG05.valuestr;
 					}
-					etransAck.Etype=fieldInputter.GetEtransType();
+					etransAck.Etype = fieldInputter.GetEtransType();
 				}
 				Etranss.Insert(etransAck);
-				Etranss.SetMessage(etransAck.EtransNum,result);
-				etrans.AckEtransNum=etransAck.EtransNum;
+				Etranss.SetMessage(etransAck.EtransNum, result);
+				etrans.AckEtransNum = etransAck.EtransNum;
 				Etranss.Update(etrans);
-				Etranss.SetMessage(etrans.EtransNum,strb.ToString());
+				Etranss.SetMessage(etrans.EtransNum, strb.ToString());
 				etransAcks.Add(etransAck);
-				if(errorMsg!="") {
+				if (errorMsg != "")
+				{
 					throw new ApplicationException(errorMsg);
 				}
-				CCDField fieldG62=fieldInputter.GetFieldById("G62");//Last reconciliation page number.
-				totalPages=PIn.Int(fieldG62.valuestr);
-				if(!isAutomatic && printCCD != null) {
-					printCCD(etrans,result,true);//Physically print the form.
+				CCDField fieldG62 = fieldInputter.GetFieldById("G62");//Last reconciliation page number.
+				totalPages = PIn.Int(fieldG62.valuestr);
+				if (!isAutomatic && printCCD != null)
+				{
+					printCCD(etrans, result, true);//Physically print the form.
 				}
 				pageNumber++;
-			} while(pageNumber<=totalPages);
+			} while (pageNumber <= totalPages);
 			return etransAcks;
 		}
 
 		///<summary>Does not exist in version 02 so only supported for version 04. Returns the request Etrans record. Usually pass in a carrier with network null.  If sending to a network, carrier will be null and we still don't see anywhere in the message format to specify network.  We expect to get clarification on this issue later. Validate provTreat as a CDANet provider before calling this function.</summary>
-		public static Etrans GetSummaryReconciliation(Clearinghouse clearinghouseClin,Carrier carrier,CanadianNetwork network,Provider provTreat,
-			DateTime reconciliationDate,bool isAutomatic,PrintCCD printCCD) {
-			if(clearinghouseClin==null) {
+		public static Etrans GetSummaryReconciliation(Clearinghouse clearinghouseClin, Carrier carrier, CanadianNetwork network, Provider provTreat,
+			DateTime reconciliationDate, bool isAutomatic, PrintCCD printCCD)
+		{
+			if (clearinghouseClin == null)
+			{
 				throw new ApplicationException("Canadian clearinghouse not found.");
 			}
-			string saveFolder=clearinghouseClin.ExportPath;
-			if(!Directory.Exists(saveFolder)) {
-				throw new ApplicationException(saveFolder+" not found.");
+			string saveFolder = clearinghouseClin.ExportPath;
+			if (!Directory.Exists(saveFolder))
+			{
+				throw new ApplicationException(saveFolder + " not found.");
 			}
-			StringBuilder strb=new StringBuilder();
-			Etrans etrans=null;
-			if(carrier!=null) {
-				if((carrier.CanadianSupportedTypes&CanSupTransTypes.RequestForSummaryReconciliation_05)!=CanSupTransTypes.RequestForSummaryReconciliation_05) {
+			StringBuilder strb = new StringBuilder();
+            Etrans etrans;
+            if (carrier != null)
+			{
+				if ((carrier.CanadianSupportedTypes & CanSupTransTypes.RequestForSummaryReconciliation_05) != CanSupTransTypes.RequestForSummaryReconciliation_05)
+				{
 					throw new ApplicationException("The carrier does not support summary reconciliation transactions.");
 				}
-				etrans=Etranss.CreateCanadianOutput(0,carrier.Id,carrier.CanadianNetworkId,
-					clearinghouseClin.HqClearinghouseNum,EtransType.RequestSumm_CA,0,0,Security.CurrentUser.Id);
+				etrans = Etranss.CreateCanadianOutput(0, carrier.Id, carrier.CanadianNetworkId,
+					clearinghouseClin.Id, EtransType.RequestSumm_CA, 0, 0, Security.CurrentUser.Id);
 			}
-			else {//Assume network!=null
-				etrans=Etranss.CreateCanadianOutput(0,0,network.Id,
-					clearinghouseClin.HqClearinghouseNum,EtransType.RequestSumm_CA,0,0,Security.CurrentUser.Id);
+			else
+			{//Assume network!=null
+				etrans = Etranss.CreateCanadianOutput(0, 0, network.Id,
+					clearinghouseClin.Id, EtransType.RequestSumm_CA, 0, 0, Security.CurrentUser.Id);
 			}
 			//A01 transaction prefix 12 AN
-			strb.Append(Canadian.TidyAN(network.TransactionPrefix,12));
+			strb.Append(Canadian.TidyAN(network.TransactionPrefix, 12));
 			//A02 office sequence number 6 N
-			strb.Append(Canadian.TidyN(etrans.OfficeSequenceNumber,6));
+			strb.Append(Canadian.TidyN(etrans.OfficeSequenceNumber, 6));
 			//A03 format version number 2 N
 			strb.Append("04");
 			//A04 transaction code 2 N
 			strb.Append("05");//payment reconciliation request
-												//A05 carrier id number 6 N
-			if(carrier!=null) {
+							  //A05 carrier id number 6 N
+			if (carrier != null)
+			{
 				strb.Append(carrier.ElectronicId);//already validated as 6 digit number.
 			}
-			else { //Assume network!=null
+			else
+			{ //Assume network!=null
 				strb.Append("999999");//Always 999999 when sending to a network.
 			}
 			//A06 software system id 3 AN
 			strb.Append(Canadian.SoftwareSystemId());
 			//A10 encryption method 1 N
-			if(carrier!=null) {
+			if (carrier != null)
+			{
 				strb.Append(carrier.CanadianEncryptionMethod);//validated in UI
 			}
-			else { //Assume network!=null
+			else
+			{ //Assume network!=null
 				strb.Append("1");//No encryption when sending to a network.
 			}
 			//A07 message length N4
-			strb.Append(Canadian.TidyN("63",5));
+			strb.Append(Canadian.TidyN("63", 5));
 			//A09 carrier transaction counter 5 N
-			strb.Append(Canadian.TidyN(etrans.CarrierTransCounter,5));
+			strb.Append(Canadian.TidyN(etrans.CarrierTransCounter, 5));
 			//B01 CDA provider number 9 AN
-			strb.Append(Canadian.TidyAN(provTreat.NationalProviderID,9));//already validated
-																															 //B02 (treating) provider office number 4 AN
-			strb.Append(Canadian.TidyAN(provTreat.CanadianOfficeNumber,4));//already validated
-																																	//F33 Reconciliation Date 8 N
+			strb.Append(Canadian.TidyAN(provTreat.NationalProviderID, 9));//already validated
+																		  //B02 (treating) provider office number 4 AN
+			strb.Append(Canadian.TidyAN(provTreat.CanadianOfficeNumber, 4));//already validated
+																			//F33 Reconciliation Date 8 N
 			strb.Append(reconciliationDate.ToString("yyyyMMdd"));
-			//End of message construction.
-			string errorMsg="";
-			string result=Canadian.PassToIca(strb.ToString(),clearinghouseClin,network,isAutomatic,out errorMsg);
-			//Attach an ack to the etrans
-			Etrans etransAck=new Etrans();
-			etransAck.PatNum=etrans.PatNum;
-			etransAck.PlanNum=etrans.PlanNum;
-			etransAck.InsSubNum=etrans.InsSubNum;
-			etransAck.CarrierNum=etrans.CarrierNum;
-			etransAck.DateTimeTrans=DateTime.Now;
-			etransAck.UserNum=Security.CurrentUser.Id;
-			CCDFieldInputter fieldInputter=null;
-			if(errorMsg!="") {
-				etransAck.Etype=EtransType.AckError;
-				etransAck.Note=errorMsg;
-				etrans.Note="failed";
+            //End of message construction.
+            string result = Canadian.PassToIca(strb.ToString(), clearinghouseClin, network, isAutomatic, out string errorMsg);
+            //Attach an ack to the etrans
+            Etrans etransAck = new Etrans
+            {
+                PatNum = etrans.PatNum,
+                PlanNum = etrans.PlanNum,
+                InsSubNum = etrans.InsSubNum,
+                CarrierNum = etrans.CarrierNum,
+                DateTimeTrans = DateTime.Now,
+                UserNum = Security.CurrentUser.Id
+            };
+            if (errorMsg != "")
+			{
+				etransAck.Etype = EtransType.AckError;
+				etransAck.Note = errorMsg;
+				etrans.Note = "failed";
 			}
-			else {
-				fieldInputter=new CCDFieldInputter(result);
-				CCDField fieldG05=fieldInputter.GetFieldById("G05");
-				if(fieldG05!=null) {
-					etransAck.AckCode=fieldG05.valuestr;
+			else
+			{
+                CCDFieldInputter fieldInputter = new CCDFieldInputter(result);
+                CCDField fieldG05 = fieldInputter.GetFieldById("G05");
+				if (fieldG05 != null)
+				{
+					etransAck.AckCode = fieldG05.valuestr;
 				}
-				etransAck.Etype=fieldInputter.GetEtransType();
+				etransAck.Etype = fieldInputter.GetEtransType();
 			}
 			Etranss.Insert(etransAck);
-			Etranss.SetMessage(etransAck.EtransNum,result);
-			etrans.AckEtransNum=etransAck.EtransNum;
+			Etranss.SetMessage(etransAck.EtransNum, result);
+			etrans.AckEtransNum = etransAck.EtransNum;
 			Etranss.Update(etrans);
-			Etranss.SetMessage(etrans.EtransNum,strb.ToString());
-			if(errorMsg!="") {
+			Etranss.SetMessage(etrans.EtransNum, strb.ToString());
+			if (errorMsg != "")
+			{
 				throw new ApplicationException(errorMsg);
 			}
-			if(!isAutomatic && printCCD != null) {
-				printCCD(etrans,result,true);//Physically print the form.
+			if (!isAutomatic && printCCD != null)
+			{
+				printCCD(etrans, result, true);//Physically print the form.
 			}
 			return etrans;
 		}
@@ -734,221 +851,263 @@ namespace OpenDentBusiness.Eclaims {
 		///Send to a specific carrier by setting the carrier varaible, or leave null if sending to entire network.
 		///If the user initiated this call, then set the form and ccd delegate so the output can be printed.
 		///Otherwise, set form and ccd delegate to null to supress UI and printer output.</summary>
-		private static List<Etrans> GetOutstandingForClearinghouse(Clearinghouse clearinghouseClin,Provider prov,string formatVersion,Carrier carrier,
-			CanadianNetwork network,PrintCdaClaimForm printForm,PrintCCD printCCD) 
+		private static List<Etrans> GetOutstandingForClearinghouse(Clearinghouse clearinghouseClin, Provider prov, string formatVersion, Carrier carrier,
+			CanadianNetwork network, PrintCdaClaimForm printForm, PrintCCD printCCD)
 		{
-			bool isAutomatic=(printForm==null && printCCD==null);
-			List<Etrans> etransAcks=new List<Etrans>();
-			if(clearinghouseClin==null) {
+			bool isAutomatic = (printForm == null && printCCD == null);
+			List<Etrans> etransAcks = new List<Etrans>();
+			if (clearinghouseClin == null)
+			{
 				throw new ApplicationException("Canadian clearinghouse not found.");
 			}
-			string saveFolder=clearinghouseClin.ExportPath;
-			if(!Directory.Exists(saveFolder)) {
-				throw new ApplicationException(saveFolder+" not found.");
+			string saveFolder = clearinghouseClin.ExportPath;
+			if (!Directory.Exists(saveFolder))
+			{
+				throw new ApplicationException(saveFolder + " not found.");
 			}
 			//We are required to send the request for outstanding transactions over and over until we get back an outstanding transactions ack format (Transaction type 14), because
 			//there may be more than one item in the mailbox and we can only get one item at time.
-			bool exit=false;
-			do {
-				StringBuilder strb=new StringBuilder();
-				if(carrier!=null && !carrier.CanadianSupportedTypes.HasFlag(CanSupTransTypes.RequestForOutstandingTrans_04)) {
+			bool exit = false;
+			do
+			{
+				StringBuilder strb = new StringBuilder();
+				if (carrier != null && !carrier.CanadianSupportedTypes.HasFlag(CanSupTransTypes.RequestForOutstandingTrans_04))
+				{
 					throw new ApplicationException("The carrier does not support request for outstanding transactions.");
-				}					
-				Etrans etrans=Etranss.CreateCanadianOutput(0,(carrier==null)?0:carrier.Id,(network==null)?0:network.Id,
-					clearinghouseClin.HqClearinghouseNum,EtransType.RequestOutstand_CA,0,0,Security.CurrentUser.Id);
+				}
+				Etrans etrans = Etranss.CreateCanadianOutput(0, (carrier == null) ? 0 : carrier.Id, (network == null) ? 0 : network.Id,
+					clearinghouseClin.Id, EtransType.RequestOutstand_CA, 0, 0, Security.CurrentUser.Id);
 				//A01 transaction prefix 12 AN
-				if(network==null) {//iTrans will always hit this, or running for Version 2 or Version 4 for all carriers.
+				if (network == null)
+				{//iTrans will always hit this, or running for Version 2 or Version 4 for all carriers.
 					strb.Append("            ");
 				}
-				else {//To specific ITRANS version 04 carrier, or ClaimStream Telus A network or Telus B network.
-					strb.Append(Canadian.TidyAN(network.TransactionPrefix,12));
+				else
+				{//To specific ITRANS version 04 carrier, or ClaimStream Telus A network or Telus B network.
+					strb.Append(Canadian.TidyAN(network.TransactionPrefix, 12));
 				}
 				//A02 office sequence number 6 N
-				strb.Append(Canadian.TidyN(etrans.OfficeSequenceNumber,6));
+				strb.Append(Canadian.TidyN(etrans.OfficeSequenceNumber, 6));
 				//A03 format version number 2 N
 				strb.Append(formatVersion);
 				//A04 transaction code 2 N
 				strb.Append("04");//outstanding transactions request
-				if(formatVersion=="04") {
+				if (formatVersion == "04")
+				{
 					//A05 carrier id number 6 N
-					if(carrier==null) {
+					if (carrier == null)
+					{
 						strb.Append("999999");
 					}
-					else {
+					else
+					{
 						strb.Append(carrier.ElectronicId);//already validated as 6 digit number.
 					}
 				}
 				//A06 software system id 3 AN
 				strb.Append(Canadian.SoftwareSystemId());
-				if(formatVersion=="04") {
+				if (formatVersion == "04")
+				{
 					//A10 encryption method 1 N
-					if(carrier==null) {
+					if (carrier == null)
+					{
 						strb.Append("1");
 					}
-					else {
+					else
+					{
 						strb.Append(carrier.CanadianEncryptionMethod);//validated in UI
 					}
 				}
 				//A07 message length N4
-				if(formatVersion=="04") {
-					strb.Append(Canadian.TidyN("64",5));
+				if (formatVersion == "04")
+				{
+					strb.Append(Canadian.TidyN("64", 5));
 				}
-				else if(formatVersion=="02") {
-					strb.Append(Canadian.TidyN("42",4));
+				else if (formatVersion == "02")
+				{
+					strb.Append(Canadian.TidyN("42", 4));
 				}
-				if(formatVersion=="04") {
+				if (formatVersion == "04")
+				{
 					//A09 carrier transaction counter 5 N
-					strb.Append(Canadian.TidyN(etrans.CarrierTransCounter,5));
+					strb.Append(Canadian.TidyN(etrans.CarrierTransCounter, 5));
 				}
 				//According to the documentation for the outstanding transactions ack format, B01 only has to be a valid provider for the practice,
 				//and that will trigger acknowledgements for all providers of the practice. I am assuming here that the same is true for the 
 				//billing provider in field B03, because there is no real reason to limit the request to any particular provider.
 				//B01 CDA provider number 9 AN
-				strb.Append(Canadian.TidyAN(prov.NationalProviderID,9));//already validated
-				//B02 (treating) provider office number 4 AN
-				strb.Append(Canadian.TidyAN(prov.CanadianOfficeNumber,4));//already validated
-				if(formatVersion=="04") {
+				strb.Append(Canadian.TidyAN(prov.NationalProviderID, 9));//already validated
+																		 //B02 (treating) provider office number 4 AN
+				strb.Append(Canadian.TidyAN(prov.CanadianOfficeNumber, 4));//already validated
+				if (formatVersion == "04")
+				{
 					//B03 billing provider number 9 AN
 					//might need to account for possible 5 digit prov id assigned by carrier
-					strb.Append(Canadian.TidyAN(prov.NationalProviderID,9));//already validated
+					strb.Append(Canadian.TidyAN(prov.NationalProviderID, 9));//already validated
 				}
-				string errorMsg="";
-				string result=Canadian.PassToIca(strb.ToString(),clearinghouseClin,network,isAutomatic,out errorMsg);
-				//Attach an ack to the etrans
-				Etrans etransAck=new Etrans();
-				etransAck.PatNum=etrans.PatNum;
-				etransAck.PlanNum=etrans.PlanNum;
-				etransAck.InsSubNum=etrans.InsSubNum;
-				etransAck.CarrierNum=etrans.CarrierNum;
-				etransAck.DateTimeTrans=DateTime.Now;
-				CCDFieldInputter fieldInputter=null;
-				if(errorMsg!="") {
-					etransAck.Etype=EtransType.AckError;
-					etransAck.Note=errorMsg;
-					etrans.Note="failed";
+                string result = Canadian.PassToIca(strb.ToString(), clearinghouseClin, network, isAutomatic, out string errorMsg);
+                //Attach an ack to the etrans
+                Etrans etransAck = new Etrans
+                {
+                    PatNum = etrans.PatNum,
+                    PlanNum = etrans.PlanNum,
+                    InsSubNum = etrans.InsSubNum,
+                    CarrierNum = etrans.CarrierNum,
+                    DateTimeTrans = DateTime.Now
+                };
+                CCDFieldInputter fieldInputter = null;
+				if (errorMsg != "")
+				{
+					etransAck.Etype = EtransType.AckError;
+					etransAck.Note = errorMsg;
+					etrans.Note = "failed";
 				}
-				else {
-					if(result.Substring(12).StartsWith("NO MORE ITEMS")) {
-						etransAck.Etype=EtransType.OutstandingAck_CA;
-						exit=true;
+				else
+				{
+					if (result.Substring(12).StartsWith("NO MORE ITEMS"))
+					{
+						etransAck.Etype = EtransType.OutstandingAck_CA;
+						exit = true;
 					}
-					else {
-						fieldInputter=new CCDFieldInputter(result);
-						CCDField fieldG05=fieldInputter.GetFieldById("G05");
-						if(fieldG05!=null) {
-							etransAck.AckCode=fieldG05.valuestr;
+					else
+					{
+						fieldInputter = new CCDFieldInputter(result);
+						CCDField fieldG05 = fieldInputter.GetFieldById("G05");
+						if (fieldG05 != null)
+						{
+							etransAck.AckCode = fieldG05.valuestr;
 						}
-						etransAck.Etype=fieldInputter.GetEtransType();
+						etransAck.Etype = fieldInputter.GetEtransType();
 					}
 				}
 				Etranss.Insert(etransAck);
 				//Update etransAck and etrans here with EtransMessageTextNum as these objects are sometimes used again later to update the DB.
-				etransAck.EtransMessageTextNum=Etranss.SetMessage(etransAck.EtransNum,result);
-				etrans.AckEtransNum=etransAck.EtransNum;
+				etransAck.EtransMessageTextNum = Etranss.SetMessage(etransAck.EtransNum, result);
+				etrans.AckEtransNum = etransAck.EtransNum;
 				Etranss.Update(etrans);
-				etrans.EtransMessageTextNum=Etranss.SetMessage(etrans.EtransNum,strb.ToString());
+				etrans.EtransMessageTextNum = Etranss.SetMessage(etrans.EtransNum, strb.ToString());
 				etransAcks.Add(etransAck);
-				if(errorMsg!="") {
+				if (errorMsg != "")
+				{
 					//Do not let this one error prevent us from downloading the remaining items from the inbox.
 					//The error message was recorded in the etransAck if the user cares to research what happened.
 					continue;
 				}
-				if(fieldInputter==null) {//happens in version 02 when a terminating message containing the text "NO MORE ITEMS" is received.
+				if (fieldInputter == null)
+				{//happens in version 02 when a terminating message containing the text "NO MORE ITEMS" is received.
 					break;
 				}
-				CCDField fieldA04=fieldInputter.GetFieldById("A04");//message format
-				if(formatVersion=="02") {
+				CCDField fieldA04 = fieldInputter.GetFieldById("A04");//message format
+				if (formatVersion == "02")
+				{
 					//In this case, there are only 4 possible responses:
 					//EOB, Claim Ack, Claim Ack with an error code, or Claim Ack with literal "NO MORE ITEMS" starting at character 13.
-					if(fieldA04.valuestr=="11") {
-						CCDField fieldG08=fieldInputter.GetFieldById("G08");
-						if(fieldG08!=null && (fieldG08.valuestr=="004" || fieldG08.valuestr=="049")) { //Exit conditions specified in the documentation.
-							etransAck.Etype=EtransType.OutstandingAck_CA;
-							exit=true;
+					if (fieldA04.valuestr == "11")
+					{
+						CCDField fieldG08 = fieldInputter.GetFieldById("G08");
+						if (fieldG08 != null && (fieldG08.valuestr == "004" || fieldG08.valuestr == "049"))
+						{ //Exit conditions specified in the documentation.
+							etransAck.Etype = EtransType.OutstandingAck_CA;
+							exit = true;
 						}
 					}
 				}
-				else if(formatVersion=="04") {
+				else if (formatVersion == "04")
+				{
 					//Remember, the only allowed response transaction types are:
 					//21 EOB Response, 11 Claim Ack, 14 Outstanding Transactions Response, 23 Predetermination EOB, 13 Predetermination Ack, 24 E-Mail Response
-					if(fieldA04.valuestr=="14") {//Outstanding Transaction Ack Format
-						CCDField fieldG05=fieldInputter.GetFieldById("G05");//response status
-						if(fieldG05.valuestr=="R") {//We only expect the result to be 'R' or 'X' as specified in the documentation.
-							CCDField fieldG07=fieldInputter.GetFieldById("G07");//disposition message
-							CCDField fieldG08=fieldInputter.GetFieldById("G08");//error code
-							if(!isAutomatic) {
-								MessageBox.Show("Failed to receive outstanding transactions. Messages from CDANet"+": "+Environment.NewLine+
-									fieldG07.valuestr.Trim()+Environment.NewLine+((fieldG08!=null) ? CCDerror.message(Convert.ToInt32(fieldG08.valuestr),false) : ""));
+					if (fieldA04.valuestr == "14")
+					{//Outstanding Transaction Ack Format
+						CCDField fieldG05 = fieldInputter.GetFieldById("G05");//response status
+						if (fieldG05.valuestr == "R")
+						{//We only expect the result to be 'R' or 'X' as specified in the documentation.
+							CCDField fieldG07 = fieldInputter.GetFieldById("G07");//disposition message
+							CCDField fieldG08 = fieldInputter.GetFieldById("G08");//error code
+							if (!isAutomatic)
+							{
+								MessageBox.Show("Failed to receive outstanding transactions. Messages from CDANet" + ": " + Environment.NewLine +
+									fieldG07.valuestr.Trim() + Environment.NewLine + ((fieldG08 != null) ? CCDerror.message(Convert.ToInt32(fieldG08.valuestr), false) : ""));
 							}
 						}
-						etransAck.Etype=EtransType.OutstandingAck_CA;
-						exit=true;
+						etransAck.Etype = EtransType.OutstandingAck_CA;
+						exit = true;
 					}
 				}
 				//Field A02 exists in all of the possible formats (21,11,14,23,13,24).
-				CCDField fieldA02=fieldInputter.GetFieldById("A02");//office sequence number
-				//We use the Office Sequence Number to find the original etrans entry so that we can discover which patient the response is referring to.
-				Etrans etranOriginal=Etranss.GetForSequenceNumberCanada(fieldA02.valuestr);
-				if(etranOriginal!=null) {//Null will happen when testing, but should not happen in production.
-					etrans.PatNum=etranOriginal.PatNum;
-					etrans.PlanNum=etranOriginal.PlanNum;
-					etrans.InsSubNum=etranOriginal.InsSubNum;
-					etrans.ClaimNum=etranOriginal.ClaimNum;
+				CCDField fieldA02 = fieldInputter.GetFieldById("A02");//office sequence number
+																	  //We use the Office Sequence Number to find the original etrans entry so that we can discover which patient the response is referring to.
+				Etrans etranOriginal = Etranss.GetForSequenceNumberCanada(fieldA02.valuestr);
+				if (etranOriginal != null)
+				{//Null will happen when testing, but should not happen in production.
+					etrans.PatNum = etranOriginal.PatNum;
+					etrans.PlanNum = etranOriginal.PlanNum;
+					etrans.InsSubNum = etranOriginal.InsSubNum;
+					etrans.ClaimNum = etranOriginal.ClaimNum;
 					Etranss.Update(etrans);
-					etransAck.PatNum=etranOriginal.PatNum;
-					etransAck.PlanNum=etranOriginal.PlanNum;
-					etransAck.InsSubNum=etranOriginal.InsSubNum;
-					etransAck.ClaimNum=etranOriginal.ClaimNum;
+					etransAck.PatNum = etranOriginal.PatNum;
+					etransAck.PlanNum = etranOriginal.PlanNum;
+					etransAck.InsSubNum = etranOriginal.InsSubNum;
+					etransAck.ClaimNum = etranOriginal.ClaimNum;
 					Etranss.Update(etransAck);
-					if(!exit) {
-						Claim claim=null;
-						if(etransAck.ClaimNum!=0) {
-							claim=Claims.GetClaim(etransAck.ClaimNum);
+					if (!exit)
+					{
+						Claim claim = null;
+						if (etransAck.ClaimNum != 0)
+						{
+							claim = Claims.GetClaim(etransAck.ClaimNum);
 						}
-						if(claim!=null) {
-							if(etransAck.AckCode=="A") {
-								claim.ClaimStatus="R";
-								claim.DateReceived=MiscData.GetNowDateTime();
+						if (claim != null)
+						{
+							if (etransAck.AckCode == "A")
+							{
+								claim.ClaimStatus = "R";
+								claim.DateReceived = MiscData.GetNowDateTime();
 							}
-							else if(etransAck.AckCode=="H" || etransAck.AckCode=="B" || etransAck.AckCode=="C" || etransAck.AckCode=="N") {
-								claim.ClaimStatus="S";
+							else if (etransAck.AckCode == "H" || etransAck.AckCode == "B" || etransAck.AckCode == "C" || etransAck.AckCode == "N")
+							{
+								claim.ClaimStatus = "S";
 							}
-							else if(etransAck.AckCode=="M") {
-								if(!isAutomatic) {
+							else if (etransAck.AckCode == "M")
+							{
+								if (!isAutomatic)
+								{
 									printForm(claim);
 								}
 							}
 							Claims.Update(claim);
-							if((fieldA04.valuestr=="21" || fieldA04.valuestr=="23")//EOB or Predetermination EOB
-								&& clearinghouseClin.IsEraDownloadAllowed!=EraBehaviors.None 
+							if ((fieldA04.valuestr == "21" || fieldA04.valuestr == "23")//EOB or Predetermination EOB
+								&& clearinghouseClin.IsEraDownloadAllowed != EraBehaviors.None
 								&& InsSubs.GetOne(claim.InsSubNum).AssignBen)
 							{
-								List<Procedure> listAllProcs=Procedures.Refresh(claim.PatNum);
-								List<ClaimProc> listAllClaimProcs=ClaimProcs.Refresh(claim.PatNum);
-								List<ClaimProc> listClaimProcsForClaim=listAllClaimProcs.FindAll(x => x.ClaimNum==claim.ClaimNum);
+								List<Procedure> listAllProcs = Procedures.Refresh(claim.PatNum);
+								List<ClaimProc> listAllClaimProcs = ClaimProcs.Refresh(claim.PatNum);
+								List<ClaimProc> listClaimProcsForClaim = listAllClaimProcs.FindAll(x => x.ClaimNum == claim.ClaimNum);
 								//int patAge=0;
 								//if(clearinghouseClin.IsEraDownloadAllowed==EraBehaviors.DownloadDoNotReceive) {
-									Patient pat=Patients.GetPat(claim.PatNum);
+								Patient pat = Patients.GetPat(claim.PatNum);
 								//	patAge=pat.Age;
 								//}
-								Canadian.EOBImportHelper(fieldInputter,listClaimProcsForClaim,listAllProcs,listAllClaimProcs,claim,true,null,clearinghouseClin.IsEraDownloadAllowed,pat);
-								SecurityLogs.MakeLogEntry(Permissions.InsPayCreate,claim.PatNum
-									,"Claim for service date "+POut.Date(claim.DateService)+" amounts overwritten using recieved EOB amounts."
-									,SecurityLogSource.CanadaEobAutoImport);
+								Canadian.EOBImportHelper(fieldInputter, listClaimProcsForClaim, listAllProcs, listAllClaimProcs, claim, true, null, clearinghouseClin.IsEraDownloadAllowed, pat);
+								SecurityLogs.MakeLogEntry(Permissions.InsPayCreate, claim.PatNum
+									, "Claim for service date " + POut.Date(claim.DateService) + " amounts overwritten using recieved EOB amounts."
+									, SecurityLogSource.CanadaEobAutoImport);
 							}
 						}
 					}
 				}
-				if(!exit && !isAutomatic) {
-					try {
-						printCCD(etrans,result,true);//Physically print the form.
+				if (!exit && !isAutomatic)
+				{
+					try
+					{
+						printCCD(etrans, result, true);//Physically print the form.
 					}
-					catch {
-						CodeBase.MsgBoxCopyPaste msgbox=new CodeBase.MsgBoxCopyPaste("Failed to display one of the ROT responses, here is the raw message"+": "+Environment.NewLine+result);
+					catch
+					{
+						CodeBase.MsgBoxCopyPaste msgbox = new CodeBase.MsgBoxCopyPaste("Failed to display one of the ROT responses, here is the raw message" + ": " + Environment.NewLine + result);
 						msgbox.ShowDialog();
 					}
 				}
-			} while(!exit);
+			} while (!exit);
 			return etransAcks;
 		}
 
@@ -961,43 +1120,51 @@ namespace OpenDentBusiness.Eclaims {
 		///Send to a specific carrier by setting the carrier varaible, or leave null if sending to entire network.
 		///If the user initiated this call, then set the form and ccd delegate so the output can be printed.
 		///Otherwise, set form and ccd delegate to null to supress UI and printer output.</summary>
-		public static List<Etrans> GetOutstandingForDefault(Provider prov,string formatVersion="",Carrier carrier=null,
-			PrintCdaClaimForm printForm=null,PrintCCD printCCD=null)
+		public static List<Etrans> GetOutstandingForDefault(Provider prov, string formatVersion = "", Carrier carrier = null,
+			PrintCdaClaimForm printForm = null, PrintCCD printCCD = null)
 		{
-			List<Etrans> listEtrans=new List<Etrans>();
+			List<Etrans> listEtrans = new List<Etrans>();
 			//If carrier is Alberta Blue Cross (ABC), then ClaimStream will be selected as the clearinghouseHq if the user has the recommended setup.
-			Clearinghouse clearinghouseHq=Canadian.GetCanadianClearinghouseHq(carrier);
-			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.Active.Id);
-			CanadianNetwork netTelusA=CanadianNetworks.FirstOrDefault(x => x.Abbr=="TELUS A");
-			CanadianNetwork netTelusB=CanadianNetworks.FirstOrDefault(x => x.Abbr=="TELUS B");
+			Clearinghouse clearinghouseHq = Canadian.GetCanadianClearinghouseHq(carrier);
+			Clearinghouse clearinghouseClin = Clearinghouses.OverrideFields(clearinghouseHq, Clinics.Active.Id);
+			CanadianNetwork netTelusA = CanadianNetworks.FirstOrDefault(x => x.Abbr == "TELUS A");
+			CanadianNetwork netTelusB = CanadianNetworks.FirstOrDefault(x => x.Abbr == "TELUS B");
 			//Check version 04 reports first, in case there is an error.  Most carrier use version 04.
 			//If there is an error with version 02, then we would not want it to stop version 04 reports from running.
 			//Therefore, version 02 reports should come after version 04 reports.
-			if(String.IsNullOrEmpty(formatVersion) || formatVersion=="04") {//Version 04 request.
-				if(carrier==null) {//Version 04 request for all networks.
-					if(clearinghouseHq.CommBridge==EclaimsCommBridge.ITRANS) {
-						listEtrans.AddRange(CanadianOutput.GetOutstandingForClearinghouse(clearinghouseClin,prov,"04",null,null,printForm,printCCD));
+			if (String.IsNullOrEmpty(formatVersion) || formatVersion == "04")
+			{//Version 04 request.
+				if (carrier == null)
+				{//Version 04 request for all networks.
+					if (clearinghouseHq.CommBridge == EclaimsCommBridge.ITRANS)
+					{
+						listEtrans.AddRange(GetOutstandingForClearinghouse(clearinghouseClin, prov, "04", null, null, printForm, printCCD));
 					}
-					else if(clearinghouseHq.CommBridge==EclaimsCommBridge.Claimstream) {
+					else if (clearinghouseHq.CommBridge == EclaimsCommBridge.Claimstream)
+					{
 						//Alberta Blue Cross (ABC) only accepts requests with a carrier specified (since there is only 1 carrier in their network).
-						listEtrans.AddRange(CanadianOutput.GetOutstandingForClearinghouse(clearinghouseClin,prov,"04",null,netTelusA,printForm,printCCD));
-						listEtrans.AddRange(CanadianOutput.GetOutstandingForClearinghouse(clearinghouseClin,prov,"04",null,netTelusB,printForm,printCCD));
+						listEtrans.AddRange(GetOutstandingForClearinghouse(clearinghouseClin, prov, "04", null, netTelusA, printForm, printCCD));
+						listEtrans.AddRange(GetOutstandingForClearinghouse(clearinghouseClin, prov, "04", null, netTelusB, printForm, printCCD));
 					}
 				}
-				else {//Version 04 request for a specific carrier.  Could be for either ITRANS or ClaimStream, depending on clearinghouse selected above.
-					//Alberta Blue Cross (ABC) always has to be checked this way.
-					CanadianNetwork net=CanadianNetworks.GetNetwork(carrier.CanadianNetworkId,clearinghouseClin);//We always know which network if the carrier is specified.
-					listEtrans.AddRange(CanadianOutput.GetOutstandingForClearinghouse(clearinghouseClin,prov,"04",carrier,net,printForm,printCCD));
+				else
+				{//Version 04 request for a specific carrier.  Could be for either ITRANS or ClaimStream, depending on clearinghouse selected above.
+				 //Alberta Blue Cross (ABC) always has to be checked this way.
+					CanadianNetwork net = CanadianNetworks.GetNetwork(carrier.CanadianNetworkId, clearinghouseClin);//We always know which network if the carrier is specified.
+					listEtrans.AddRange(GetOutstandingForClearinghouse(clearinghouseClin, prov, "04", carrier, net, printForm, printCCD));
 				}
 			}
-			if((String.IsNullOrEmpty(formatVersion) || formatVersion=="02") && carrier==null) {//Version 02 request.  Always an entire clearinghouse, not a carrier.
-				if(clearinghouseHq.CommBridge==EclaimsCommBridge.ITRANS) {
-					listEtrans.AddRange(CanadianOutput.GetOutstandingForClearinghouse(clearinghouseClin,prov,"02",null,null,printForm,printCCD));
+			if ((String.IsNullOrEmpty(formatVersion) || formatVersion == "02") && carrier == null)
+			{//Version 02 request.  Always an entire clearinghouse, not a carrier.
+				if (clearinghouseHq.CommBridge == EclaimsCommBridge.ITRANS)
+				{
+					listEtrans.AddRange(GetOutstandingForClearinghouse(clearinghouseClin, prov, "02", null, null, printForm, printCCD));
 				}
-				else if(clearinghouseHq.CommBridge==EclaimsCommBridge.Claimstream) {
+				else if (clearinghouseHq.CommBridge == EclaimsCommBridge.Claimstream)
+				{
 					//Alberta Blue Cross (ABC) uses version 04.  Therefore, no need to ask for version 02 reports.
-					listEtrans.AddRange(CanadianOutput.GetOutstandingForClearinghouse(clearinghouseClin,prov,"02",null,netTelusA,printForm,printCCD));
-					listEtrans.AddRange(CanadianOutput.GetOutstandingForClearinghouse(clearinghouseClin,prov,"02",null,netTelusB,printForm,printCCD));
+					listEtrans.AddRange(GetOutstandingForClearinghouse(clearinghouseClin, prov, "02", null, netTelusA, printForm, printCCD));
+					listEtrans.AddRange(GetOutstandingForClearinghouse(clearinghouseClin, prov, "02", null, netTelusB, printForm, printCCD));
 				}
 			}
 			return listEtrans;

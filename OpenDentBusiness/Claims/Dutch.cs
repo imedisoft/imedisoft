@@ -1,14 +1,12 @@
-﻿using System;
+﻿using Imedisoft.Claims;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using OpenDentBusiness;
 using System.Windows.Forms;
-using CodeBase;
-using Imedisoft.Claims;
-using Imedisoft.Data;
-using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness.Eclaims
 {
@@ -39,7 +37,7 @@ namespace OpenDentBusiness.Eclaims
 		public static bool CreateClaim(Clearinghouse clearingHouse, ClaimSendQueueItem queueItem)
 		{
 			var stringBuilder = new StringBuilder();
-			
+
 
 			Claim claim = Claims.GetClaim(queueItem.ClaimNum);
 			Provider provBill = Providers.GetById(claim.ProvBill);
@@ -132,16 +130,16 @@ namespace OpenDentBusiness.Eclaims
 
 			if (!Directory.Exists(exportPath))
 			{
-                try
-                {
+				try
+				{
 					Directory.CreateDirectory(exportPath);
 				}
-                catch (Exception exception)
-                {
+				catch (Exception exception)
+				{
 					MessageBox.Show("Failed to create directory '" + exportPath + "'. " + exception.Message);
 
 					return false;
-                }
+				}
 			}
 
 			string saveFile = Path.Combine(exportPath, "claims" + claim.ClaimNum.ToString() + ".txt");
@@ -160,8 +158,8 @@ namespace OpenDentBusiness.Eclaims
 
 			var p = lastName.IndexOf(',');
 
-			return p == -1 ? 
-				lastName : 
+			return p == -1 ?
+				lastName :
 				lastName.Substring(0, p);
 		}
 
@@ -222,12 +220,12 @@ namespace OpenDentBusiness.Eclaims
 		{
 			if (procedureCode.TreatmentArea == ProcedureTreatmentArea.Arch)
 			{
-				if (procedure.Surf == "U") 
+				if (procedure.Surf == "U")
 					return "1";
 
-				if (procedure.Surf == "L") 
+				if (procedure.Surf == "L")
 					return "2";
-				
+
 
 				return "0"; // should never happen
 			}

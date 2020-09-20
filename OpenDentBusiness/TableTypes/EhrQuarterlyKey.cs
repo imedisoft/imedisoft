@@ -23,10 +23,6 @@ namespace OpenDentBusiness
 		/// </summary>
 		public string Key;
 
-
-
-
-
 		[Ignore, Obsolete]
 		public long PatNum;
 

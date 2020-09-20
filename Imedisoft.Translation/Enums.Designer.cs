@@ -61,6 +61,33 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Multi Response.
+        /// </summary>
+        public static string AutoNotePromptTypeMultiResponse {
+            get {
+                return ResourceManager.GetString("AutoNotePromptTypeMultiResponse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One Response.
+        /// </summary>
+        public static string AutoNotePromptTypeOneResponse {
+            get {
+                return ResourceManager.GetString("AutoNotePromptTypeOneResponse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text.
+        /// </summary>
+        public static string AutoNotePromptTypeText {
+            get {
+                return ResourceManager.GetString("AutoNotePromptTypeText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account Colors.
         /// </summary>
         public static string DefinitionCategoryAccountColors {

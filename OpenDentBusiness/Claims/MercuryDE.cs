@@ -1,44 +1,21 @@
+using CodeBase;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Net;
-using System.Net.Security;
-using System.Net.Sockets;
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Permissions;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Web;
-using System.Web.Services;
-using System.Web.Services.Protocols;
-using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Serialization;
-using System.Xml.XPath;
-using OpenDentBusiness;
 using Tamir.SharpSsh.jsch;
-using CodeBase;
 
 namespace OpenDentBusiness.Eclaims
 {
 	/// <summary>
 	/// aka Mercury Dental Exchange.
 	/// </summary>
-	public class MercuryDE
+	public static class MercuryDE
 	{
-
 		private static string remoteHost = "qaftp.mercurydataexchange.com";//Change to ftp.mercurydataexchange.com when released.
 		private static string rootFolderName = "Testing";//Change to "Production" when released.
 		private static Clearinghouse _clearinghouseClin = null;
 		public static string ErrorMessage = "";
-
-		///<summary></summary>
-		public MercuryDE()
-		{
-		}
 
 		///<summary>Returns true if the communications were successful, and false if they failed. Both sends and retrieves.</summary>
 		public static bool Launch(Clearinghouse clearinghouseClin, int batchNum, IODProgressExtended progress = null)
@@ -52,36 +29,36 @@ namespace OpenDentBusiness.Eclaims
 			//Step 1: Retrieve reports regarding the existing pending claim statuses.
 			//Step 2: Send new claims in a new batch.
 			bool success = true;
-			//Connect to the MDE SFTP server.
-			Session session = null;
-			Channel channel = null;
-			ChannelSftp ch = null;
-			JSch jsch = new JSch();
-			progress.UpdateProgress("Contacting web server", "reports", "17%", 17);
+            JSch jsch = new JSch();
+            progress.UpdateProgress("Contacting web server", "reports", "17%", 17);
 			if (progress.IsPauseOrCancel())
 			{
 				progress.UpdateProgress("Canceled by user.");
 				return false;
 			}
-			try
-			{
-				session = jsch.getSession(_clearinghouseClin.LoginID, remoteHost, 22);
-				session.setPassword(_clearinghouseClin.Password);
-				Hashtable config = new Hashtable();
-				config.Add("StrictHostKeyChecking", "no");
-				session.setConfig(config);
-				session.connect();
-				channel = session.openChannel("sftp");
-				channel.connect();
-				ch = (ChannelSftp)channel;
-			}
-			catch (Exception ex)
-			{
-				progress.UpdateProgress("Connection Failed");
-				ErrorMessage = "Connection Failed" + ": " + ex.Message;
-				return false;
-			}
-			progress.UpdateProgress("Web server contact successful.");
+            //Connect to the MDE SFTP server.
+            Session session;
+            ChannelSftp ch;
+            Channel channel;
+            try
+            {
+                session = jsch.getSession(_clearinghouseClin.LoginID, remoteHost, 22);
+                session.setPassword(_clearinghouseClin.Password);
+                Hashtable config = new Hashtable();
+                config.Add("StrictHostKeyChecking", "no");
+                session.setConfig(config);
+                session.connect();
+                channel = session.openChannel("sftp");
+                channel.connect();
+                ch = (ChannelSftp)channel;
+            }
+            catch (Exception ex)
+            {
+                progress.UpdateProgress("Connection Failed");
+                ErrorMessage = "Connection Failed" + ": " + ex.Message;
+                return false;
+            }
+            progress.UpdateProgress("Web server contact successful.");
 			try
 			{
 				//At this point we are connected to the MDE SFTP server.

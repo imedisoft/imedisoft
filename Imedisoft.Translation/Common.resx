@@ -120,6 +120,9 @@
   <data name="Abbr" xml:space="preserve">
     <value>Abbr</value>
   </data>
+  <data name="Accepted" xml:space="preserve">
+    <value>Accepted</value>
+  </data>
   <data name="AdjustmentType" xml:space="preserve">
     <value>Adjustment Type</value>
   </data>
@@ -140,6 +143,20 @@
   </data>
   <data name="Appointment" xml:space="preserve">
     <value>Appointment</value>
+  </data>
+  <data name="AutoNoteExportFailed" xml:space="preserve">
+    <value>Auto Note(s) failed to export.</value>
+  </data>
+  <data name="AutoNoteExportSuccess" xml:space="preserve">
+    <value>Auto Note(s) successfully exported.</value>
+  </data>
+  <data name="AutoNoteImportFailed" xml:space="preserve">
+    <value>Auto Note(s) failed to import.</value>
+  </data>
+  <data name="AutoNoteImportSuccess" xml:space="preserve">
+    <value>Auto Notes successfully imported!
+
+Imported {0} new note(s) and {1} new prompt(s).</value>
   </data>
   <data name="Balance" xml:space="preserve">
     <value>Balance</value>
@@ -207,6 +224,18 @@
   <data name="ConfirmInstallUpdate" xml:space="preserve">
     <value>There is a update available. Would you like to update now?</value>
   </data>
+  <data name="ConfirmMoveSelectedCategory" xml:space="preserve">
+    <value>Move the selected category?</value>
+  </data>
+  <data name="ConfirmMoveSelectedCategoryToRootLevel" xml:space="preserve">
+    <value>Move the selected category to the root level?</value>
+  </data>
+  <data name="ConfirmMoveSelectedNote" xml:space="preserve">
+    <value>Move the selected note?</value>
+  </data>
+  <data name="ConfirmMoveSelectedNoteToRootLevel" xml:space="preserve">
+    <value>Move the selected note to the root level?</value>
+  </data>
   <data name="Controlled" xml:space="preserve">
     <value>Controlled</value>
   </data>
@@ -228,11 +257,20 @@
   <data name="DateLimitation" xml:space="preserve">
     <value>Date limitation</value>
   </data>
+  <data name="DefaultText" xml:space="preserve">
+    <value>Default text</value>
+  </data>
   <data name="Definition" xml:space="preserve">
     <value>Definition</value>
   </data>
+  <data name="Denied" xml:space="preserve">
+    <value>Denied</value>
+  </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
+  </data>
+  <data name="DescriptionCannotContainSpecialCharacters" xml:space="preserve">
+    <value>The description can only contain letters, numbers, underscore, and space.</value>
   </data>
   <data name="Developer" xml:space="preserve">
     <value>Developer</value>
@@ -260,6 +298,9 @@
   </data>
   <data name="End" xml:space="preserve">
     <value>End</value>
+  </data>
+  <data name="EntryDate" xml:space="preserve">
+    <value>Entry Date</value>
   </data>
   <data name="ErrorCheckingForUpdates" xml:space="preserve">
     <value>Error checking for updates.</value>
@@ -303,6 +344,9 @@
   </data>
   <data name="InvalidUserNameOrPassword" xml:space="preserve">
     <value>Invalid username or password.</value>
+  </data>
+  <data name="JsonFiles" xml:space="preserve">
+    <value>JSON Files</value>
   </data>
   <data name="Key" xml:space="preserve">
     <value>Key</value>
@@ -372,6 +416,15 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="OperationNowAllowedForReason" xml:space="preserve">
     <value>You are not allowed to perform the requested operation. Reason: {0}.</value>
   </data>
+  <data name="Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="Organization" xml:space="preserve">
+    <value>Organization</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
   <data name="PasswordCannotBeEmpty" xml:space="preserve">
     <value>The password cannot be empty.</value>
   </data>
@@ -417,6 +470,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="PleaseEnterApiKey" xml:space="preserve">
     <value>Please enter an API key.</value>
   </data>
+  <data name="PleaseEnterAutograph" xml:space="preserve">
+    <value>Please enter a autograph.</value>
+  </data>
   <data name="PleaseEnterDate" xml:space="preserve">
     <value>Please enter a date.</value>
   </data>
@@ -426,8 +482,14 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="PleaseEnterName" xml:space="preserve">
     <value>Please enter a name.</value>
   </data>
+  <data name="PleaseEnterNote" xml:space="preserve">
+    <value>Please enter a note.</value>
+  </data>
   <data name="PleaseEnterPassword" xml:space="preserve">
     <value>Please enter password</value>
+  </data>
+  <data name="PleaseEnterResponseText" xml:space="preserve">
+    <value>Please enter a response text.</value>
   </data>
   <data name="PleaseEnterTitle" xml:space="preserve">
     <value>Please enter a title.</value>
@@ -456,6 +518,12 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="PleaseSelectAtLeastOneCondition" xml:space="preserve">
     <value>Please select at least one condition.</value>
   </data>
+  <data name="PleaseSelectAtLeastOneNote" xml:space="preserve">
+    <value>Please select at least one note.</value>
+  </data>
+  <data name="PleaseSelectAtLeastOneResponse" xml:space="preserve">
+    <value>Please select at least one response.</value>
+  </data>
   <data name="PleaseSelectCode" xml:space="preserve">
     <value>Please select a code.</value>
   </data>
@@ -474,6 +542,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="PleaseSelectProviderForInsuranceBilling" xml:space="preserve">
     <value>Please select a provider for insurance billing.</value>
   </data>
+  <data name="PleaseSelectResponse" xml:space="preserve">
+    <value>Please select a response.</value>
+  </data>
   <data name="PleaseSelectType" xml:space="preserve">
     <value>Please select a type.</value>
   </data>
@@ -483,8 +554,15 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="PleaseSelectUserGroup" xml:space="preserve">
     <value>Please select a group.</value>
   </data>
+  <data name="PossibleResponsesOneLinePerItem" xml:space="preserve">
+    <value>Possible responses
+(one line per item)</value>
+  </data>
   <data name="Problem" xml:space="preserve">
     <value>Problem</value>
+  </data>
+  <data name="PromptText" xml:space="preserve">
+    <value>Prompt Text</value>
   </data>
   <data name="Provider" xml:space="preserve">
     <value>Provider</value>
@@ -499,8 +577,17 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="ReEnterPassword" xml:space="preserve">
     <value>Re-Enter Password</value>
   </data>
+  <data name="Requested" xml:space="preserve">
+    <value>Requested</value>
+  </data>
   <data name="Response" xml:space="preserve">
     <value>Response</value>
+  </data>
+  <data name="Scan" xml:space="preserve">
+    <value>Scan</value>
+  </data>
+  <data name="Scanned" xml:space="preserve">
+    <value>Scanned</value>
   </data>
   <data name="SelectRowFromQueryFeed" xml:space="preserve">
     <value>Select a row from the Query Feed.</value>
@@ -522,6 +609,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="Start" xml:space="preserve">
     <value>Start</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
   </data>
   <data name="Stop" xml:space="preserve">
     <value>Stop</value>
@@ -586,6 +676,9 @@ Call your security admin to unlock your account or wait at least 5 minutes.</val
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>View</value>
   </data>
   <data name="Weighted" xml:space="preserve">
     <value>Weighted</value>

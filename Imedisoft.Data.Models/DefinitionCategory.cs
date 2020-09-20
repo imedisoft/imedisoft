@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -95,6 +96,7 @@ namespace Imedisoft.Data.Models
 		public const string ClaimPaymentGroups = "40";
 
 		///<summary>41 - Auto Note Categories.  Used to categorize autonotes into custom categories.</summary>
+		[Obsolete("This has been moved to a dedicated table...")]
 		public const string AutoNoteCats = "41";
 
 		///<summary>42 - Web Sched New Patient Appointment Types.  Displays in Web Sched.  Selected type shows in appointment note.</summary>

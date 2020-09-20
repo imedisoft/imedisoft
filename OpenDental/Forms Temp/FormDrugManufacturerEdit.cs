@@ -7,61 +7,76 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 
-namespace OpenDental {
-	public partial class FormDrugManufacturerEdit:ODForm {
+namespace OpenDental
+{
+	public partial class FormDrugManufacturerEdit : ODForm
+	{
 		public DrugManufacturer DrugManufacturerCur;
 		public bool IsNew;
 
-		public FormDrugManufacturerEdit() {
+		public FormDrugManufacturerEdit()
+		{
 			InitializeComponent();
-			
+
 		}
 
-		private void FormDrugManufacturerEdit_Load(object sender,EventArgs e) {
-			textManufacturerName.Text=DrugManufacturerCur.ManufacturerName;
-			textManufacturerCode.Text=DrugManufacturerCur.ManufacturerCode;
+		private void FormDrugManufacturerEdit_Load(object sender, EventArgs e)
+		{
+			textManufacturerName.Text = DrugManufacturerCur.ManufacturerName;
+			textManufacturerCode.Text = DrugManufacturerCur.ManufacturerCode;
 		}
 
-		private void butDelete_Click(object sender,EventArgs e) {
-			if(IsNew) {
-				DialogResult=DialogResult.Cancel;
+		private void butDelete_Click(object sender, EventArgs e)
+		{
+			if (IsNew)
+			{
+				DialogResult = DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
+			if (!MsgBox.Show(MsgBoxButtons.OKCancel, "Delete?"))
+			{
 				return;
 			}
-			try {
-					DrugManufacturers.Delete(DrugManufacturerCur.DrugManufacturerNum);
+			try
+			{
+				DrugManufacturers.Delete(DrugManufacturerCur.DrugManufacturerNum);
 			}
-			catch(ApplicationException ex) {
+			catch (ApplicationException ex)
+			{
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			DialogResult=DialogResult.OK;
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butOK_Click(object sender,EventArgs e) {
-			if(textManufacturerName.Text=="" || textManufacturerCode.Text=="") {
+		private void butOK_Click(object sender, EventArgs e)
+		{
+			if (textManufacturerName.Text == "" || textManufacturerCode.Text == "")
+			{
 				MessageBox.Show("Bank fields are not allowed.");
 				return;
 			}
-			DrugManufacturerCur.ManufacturerName=textManufacturerName.Text;
-			DrugManufacturerCur.ManufacturerCode=textManufacturerCode.Text;
-			if(IsNew) {
-				if(DrugManufacturers.GetExists(x => x.ManufacturerCode==textManufacturerCode.Text)) {
+			DrugManufacturerCur.ManufacturerName = textManufacturerName.Text;
+			DrugManufacturerCur.ManufacturerCode = textManufacturerCode.Text;
+			if (IsNew)
+			{
+				if (DrugManufacturers.GetExists(x => x.ManufacturerCode == textManufacturerCode.Text))
+				{
 					MessageBox.Show("Manufacturer with this code already exists.");
 					return;
 				}
 				DrugManufacturers.Insert(DrugManufacturerCur);
 			}
-			else {
+			else
+			{
 				DrugManufacturers.Update(DrugManufacturerCur);
 			}
-			DialogResult=DialogResult.OK;
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butCancel_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butCancel_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
 	}
 }
