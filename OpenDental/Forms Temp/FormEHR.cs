@@ -255,8 +255,7 @@ namespace OpenDental {
 						break;
 					case EhrMeasureType.ElectronicCopy:
 						if(listMu[e.Row].Action=="Provide elect copy to Pt") {
-							FormEhrElectronicCopy FormE=new FormEhrElectronicCopy();
-							FormE.PatCur=PatCur;
+							FormEhrElectronicCopy FormE=new FormEhrElectronicCopy(PatCur);
 							FormE.ShowDialog();
 							FillGridMu();
 						}
@@ -305,20 +304,17 @@ namespace OpenDental {
 						else if(compare==-1) {//The referral count is greater than the reconcile count.
 							//So we do not need to show the referral window, we just need to reconcile below.
 						}
-						FormEhrSummaryOfCare FormMedRec=new FormEhrSummaryOfCare();
-						FormMedRec.PatCur=PatCur;
+						FormEhrSummaryOfCare FormMedRec=new FormEhrSummaryOfCare(PatCur);
 						FormMedRec.ShowDialog();
 						FillGridMu();
 						break;
 					case EhrMeasureType.SummaryOfCare:
-						FormEhrSummaryOfCare FormSoC=new FormEhrSummaryOfCare();
-						FormSoC.PatCur=PatCur;
+						FormEhrSummaryOfCare FormSoC=new FormEhrSummaryOfCare(PatCur);
 						FormSoC.ShowDialog();
 						FillGridMu();
 						break;
 					case EhrMeasureType.SummaryOfCareElectronic:
-						FormEhrSummaryOfCare FormSoCE=new FormEhrSummaryOfCare();
-						FormSoCE.PatCur=PatCur;
+						FormEhrSummaryOfCare FormSoCE=new FormEhrSummaryOfCare(PatCur);
 						FormSoCE.ShowDialog();
 						FillGridMu();
 						break;
@@ -590,10 +586,11 @@ namespace OpenDental {
 			FillGridMu();
 		}
 
-		private void butVaccines_Click(object sender,EventArgs e) {
-			FormEhrVaccines FormVac = new FormEhrVaccines();
-			FormVac.PatCur=PatCur;
-			FormVac.ShowDialog();
+		private void VaccinesButton_Click(object sender, EventArgs e)
+		{
+			using var formEhrVaccines = new FormEhrVaccines(PatCur);
+
+			formEhrVaccines.ShowDialog(this);
 		}
 
 		private void butPatList_Click(object sender,EventArgs e) {

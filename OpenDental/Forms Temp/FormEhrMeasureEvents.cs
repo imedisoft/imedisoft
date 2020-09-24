@@ -7,6 +7,9 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
+using System.Linq;
 
 namespace OpenDental {
 	public partial class FormEhrMeasureEvents:ODForm {
@@ -32,10 +35,10 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			if(comboType.SelectedIndex==0) {
-				_listEhrMeasureEvents=EhrMeasureEvents.GetAllByTypeFromDB(PIn.Date(textDateStart.Text),PIn.Date(textDateEnd.Text),(EhrMeasureEventType)comboType.SelectedIndex,true);
+				_listEhrMeasureEvents=EhrMeasureEvents.GetByDateRange(PIn.Date(textDateStart.Text),PIn.Date(textDateEnd.Text)).ToList();
 			}
 			else {
-				_listEhrMeasureEvents=EhrMeasureEvents.GetAllByTypeFromDB(PIn.Date(textDateStart.Text),PIn.Date(textDateEnd.Text),(EhrMeasureEventType)comboType.SelectedIndex-1,false);
+				_listEhrMeasureEvents=EhrMeasureEvents.GetByDateRange(PIn.Date(textDateStart.Text),PIn.Date(textDateEnd.Text),(EhrMeasureEventType)comboType.SelectedIndex-1).ToList();
 			}
 			gridMain.BeginUpdate();
 			gridMain.Columns.Clear();

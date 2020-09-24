@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Imedisoft.Data;
 using Imedisoft.Data.Models;
+using Imedisoft.Data.Models.CodeLists.HL7;
 using OpenDentBusiness;
 
 namespace OpenDentBusiness.HL7 {
@@ -14,7 +16,7 @@ namespace OpenDentBusiness.HL7 {
 		///<summary>Set in constructor and must not be modified.</summary>
 		private Patient _pat;
 		///<summary>Set in constructor and must not be modified.</summary>
-		private List<VaccinePat> _vaccines;
+		private List<EhrPatientVaccine> _vaccines;
 		///<summary>The entire message object after it is successfully built.</summary>
 		private MessageHL7 _msg;
 		///<summary>Helper variable.</summary>
@@ -28,7 +30,7 @@ namespace OpenDentBusiness.HL7 {
 		///<summary>Creates the Message object and fills it with data.  Vaccines must all be for the same patient.
 		///A list of vaccines is passed in so the user can select a subset of vaccines to send for the patient.
 		///Throws an exception if validation fails.</summary>
-		public EhrVXU(Patient pat,List<VaccinePat> vaccines) {
+		public EhrVXU(Patient pat,List<EhrPatientVaccine> vaccines) {
 			string errors=Validate(pat,vaccines);
 			if(errors!="") {
 				throw new Exception(errors);
@@ -241,156 +243,156 @@ namespace OpenDentBusiness.HL7 {
 		}
 
 		///<summary>Observation Result segment.  Required if known.  The basic format is question and answer.  Guide page 116.</summary>
-		private void OBX(VaccinePat vaccine) {
-			List<VaccineObs> listVaccineObservations=VaccineObses.GetForVaccine(vaccine.VaccinePatNum);
+		private void OBX(EhrPatientVaccine vaccine) {
+			List<EhrPatientVaccineObservation> listVaccineObservations=EhrPatientVaccineObservations.GetByPatientVaccine(vaccine.Id).ToList();
 			for(int i=0;i<listVaccineObservations.Count;i++) {
-				VaccineObs vaccineObs=listVaccineObservations[i];
+				EhrPatientVaccineObservation vaccineObs=listVaccineObservations[i];
 				_seg=new SegmentHL7(SegmentNameHL7.OBX);
 				_seg.SetField(0,"OBX");
 				_seg.SetField(1,(i+1).ToString());//OBX-1 Set ID - OBX.  Required (length 1..4).  Cardinality [1..1].
 				//OBX-2 Value Type.  Required (length 2..3).  Cardinality [1..1].  Value Set HL70125 (constrained, not in guide).  CE=Coded Entry,DT=Date,NM=Numeric,ST=String,TS=Time Stamp (Date & Time).
-				if(vaccineObs.ValType==VaccineObsType.Dated) {
+				if(vaccineObs.ValueType==HL70125.Dated) {
 					_seg.SetField(2,"DT");
 				}
-				else if(vaccineObs.ValType==VaccineObsType.Numeric) {
+				else if(vaccineObs.ValueType==HL70125.Numeric) {
 					_seg.SetField(2,"NM");
 				}
-				else if(vaccineObs.ValType==VaccineObsType.Text) {
+				else if(vaccineObs.ValueType==HL70125.Text) {
 					_seg.SetField(2,"ST");
 				}
-				else if(vaccineObs.ValType==VaccineObsType.DateAndTime) {
+				else if(vaccineObs.ValueType==HL70125.DateAndTime) {
 					_seg.SetField(2,"TS");
 				}
 				else { //vaccineObs.ValType==VaccineObsType.Coded
 					_seg.SetField(2,"CE");
 				}
 				//OBX-3 Observation Identifier.  Required.  Cardinality [1..1].  Value set NIP003 (25 items).  Type CE.  Purpose is to pose the question that is answered by OBX-5.
-				if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.DatePublished) {
+				if(vaccineObs.IdentifyingCode==NIP003.DatePublished) {
 					WriteCE(3,"29768-9","Date vaccine information statement published","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.DatePresented) {
+				else if(vaccineObs.IdentifyingCode==NIP003.DatePresented) {
 					WriteCE(3,"29769-7","Date vaccine information statement presented","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.DatePrecautionExpiration) {
+				else if(vaccineObs.IdentifyingCode==NIP003.DatePrecautionExpiration) {
 					WriteCE(3,"30944-3","Date of vaccination temporary contraindication and or precaution expiration","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.Precaution) {
+				else if(vaccineObs.IdentifyingCode==NIP003.Precaution) {
 					WriteCE(3,"30945-0","Vaccination contraindication and or precaution","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.DatePrecautionEffective) {
+				else if(vaccineObs.IdentifyingCode==NIP003.DatePrecautionEffective) {
 					WriteCE(3,"30946-8","Date vaccination contraindication and or precaution effective","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.TypeOf) {
+				else if(vaccineObs.IdentifyingCode==NIP003.TypeOf) {
 					WriteCE(3,"30956-7","Vaccine Type","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.FundsPurchasedWith) {
+				else if(vaccineObs.IdentifyingCode==NIP003.FundsPurchasedWith) {
 					WriteCE(3,"30963-3","Funds vaccine purchased with","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.DoseNumber) {
+				else if(vaccineObs.IdentifyingCode==NIP003.DoseNumber) {
 					WriteCE(3,"30973-2","Dose number","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.NextDue) {
+				else if(vaccineObs.IdentifyingCode==NIP003.NextDue) {
 					WriteCE(3,"30979-9","Vaccines due next","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.DateDue) {
+				else if(vaccineObs.IdentifyingCode==NIP003.DateDue) {
 					WriteCE(3,"30980-7","Date vaccine due","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.DateEarliestAdminister) {
+				else if(vaccineObs.IdentifyingCode==NIP003.DateEarliestAdminister) {
 					WriteCE(3,"30981-5","Earliest date to give","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.ReasonForcast) {
+				else if(vaccineObs.IdentifyingCode==NIP003.ReasonForcast) {
 					WriteCE(3,"30982-3","Reason applied by forcast logic to project this vaccine","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.Reaction) {
+				else if(vaccineObs.IdentifyingCode==NIP003.Reaction) {
 					WriteCE(3,"31044-1","Reaction","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.ComponentType) {
+				else if(vaccineObs.IdentifyingCode==NIP003.ComponentType) {
 					WriteCE(3,"38890-0","Vaccine component type","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.TakeResponseType) {
+				else if(vaccineObs.IdentifyingCode==NIP003.TakeResponseType) {
 					WriteCE(3,"46249-9","Vaccination take-response type","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.DateTakeResponse) {
+				else if(vaccineObs.IdentifyingCode==NIP003.DateTakeResponse) {
 					WriteCE(3,"46250-7","Vaccination take-response date","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.ScheduleUsed) {
+				else if(vaccineObs.IdentifyingCode==NIP003.ScheduleUsed) {
 					WriteCE(3,"59779-9","Immunization schedule used","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.Series) {
+				else if(vaccineObs.IdentifyingCode==NIP003.Series) {
 					WriteCE(3,"59780-7","Immunization series","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.DoseValidity) {
+				else if(vaccineObs.IdentifyingCode==NIP003.DoseValidity) {
 					WriteCE(3,"59781-5","Dose validity","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.NumDosesPrimary) {
+				else if(vaccineObs.IdentifyingCode==NIP003.NumDosesPrimary) {
 					WriteCE(3,"59782-3","Number of doses in primary immunization series","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.StatusInSeries) {
+				else if(vaccineObs.IdentifyingCode==NIP003.StatusInSeries) {
 					WriteCE(3,"59783-1","Status in immunization series","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.DiseaseWithImmunity) {
+				else if(vaccineObs.IdentifyingCode==NIP003.DiseaseWithImmunity) {
 					WriteCE(3,"59784-9","Disease with presumed immunity","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.Indication) {
+				else if(vaccineObs.IdentifyingCode==NIP003.Indication) {
 					WriteCE(3,"59785-6","Indication for Immunization","LN");
 				}
-				else if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.FundPgmEligCat) {
+				else if(vaccineObs.IdentifyingCode==NIP003.FundPgmEligCat) {
 					WriteCE(3,"64994-7","Vaccine funding program eligibility category","LN");
 				}
 				else { //vaccineObs.IdentifyingCode==VaccineObsIdentifier.DocumentType
 					WriteCE(3,"69764-9","Document type","LN");
 				}
 				//OBX-4 Observation Sub-ID.  Required (length 1..20).  Cardinality [1..1].  Type ST.
-				if(vaccineObs.VaccineObsNumGroup==0) {
-					_seg.SetField(4,vaccineObs.VaccineObsNum.ToString());
+				if(vaccineObs.Group==0) {
+					_seg.SetField(4,vaccineObs.Id.ToString());
 				}
 				else {//vaccineObs.VaccineObsNumGroup!=0
-					_seg.SetField(4,vaccineObs.VaccineObsNumGroup.ToString());
+					_seg.SetField(4,vaccineObs.Group.ToString());
 				}
 				//OBX-5 Observation Value.  Required. Cardinality [1..1].  Value set varies, depending on the value of OBX-2 (Use type CE if OBX-2 is "CE", otherwise treat as a string).  Purpose is to answer the quesiton posed by OBX-3.
-				if(vaccineObs.ValType==VaccineObsType.Coded) {
-					string codeDescript=vaccineObs.ValReported.Trim();//If we do not know the description, then the code will also be placed into the description. The testing tool required non-empty entries.
-					if(vaccineObs.ValCodeSystem==VaccineObsValCodeSystem.CVX) {
-						Cvx cvx=Cvxs.GetByCode(vaccineObs.ValReported);
+				if(vaccineObs.ValueType==HL70125.Coded) {
+					string codeDescript=vaccineObs.Value.Trim();//If we do not know the description, then the code will also be placed into the description. The testing tool required non-empty entries.
+					if(vaccineObs.CodeSystem=="CVX") {
+						Cvx cvx=Cvxs.GetByCode(vaccineObs.Value);
 						codeDescript=cvx.Description;
 					}
-					else if(vaccineObs.ValCodeSystem==VaccineObsValCodeSystem.HL70064) {
-						if(vaccineObs.ValReported.ToUpper()=="V01") {
+					else if(vaccineObs.CodeSystem== "HL70064") {
+						if (vaccineObs.Value.ToUpper()=="V01") {
 							codeDescript="Not VFC eligible";
 						}
-						else if(vaccineObs.ValReported.ToUpper()=="V02") {
+						else if(vaccineObs.Value.ToUpper()=="V02") {
 							codeDescript="VFC eligible-Medicaid/Medicaid Managed Care";
 						}
-						else if(vaccineObs.ValReported.ToUpper()=="V03") {
+						else if(vaccineObs.Value.ToUpper()=="V03") {
 							codeDescript="VFC eligible- Uninsured";
 						}
-						else if(vaccineObs.ValReported.ToUpper()=="V04") {
+						else if(vaccineObs.Value.ToUpper()=="V04") {
 							codeDescript="VFC eligible- American Indian/Alaskan Native";
 						}
-						else if(vaccineObs.ValReported.ToUpper()=="V05") {
+						else if(vaccineObs.Value.ToUpper()=="V05") {
 							codeDescript="VFC eligible-Federally Qualified Health Center Patient (under-insured)";
 						}
-						else if(vaccineObs.ValReported.ToUpper()=="V06") {
+						else if(vaccineObs.Value.ToUpper()=="V06") {
 							codeDescript="Deprecated [VFC eligible- State specific eligibility (e.g. S-CHIP plan)]";
 						}
-						else if(vaccineObs.ValReported.ToUpper()=="V07") {
+						else if(vaccineObs.Value.ToUpper()=="V07") {
 							codeDescript="Local-specific eligibility";
 						}
-						else if(vaccineObs.ValReported.ToUpper()=="V08") {
+						else if(vaccineObs.Value.ToUpper()=="V08") {
 							codeDescript="Deprecated [Not VFC eligible-underinsured]";
 						}
 					}
-					WriteCE(5,vaccineObs.ValReported.Trim(),codeDescript,vaccineObs.ValCodeSystem.ToString());
+					WriteCE(5,vaccineObs.Value.Trim(),codeDescript,vaccineObs.CodeSystem.ToString());
 				}
-				else if(vaccineObs.ValType==VaccineObsType.Dated) {
-					DateTime dateVal=DateTime.Parse(vaccineObs.ValReported.Trim());
+				else if(vaccineObs.ValueType==HL70125.Dated) {
+					DateTime dateVal=DateTime.Parse(vaccineObs.Value.Trim());
 					_seg.SetField(5,dateVal.ToString("yyyyMMdd"));
 				}
-				else if(vaccineObs.ValType==VaccineObsType.Numeric) {
-					_seg.SetField(5,vaccineObs.ValReported.Trim());
+				else if(vaccineObs.ValueType==HL70125.Numeric) {
+					_seg.SetField(5,vaccineObs.Value.Trim());
 				}
-				else if(vaccineObs.ValType==VaccineObsType.DateAndTime) {
-					DateTime dateVal=DateTime.Parse(vaccineObs.ValReported.Trim());
+				else if(vaccineObs.ValueType==HL70125.DateAndTime) {
+					DateTime dateVal=DateTime.Parse(vaccineObs.Value.Trim());
 					string strDateOut=dateVal.ToString("yyyyMMdd");
 					//The testing tool threw errors when there were trailing zeros, even though technically valid.
 					if(dateVal.Second>0) {
@@ -405,10 +407,10 @@ namespace OpenDentBusiness.HL7 {
 					_seg.SetField(5,strDateOut);
 				}
 				else { //vaccineObs.ValType==VaccineObsType.Text
-					_seg.SetField(5,vaccineObs.ValReported);
+					_seg.SetField(5,vaccineObs.Value);
 				}
 				//OBX-6 Units.  Required if OBX-2 is "NM" or "SN" (SN appears to be missing from definition).
-				if(vaccineObs.ValType==VaccineObsType.Numeric) {
+				if(vaccineObs.ValueType==HL70125.Numeric) {
 					Ucum ucum=Ucums.GetByCode(vaccineObs.UcumCode);
 					WriteCE(6,ucum.Code,ucum.Description,"UCUM");
 				}
@@ -420,13 +422,13 @@ namespace OpenDentBusiness.HL7 {
 				//OBX-12 Effective Date of Reference Range Values.  Optional.
 				//OBX-13 User Defined Access Checks.  Optional.
 				//OBX-14 Date/Time of the Observation.  Required if known.  Cardinality [0..1].
-				if(vaccineObs.DateObs.Year>1880) {
-					_seg.SetField(14,vaccineObs.DateObs.ToString("yyyyMMdd"));
+				if(vaccineObs.Date.HasValue) {
+					_seg.SetField(14,vaccineObs.Date.Value.ToString("yyyyMMdd"));
 				}
 				//OBX-15 Producer's Reference.  Optional.
 				//OBX-16 Responsible Observer.  Optional.
 				//OBX-17 Observation Method.  Required if OBX-3.1 is “64994-7”.  Value set CDCPHINVS. Type CE.
-				if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.FundPgmEligCat) {
+				if(vaccineObs.IdentifyingCode==NIP003.FundPgmEligCat) {
 					_seg.SetField(17,vaccineObs.MethodCode.Trim(),"","CDCPHINVS");
 				}
 				//OBX-18 Equipment Instance Identifier.  Optional.
@@ -442,13 +444,13 @@ namespace OpenDentBusiness.HL7 {
 		}
 		
 		///<summary>Order Request segment.  Required.  Guide page 126.</summary>
-		private void ORC(VaccinePat vaccine) {
+		private void ORC(EhrPatientVaccine vaccine) {
 			_seg=new SegmentHL7(SegmentNameHL7.ORC);
 			_seg.SetField(0,"ORC");
 			_seg.SetField(1,"RE");//ORC-1 Order Control.  Required (length 2).  Cardinality [1..1].  Value set HL70119.  The only allowed value is "RE".
 			//ORC-2 Placer Order Number.  Required if known.  Cardinality [0..1].  Type EI (guid page 62).
 			//ORC-3 Filler Order Number.  Required.  Cardinality [0..1].  Type EI (guid page 62).  "Shall be the unique ID of the sending system."  The city and state are used to record the region where the vaccine record was filled.
-			WriteEI(3,vaccine.VaccinePatNum.ToString(),vaccine.FilledCity.Trim(),vaccine.FilledST.Trim());
+			WriteEI(3,vaccine.Id.ToString(),vaccine.FilledCity.Trim(),vaccine.FilledState.Trim());
 			//ORC-4 Placer Group Number.  Optional.
 			//ORC-5 Order Status.  Optional.
 			//ORD-6 Response Flag.  Optional.
@@ -456,20 +458,20 @@ namespace OpenDentBusiness.HL7 {
 			//ORD-8 Parent.  Optional.
 			//ORD-9 Date/Time of Transaction.  Optional.
 			//ORD-10 Entered By.  Required if known.  Cardinality [0..1].  Type XCN.  This is the person that entered the immunization record into the system.
-			User userod=Users.GetById(vaccine.UserNum);//Can be null if vaccine.UserNum=0 for older records before the vaccine.UserNum column existed.
+			User userod=Users.GetById(vaccine.UserId);//Can be null if vaccine.UserNum=0 for older records before the vaccine.UserNum column existed.
 			if(userod!=null) {
 				if(userod.ProviderId.HasValue) {
 					Provider provEnteredBy=Providers.GetById(userod.ProviderId.Value);
-					WriteXCN(10,provEnteredBy.FirstName,provEnteredBy.LastName,provEnteredBy.Initials,vaccine.UserNum.ToString(),cityWhereEntered,stateWhereEntered,"D");
+					WriteXCN(10,provEnteredBy.FirstName,provEnteredBy.LastName,provEnteredBy.Initials,vaccine.UserId.ToString(),cityWhereEntered,stateWhereEntered,"D");
 				}
 				else if(userod.EmployeeId.HasValue) {
 					Employee employee=Employees.GetEmp(userod.EmployeeId.Value);
-					WriteXCN(10,employee.FirstName,employee.LastName,employee.Initials,vaccine.UserNum.ToString(),cityWhereEntered,stateWhereEntered,"D");
+					WriteXCN(10,employee.FirstName,employee.LastName,employee.Initials,vaccine.UserId.ToString(),cityWhereEntered,stateWhereEntered,"D");
 				}
 			}
 			//ORD-11 Verified By.  Optional.
 			//ORD-12 Ordering Provider.  Required if known. Cardinality [0..1].  Type XCN.  This shall be the provider ordering the immunization.  It is expected to be empty if the immunization record is transcribed from a historical record.
-			Provider provOrdering=Providers.GetById(vaccine.ProvNumOrdering);//Can be null if vaccine.ProvNumOrdering is zero.
+			Provider provOrdering=Providers.GetById(vaccine.OrderedBy);//Can be null if vaccine.ProvNumOrdering is zero.
 			if(provOrdering!=null) {
 				WriteXCN(12,provOrdering.FirstName,provOrdering.LastName,provOrdering.Initials,provOrdering.Id.ToString(),cityWhereEntered,stateWhereEntered,"L");
 			}
@@ -519,18 +521,20 @@ namespace OpenDentBusiness.HL7 {
 			else {
 				WriteCE(11,"02","Reminder/Recall - any method","HL70215");
 			}
+
 			//PD1-12 Protection Indicator.  Required if known (length 1..1).  Cardinality [0..1].  Value set HL70136 (guide page 199).  Allowed values are "Y" for yes, "N" for no, or blank for unknown.
-			EhrPatient ehrPatient=EhrPatients.Refresh(_pat.PatNum);
-			if(ehrPatient.VacShareOk==YN.Yes) {
+			EhrPatient ehrPatient=EhrPatients.GetById(_pat.PatNum);
+			if(ehrPatient.AllowShareVaccines==true) {
 				_seg.SetField(12,"N");//Do not protect.
 			}
-			else if(ehrPatient.VacShareOk==YN.No) {
+			else if(ehrPatient.AllowShareVaccines==false) {
 				_seg.SetField(12,"Y");//Protect
 			}
 			//PD1-13 Protection Indicator Date Effective.  Required if PD1-12 is not blank (length unspecified).  Cardinality [0..1].
-			if(ehrPatient.VacShareOk!=YN.Unknown) {
+			if(ehrPatient.AllowShareVaccines!=null) {
 				_seg.SetField(13,_pat.DateTStamp.ToString("yyyyMMdd"));
 			}
+
 			//PD1-14 Place of Worship.  Optional (length unspecified).  Cardinality [0..1].
 			//PD1-15 Advance Directive Code.  Optional (length unspecified).  Cardinality [0..1].
 			//PD1-16 Immunization Registry Status.  Required if known (length unspecified).  Cardinality [0..1].  Value set HL70441 (guide page 232).  The word "registry" refers to the EHR.
@@ -585,8 +589,8 @@ namespace OpenDentBusiness.HL7 {
 			}
 			//PID-4 Alternate Patient ID - 00106.  No longer used.
 			WriteXPN(5,_pat.FName,_pat.LName,_pat.MiddleI,"L");//PID-5 Patient Name.  Required (length unspecified).  Cardinality [1..*].  Type XPN.  The first repetition must contain the legal name.
-			EhrPatient ehrPatient=EhrPatients.Refresh(_pat.PatNum);
-			WriteXPN(6,ehrPatient.MotherMaidenFname,ehrPatient.MotherMaidenLname,"","M");//PID-6 Mother's Maiden Name.  Required if known (length unspecified).  Cardinality [0..1].  Type XPN.
+			EhrPatient ehrPatient=EhrPatients.GetById(_pat.PatNum);
+			WriteXPN(6,ehrPatient.MotherMaidenFirstName,ehrPatient.MotherMaidenLastName,"","M");//PID-6 Mother's Maiden Name.  Required if known (length unspecified).  Cardinality [0..1].  Type XPN.
 			//PID-7 Date/Time of Birth.  Required.  Cardinality [1..1].  We must specify "UNK" if unknown.
 			if(_pat.Birthdate.Year<1880) {
 				_seg.SetField(7,"UNK");
@@ -672,71 +676,92 @@ namespace OpenDentBusiness.HL7 {
 		}
 
 		///<summary>Pharmacy/Treatment Administration segment.  Required.  Guide page 149.</summary>
-		private void RXA(VaccinePat vaccine) {
+		private void RXA(EhrPatientVaccine vaccine) {
 			_seg=new SegmentHL7(SegmentNameHL7.RXA);
 			_seg.SetField(0,"RXA");
 			_seg.SetField(1,"0");//RXA-1 Give Sub-ID Counter.  Required.  Must be "0".
 			_seg.SetField(2,"1");//RXA-2 Administration Sub-ID Counter.  Required.  Must be "1".
-			_seg.SetField(3,vaccine.DateTimeStart.ToString("yyyyMMddHHmm"));//RXA-3 Date/Time Start of Administration.  Required.  This segment can also be used to planned vaccinations.
-			if(vaccine.DateTimeEnd.Year>1880) {
-				_seg.SetField(4,vaccine.DateTimeEnd.ToString("yyyyMMddHHmm"));//RXA-4 Date/Time End of Administration.  Required if known.  Must be same as RXA-3 or blank.  UI forces RXA-4 and RXA-3 to be equal.  This would be blank if for a planned vaccine.
+			_seg.SetField(3,(vaccine.DateStart ?? DateTime.MinValue).ToString("yyyyMMddHHmm"));//RXA-3 Date/Time Start of Administration.  Required.  This segment can also be used to planned vaccinations.
+			if(vaccine.DateEnd.HasValue) {
+				_seg.SetField(4,vaccine.DateEnd.Value.ToString("yyyyMMddHHmm"));//RXA-4 Date/Time End of Administration.  Required if known.  Must be same as RXA-3 or blank.  UI forces RXA-4 and RXA-3 to be equal.  This would be blank if for a planned vaccine.
 			}
+
+
 			//RXA-5 Administered Code.  Required.  Cardinality [1..1].  Type CE (guide page 53).  Must be a CVX code.
-			VaccineDef vaccineDef=null;
-			if(vaccine.CompletionStatus==VaccineCompletionStatus.NotAdministered) {
-				WriteCE(5,"998","no vaccine administered","CVX");
+			EhrVaccine vaccineDef = null;
+			if (vaccine.CompletionStatus == TreatmentCompletionStatus.NotAdministered || !vaccine.VaccineId.HasValue)
+			{
+				WriteCE(5, "998", "no vaccine administered", "CVX");
 			}
-			else {
-				vaccineDef=VaccineDefs.GetOne(vaccine.VaccineDefNum);
-				Cvx cvx=Cvxs.GetByCode(vaccineDef.CVXCode);
-				WriteCE(5,cvx.Code,cvx.Description,"CVX");
+			else
+			{
+				vaccineDef = EhrVaccines.GetById(vaccine.VaccineId.Value);
+				Cvx cvx = Cvxs.GetByCode(vaccineDef.CvxCode);
+				WriteCE(5, cvx.Code, cvx.Description, "CVX");
 			}
+
 			//RXA-6 Administered Amount.  Required (length 1..20).  If amount is not known or not meaningful, then use "999".
-			if(vaccine.AdministeredAmt>0) {
-				_seg.SetField(6,vaccine.AdministeredAmt.ToString());
+			if (vaccine.AdministeredAmount > 0)
+			{
+				_seg.SetField(6, vaccine.AdministeredAmount.ToString());
 			}
-			else {
-				_seg.SetField(6,"999");//Registries that do not collect administered amount should record the value as "999".
+			else
+			{
+				_seg.SetField(6, "999");//Registries that do not collect administered amount should record the value as "999".
 			}
+
 			//RXA-7 Administered Units.  Required if RXA-6 is not "999".  Cadinality [0..1].  Type CE (guide page 53).  Value set HL70396 (guide page 231).  Must be UCUM coding.
-			if(vaccine.AdministeredAmt>0 && vaccine.DrugUnitNum!=0) {
-				DrugUnit drugUnit=DrugUnits.GetOne(vaccine.DrugUnitNum);
-				Ucum ucum=Ucums.GetByCode(drugUnit.UnitIdentifier);
-				WriteCE(7,ucum.Code,ucum.Description,"UCUM");//UCUM is not in table HL70396, but it there was a note stating that it was required in the guide and UCUM was required in the test cases.
+			if (vaccine.AdministeredAmount > 0 && !string.IsNullOrEmpty(vaccine.DrugUnitCode))
+			{
+				EhrDrugUnit drugUnit = EhrDrugUnits.GetByCode(vaccine.DrugUnitCode);
+				Ucum ucum = Ucums.GetByCode(drugUnit.Code);
+				WriteCE(7, ucum.Code, ucum.Description, "UCUM");//UCUM is not in table HL70396, but it there was a note stating that it was required in the guide and UCUM was required in the test cases.
 			}
+
 			//RXA-8 Administered Dosage Form.  Optional.
 			//RXA-9 Administration Notes.  Required if RXA-20 is "CP" or "PA".  Value set NIP 0001.  Type CE.
-			if(vaccine.CompletionStatus==VaccineCompletionStatus.Complete || vaccine.CompletionStatus==VaccineCompletionStatus.PartiallyAdministered) {
-				if(vaccine.AdministrationNoteCode==VaccineAdministrationNote.NewRecord) {
-					WriteCE(9,"00","New immunization record","NIP001");
+			if (vaccine.CompletionStatus == TreatmentCompletionStatus.Complete || vaccine.CompletionStatus == TreatmentCompletionStatus.PartiallyAdministered)
+			{
+				if (vaccine.InformationSource == NIP001.NewRecord)
+				{
+					WriteCE(9, "00", "New immunization record", "NIP001");
 				}
-				else if(vaccine.AdministrationNoteCode==VaccineAdministrationNote.HistoricalSourceUnknown) {
-					WriteCE(9,"01","Historical information - source unspecified","NIP001");
+				else if (vaccine.InformationSource == NIP001.HistoricalSourceUnspecified)
+				{
+					WriteCE(9, "01", "Historical information - source unspecified", "NIP001");
 				}
-				else if(vaccine.AdministrationNoteCode==VaccineAdministrationNote.HistoricalOtherProvider) {
-					WriteCE(9,"02","Historical information - from other provider","NIP001");
+				else if (vaccine.InformationSource == NIP001.HistoricalFromOtherProvider)
+				{
+					WriteCE(9, "02", "Historical information - from other provider", "NIP001");
 				}
-				else if(vaccine.AdministrationNoteCode==VaccineAdministrationNote.HistoricalParentsWrittenRecord) {
-					WriteCE(9,"03","Historical information - from parent's written record","NIP001");
+				else if (vaccine.InformationSource == NIP001.HistoricalFromParentsWrittenRecord)
+				{
+					WriteCE(9, "03", "Historical information - from parent's written record", "NIP001");
 				}
-				else if(vaccine.AdministrationNoteCode==VaccineAdministrationNote.HistoricalParentsRecall) {
-					WriteCE(9,"04","Historical information - from parent's recall","NIP001");
+				else if (vaccine.InformationSource == NIP001.HistoricalFromParentsRecall)
+				{
+					WriteCE(9, "04", "Historical information - from parent's recall", "NIP001");
 				}
-				else if(vaccine.AdministrationNoteCode==VaccineAdministrationNote.HistoricalOtherRegistry) {
-					WriteCE(9,"05","Historical information - from other registry","NIP001");
+				else if (vaccine.InformationSource == NIP001.HistoricalFromOtherRegistry)
+				{
+					WriteCE(9, "05", "Historical information - from other registry", "NIP001");
 				}
-				else if(vaccine.AdministrationNoteCode==VaccineAdministrationNote.HistoricalBirthCertificate) {
-					WriteCE(9,"06","Historical information - from birth certificate","NIP001");
+				else if (vaccine.InformationSource == NIP001.HistoricalFromBirthCertificate)
+				{
+					WriteCE(9, "06", "Historical information - from birth certificate", "NIP001");
 				}
-				else if(vaccine.AdministrationNoteCode==VaccineAdministrationNote.HistoricalSchoolRecord) {
-					WriteCE(9,"07","Historical information - from school record","NIP001");
+				else if (vaccine.InformationSource == NIP001.HistoricalFromSchoolRecord)
+				{
+					WriteCE(9, "07", "Historical information - from school record", "NIP001");
 				}
-				else if(vaccine.AdministrationNoteCode==VaccineAdministrationNote.HistoricalPublicAgency) {
-					WriteCE(9,"08","Historical information - from public agency","NIP001");
+				else if (vaccine.InformationSource == NIP001.HistoricalFromPublicAgency)
+				{
+					WriteCE(9, "08", "Historical information - from public agency", "NIP001");
 				}
 			}
+
 			//RXA-10 Administering Provider.  Required if known.  Type XCN.  This is the person who gave the administration or the vaccinaton.  It is not the ordering clinician.
-			Provider provAdministering=Providers.GetById(vaccine.ProvNumAdminister);//Can be null when vaccine.ProvNumAdminister is zero.
+			Provider provAdministering=Providers.GetById(vaccine.AdministeredBy);//Can be null when vaccine.ProvNumAdminister is zero.
 			if(provAdministering!=null) {
 				WriteXCN(10,provAdministering.FirstName,provAdministering.LastName,provAdministering.Initials,provAdministering.Id.ToString(),cityWhereEntered,stateWhereEntered,"L");
 			}
@@ -746,53 +771,53 @@ namespace OpenDentBusiness.HL7 {
 			//RXA-13 Administered Strength.  Optional.
 			//RXA-14 Administered Strength Units.  Optional.
 			//RXA-15 Substance Lot Number.  Required if the value in RXA-9.1 is "00".  We decided not to send this field if NotAdministered because we observed such behavior in the testing tool.
-			if(vaccine.CompletionStatus!=VaccineCompletionStatus.NotAdministered && vaccine.LotNumber.Trim()!="") {
+			if(vaccine.CompletionStatus!=TreatmentCompletionStatus.NotAdministered && vaccine.LotNumber.Trim()!="") {
 				_seg.SetField(15,vaccine.LotNumber.Trim());
 			}
 			//RXA-16 Substance Expiration Date.  Required if RXA-15 is not blank.  Must include at least year and month, but day is not required.  We decided not to send this field if NotAdministered because we observed such behavior in the testing tool.
-			if(vaccine.CompletionStatus!=VaccineCompletionStatus.NotAdministered && vaccine.DateExpire.Year>1880) {
-				_seg.SetField(16,vaccine.DateExpire.ToString("yyyyMMdd"));
+			if(vaccine.CompletionStatus!=TreatmentCompletionStatus.NotAdministered && vaccine.ExpirationDate.HasValue) {
+				_seg.SetField(16,vaccine.ExpirationDate.Value.ToString("yyyyMMdd"));
 			}
 			//RXA-17 Substance Manufacturer Name.  Requred if RXA-9.1 is "00".  Cardinality [0..*].  Value set MVX.  Type CE.
-			if(vaccine.CompletionStatus!=VaccineCompletionStatus.NotAdministered && vaccineDef.DrugManufacturerNum!=0) {
-				DrugManufacturer manufacturer=DrugManufacturers.GetOne(vaccineDef.DrugManufacturerNum);
-				WriteCE(17,manufacturer.ManufacturerCode,manufacturer.ManufacturerName,"MVX");
+			if(vaccine.CompletionStatus!=TreatmentCompletionStatus.NotAdministered && vaccineDef.EhrDrugManufacturerId!=0) {
+				EhrDrugManufacturer manufacturer=EhrDrugManufacturers.GetById(vaccineDef.EhrDrugManufacturerId);
+				WriteCE(17,manufacturer.Code,manufacturer.Name,"MVX");
 			}
 			//RXA-18 Substance/Treatment Refusal Reason.  Required if RXA-20 is "RE".  Cardinality [0..*].  Required when RXA-20 is "RE", otherwise do not send.  Value set NIP002.
-			if(vaccine.RefusalReason==VaccineRefusalReason.ParentalDecision) {
+			if(vaccine.RefusalReason==SubstanceRefusalReason.ParentalDecision) {
 				WriteCE(18,"00","Parental decision","NIP002");
 			}
-			else if(vaccine.RefusalReason==VaccineRefusalReason.ReligiousExemption) {
+			else if(vaccine.RefusalReason==SubstanceRefusalReason.ReligiousExemption) {
 				WriteCE(18,"01","Religious exemption","NIP002");
 			}
-			else if(vaccine.RefusalReason==VaccineRefusalReason.Other) {
+			else if(vaccine.RefusalReason==SubstanceRefusalReason.Other) {
 				WriteCE(18,"02",vaccine.Note,"NIP002");//The reason is required instead of a generic description for this particular situation.
 			}
-			else if(vaccine.RefusalReason==VaccineRefusalReason.PatientDecision) {
+			else if(vaccine.RefusalReason==SubstanceRefusalReason.PatientDecision) {
 				WriteCE(18,"03","Patient decision","NIP002");
 			}
 			//RXA-19 Indication.  Optional.
 			//RXA-20 Completion Status.  Required if known (length 2..2).  Value set HL70322 (guide page 225).  CP=Complete, RE=Refused, NA=Not Administered, PA=Partially Administered.
-			if(vaccine.CompletionStatus==VaccineCompletionStatus.Refused) {
+			if(vaccine.CompletionStatus==TreatmentCompletionStatus.Refused) {
 				_seg.SetField(20,"RE");
 			}
-			else if(vaccine.CompletionStatus==VaccineCompletionStatus.NotAdministered) {
+			else if(vaccine.CompletionStatus==TreatmentCompletionStatus.NotAdministered) {
 				_seg.SetField(20,"NA");
 			}
-			else if(vaccine.CompletionStatus==VaccineCompletionStatus.PartiallyAdministered) {
+			else if(vaccine.CompletionStatus==TreatmentCompletionStatus.PartiallyAdministered) {
 				_seg.SetField(20,"PA");
 			}
 			else {//Complete (default)
 				_seg.SetField(20,"CP");
 			}
 			//RXA-21 Action code.  Required if known (length 2..2).  Value set HL70323 (guide page 225).  A=Add, D=Delete, U=Update.
-			if(vaccine.ActionCode==VaccineAction.Add) {
+			if(vaccine.ActionCode==HL70323.Add) {
 				_seg.SetField(21,"A");
 			}
-			else if(vaccine.ActionCode==VaccineAction.Delete) {
+			else if(vaccine.ActionCode==HL70323.Delete) {
 				_seg.SetField(21,"D");
 			}
-			else if(vaccine.ActionCode==VaccineAction.Update) {
+			else if(vaccine.ActionCode==HL70323.Update) {
 				_seg.SetField(21,"U");
 			}
 			//RXA-22 System Entry Date/Time.  Optional.
@@ -804,72 +829,72 @@ namespace OpenDentBusiness.HL7 {
 		}
 
 		///<summary>Pharmacy/Treatment Route segment.  Required if known.  Guide page 158.</summary>
-		private void RXR(VaccinePat vaccine) {
-			if(vaccine.AdministrationRoute==VaccineAdministrationRoute.None) {
+		private void RXR(EhrPatientVaccine vaccine) {
+			if(string.IsNullOrEmpty(vaccine.AdministrationRoute)) {
 				return;//Unspecified.  Therefore unknown and the entire segment is not required.
 			}
 			_seg=new SegmentHL7(SegmentNameHL7.RXR);
 			_seg.SetField(0,"RXR");
 			//RXR-1 Route.  Required.  Cardinality [1..1].  Value set HL70162 (guide page 200). Type CE (guide page 53).
-			if(vaccine.AdministrationRoute==VaccineAdministrationRoute.Intradermal) {
+			if(vaccine.AdministrationRoute==RouteOfAdministration.Intradermal) {
 				WriteCE(1,"ID","Intradermal","HL70162");
 			}
-			else if(vaccine.AdministrationRoute==VaccineAdministrationRoute.Intramuscular) {
+			else if(vaccine.AdministrationRoute==RouteOfAdministration.Intramuscular) {
 				WriteCE(1,"IM","Intramuscular","HL70162");
 			}
-			else if(vaccine.AdministrationRoute==VaccineAdministrationRoute.Nasal) {
+			else if(vaccine.AdministrationRoute==RouteOfAdministration.Nasal) {
 				WriteCE(1,"NS","Nasal","HL70162");
 			}
-			else if(vaccine.AdministrationRoute==VaccineAdministrationRoute.Intravenous) {
+			else if(vaccine.AdministrationRoute==RouteOfAdministration.Intravenous) {
 				WriteCE(1,"IV","Intravenous","HL70162");
 			}
-			else if(vaccine.AdministrationRoute==VaccineAdministrationRoute.Oral) {
+			else if(vaccine.AdministrationRoute==RouteOfAdministration.Oral) {
 				WriteCE(1,"PO","Oral","HL70162");
 			}
-			else if(vaccine.AdministrationRoute==VaccineAdministrationRoute.Subcutaneous) {
+			else if(vaccine.AdministrationRoute==RouteOfAdministration.Subcutaneous) {
 				WriteCE(1,"SC","Subcutaneous","HL70162");
 			}
-			else if(vaccine.AdministrationRoute==VaccineAdministrationRoute.Transdermal) {
+			else if(vaccine.AdministrationRoute==RouteOfAdministration.Transdermal) {
 				WriteCE(1,"TD","Transdermal","HL70162");
 			}
 			else {//Other
 				WriteCE(1,"OTH","Other","HL70162");
 			}
 			//RXR-2 Administration Site.  Required if known.  Cardinality [0..1].  Value set HL70163 (guide page 201, details where the vaccine was physically administered on the patient's body).
-			if(vaccine.AdministrationSite==VaccineAdministrationSite.LeftThigh) {
+			if(vaccine.AdministrationSite==AdministrativeSite.LeftThigh) {
 				WriteCE(2,"LT","LeftThigh","HL70163");
 			}
-			else if(vaccine.AdministrationSite==VaccineAdministrationSite.LeftVastusLateralis) {
+			else if(vaccine.AdministrationSite==AdministrativeSite.LeftVastusLateralis) {
 				WriteCE(2,"LVL","LeftVastusLateralis","HL70163");
 			}
-			else if(vaccine.AdministrationSite==VaccineAdministrationSite.LeftGluteousMedius) {
+			else if(vaccine.AdministrationSite==AdministrativeSite.LeftGluteousMedius) {
 				WriteCE(2,"LG","LeftGluteousMedius","HL70163");
 			}
-			else if(vaccine.AdministrationSite==VaccineAdministrationSite.LeftArm) {
+			else if(vaccine.AdministrationSite==AdministrativeSite.LeftArm) {
 				WriteCE(2,"LA","LeftArm","HL70163");
 			}
-			else if(vaccine.AdministrationSite==VaccineAdministrationSite.LeftDeltoid) {
+			else if(vaccine.AdministrationSite==AdministrativeSite.LeftDeltoid) {
 				WriteCE(2,"LD","LeftDeltoid","HL70163");
 			}
-			else if(vaccine.AdministrationSite==VaccineAdministrationSite.LeftLowerForearm) {
+			else if(vaccine.AdministrationSite==AdministrativeSite.LeftLowerForearm) {
 				WriteCE(2,"LLFA","LeftLowerForearm","HL70163");
 			}
-			else if(vaccine.AdministrationSite==VaccineAdministrationSite.RightThigh) {
+			else if(vaccine.AdministrationSite==AdministrativeSite.RightThigh) {
 				WriteCE(2,"RT","RightThigh","HL70163");
 			}
-			else if(vaccine.AdministrationSite==VaccineAdministrationSite.RightVastusLateralis) {
+			else if(vaccine.AdministrationSite==AdministrativeSite.RightVastusLateralis) {
 				WriteCE(2,"RVL","RightVastusLateralis","HL70163");
 			}
-			else if(vaccine.AdministrationSite==VaccineAdministrationSite.RightGluteousMedius) {
+			else if(vaccine.AdministrationSite==AdministrativeSite.RightGluteousMedius) {
 				WriteCE(2,"RG","RightGluteousMedius","HL70163");
 			}
-			else if(vaccine.AdministrationSite==VaccineAdministrationSite.RightArm) {
+			else if(vaccine.AdministrationSite==AdministrativeSite.RightArm) {
 				WriteCE(2,"RA","RightArm","HL70163");
 			}			
-			else if(vaccine.AdministrationSite==VaccineAdministrationSite.RightDeltoid) {
+			else if(vaccine.AdministrationSite==AdministrativeSite.RightDeltoid) {
 				WriteCE(2,"RD","RightArm","HL70163");
 			}
-			else if(vaccine.AdministrationSite==VaccineAdministrationSite.RightLowerForearm) {
+			else if(vaccine.AdministrationSite==AdministrativeSite.RightLowerForearm) {
 				WriteCE(2,"RLFA","RightLowerForearm","HL70163");
 			}			
 			//RXR-3 Administration Device.  Optional.
@@ -1175,38 +1200,38 @@ namespace OpenDentBusiness.HL7 {
 
 		#endregion Field Helpers
 
-		public static string Validate(Patient pat,List<VaccinePat> vaccines) {
+		public static string Validate(Patient pat,List<EhrPatientVaccine> vaccines) {
 			StringBuilder sb=new StringBuilder();
 			if(vaccines.Count==0) {
 				WriteError(sb,"Must be at least one vaccine.");
 			}
 			for(int i=0;i<vaccines.Count;i++) {
-				VaccinePat vaccine=vaccines[i];
+				EhrPatientVaccine vaccine=vaccines[i];
 				string vaccineName="not administered";
-				VaccineDef vaccineDef=null;
-				if(vaccine.CompletionStatus!=VaccineCompletionStatus.NotAdministered) {//Some fields are not used when the vaccine was not administered.
-					vaccineDef=VaccineDefs.GetOne(vaccine.VaccineDefNum);
-					vaccineName=vaccineDef.VaccineName;
-					if(!Cvxs.CodeExists(vaccineDef.CVXCode)) {
-						WriteError(sb,"Invalid CVX code '"+vaccineDef.CVXCode+"' for vaccine '"+vaccineDef.VaccineName+"'");
+				EhrVaccine vaccineDef=null;
+				if(vaccine.CompletionStatus!=TreatmentCompletionStatus.NotAdministered && vaccine.VaccineId.HasValue) {//Some fields are not used when the vaccine was not administered.
+					vaccineDef=EhrVaccines.GetById(vaccine.VaccineId.Value);
+					vaccineName=vaccineDef.Name;
+					if(!Cvxs.CodeExists(vaccineDef.CvxCode)) {
+						WriteError(sb,"Invalid CVX code '"+vaccineDef.CvxCode+"' for vaccine '"+vaccineDef.Name+"'");
 					}
-					if(vaccineDef.DrugManufacturerNum!=0) {
-						DrugManufacturer manufacturer=DrugManufacturers.GetOne(vaccineDef.DrugManufacturerNum);
+					if(vaccineDef.EhrDrugManufacturerId!=0) {
+						EhrDrugManufacturer manufacturer=EhrDrugManufacturers.GetById(vaccineDef.EhrDrugManufacturerId);
 						//manufacturer.ManufacturerCode;//TODO: Consider validating MVX codes here. We do not currently store MVX codes.
 					}
-					if(vaccine.AdministrationNoteCode==VaccineAdministrationNote.NewRecord && vaccine.LotNumber.Trim()=="") {
+					if(vaccine.InformationSource==NIP001.NewRecord && vaccine.LotNumber.Trim()=="") {
 						WriteError(sb,"Missing lot number.  Required for new records.");
 					}
 					if(vaccine.FilledCity.Trim()=="") {
 						WriteError(sb,"Missing filled city.");
 					}
 				}
-				if(vaccine.AdministeredAmt>0 && vaccine.DrugUnitNum==0) {
+				if(vaccine.AdministeredAmount>0 && string.IsNullOrEmpty(vaccine.DrugUnitCode)) {
 					WriteError(sb,"Drug unit missing.  Required when administered amount is specified.");
 				}
-				if(vaccine.AdministeredAmt>0 && vaccine.DrugUnitNum!=0) {
-					DrugUnit drugUnit=DrugUnits.GetOne(vaccine.DrugUnitNum);
-					Ucum ucum=Ucums.GetByCode(drugUnit.UnitIdentifier);
+				if(vaccine.AdministeredAmount>0 && !string.IsNullOrEmpty(vaccine.DrugUnitCode)) {
+					EhrDrugUnit drugUnit=EhrDrugUnits.GetByCode(vaccine.DrugUnitCode);
+					Ucum ucum=Ucums.GetByCode(drugUnit.Code);
 					if(ucum==null) {
 						WriteError(sb,"Drug unit invalid UCUM code.");
 					}
@@ -1223,16 +1248,16 @@ namespace OpenDentBusiness.HL7 {
 					//US territories. Reference http://www.itl.nist.gov/fipspubs/fip5-2.htm
 					"AS","FM","GU","MH","MP","PR","VI",//UM and PW are excluded here, because they are not allowed in HL7 table 0363.
 				});
-				if(stateCodes.IndexOf(vaccine.FilledST.Trim().ToUpper())==-1) {
+				if(stateCodes.IndexOf(vaccine.FilledState.Trim().ToUpper())==-1) {
 					WriteError(sb,"Filled state must be 2 letter state or territory code for the United States.");
 				}
-				if(vaccine.LotNumber.Trim()!="" && vaccine.DateExpire.Year<1880) {
+				if(vaccine.LotNumber.Trim()!="" && !vaccine.ExpirationDate.HasValue) {
 					WriteError(sb,"Missing date expiration.");
 				}
-				if(vaccine.CompletionStatus==VaccineCompletionStatus.Refused && vaccine.RefusalReason==VaccineRefusalReason.None) {
+				if(vaccine.CompletionStatus==TreatmentCompletionStatus.Refused && string.IsNullOrEmpty(vaccine.RefusalReason)) {
 					WriteError(sb,"Missing refusal reason.");
 				}
-				if(vaccine.CompletionStatus!=VaccineCompletionStatus.Refused && vaccine.RefusalReason!=VaccineRefusalReason.None) {
+				if(vaccine.CompletionStatus!=TreatmentCompletionStatus.Refused && !string.IsNullOrEmpty(vaccine.RefusalReason)) {
 					WriteError(sb,"Since a refusal reason was specified, completion status must be Refused.");
 				}
 				if(PrefC.HasClinicsEnabled && pat.ClinicNum!=0) {//Using clinics and a clinic is assigned.
@@ -1252,58 +1277,58 @@ namespace OpenDentBusiness.HL7 {
 						WriteError(sb,"Missing practice city.");
 					}
 				}
-				if(vaccine.DateTimeStart.Year>1880 && vaccine.DateTimeEnd.Year>1880 && vaccine.DateTimeStart!=vaccine.DateTimeEnd) {
+				if(vaccine.DateEnd.HasValue && vaccine.DateStart!=vaccine.DateEnd) {
 					WriteError(sb,"Stop time must be blank or equal to start time.");
 				}
-				List<VaccineObs> listVaccineObservations=VaccineObses.GetForVaccine(vaccine.VaccinePatNum);
+				List<EhrPatientVaccineObservation> listVaccineObservations=EhrPatientVaccineObservations.GetByPatientVaccine(vaccine.Id).ToList();
 				for(int j=0;j<listVaccineObservations.Count;j++) {
-					VaccineObs vaccineObs=listVaccineObservations[j];
-					if(vaccineObs.ValReported.Trim()=="") {
-						WriteError(sb,"Missing value for observation with type '"+vaccineObs.ValType.ToString()+"' attached to vaccine '"+vaccineName+"'");
+					EhrPatientVaccineObservation vaccineObs=listVaccineObservations[j];
+					if(vaccineObs.Value.Trim()=="") {
+						WriteError(sb,"Missing value for observation with type '"+vaccineObs.ValueType.ToString()+"' attached to vaccine '"+vaccineName+"'");
 					}
 					Ucum ucum=Ucums.GetByCode(vaccineObs.UcumCode);
-					if(ucum==null && vaccineObs.ValType==VaccineObsType.Numeric) {
-						WriteError(sb,"Invalid unit code (must be UCUM) for observation with type '"+vaccineObs.ValType.ToString()+"' attached to vaccine '"+vaccineName+"'");
+					if(ucum==null && vaccineObs.ValueType==HL70125.Numeric) {
+						WriteError(sb,"Invalid unit code (must be UCUM) for observation with type '"+vaccineObs.ValueType.ToString()+"' attached to vaccine '"+vaccineName+"'");
 					}
-					if(vaccineObs.IdentifyingCode==VaccineObsIdentifier.FundPgmEligCat && vaccineObs.MethodCode.Trim()=="") {
-						WriteError(sb,"Missing method code for observation with type '"+vaccineObs.ValType.ToString()+"' attached to vaccine '"+vaccineName+"'");
+					if(vaccineObs.IdentifyingCode==NIP003.FundPgmEligCat && vaccineObs.MethodCode.Trim()=="") {
+						WriteError(sb,"Missing method code for observation with type '"+vaccineObs.ValueType.ToString()+"' attached to vaccine '"+vaccineName+"'");
 					}
-					if(vaccineObs.ValType==VaccineObsType.Coded) {
+					if(vaccineObs.ValueType==HL70125.Coded) {
 						//Any value is allowed.
 					}
-					else if(vaccineObs.ValType==VaccineObsType.Dated) {
+					else if(vaccineObs.ValueType==HL70125.Dated) {
 						try {
-							DateTime.Parse(vaccineObs.ValReported);
+							DateTime.Parse(vaccineObs.Value);
 						}
 						catch(Exception) {
-							WriteError(sb,"Observation value is '"+vaccineObs.ValReported+"'.  Must be a valid date for vaccine '"+vaccineName+"'");
+							WriteError(sb,"Observation value is '"+vaccineObs.Value+"'.  Must be a valid date for vaccine '"+vaccineName+"'");
 						}
 					}
-					else if(vaccineObs.ValType==VaccineObsType.DateAndTime) {
+					else if(vaccineObs.ValueType==HL70125.DateAndTime) {
 						try {
-							DateTime.Parse(vaccineObs.ValReported);
+							DateTime.Parse(vaccineObs.Value);
 						}
 						catch(Exception) {
-							WriteError(sb,"Observation value is '"+vaccineObs.ValReported+"'.  Must be a valid date and time for vaccine '"+vaccineName+"'");
+							WriteError(sb,"Observation value is '"+vaccineObs.Value+"'.  Must be a valid date and time for vaccine '"+vaccineName+"'");
 						}
 					}
-					else if(vaccineObs.ValType==VaccineObsType.Numeric) {
+					else if(vaccineObs.ValueType==HL70125.Numeric) {
 						try {
-							double.Parse(vaccineObs.ValReported);
+							double.Parse(vaccineObs.Value);
 						}
 						catch(Exception) {
-							WriteError(sb,"Observation value is '"+vaccineObs.ValReported+"'.  Must be a valid number for vaccine '"+vaccineName+"'");
+							WriteError(sb,"Observation value is '"+vaccineObs.Value+"'.  Must be a valid number for vaccine '"+vaccineName+"'");
 						}
 					}
-					else if(vaccineObs.ValType==VaccineObsType.Text) {
+					else if(vaccineObs.ValueType==HL70125.Text) {
 						//Any value is allowed.
 					}
 					else { //DateAndTime
 						try {
-							DateTime.Parse(vaccineObs.ValReported);
+							DateTime.Parse(vaccineObs.Value);
 						}
 						catch(Exception) {
-							WriteError(sb,"Observation value is '"+vaccineObs.ValReported+"'.  Must be a valid date and time for vaccine '"+vaccineName+"'");
+							WriteError(sb,"Observation value is '"+vaccineObs.Value+"'.  Must be a valid date and time for vaccine '"+vaccineName+"'");
 						}
 					}
 				}

@@ -43,8 +43,8 @@ namespace OpenDentBusiness.Crud{
 			ZipCode zipCode;
 			foreach(DataRow row in table.Rows) {
 				zipCode=new ZipCode();
-				zipCode.ZipCodeNum   = PIn.Long  (row["ZipCodeNum"].ToString());
-				zipCode.ZipCodeDigits= PIn.String(row["ZipCodeDigits"].ToString());
+				zipCode.Id   = PIn.Long  (row["ZipCodeNum"].ToString());
+				zipCode.Digits= PIn.String(row["ZipCodeDigits"].ToString());
 				zipCode.City         = PIn.String(row["City"].ToString());
 				zipCode.State        = PIn.String(row["State"].ToString());
 				zipCode.IsFrequent   = PIn.Bool  (row["IsFrequent"].ToString());
@@ -66,8 +66,8 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("IsFrequent");
 			foreach(ZipCode zipCode in listZipCodes) {
 				table.Rows.Add(new object[] {
-					POut.Long  (zipCode.ZipCodeNum),
-					            zipCode.ZipCodeDigits,
+					POut.Long  (zipCode.Id),
+					            zipCode.Digits,
 					            zipCode.City,
 					            zipCode.State,
 					POut.Bool  (zipCode.IsFrequent),
@@ -84,7 +84,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one ZipCode into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(ZipCode zipCode,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				zipCode.ZipCodeNum=ReplicationServers.GetKey("zipcode","ZipCodeNum");
+				zipCode.Id=ReplicationServers.GetKey("zipcode","ZipCodeNum");
 			}
 			string command="INSERT INTO zipcode (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -92,10 +92,10 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="ZipCodeDigits,City,State,IsFrequent) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(zipCode.ZipCodeNum)+",";
+				command+=POut.Long(zipCode.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(zipCode.ZipCodeDigits)+"',"
+				 "'"+POut.String(zipCode.Digits)+"',"
 				+"'"+POut.String(zipCode.City)+"',"
 				+"'"+POut.String(zipCode.State)+"',"
 				+    POut.Bool  (zipCode.IsFrequent)+")";
@@ -103,9 +103,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				zipCode.ZipCodeNum=Database.ExecuteInsert(command);
+				zipCode.Id=Database.ExecuteInsert(command);
 			}
-			return zipCode.ZipCodeNum;
+			return zipCode.Id;
 		}
 
 		///<summary>Inserts one ZipCode into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -118,17 +118,17 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO zipcode (";
 			if(!useExistingPK) {
-				zipCode.ZipCodeNum=ReplicationServers.GetKeyNoCache("zipcode","ZipCodeNum");
+				zipCode.Id=ReplicationServers.GetKeyNoCache("zipcode","ZipCodeNum");
 			}
 			if(useExistingPK) {
 				command+="ZipCodeNum,";
 			}
 			command+="ZipCodeDigits,City,State,IsFrequent) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(zipCode.ZipCodeNum)+",";
+				command+=POut.Long(zipCode.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(zipCode.ZipCodeDigits)+"',"
+				 "'"+POut.String(zipCode.Digits)+"',"
 				+"'"+POut.String(zipCode.City)+"',"
 				+"'"+POut.String(zipCode.State)+"',"
 				+    POut.Bool  (zipCode.IsFrequent)+")";
@@ -136,28 +136,28 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				zipCode.ZipCodeNum=Database.ExecuteInsert(command);
+				zipCode.Id=Database.ExecuteInsert(command);
 			}
-			return zipCode.ZipCodeNum;
+			return zipCode.Id;
 		}
 
 		///<summary>Updates one ZipCode in the database.</summary>
 		public static void Update(ZipCode zipCode) {
 			string command="UPDATE zipcode SET "
-				+"ZipCodeDigits= '"+POut.String(zipCode.ZipCodeDigits)+"', "
+				+"ZipCodeDigits= '"+POut.String(zipCode.Digits)+"', "
 				+"City         = '"+POut.String(zipCode.City)+"', "
 				+"State        = '"+POut.String(zipCode.State)+"', "
 				+"IsFrequent   =  "+POut.Bool  (zipCode.IsFrequent)+" "
-				+"WHERE ZipCodeNum = "+POut.Long(zipCode.ZipCodeNum);
+				+"WHERE ZipCodeNum = "+POut.Long(zipCode.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates one ZipCode in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(ZipCode zipCode,ZipCode oldZipCode) {
 			string command="";
-			if(zipCode.ZipCodeDigits != oldZipCode.ZipCodeDigits) {
+			if(zipCode.Digits != oldZipCode.Digits) {
 				if(command!="") { command+=",";}
-				command+="ZipCodeDigits = '"+POut.String(zipCode.ZipCodeDigits)+"'";
+				command+="ZipCodeDigits = '"+POut.String(zipCode.Digits)+"'";
 			}
 			if(zipCode.City != oldZipCode.City) {
 				if(command!="") { command+=",";}
@@ -175,7 +175,7 @@ namespace OpenDentBusiness.Crud{
 				return false;
 			}
 			command="UPDATE zipcode SET "+command
-				+" WHERE ZipCodeNum = "+POut.Long(zipCode.ZipCodeNum);
+				+" WHERE ZipCodeNum = "+POut.Long(zipCode.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
@@ -183,7 +183,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(ZipCode,ZipCode) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(ZipCode zipCode,ZipCode oldZipCode) {
-			if(zipCode.ZipCodeDigits != oldZipCode.ZipCodeDigits) {
+			if(zipCode.Digits != oldZipCode.Digits) {
 				return true;
 			}
 			if(zipCode.City != oldZipCode.City) {

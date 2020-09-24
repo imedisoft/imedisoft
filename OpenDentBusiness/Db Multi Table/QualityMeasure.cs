@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -247,7 +248,7 @@ namespace OpenDentBusiness {
 		public string ValueSetName;
 		public string ValueSetOID;
 		public string PatNote;//will be blank if vaccinepat object
-		public VaccineCompletionStatus CompletionStatus;
+		public string CompletionStatus;
 		public DateTime DateStart;
 		public DateTime DateStop;
 	}

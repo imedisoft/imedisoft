@@ -10,6 +10,7 @@ using Ionic.Zip;
 using System.Linq;
 using Imedisoft.Data;
 using Imedisoft.Data.Models;
+using Imedisoft.Data.Models.CodeLists.HL7;
 
 namespace OpenDentBusiness {
 	///<summary>Used in Ehr quality measures.</summary>
@@ -3969,7 +3970,7 @@ namespace OpenDentBusiness {
 				ehrVacPatCur.EhrCqmVaccinePatNum=PIn.Long(tableAllVaccinePats.Rows[i]["VaccinePatNum"].ToString());
 				ehrVacPatCur.PatNum=PIn.Long(tableAllVaccinePats.Rows[i]["PatNum"].ToString());
 				ehrVacPatCur.CVXCode=tableAllVaccinePats.Rows[i]["CVXCode"].ToString();
-				ehrVacPatCur.CompletionStatus=(VaccineCompletionStatus)PIn.Int(tableAllVaccinePats.Rows[i]["CompletionStatus"].ToString());
+				ehrVacPatCur.CompletionStatus=tableAllVaccinePats.Rows[i]["CompletionStatus"].ToString();
 				ehrVacPatCur.DateStart=PIn.Date(tableAllVaccinePats.Rows[i]["DateTimeStart"].ToString());
 				ehrVacPatCur.DateStop=PIn.Date(tableAllVaccinePats.Rows[i]["DateTimeEnd"].ToString());
 				EhrCode ehrCodeCur=dictVaccinePatNumEhrCode[ehrVacPatCur.EhrCqmVaccinePatNum];
@@ -4488,7 +4489,7 @@ namespace OpenDentBusiness {
 						}
 						//apply numerator meds
 						for(int j=0;j<listAllMedPatsCur.Count;j++) {//already only consists of meds from value set 2.16.840.1.113883.3.526.3.1254 - Influenza Vaccine Grouping Value Set
-							if(listAllMedPatsCur[j].CompletionStatus==VaccineCompletionStatus.NotAdministered) {//status other than complete, skip
+							if(listAllMedPatsCur[j].CompletionStatus==TreatmentCompletionStatus.NotAdministered) {//status other than complete, skip
 								continue;
 							}
 							for(int k=0;k<listOccurrenceADates.Count;k++) {
@@ -4592,7 +4593,7 @@ namespace OpenDentBusiness {
 							continue;
 						}
 						for(int j=0;j<listAllMedPatsCur.Count;j++) {
-							if(listAllMedPatsCur[j].CompletionStatus==VaccineCompletionStatus.Complete) {//Only looking for NotAdministered, if status=Complete, skip
+							if(listAllMedPatsCur[j].CompletionStatus==TreatmentCompletionStatus.Complete) {//Only looking for NotAdministered, if status=Complete, skip
 								continue;
 							}
 							for(int k=0;k<listOccurrenceADates.Count;k++) {
@@ -7579,7 +7580,7 @@ BMI 18.5-25.";
 								//EhrCqmVaccinePatNum will only be set if pneumonia or influenza measure and it represents a vaccine
 								else {
 									codeValue=mPatCur.CVXCode;
-									if(mPatCur.CompletionStatus==VaccineCompletionStatus.NotAdministered) {//NotAdministered is due to an allergy or intolerance
+									if(mPatCur.CompletionStatus==TreatmentCompletionStatus.NotAdministered) {//NotAdministered is due to an allergy or intolerance
 										descript="Medication, Allergy: ";
 									}
 									else {//only getting CompletionStatus=Complete or NotAdministered, the else is for Complete
@@ -8526,7 +8527,7 @@ BMI 18.5-25.";
 			}
 			else {//if EhrCqmMedicationPat==0 then it is a vaccine, so EhrCqmVaccinePatNum!=0
 				//if NotAdministered then it is a Medication Allergy/Intolerance
-				if(mPatCur.CompletionStatus==VaccineCompletionStatus.NotAdministered) {
+				if(mPatCur.CompletionStatus==TreatmentCompletionStatus.NotAdministered) {
 					Start("observation","classCode","OBS","moodCode","EVN");
 					_x.WriteComment("Substance or Device Allergy - Intolerance Observation");
 					TemplateId("2.16.840.1.113883.10.20.24.3.90");

@@ -350,7 +350,7 @@ namespace OpenDentBusiness{
 						//}
 						EhrLabResult labResult=new EhrLabResult();
 						labResult.SetIdOBX=PIn.Long(fields[1]);
-						try { labResult.ValueType=(HL70125)Enum.Parse(typeof(HL70125),fields[2]); }
+						try { labResult.ValueType=(EhrLaboratories.HL70125)Enum.Parse(typeof(EhrLaboratories.HL70125), fields[2]); }
 						catch { }
 						//Lab Result Observation Identifier (LOINC)
 						labResult.ObservationIdentifierID									=fields[3].Split('^')[0];
@@ -372,49 +372,49 @@ namespace OpenDentBusiness{
 						labResult.ObservationIdentifierSub=fields[4];
 						//Observation Value
 						switch(labResult.ValueType) {
-							case HL70125.CE:
-							case HL70125.CWE:
-								labResult.ObservationValueCodedElementID										=fields[5].Split('^')[0];
-								try { labResult.ObservationValueCodedElementText									=fields[5].Split('^')[1]; }
+							case EhrLaboratories.HL70125.CE:
+							case EhrLaboratories.HL70125.CWE:
+								labResult.ObservationValueCodedElementID										= fields[5].Split('^')[0];
+								try { labResult.ObservationValueCodedElementText									= fields[5].Split('^')[1]; }
 								catch { }
-								try { labResult.ObservationValueCodedElementCodeSystemName				=fields[5].Split('^')[2]; }
+								try { labResult.ObservationValueCodedElementCodeSystemName				= fields[5].Split('^')[2]; }
 								catch { }
-								try { labResult.ObservationValueCodedElementIDAlt									=fields[5].Split('^')[3]; }
+								try { labResult.ObservationValueCodedElementIDAlt									= fields[5].Split('^')[3]; }
 								catch { }
-								try { labResult.ObservationValueCodedElementTextAlt								=fields[5].Split('^')[4]; }
+								try { labResult.ObservationValueCodedElementTextAlt								= fields[5].Split('^')[4]; }
 								catch { }
-								try { labResult.ObservationValueCodedElementCodeSystemNameAlt			=fields[5].Split('^')[5]; }
+								try { labResult.ObservationValueCodedElementCodeSystemNameAlt			= fields[5].Split('^')[5]; }
 								catch { }
 								//OBX-5.6 - Coding System Version ID
 								//OBX-5.7 - Alternate Coding System Version ID
-								if(labResult.ValueType==HL70125.CWE) {
-									labResult.ObservationValueCodedElementTextOriginal=fields[5].Split('^')[8];
+								if(labResult.ValueType == EhrLaboratories.HL70125.CWE) {
+									labResult.ObservationValueCodedElementTextOriginal= fields[5].Split('^')[8];
 								}
 								break;
-							case HL70125.DT:
-							case HL70125.TS:
-								labResult.ObservationValueDateTime=fields[5];
+							case EhrLaboratories.HL70125.DT:
+							case EhrLaboratories.HL70125.TS:
+								labResult.ObservationValueDateTime= fields[5];
 								break;
-							case HL70125.FT://formatted text
-							case HL70125.ST://string
-							case HL70125.TX://text
-								labResult.ObservationValueText=fields[5];
+							case EhrLaboratories.HL70125.FT://formatted text
+							case EhrLaboratories.HL70125.ST://string
+							case EhrLaboratories.HL70125.TX://text
+								labResult.ObservationValueText= fields[5];
 								break;
-							case HL70125.NM:
+							case EhrLaboratories.HL70125.NM:
 								//data may contain positive or negative sign.  Below, the sign is handled first, and then multiplied by PIn.Double(val)
-								labResult.ObservationValueNumeric=  (fields[5].Contains("-")?-1f:1f)  *  PIn.Double(fields[5].Trim('+').Trim('-'));
+								labResult.ObservationValueNumeric=  (fields[5].Contains("-")?-1f:1f)  * PIn.Double(fields[5].Trim('+').Trim('-'));
 								break;
-							case HL70125.SN:
+							case EhrLaboratories.HL70125.SN:
 								labResult.ObservationValueComparator						=						fields[5].Split('^')[0];
-								try { labResult.ObservationValueNumber1						=PIn.Double(fields[5].Split('^')[1]); }
+								try { labResult.ObservationValueNumber1						= PIn.Double(fields[5].Split('^')[1]); }
 								catch { }//optional, may be a null reference
 								try { labResult.ObservationValueSeparatorOrSuffix	=						fields[5].Split('^')[2]; }
 								catch { }//optional, may be a null reference
-								try { labResult.ObservationValueNumber2						=PIn.Double(fields[5].Split('^')[3]); }
+								try { labResult.ObservationValueNumber2						= PIn.Double(fields[5].Split('^')[3]); }
 								catch { }//optional, may be a null reference
 								break;
-							case HL70125.TM:
-								labResult.ObservationValueTime=PIn.Time(fields[5]);
+							case EhrLaboratories.HL70125.TM:
+								labResult.ObservationValueTime= PIn.Time(fields[5]);
 								break;
 						}
 						//Units

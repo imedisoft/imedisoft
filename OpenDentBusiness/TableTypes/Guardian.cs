@@ -1,38 +1,37 @@
 ﻿using System;
-using System.Collections;
-using System.Drawing;
 
-namespace OpenDentBusiness{
-	///<summary>Links patient to patient in a many to many database relationship.  The two PatNums need not be in the same family, but will usually be.
-	///The two PatNums could be in different families if the relationship was entered, then one of the patients in the relationship is moved to another family.
-	///This table can also be used for other relationship types besides guardians.  The table name is guardian because we only supported guardian relationships in the past,
-	///and we did not want to risk breaking queries by changing the table or column names. User can specify any relationship as a guardian or not a guardian.
-	///For example, a retired person might specify their brother or child as their guardian, or the user may want to record the brother of a patient as a non-guardian.</summary>
-	[Serializable()]
-	[CrudTable(IsSynchable=true)]
-	public class Guardian:TableBase{
+namespace OpenDentBusiness
+{
+    ///<summary>Links patient to patient in a many to many database relationship.  The two PatNums need not be in the same family, but will usually be.
+    ///The two PatNums could be in different families if the relationship was entered, then one of the patients in the relationship is moved to another family.
+    ///This table can also be used for other relationship types besides guardians.  The table name is guardian because we only supported guardian relationships in the past,
+    ///and we did not want to risk breaking queries by changing the table or column names. User can specify any relationship as a guardian or not a guardian.
+    ///For example, a retired person might specify their brother or child as their guardian, or the user may want to record the brother of a patient as a non-guardian.</summary>
+    [Serializable()]
+	[CrudTable(IsSynchable = true)]
+	public class Guardian : TableBase
+	{
 		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+		[CrudColumn(IsPriKey = true)]
 		public long GuardianNum;
+
 		///<summary>FK to patient.PatNum.  If Relationship is "Mother", then this PatNum is the child of the mother.</summary>
 		public long PatNumChild;
+
 		///<summary>FK to patient.PatNum.  If Relationship is "Mother", then this is the PatNum of the mother.</summary>
 		public long PatNumGuardian;
+
 		///<summary>Enum:GuardianRelationship .</summary>
 		public GuardianRelationship Relationship;
+
 		///<summary>True if this specifies a guardian relationship, or false if any other relationship.
 		///When this flag is true, the relationship will show in the "Guardians" appointment view field and in the family module "Guardians" display field for the patient.  This also grants PHI access in the patient portal to the specific patient designated via PatNumChild.</summary>
 		public bool IsGuardian;
-
-		///<summary></summary>
-		public Guardian Clone() {
-			return (Guardian)this.MemberwiseClone();
-		}
-
 	}
 
 	///<summary></summary>
-	public enum GuardianRelationship {
+	public enum GuardianRelationship
+	{
 		///<summary>0 - Added due to feature request.  Needed for EHR.</summary>
 		Father,
 		///<summary>1 - Added due to feature request.  Needed for EHR.</summary>
@@ -80,5 +79,4 @@ namespace OpenDentBusiness{
 		///<summary>22 - Added for EHR.</summary>
 		Grandchild,
 	}
-
 }

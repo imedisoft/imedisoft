@@ -83,7 +83,7 @@ namespace OpenDental {
 				newMeasureEvent.Type=EhrMeasureEventType.EducationProvided;
 				newMeasureEvent.PatientId=patCur.PatNum;
 				newMeasureEvent.MoreInfo=eduResourceList[e.Row].ResourceUrl;
-				EhrMeasureEvents.Insert(newMeasureEvent);
+				EhrMeasureEvents.Save(newMeasureEvent);
 				FillGridProvided();
 			}
 		}
@@ -95,7 +95,7 @@ namespace OpenDental {
 			gridProvided.Columns.Add(col);
 			col=new GridColumn("Details",600);
 			gridProvided.Columns.Add(col);
-			eduMeasureProvidedList=EhrMeasureEvents.RefreshByType(patCur.PatNum,EhrMeasureEventType.EducationProvided);
+			eduMeasureProvidedList=EhrMeasureEvents.GetByPatient(patCur.PatNum,EhrMeasureEventType.EducationProvided).ToList();
 			gridProvided.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<eduMeasureProvidedList.Count;i++) {

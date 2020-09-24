@@ -13,6 +13,8 @@ using OpenDental.UI;
 using OpenDentBusiness.IO;
 using Imedisoft.Data;
 using Imedisoft.Data.Models;
+using System.Linq;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormEhrClinicalSummary:ODForm {
@@ -34,7 +36,7 @@ namespace OpenDental {
 			gridEHRMeasureEvents.Columns.Add(col);
 			//col = new ODGridColumn("Details",600);
 			//gridEHRMeasureEvents.Columns.Add(col);
-			summariesSentList = EhrMeasureEvents.RefreshByType(PatCur.PatNum,EhrMeasureEventType.ClinicalSummaryProvidedToPt);
+			summariesSentList = EhrMeasureEvents.GetByPatient(PatCur.PatNum,EhrMeasureEventType.ClinicalSummaryProvidedToPt).ToList();
 			gridEHRMeasureEvents.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<summariesSentList.Count;i++) {
@@ -79,7 +81,7 @@ namespace OpenDental {
 			newMeasureEvent.Date = DateTime.Now;
 			newMeasureEvent.Type = EhrMeasureEventType.ClinicalSummaryProvidedToPt;
 			newMeasureEvent.PatientId = PatCur.PatNum;
-			EhrMeasureEvents.Insert(newMeasureEvent);
+			EhrMeasureEvents.Save(newMeasureEvent);
 			FillGridEHRMeasureEvents();
 			MessageBox.Show("Exported");	
 		}
@@ -148,7 +150,7 @@ namespace OpenDental {
 			newMeasureEvent.Date=DateTime.Now;
 			newMeasureEvent.Type=EhrMeasureEventType.ClinicalSummaryProvidedToPt;
 			newMeasureEvent.PatientId=PatCur.PatNum;
-			EhrMeasureEvents.Insert(newMeasureEvent);
+			EhrMeasureEvents.Save(newMeasureEvent);
 			FillGridEHRMeasureEvents();//This will cause the measure event to show in the grid below the popup message on the next line.  Reassures the user that the event was immediately recorded.
 			MessageBox.Show("Clinical Summary Sent");
 		}
@@ -176,7 +178,7 @@ namespace OpenDental {
 				measureEvent.Date = DateTime.Now;
 				measureEvent.Type = EhrMeasureEventType.ClinicalSummaryProvidedToPt;
 				measureEvent.PatientId = PatCur.PatNum;
-				EhrMeasureEvents.Insert(measureEvent);
+				EhrMeasureEvents.Save(measureEvent);
 				FillGridEHRMeasureEvents();
 			}		
 		}

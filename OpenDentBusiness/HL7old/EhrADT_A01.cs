@@ -1,18 +1,18 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using Imedisoft.Data;
-using Imedisoft.Data.Models;
-using OpenDentBusiness;
 
-namespace OpenDentBusiness.HL7 {
-	///<summary>Syndromic surveillance messaging.  Written using the PHIN HL7 2.5.1 guide.
-	///Since we are only certifying ambulatory, we have much fewer requirements to meet certification.
-	///Ambulatory implementations must fill all required fields, but can ignore all "required if known" fields and can also ignore all optional fields.
-	///Inpatient implementations must fill all required fields and all "required if known" fields, but are allowed to skip optional fields.
-	///For inpatient, if a field is required if known, then UI would be needed if there was no way to enter the data.  Basically required if known fields become required fields if implementing inpatient.</summary>
-	public class EhrADT_A01 {
+namespace OpenDentBusiness.HL7
+{
+    ///<summary>Syndromic surveillance messaging.  Written using the PHIN HL7 2.5.1 guide.
+    ///Since we are only certifying ambulatory, we have much fewer requirements to meet certification.
+    ///Ambulatory implementations must fill all required fields, but can ignore all "required if known" fields and can also ignore all optional fields.
+    ///Inpatient implementations must fill all required fields and all "required if known" fields, but are allowed to skip optional fields.
+    ///For inpatient, if a field is required if known, then UI would be needed if there was no way to enter the data.  Basically required if known fields become required fields if implementing inpatient.</summary>
+    public class EhrADT_A01 {
 
 		///<summary>Set in constructor and must not be modified.</summary>
 		private Appointment _appt;

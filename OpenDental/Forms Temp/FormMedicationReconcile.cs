@@ -11,6 +11,7 @@ using System.IO;
 using Imedisoft.Forms;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
+using System.Linq;
 
 namespace OpenDental {
 	public partial class FormMedicationReconcile:ODForm {
@@ -112,7 +113,7 @@ namespace OpenDental {
 			gridReconcileEvents.Columns.Add(col);
 			col=new GridColumn("Details",600);
 			gridReconcileEvents.Columns.Add(col);
-			ehrMeasureEventsList=EhrMeasureEvents.RefreshByType(PatCur.PatNum,EhrMeasureEventType.MedicationReconcile);
+			ehrMeasureEventsList=EhrMeasureEvents.GetByPatient(PatCur.PatNum,EhrMeasureEventType.MedicationReconcile).ToList();
 			gridReconcileEvents.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<ehrMeasureEventsList.Count;i++) {
@@ -188,7 +189,7 @@ namespace OpenDental {
 			newMeasureEvent.Type=EhrMeasureEventType.MedicationReconcile;
 			newMeasureEvent.PatientId=PatCur.PatNum;
 			newMeasureEvent.MoreInfo="";
-			EhrMeasureEvents.Insert(newMeasureEvent);
+			EhrMeasureEvents.Save(newMeasureEvent);
 			FillReconcilesGrid();
 		}
 

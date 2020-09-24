@@ -59,11 +59,6 @@ namespace OpenDentBusiness
 		public MatchCardinality Cardinality;
 
 
-		///<summary></summary>
-		public EhrTrigger Copy()
-		{
-			return (EhrTrigger)this.MemberwiseClone();
-		}
 
 		public EhrTrigger()
 		{

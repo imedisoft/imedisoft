@@ -1,12 +1,13 @@
 using System;
 
-namespace OpenDentBusiness {
-
+namespace OpenDentBusiness
+{
 	///<summary>Only used at HQ.  If a row is present in this table, then this customer is a reseller.  Also holds their credentials for the reseller portal.</summary>
 	[Serializable]
-	public class Reseller:TableBase {
+	public class Reseller : TableBase
+	{
 		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+		[CrudColumn(IsPriKey = true)]
 		public long ResellerNum;
 		///<summary>FK to patient.PatNum.</summary>
 		public long PatNum;
@@ -25,13 +26,14 @@ namespace OpenDentBusiness {
 
 		///<summary>The password hash, not the actual password.  If no password has been entered, then this will be blank.</summary>
 		public string PasswordHash
-        {
+		{
 			get => ResellerPassword;
 			set => ResellerPassword = value;
 		}
 
 		///<summary>Returns a copy of this Reseller.</summary>
-		public Reseller Copy() {
+		public Reseller Copy()
+		{
 			return (Reseller)this.MemberwiseClone();
 		}
 	}

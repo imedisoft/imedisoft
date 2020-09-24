@@ -1009,6 +1009,16 @@ namespace Imedisoft.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap IconAt {
+            get {
+                object obj = ResourceManager.GetObject("IconAt", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap IconBug {
             get {
                 object obj = ResourceManager.GetObject("IconBug", resourceCulture);
@@ -1132,6 +1142,36 @@ namespace Imedisoft.Properties {
         public static System.Drawing.Bitmap IconEllipsisSmall {
             get {
                 object obj = ResourceManager.GetObject("IconEllipsisSmall", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconEnvelope {
+            get {
+                object obj = ResourceManager.GetObject("IconEnvelope", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconEnvelopeOpen {
+            get {
+                object obj = ResourceManager.GetObject("IconEnvelopeOpen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconEnvelopeOpenText {
+            get {
+                object obj = ResourceManager.GetObject("IconEnvelopeOpenText", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

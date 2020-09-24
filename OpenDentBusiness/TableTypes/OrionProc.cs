@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections;
-using System.Drawing;
 
-namespace OpenDentBusiness{
-	///<summary>This table is only used by one customer.  1:1 relationship to procedurelog table.</summary>
-	[Serializable]
-	public class OrionProc:TableBase{
+namespace OpenDentBusiness
+{
+    ///<summary>This table is only used by one customer.  1:1 relationship to procedurelog table.</summary>
+    [Serializable]
+	public class OrionProc : TableBase
+	{
 		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+		[CrudColumn(IsPriKey = true)]
 		public long OrionProcNum;
 		///<summary>FK to procedurelog.ProcNum</summary>
 		public long ProcNum;
@@ -27,71 +27,71 @@ namespace OpenDentBusiness{
 		public bool IsEffectiveComm;
 		///<summary>.</summary>
 		public bool IsRepair;
-		
 
 
-		public OrionProc Copy() {
+
+		public OrionProc Copy()
+		{
 			return (OrionProc)this.MemberwiseClone();
 		}
 	}
 
 	///<summary></summary>
-	public enum OrionDPC{
-	  ///<summary>0- Not Specified</summary>
-	  NotSpecified,
+	public enum OrionDPC
+	{
+		///<summary>0- Not Specified</summary>
+		NotSpecified,
 		///<summary>1- None</summary>
-	  None,
-	  ///<summary>2- Treatment to be scheduled within 1 calendar day</summary>
-	  _1A,
-	  ///<summary>3- Treatment to be scheduled within 30 calendar days</summary>
-	  _1B,
-	  ///<summary>4- Treatment to be scheduled within 60 calendar days</summary>
-	  _1C,
-	  ///<summary>5– Treatment to be scheduled within 120 calendar days</summary>
-	  _2,
-	  ///<summary>6– Treatment to be scheduled within 1 year</summary>
-	  _3,
-	  ///<summary>7– No further treatment is needed, no appointment needed</summary>
-	  _4,
-	  ///<summary>8– No appointment needed </summary>
-	  _5		
+		None,
+		///<summary>2- Treatment to be scheduled within 1 calendar day</summary>
+		_1A,
+		///<summary>3- Treatment to be scheduled within 30 calendar days</summary>
+		_1B,
+		///<summary>4- Treatment to be scheduled within 60 calendar days</summary>
+		_1C,
+		///<summary>5– Treatment to be scheduled within 120 calendar days</summary>
+		_2,
+		///<summary>6– Treatment to be scheduled within 1 year</summary>
+		_3,
+		///<summary>7– No further treatment is needed, no appointment needed</summary>
+		_4,
+		///<summary>8– No appointment needed </summary>
+		_5
 	}
 
 	///<summary></summary>
 	[Flags]
-	public enum OrionStatus {
+	public enum OrionStatus
+	{
 		///<summary>0- None.  While a normal orion proc would never have this status2, it is still needed for flags in ChartViews.  And it's also possible that a status2 slipped through the cracks and was not assigned, leaving it with this value.</summary>
-		None=0,
+		None = 0,
 		///<summary>1– Treatment planned</summary>
-		TP=1,
+		TP = 1,
 		///<summary>2– Completed</summary>
-		C=2,
+		C = 2,
 		///<summary>4– Existing prior to incarceration</summary>
-		E=4,
+		E = 4,
 		///<summary>8– Refused treatment</summary>
-		R=8,
+		R = 8,
 		///<summary>16– Referred out to specialist</summary>
-		RO=16,
+		RO = 16,
 		///<summary>32– Completed by specialist</summary>
-		CS=32,
+		CS = 32,
 		///<summary>64– Completed by registry</summary>
-		CR=64,
+		CR = 64,
 		///<summary>128- Cancelled, tx plan changed</summary>
-		CA_Tx=128,
+		CA_Tx = 128,
 		///<summary>256- Cancelled, eligible parole</summary>
-		CA_EPRD=256,
+		CA_EPRD = 256,
 		///<summary>512- Cancelled, parole/discharge</summary>
-		CA_PD=512,
+		CA_PD = 512,
 		///<summary>1024– Suspended, unacceptable plaque</summary>
-		S=1024,
+		S = 1024,
 		///<summary>2048- Stop clock, multi visit</summary>
-		ST=2048,
+		ST = 2048,
 		///<summary>4096– Watch</summary>
-		W=4096,
+		W = 4096,
 		///<summary>8192– Alternative</summary>
-		A=8192
+		A = 8192
 	}
-
-
 }
-

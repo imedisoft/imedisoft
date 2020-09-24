@@ -148,7 +148,7 @@ namespace OpenDental {
 				newMeasureEvent.PatientId=MedOrderCur.PatNum;
 				newMeasureEvent.MoreInfo="";
 				newMeasureEvent.ObjectId=MedOrderCur.MedicalOrderNum;
-				EhrMeasureEvents.Insert(newMeasureEvent);
+				EhrMeasureEvents.Save(newMeasureEvent);
 			}
 			else {
 				MedicalOrders.Update(MedOrderCur);

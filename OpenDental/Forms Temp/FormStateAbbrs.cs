@@ -129,7 +129,7 @@ namespace OpenDental{
 			long previousSelectedStateAbbrNum=-1;
 			int newSelectedIdx=-1;
 			if(gridMain.GetSelectedIndex()!=-1){
-				previousSelectedStateAbbrNum=((StateAbbr)gridMain.Rows[gridMain.GetSelectedIndex()].Tag).StateAbbrNum;
+				previousSelectedStateAbbrNum=((StateAbbr)gridMain.Rows[gridMain.GetSelectedIndex()].Tag).Id;
 			}
 			gridMain.BeginUpdate();
 			gridMain.Columns.Clear();
@@ -158,7 +158,7 @@ namespace OpenDental{
 				}
 				row.Tag=stateAbbrs[i];
 				gridMain.Rows.Add(row);
-				if(stateAbbrs[i].StateAbbrNum==previousSelectedStateAbbrNum) {
+				if(stateAbbrs[i].Id==previousSelectedStateAbbrNum) {
 					newSelectedIdx=i;
 				}
 			}

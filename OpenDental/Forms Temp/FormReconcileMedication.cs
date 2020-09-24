@@ -403,7 +403,7 @@ namespace OpenDental {
 			newMeasureEvent.Type=EhrMeasureEventType.MedicationReconcile;
 			newMeasureEvent.PatientId=_patCur.PatNum;
 			newMeasureEvent.MoreInfo="";
-			EhrMeasureEvents.Insert(newMeasureEvent);
+			EhrMeasureEvents.Save(newMeasureEvent);
 			for(int inter=0;inter<_listMedicationPatReconcile.Count;inter++) {
 				if(CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowCDS && CdsPermissions.GetByUser(Security.CurrentUser.Id).MedicationCDS) {
 					Medication medInter=Medications.GetByRxCuiNoCache(_listMedicationPatReconcile[inter].RxCui.ToString());

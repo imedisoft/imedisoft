@@ -1,16 +1,15 @@
 ﻿using Imedisoft.Data.Annotations;
-using System;
 
 namespace OpenDentBusiness
 {
-	/// <summary>
-	/// For EHR module, these are all the codes from various code sets that will affect reporting clinical quality measures.
-	/// Users cannot edit. 
-	/// This is not an actual table in the database. 
-	/// The codes are loaded from the EHR.dll, so it is a static object, no inserts/updates. 
-	/// Selecting from this 'table' will always use the cache pattern.
-	/// </summary>
-	public class EhrCode : TableBase
+    /// <summary>
+    /// For EHR module, these are all the codes from various code sets that will affect reporting clinical quality measures.
+    /// Users cannot edit. 
+    /// This is not an actual table in the database. 
+    /// The codes are loaded from the EHR.dll, so it is a static object, no inserts/updates. 
+    /// Selecting from this 'table' will always use the cache pattern.
+    /// </summary>
+    public class EhrCode : TableBase
 	{
 		[PrimaryKey]
 		public long EhrCodeNum;

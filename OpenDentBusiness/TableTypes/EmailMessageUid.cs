@@ -2,10 +2,10 @@ using System;
 
 namespace OpenDentBusiness
 {
-    ///<summary>Used to track which email messages have been downloaded into the inbox for a particular recipient address.
-    ///Not linked to the email message itself because no link is needed.
-    ///If we decide to add a foreign key to a EmailMessage later, we should consider what do to when an email message is deleted (set the foreign key to 0 perhaps).</summary>
-    [Serializable]
+	///<summary>Used to track which email messages have been downloaded into the inbox for a particular recipient address.
+	///Not linked to the email message itself because no link is needed.
+	///If we decide to add a foreign key to a EmailMessage later, we should consider what do to when an email message is deleted (set the foreign key to 0 perhaps).</summary>
+	[Serializable]
 	public class EmailMessageUid : TableBase
 	{
 		///<summary>Primary key.</summary>

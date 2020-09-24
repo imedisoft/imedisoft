@@ -88,6 +88,55 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CVX code already exists for the selected manufacturer..
+        /// </summary>
+        public static string CvxCodeAlreadyExistsForTheSelectedManufacturer {
+            get {
+                return ResourceManager.GetString("CvxCodeAlreadyExistsForTheSelectedManufacturer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Encrypted Message:
+        ///{0}
+        ///
+        ///Hash:
+        ///{1}.
+        /// </summary>
+        public static string EncryptedMessageWithHash {
+            get {
+                return ResourceManager.GetString("EncryptedMessageWithHash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Encryption.
+        /// </summary>
+        public static string Encryption {
+            get {
+                return ResourceManager.GetString("Encryption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text entered was not valid encrypted text..
+        /// </summary>
+        public static string EnteredTextIsNotValidEncryptedText {
+            get {
+                return ResourceManager.GetString("EnteredTextIsNotValidEncryptedText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Immunization Submission.
+        /// </summary>
+        public static string ImmunizationSubmission {
+            get {
+                return ResourceManager.GetString("ImmunizationSubmission", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Instructions.
         /// </summary>
         public static string Instructions {
@@ -106,6 +155,60 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This is not a valid CCD, CCDA, CCR, or C32 message. Only the raw text will be shown..
+        /// </summary>
+        public static string InvalidSummaryOfCareOnlyRawTextWillBeShown {
+            get {
+                return ResourceManager.GetString("InvalidSummaryOfCareOnlyRawTextWillBeShown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manufacturer with this code already exists..
+        /// </summary>
+        public static string ManufacturerWithThisCodeAlreadyExists {
+            get {
+                return ResourceManager.GetString("ManufacturerWithThisCodeAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not administered: {0}.
+        /// </summary>
+        public static string NotAdministeredName {
+            get {
+                return ResourceManager.GetString("NotAdministeredName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nothing to decrypt..
+        /// </summary>
+        public static string NothingToDecrypt {
+            get {
+                return ResourceManager.GetString("NothingToDecrypt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nothing to encrypt..
+        /// </summary>
+        public static string NothingToEncrypt {
+            get {
+                return ResourceManager.GetString("NothingToEncrypt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nothing to send..
+        /// </summary>
+        public static string NothingToSend {
+            get {
+                return ResourceManager.GetString("NothingToSend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please enter a source name..
         /// </summary>
         public static string PleaseEnterAmendmentSourceName {
@@ -115,11 +218,191 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter the code system..
+        /// </summary>
+        public static string PleaseEnterCodeSystem {
+            get {
+                return ResourceManager.GetString("PleaseEnterCodeSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter documentation in the note..
+        /// </summary>
+        public static string PleaseEnterDocumentationInNote {
+            get {
+                return ResourceManager.GetString("PleaseEnterDocumentationInNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a method code..
+        /// </summary>
+        public static string PleaseEnterMethodCode {
+            get {
+                return ResourceManager.GetString("PleaseEnterMethodCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a valid expiration date..
+        /// </summary>
+        public static string PleaseEnterValidExpirationDate {
+            get {
+                return ResourceManager.GetString("PleaseEnterValidExpirationDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please select an amendment source..
         /// </summary>
         public static string PleaseSelectAmendmentSource {
             get {
                 return ResourceManager.GetString("PleaseSelectAmendmentSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At least one observation must be selected..
+        /// </summary>
+        public static string PleaseSelectAtLeastOneObservation {
+            get {
+                return ResourceManager.GetString("PleaseSelectAtLeastOneObservation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select at least one vaccine..
+        /// </summary>
+        public static string PleaseSelectAtLeastOneVaccine {
+            get {
+                return ResourceManager.GetString("PleaseSelectAtLeastOneVaccine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select a manufacturer..
+        /// </summary>
+        public static string PleaseSelectManufacturer {
+            get {
+                return ResourceManager.GetString("PleaseSelectManufacturer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select the question this observation answers..
+        /// </summary>
+        public static string PleaseSelectQuestionThisObservationAnswers {
+            get {
+                return ResourceManager.GetString("PleaseSelectQuestionThisObservationAnswers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select the SNOMED CT goal..
+        /// </summary>
+        public static string PleaseSelectSnomedCtGoal {
+            get {
+                return ResourceManager.GetString("PleaseSelectSnomedCtGoal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Two or more observations must be selected..
+        /// </summary>
+        public static string PleaseSelectTwoOrMoreObservations {
+            get {
+                return ResourceManager.GetString("PleaseSelectTwoOrMoreObservations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select a vaccine..
+        /// </summary>
+        public static string PleaseSelectVaccine {
+            get {
+                return ResourceManager.GetString("PleaseSelectVaccine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select the value units..
+        /// </summary>
+        public static string PleaseSelectValueUnits {
+            get {
+                return ResourceManager.GetString("PleaseSelectValueUnits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provided to patient.
+        /// </summary>
+        public static string ProvidedToPatient {
+            get {
+                return ResourceManager.GetString("ProvidedToPatient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Requested by patient.
+        /// </summary>
+        public static string RequestedByPatient {
+            get {
+                return ResourceManager.GetString("RequestedByPatient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified value is not a valid date..
+        /// </summary>
+        public static string SpecifiedValueIsNotValidDate {
+            get {
+                return ResourceManager.GetString("SpecifiedValueIsNotValidDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified value is not a valid date and time..
+        /// </summary>
+        public static string SpecifiedValueIsNotValidDateTime {
+            get {
+                return ResourceManager.GetString("SpecifiedValueIsNotValidDateTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified value is not a valid number..
+        /// </summary>
+        public static string SpecifiedValueIsNotValidNumber {
+            get {
+                return ResourceManager.GetString("SpecifiedValueIsNotValidNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Summary of Care.
+        /// </summary>
+        public static string SummaryOfCare {
+            get {
+                return ResourceManager.GetString("SummaryOfCare", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Summary of Care not exported..
+        /// </summary>
+        public static string SummaryOfCareNotExported {
+            get {
+                return ResourceManager.GetString("SummaryOfCareNotExported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Summary of Care not shown..
+        /// </summary>
+        public static string SummaryOfCareNotShown {
+            get {
+                return ResourceManager.GetString("SummaryOfCareNotShown", resourceCulture);
             }
         }
         
@@ -138,6 +421,42 @@ namespace Imedisoft.Translation {
         public static string TriggersEnabled {
             get {
                 return ResourceManager.GetString("TriggersEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to delete. The drug manufacturer is in use by one or more vaccines..
+        /// </summary>
+        public static string UnableToDeleteDrugManufacturerIsInUse {
+            get {
+                return ResourceManager.GetString("UnableToDeleteDrugManufacturerIsInUse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to delete. The drug unit is in use by a vaccine assigned to one or more patients..
+        /// </summary>
+        public static string UnableToDeleteDrugUnitIsInUse {
+            get {
+                return ResourceManager.GetString("UnableToDeleteDrugUnitIsInUse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to delete. The vaccine is in use by one or more patients..
+        /// </summary>
+        public static string UnableToDeleteVaccineIsInUse {
+            get {
+                return ResourceManager.GetString("UnableToDeleteVaccineIsInUse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vaccine.
+        /// </summary>
+        public static string Vaccine {
+            get {
+                return ResourceManager.GetString("Vaccine", resourceCulture);
             }
         }
     }

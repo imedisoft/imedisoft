@@ -11,9 +11,6 @@ namespace OpenDentBusiness
 		[PrimaryKey]
 		public long QueryNum;
 
-		/// <summary>
-		/// Description.
-		/// </summary>
 		public string Description;
 
 		/// <summary>

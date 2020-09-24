@@ -221,6 +221,9 @@ Imported {0} new note(s) and {1} new prompt(s).</value>
   <data name="ConfirmDeleteSelectedItem" xml:space="preserve">
     <value>Are you sure you want to delete the selected item?</value>
   </data>
+  <data name="ConfirmDeleteSelectedItems" xml:space="preserve">
+    <value>Are you sure you want to delete the selected items?</value>
+  </data>
   <data name="ConfirmInstallUpdate" xml:space="preserve">
     <value>There is a update available. Would you like to update now?</value>
   </data>
@@ -235,6 +238,9 @@ Imported {0} new note(s) and {1} new prompt(s).</value>
   </data>
   <data name="ConfirmMoveSelectedNoteToRootLevel" xml:space="preserve">
     <value>Move the selected note to the root level?</value>
+  </data>
+  <data name="ConfirmOverwriteFile" xml:space="preserve">
+    <value>Overwrite existing file?</value>
   </data>
   <data name="Controlled" xml:space="preserve">
     <value>Controlled</value>
@@ -311,6 +317,12 @@ Imported {0} new note(s) and {1} new prompt(s).</value>
   <data name="ErrorOpeningLogFile" xml:space="preserve">
     <value>Could not open log file. {0}</value>
   </data>
+  <data name="ErrorReadingFile" xml:space="preserve">
+    <value>Error reading file.</value>
+  </data>
+  <data name="Exported" xml:space="preserve">
+    <value>Exported</value>
+  </data>
   <data name="FeeSchedule" xml:space="preserve">
     <value>Fee Schedule</value>
   </data>
@@ -319,6 +331,9 @@ Imported {0} new note(s) and {1} new prompt(s).</value>
   </data>
   <data name="FirstName" xml:space="preserve">
     <value>FirstName</value>
+  </data>
+  <data name="Goal" xml:space="preserve">
+    <value>Goal</value>
   </data>
   <data name="HasProc" xml:space="preserve">
     <value>Has Proc.</value>
@@ -336,6 +351,9 @@ Imported {0} new note(s) and {1} new prompt(s).</value>
   <data name="Inbox" xml:space="preserve">
     <value>Inbox</value>
   </data>
+  <data name="Instructions" xml:space="preserve">
+    <value>Instructions</value>
+  </data>
   <data name="InsufficientPrivileges" xml:space="preserve">
     <value>You do not have sufficient privileges to perform this operation.</value>
   </data>
@@ -344,6 +362,9 @@ Imported {0} new note(s) and {1} new prompt(s).</value>
   </data>
   <data name="InvalidUserNameOrPassword" xml:space="preserve">
     <value>Invalid username or password.</value>
+  </data>
+  <data name="InvalidXml" xml:space="preserve">
+    <value>Invalid XML.</value>
   </data>
   <data name="JsonFiles" xml:space="preserve">
     <value>JSON Files</value>
@@ -375,6 +396,9 @@ Imported {0} new note(s) and {1} new prompt(s).</value>
   <data name="MedLabAccountInUseByAnotherClinic" xml:space="preserve">
     <value>The MedLab Account Number entered is already in use by another clinic.</value>
   </data>
+  <data name="Meets" xml:space="preserve">
+    <value>Meets</value>
+  </data>
   <data name="MissingInfo" xml:space="preserve">
     <value>Missing Info</value>
   </data>
@@ -397,6 +421,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="NoQueriesInTheQueryFeedToLog" xml:space="preserve">
     <value>No queries in the Query Feed to log.</value>
+  </data>
+  <data name="NoStylesheetFound" xml:space="preserve">
+    <value>No stylesheet found.</value>
   </data>
   <data name="NotApplicableAbbr" xml:space="preserve">
     <value>n/a</value>
@@ -473,6 +500,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="PleaseEnterAutograph" xml:space="preserve">
     <value>Please enter a autograph.</value>
   </data>
+  <data name="PleaseEnterCode" xml:space="preserve">
+    <value>Please enter a code.</value>
+  </data>
   <data name="PleaseEnterDate" xml:space="preserve">
     <value>Please enter a date.</value>
   </data>
@@ -506,8 +536,14 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="PleaseEnterValidPercentage" xml:space="preserve">
     <value>Please enter a valid percentage.</value>
   </data>
+  <data name="PleaseEnterValidStartAndStopDates" xml:space="preserve">
+    <value>Please enter valid start and stop dates.</value>
+  </data>
   <data name="PleaseEnterValidYear" xml:space="preserve">
     <value>Please enter a valid year.</value>
+  </data>
+  <data name="PleaseEnterValue" xml:space="preserve">
+    <value>Please enter a value.</value>
   </data>
   <data name="PleaseSelectAccountFirst" xml:space="preserve">
     <value>Please select an account first.</value>
@@ -554,6 +590,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="PleaseSelectUserGroup" xml:space="preserve">
     <value>Please select a group.</value>
   </data>
+  <data name="PleaseSelectValueType" xml:space="preserve">
+    <value>Please select a value type.</value>
+  </data>
   <data name="PossibleResponsesOneLinePerItem" xml:space="preserve">
     <value>Possible responses
 (one line per item)</value>
@@ -574,6 +613,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="Quarter" xml:space="preserve">
     <value>Quarter</value>
   </data>
+  <data name="Question" xml:space="preserve">
+    <value>Question</value>
+  </data>
   <data name="ReEnterPassword" xml:space="preserve">
     <value>Re-Enter Password</value>
   </data>
@@ -583,6 +625,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="Response" xml:space="preserve">
     <value>Response</value>
   </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Saved.</value>
+  </data>
   <data name="Scan" xml:space="preserve">
     <value>Scan</value>
   </data>
@@ -591,6 +636,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="SelectRowFromQueryFeed" xml:space="preserve">
     <value>Select a row from the Query Feed.</value>
+  </data>
+  <data name="Sent" xml:space="preserve">
+    <value>Sent.</value>
   </data>
   <data name="SetGraphicsForComputerToSimple" xml:space="preserve">
     <value>Set the graphics for computer '{0}' to simple.</value>
@@ -645,6 +693,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="ThereIsNoUpdateAvailable" xml:space="preserve">
     <value>There is no update available.</value>
+  </data>
+  <data name="Timestamp" xml:space="preserve">
+    <value>Timestamp</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Title</value>

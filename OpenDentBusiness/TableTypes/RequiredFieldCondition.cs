@@ -1,16 +1,18 @@
 ﻿using System;
 
-namespace OpenDentBusiness {
+namespace OpenDentBusiness
+{
 	///<summary>When one of these conditions is true, the corresponding requiredfield will be triggered.</summary>
 	[Serializable]
-	public class RequiredFieldCondition:TableBase {
+	public class RequiredFieldCondition : TableBase
+	{
 		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+		[CrudColumn(IsPriKey = true)]
 		public long RequiredFieldConditionNum;
 		///<summary>FK to requiredfield.RequiredFieldNum.</summary>
 		public long RequiredFieldNum;
 		///<summary>Enum:RequiredFieldName </summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.EnumAsString)]
+		[CrudColumn(SpecialType = CrudSpecialColType.EnumAsString)]
 		public RequiredFieldName ConditionType;
 		///<summary>Enum:ConditionOperator . The operator that is being applied to the ConditionType.</summary>
 		public ConditionOperator Operator;
@@ -20,34 +22,26 @@ namespace OpenDentBusiness {
 		public LogicalOperator ConditionRelationship;
 
 		///<summary></summary>
-		public RequiredFieldCondition Clone() {
+		public RequiredFieldCondition Clone()
+		{
 			return (RequiredFieldCondition)this.MemberwiseClone();
 		}
 	}
 
-	///<summary></summary>
-	public enum ConditionOperator {
-		///<summary>0: =</summary>
+	public enum ConditionOperator
+	{
 		Equals,
-		///<summary>1: !=</summary>
 		NotEquals,
-		///<summary>2: ></summary>
 		GreaterThan,
-		///<summary>3: &lt;</summary>
 		LessThan,
-		///<summary>4: >=</summary>
 		GreaterThanOrEqual,
-		///<summary>5: &lt;=</summary>
 		LessThanOrEqual
 	}
 
-	///<summary></summary>
-	public enum LogicalOperator {
-		///<summary>0</summary>
+	public enum LogicalOperator
+	{
 		None,
-		///<summary>1</summary>
 		And,
-		///<summary>2</summary>
 		Or
 	}
 }

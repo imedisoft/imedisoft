@@ -2,7 +2,7 @@ using Imedisoft.Data.Annotations;
 
 namespace OpenDentBusiness
 {
-	[Table]
+    [Table("codesystems")]
 	public class CodeSystem : TableBase
 	{
 		[PrimaryKey]

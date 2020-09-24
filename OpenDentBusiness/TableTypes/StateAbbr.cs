@@ -2,15 +2,11 @@
 
 namespace OpenDentBusiness
 {
-	/// <summary>
-	/// State abbreviations are always copied to patient records rather than linked.  
-	/// Items in this list can be freely altered or deleted without harming patient data.
-	/// </summary>
-	[Table]
+	[Table("states")]
 	public class StateAbbr : TableBase
 	{
 		[PrimaryKey]
-		public long StateAbbrNum;
+		public long Id;
 
 		/// <summary>
 		/// Full state name.
@@ -18,13 +14,14 @@ namespace OpenDentBusiness
 		public string Description;
 
 		/// <summary>
-		/// Short state abbreviation (usually 2 digit)
+		/// Short state abbreviation (usually 2 characters).
 		/// </summary>
 		public string Abbr;
 
 		/// <summary>
 		/// The length that the Medicaid ID should be for this state. If 0, then the Medicaid length is not enforced for this state.
 		/// </summary>
+		[Column("medicaid_id_length")]
 		public int MedicaidIDLength;
 
 		public StateAbbr Clone() => (StateAbbr)MemberwiseClone();

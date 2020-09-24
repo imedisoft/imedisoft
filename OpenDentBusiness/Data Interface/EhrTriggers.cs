@@ -1066,7 +1066,7 @@ namespace OpenDentBusiness
 				|| ehrTrigger.CvxList.Trim() != "")
 			{
 				//Medication condition exists
-				if (!listObjectMatches.Any(x => x is MedicationPat || x is VaccineDef))
+				if (!listObjectMatches.Any(x => x is MedicationPat || x is EhrVaccine))
 				{
 					return false;
 				}

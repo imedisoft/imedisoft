@@ -3,11 +3,11 @@ using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness
 {
-    /// <summary>
-    /// Keeps track of the last appointment view used on a per user basis. 
-    /// Users can have multiple rows in this table when using clinics.
-    /// </summary>
-    [Table]
+	/// <summary>
+	/// Keeps track of the last appointment view used on a per user basis. 
+	/// Users can have multiple rows in this table when using clinics.
+	/// </summary>
+	[Table]
 	public class UserodApptView
 	{
 		[PrimaryKey]

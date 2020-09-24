@@ -166,7 +166,7 @@ namespace OpenDentBusiness
 						}
 						break;
 					case "Tobacco Use":
-						data.ListTobaccoStatuses = EhrMeasureEvents.RefreshByType(patNum, EhrMeasureEventType.TobaccoUseAssessed);
+						data.ListTobaccoStatuses = EhrMeasureEvents.GetByPatient(patNum, EhrMeasureEventType.TobaccoUseAssessed).ToList();
 						break;
 				}
 			}

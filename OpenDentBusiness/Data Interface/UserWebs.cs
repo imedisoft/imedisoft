@@ -1,5 +1,6 @@
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -329,13 +330,7 @@ namespace OpenDentBusiness
 				//Only insert an EHR event if the password was previously blank (meaning they don't currently have access).
 				if (string.IsNullOrEmpty(userWeb.PasswordHash))
 				{
-					EhrMeasureEvents.Insert(new EhrMeasureEvent()
-					{
-						Date = DateTime.Now,
-						Type = EhrMeasureEventType.OnlineAccessProvided,
-						PatientId = userWeb.FKey, //PatNum.
-						MoreInfo = "",
-					});
+					EhrMeasureEvents.Create(userWeb.FKey, EhrMeasureEventType.OnlineAccessProvided);
 				}
 				//New password was created so set the flag for the user to change on next login and update the db accordingly.
 				userWeb.RequirePasswordChange = true;

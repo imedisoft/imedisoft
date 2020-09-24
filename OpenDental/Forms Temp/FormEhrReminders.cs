@@ -83,7 +83,7 @@ namespace OpenDental {
 			gridProvided.Columns.Add(col);
 			col=new GridColumn("Details",600);
 			gridProvided.Columns.Add(col);
-			reminderSentList=EhrMeasureEvents.RefreshByType(PatCur.PatNum,EhrMeasureEventType.ReminderSent);
+			reminderSentList=EhrMeasureEvents.GetByPatient(PatCur.PatNum,EhrMeasureEventType.ReminderSent).ToList();
 			gridProvided.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<reminderSentList.Count;i++) {
@@ -105,7 +105,7 @@ namespace OpenDental {
 				moreInfo=gridMain.Rows[gridMain.GetSelectedIndex()].Cells[1].Text;
 			}
 			newMeasureEvent.MoreInfo=moreInfo;
-			EhrMeasureEvents.Insert(newMeasureEvent);
+			EhrMeasureEvents.Save(newMeasureEvent);
 			FillGridProvided();
 		}
 

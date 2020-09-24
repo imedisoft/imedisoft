@@ -1,6 +1,5 @@
 using Imedisoft.Data.Annotations;
 using System;
-using System.Collections;
 
 namespace OpenDentBusiness
 {

@@ -1,4 +1,5 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -112,7 +113,7 @@ namespace Imedisoft.Forms
 
 		private void FormCdsTriggers_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			EhrMeasureEvents.Insert(new EhrMeasureEvent
+			EhrMeasureEvents.Save(new EhrMeasureEvent
 			{
 				Date = DateTime.UtcNow,
 				Type = EhrMeasureEventType.ClinicalInterventionRules,

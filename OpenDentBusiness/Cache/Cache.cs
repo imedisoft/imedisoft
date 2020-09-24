@@ -393,9 +393,9 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.Vaccines) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Vaccines.ToString());
-				VaccineDefs.GetTableFromCache(true);
-				DrugManufacturers.GetTableFromCache(true);
-				DrugUnits.GetTableFromCache(true);
+				EhrVaccines.RefreshCache();
+				EhrDrugManufacturers.RefreshCache();
+				EhrDrugUnits.RefreshCache();
 			}
 			if (invalidTypes.Contains(InvalidType.Views) || refreshAll)
 			{

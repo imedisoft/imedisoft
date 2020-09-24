@@ -461,7 +461,7 @@ namespace OpenDental{
 						newMeasureEvent.Type=EhrMeasureEventType.SummaryOfCareProvidedToDr;
 						newMeasureEvent.PatientId=PatCur.PatNum;
 						newMeasureEvent.ObjectId=FormRAE.RefAttachCur.RefAttachNum;//Can be 0 if user didn't pick a referral for some reason.
-						EhrMeasureEvents.Insert(newMeasureEvent);
+						EhrMeasureEvents.Save(newMeasureEvent);
 					}
 					catch {
 						//We are just trying to be helpful so it doesn't really matter if something failed above. 

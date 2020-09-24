@@ -1,4 +1,5 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -161,7 +162,7 @@ namespace Imedisoft.Forms
 
 			MedicalOrderId = MedicationPats.InsertOrUpdateMedOrderForRx(rxPat, rxDef.RxCui, isProvOrder);//RxDefCur.RxCui can be 0.
 
-            EhrMeasureEvents.Insert(new EhrMeasureEvent
+            EhrMeasureEvents.Save(new EhrMeasureEvent
 			{
 				Date = DateTime.Now,
 				Type = EhrMeasureEventType.CPOE_MedOrdered,

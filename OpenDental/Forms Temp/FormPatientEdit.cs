@@ -2,27 +2,29 @@
 Open Dental GPL license Copyright (C) 2003  Jordan Sparks, DMD.  http://www.open-dent.com,  www.docsparks.com
 See header in FormOpenDental.cs for complete text.  Redistributions must retain this text.
 ===============================================================================================================*/
-using System;
-using System.Drawing;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
+using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Cache;
+using Imedisoft.Data.Models;
+using Imedisoft.Data.Models.CodeLists.HL7;
+using Imedisoft.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
 using OpenDentBusiness.HL7;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
 using System.Linq;
-using CodeBase;
-using Imedisoft.Forms;
-using Imedisoft.Data.Models;
-using Imedisoft.Data;
-using Imedisoft.Data.Cache;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
-namespace OpenDental{
-///<summary></summary>
-	public partial class FormPatientEdit : ODForm {
+namespace OpenDental
+{
+    ///<summary></summary>
+    public partial class FormPatientEdit : ODForm {
 		///<summary>Set true if this is a new patient. Patient must have been already inserted. If users clicks cancel, this patient will be deleted.</summary>
 		public bool IsNew;
 		private string SiteOriginal;
@@ -226,14 +228,14 @@ namespace OpenDental{
 			textSalutation.Text=PatCur.Salutation;
 			textIceName.Text=_patCurNote.ICEName;
 			textIcePhone.Text=_patCurNote.ICEPhone;
-			_ehrPatientCur=EhrPatients.Refresh(PatCur.PatNum);
+			_ehrPatientCur=EhrPatients.GetById(PatCur.PatNum);
 			if(Preferences.GetBool(PreferenceName.ShowFeatureEhr)) {//Show mother's maiden name UI if using EHR.
 				labelMotherMaidenFname.Visible=true;
 				textMotherMaidenFname.Visible=true;
-				textMotherMaidenFname.Text=_ehrPatientCur.MotherMaidenFname;
+				textMotherMaidenFname.Text=_ehrPatientCur.MotherMaidenFirstName;
 				labelMotherMaidenLname.Visible=true;
 				textMotherMaidenLname.Visible=true;
-				textMotherMaidenLname.Text=_ehrPatientCur.MotherMaidenLname;
+				textMotherMaidenLname.Text=_ehrPatientCur.MotherMaidenLastName;
 				labelDeceased.Visible=true;
 				textDateDeceased.Visible=true;
 			}
@@ -581,24 +583,29 @@ namespace OpenDental{
 				checkSuperBilling.Visible=true;
 				checkSuperBilling.Checked=PatCur.HasSuperBilling;
 			}
-			//Loop through the SexOrientation enum and display the Description attribute. If the Snomed attribute equals the patient's SexualOrientation, 
-			//set that item as the selected index.
-			foreach(SexOrientation sexOrientEnum in (SexOrientation[])Enum.GetValues(typeof(SexOrientation))) {
-				comboSexOrientation.Items.Add(sexOrientEnum.GetDescription());
-				if(_ehrPatientCur.SexualOrientation==sexOrientEnum.GetAttributeOrDefault<EhrAttribute>().Snomed) {
-					comboSexOrientation.SelectedIndex=comboSexOrientation.Items.Count-1;//Make the last added item the selected one
+
+			foreach (var item in SexualOrientation.GetDataItems())
+            {
+				comboSexOrientation.Items.Add(item);
+				if (item.Value == _ehrPatientCur.SexualOrientation)
+                {
+					comboSexOrientation.SelectedItem = item;
+                }
+			}
+
+			textSpecifySexOrientation.Text=_ehrPatientCur.SexualOrientationOther;
+
+			foreach (var item in GenderIdentity.GetDataItems())
+            {
+				comboGenderIdentity.Items.Add(item);
+				if (_ehrPatientCur.GenderIdentity == item.Value)
+                {
+					comboGenderIdentity.SelectedItem = item;
 				}
 			}
-			textSpecifySexOrientation.Text=_ehrPatientCur.SexualOrientationNote;
-			//Loop through the GenderId enum and display the Description attribute. If the Snomed attribute equals the patient's GenderIdentity, 
-			//set that item as the selected index.
-			foreach(GenderId genderIdEnum in (GenderId[])Enum.GetValues(typeof(GenderId))) {
-				comboGenderIdentity.Items.Add(genderIdEnum.GetDescription());
-				if(_ehrPatientCur.GenderIdentity==genderIdEnum.GetAttributeOrDefault<EhrAttribute>().Snomed) {
-					comboGenderIdentity.SelectedIndex=comboGenderIdentity.Items.Count-1;//Make the last added item the selected one
-				}
-			}
-			textSpecifyGender.Text=_ehrPatientCur.GenderIdentityNote;
+
+			textSpecifyGender.Text=_ehrPatientCur.GenderIdentityOther;
+
 			SetRequiredFields();
 			//Selecting textLName must happen at the end of load to avoid events from accessing class wide variables that have yet to be loaded.
 			//This was a bug because calling Select() was firing textBox_Leave which was accessing _listRequiredFields while it was null.
@@ -722,11 +729,11 @@ namespace OpenDental{
 		private void FillComboZip() {
 			List<ZipCode> listZipCodes=ZipCodes.GetDeepCopy(true);
 			if(!string.IsNullOrWhiteSpace(textZip.Text)) {
-				listZipCodes.RemoveAll(x => x.ZipCodeDigits!=textZip.Text);
+				listZipCodes.RemoveAll(x => x.Digits!=textZip.Text);
 			}
 			comboZip.Items.Clear();
 			foreach(ZipCode zip in listZipCodes) {
-				comboZip.Items.Add(zip.ZipCodeDigits+" ("+zip.City+")",zip);
+				comboZip.Items.Add(zip.Digits+" ("+zip.City+")",zip);
 			}
 		}
 
@@ -1524,7 +1531,7 @@ namespace OpenDental{
 			}
 			textCity.Text=selectedZip.City;
 			textState.Text=selectedZip.State;
-			textZip.Text=selectedZip.ZipCodeDigits;
+			textZip.Text=selectedZip.Digits;
 			SetRequiredFields();
 		}
 
@@ -1559,7 +1566,7 @@ namespace OpenDental{
 			{
                 var zipCode = new ZipCode
                 {
-                    ZipCodeDigits = textZip.Text
+                    Digits = textZip.Text
                 };
 
                 using var formZipCodeEdit = new FormZipCodeEdit(zipCode);
@@ -1572,7 +1579,7 @@ namespace OpenDental{
 
 				textCity.Text = zipCode.City;
 				textState.Text = zipCode.State;
-				textZip.Text = zipCode.ZipCodeDigits;
+				textZip.Text = zipCode.Digits;
 			}
 			else if (zipCodes.Count == 1) // Only one match found. Use it.
 			{
@@ -1589,7 +1596,7 @@ namespace OpenDental{
 
 				textCity.Text = formZipSelect.SelectedZipCode.City;
 				textState.Text = formZipSelect.SelectedZipCode.State;
-				textZip.Text = formZipSelect.SelectedZipCode.ZipCodeDigits;
+				textZip.Text = formZipSelect.SelectedZipCode.Digits;
 			}
 			FillComboZip();
 			SetRequiredFields();
@@ -1617,7 +1624,7 @@ namespace OpenDental{
 			{
 				var zipCode = new ZipCode
 				{
-					ZipCodeDigits = textZip.Text
+					Digits = textZip.Text
 				};
 
 				using var formZipCodeEdit = new FormZipCodeEdit(zipCode);
@@ -1630,7 +1637,7 @@ namespace OpenDental{
 
 				textCity.Text = zipCode.City;
 				textState.Text = zipCode.State;
-				textZip.Text = zipCode.ZipCodeDigits;
+				textZip.Text = zipCode.Digits;
 			}
 			else
 			{
@@ -1642,7 +1649,7 @@ namespace OpenDental{
 
 				textCity.Text = formZipSelect.SelectedZipCode.City;
 				textState.Text = formZipSelect.SelectedZipCode.State;
-				textZip.Text = formZipSelect.SelectedZipCode.ZipCodeDigits;
+				textZip.Text = formZipSelect.SelectedZipCode.Digits;
 			}
 
 			FillComboZip();
@@ -2484,15 +2491,21 @@ namespace OpenDental{
 			}
 		}
 
-		private void comboSexOrientation_SelectedIndexChanged(object sender,EventArgs e) {
-			textSpecifySexOrientation.Visible=((SexOrientation)comboSexOrientation.SelectedIndex==SexOrientation.AdditionalOrientation);
-			labelSpecifySexOrientation.Visible=((SexOrientation)comboSexOrientation.SelectedIndex==SexOrientation.AdditionalOrientation);
+		private void comboSexOrientation_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			var item = comboSexOrientation.SelectedItem as DataItem<string>;
+
+			textSpecifySexOrientation.Visible = item.Value == SexualOrientation.Other;
+			labelSpecifySexOrientation.Visible = item.Value == SexualOrientation.Other;
 			SetRequiredFields();
 		}
 
-		private void comboGenderIdentity_SelectedIndexChanged(object sender,EventArgs e) {
-			textSpecifyGender.Visible=((GenderId)comboGenderIdentity.SelectedIndex==GenderId.AdditionalGenderCategory);
-			labelSpecifyGender.Visible=((GenderId)comboGenderIdentity.SelectedIndex==GenderId.AdditionalGenderCategory);
+		private void comboGenderIdentity_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			var item = comboGenderIdentity.SelectedItem as DataItem<string>;
+
+			textSpecifyGender.Visible = item.Value == GenderIdentity.Other;
+			labelSpecifyGender.Visible = item.Value == GenderIdentity.Other;
 			SetRequiredFields();
 		}
 		
@@ -2713,19 +2726,21 @@ namespace OpenDental{
 				MessageBox.Show("County name invalid. The County entered is not present in the list of Counties. Please add the new County.");
 				return;
 			}
-			if((SexOrientation)comboSexOrientation.SelectedIndex==SexOrientation.AdditionalOrientation
-				&& textSpecifySexOrientation.Text.Trim()=="") 
-				
+
+			var sexualOrientation = comboSexOrientation.SelectedItem as DataItem<string>;
+			if (sexualOrientation != null && sexualOrientation.Value == SexualOrientation.Other && textSpecifySexOrientation.Text.Trim() == "")
 			{
 				MessageBox.Show("Sexual orientation must be specified.");
 				return;
 			}
-			if((GenderId)comboGenderIdentity.SelectedIndex==GenderId.AdditionalGenderCategory
-				&& textSpecifyGender.Text.Trim()=="") 
+
+			var genderIdentity = comboGenderIdentity.SelectedItem as DataItem<string>;
+			if (genderIdentity != null && genderIdentity.Value == GenderIdentity.Other && textSpecifyGender.Text.Trim() == "")
 			{
 				MessageBox.Show("Gender identity must be specified.");
 				return;
 			}
+
 			if(textSite.Text=="") {
 				PatCur.SiteNum=0;
 			}
@@ -2801,8 +2816,8 @@ namespace OpenDental{
 			PatCur.Title=textTitle.Text;
 			PatCur.Salutation=textSalutation.Text;
 			if(Preferences.GetBool(PreferenceName.ShowFeatureEhr)) {//Mother's maiden name UI is only used when EHR is enabled.
-				_ehrPatientCur.MotherMaidenFname=textMotherMaidenFname.Text;
-				_ehrPatientCur.MotherMaidenLname=textMotherMaidenLname.Text;
+				_ehrPatientCur.MotherMaidenFirstName=textMotherMaidenFname.Text;
+				_ehrPatientCur.MotherMaidenLastName=textMotherMaidenLname.Text;
 			}
 			PatCur.PatStatus=_listPatStatuses[listStatus.SelectedIndex];//1:1
 			switch(PatCur.PatStatus) {
@@ -2905,29 +2920,40 @@ namespace OpenDental{
 			}
 			PatCur.MedicaidID=textMedicaidID.Text;
 			_ehrPatientCur.MedicaidState=textMedicaidState.Text;
+
+
 			//Retrieve the value of the Snomed attribute for the selected SexOrientation.
-			if(comboSexOrientation.SelectedIndex>=0) {
-				SexOrientation sexOrientEnum=(SexOrientation)comboSexOrientation.SelectedIndex;
-				_ehrPatientCur.SexualOrientation=sexOrientEnum.GetAttributeOrDefault<EhrAttribute>().Snomed;
-				if(sexOrientEnum==SexOrientation.AdditionalOrientation) {
-					_ehrPatientCur.SexualOrientationNote=textSpecifySexOrientation.Text;
+			if (sexualOrientation != null)
+			{
+				_ehrPatientCur.SexualOrientation = sexualOrientation.Value;
+				if (sexualOrientation.Value == SexualOrientation.Other)
+				{
+					_ehrPatientCur.SexualOrientationOther = textSpecifySexOrientation.Text;
 				}
-				else {
-					_ehrPatientCur.SexualOrientationNote="";
+				else
+				{
+					_ehrPatientCur.SexualOrientationOther = "";
 				}
 			}
+
+
 			//Retrieve the value of the Snomed attribute for the selected GenderId.
-			if(comboGenderIdentity.SelectedIndex>=0) {
-				GenderId genderIdEnum=(GenderId)comboGenderIdentity.SelectedIndex;
-				_ehrPatientCur.GenderIdentity=genderIdEnum.GetAttributeOrDefault<EhrAttribute>().Snomed;
-				if(genderIdEnum==GenderId.AdditionalGenderCategory) {
-					_ehrPatientCur.GenderIdentityNote=textSpecifyGender.Text;
+			if (genderIdentity != null)
+			{
+				_ehrPatientCur.GenderIdentity = genderIdentity.Value;
+				if (genderIdentity.Value == GenderIdentity.Other)
+				{
+					_ehrPatientCur.GenderIdentityOther = textSpecifyGender.Text;
 				}
-				else {
-					_ehrPatientCur.GenderIdentityNote="";
+				else
+				{
+					_ehrPatientCur.GenderIdentityOther = "";
 				}
 			}
+
+
 			EhrPatients.Update(_ehrPatientCur);
+
 			PatCur.WkPhone=textWkPhone.Text;
 			PatCur.WirelessPhone=textWirelessPhone.Text;
 			PatCur.TxtMsgOk=(YN)listTextOk.SelectedIndex;

@@ -1,28 +1,27 @@
 ﻿using System;
 
-namespace OpenDentBusiness {
-	///<summary>This table is similar to the GroupPermission table.  However, unlike the GroupPermissions table, existence of a row for a patient in
-	///this table means the action is NOT allowed.  Hence the name PatRestrictions.</summary>
+namespace OpenDentBusiness
+{
+	/// <summary>
+	/// This table is similar to the GroupPermission table.
+	/// However, unlike the GroupPermissions table, existence of a row for a patient in this table means the action is NOT allowed.
+	/// Hence the name PatRestrictions.
+	/// </summary>
 	[Serializable]
-	public class PatRestriction:TableBase {
-		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+	public class PatRestriction : TableBase
+	{
+		[CrudColumn(IsPriKey = true)]
 		public long PatRestrictionNum;
+
 		///<summary>FK to patient.PatNum.</summary>
 		public long PatNum;
+
 		///<summary>Enum:PatRestrict </summary>
 		public PatRestrict PatRestrictType;
-
-		///<summary></summary>
-		public PatRestriction Copy() {
-			return (PatRestriction)this.MemberwiseClone();
-		}
-
 	}
 
-	/// <summary></summary>
-	public enum PatRestrict {
-		///<summary>0</summary>
+	public enum PatRestrict
+	{
 		None,
 		///<summary>1 - Patient cannot be scheduled nor have schedule edited. This PatRestrict should probably be checked every place the group 
 		///permissions AppointmentCreate, AppointmentMove, and AppointmentEdit are checked.</summary>

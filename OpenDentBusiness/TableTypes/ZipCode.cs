@@ -8,13 +8,13 @@ namespace OpenDentBusiness
 	/// Zipcodes are always copied to patient records rather than linked. 
 	/// So items in this list can be freely altered or deleted without harming patient data.
 	/// </summary>
-	[Serializable]
+	[Table("zip_codes")]
 	public class ZipCode : TableBase
 	{
 		[PrimaryKey]
-		public long ZipCodeNum;
+		public long Id;
 
-		public string ZipCodeDigits;
+		public string Digits;
 		public string City;
 		public string State;
 
@@ -28,7 +28,6 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Returns a string representation of the zip code.
 		/// </summary>
-		/// <returns></returns>
         public override string ToString()
         {
 			if (IsFrequent) return City + " " + State + " (freq)";

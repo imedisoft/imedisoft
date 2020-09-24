@@ -1258,7 +1258,7 @@ namespace OpenDental {
 			//The combo box is tucked under textZip because Microsoft makes stupid controls.
 			textCity.Text=(_listZipCodes[comboZip.SelectedIndex]).City;
 			textState.Text=(_listZipCodes[comboZip.SelectedIndex]).State;
-			textZip.Text=(_listZipCodes[comboZip.SelectedIndex]).ZipCodeDigits;
+			textZip.Text=(_listZipCodes[comboZip.SelectedIndex]).Digits;
 			SetRequiredFields();
 		}
 
@@ -1287,7 +1287,7 @@ namespace OpenDental {
 			if(listZipCodes.Count==0){
 				//No match found. Must enter info for new zipcode
 				ZipCode ZipCodeCur=new ZipCode();
-				ZipCodeCur.ZipCodeDigits=textZip.Text;
+				ZipCodeCur.Digits=textZip.Text;
 				FormZipCodeEdit FormZE=new FormZipCodeEdit(ZipCodeCur);
 				FormZE.ShowDialog();
 				if(FormZE.DialogResult!=DialogResult.OK){
@@ -1297,7 +1297,7 @@ namespace OpenDental {
 				FillComboZip();
 				textCity.Text=ZipCodeCur.City;
 				textState.Text=ZipCodeCur.State;
-				textZip.Text=ZipCodeCur.ZipCodeDigits;
+				textZip.Text=ZipCodeCur.Digits;
 			}
 			else if(listZipCodes.Count==1){
 				//only one match found.  Use it.
@@ -1315,14 +1315,14 @@ namespace OpenDental {
 				DataValid.SetInvalid(InvalidType.ZipCodes);
 				textCity.Text=FormZS.SelectedZipCode.City;
 				textState.Text=FormZS.SelectedZipCode.State;
-				textZip.Text=FormZS.SelectedZipCode.ZipCodeDigits;
+				textZip.Text=FormZS.SelectedZipCode.Digits;
 			}
 		}
 
 		private void FillComboZip(){
 			comboZip.Items.Clear();
 			for(int i=0;i<_listZipCodes.Count;i++){
-				comboZip.Items.Add((_listZipCodes[i]).ZipCodeDigits
+				comboZip.Items.Add((_listZipCodes[i]).Digits
 					+"("+(_listZipCodes[i]).City+")");
 			}
 		}

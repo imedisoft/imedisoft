@@ -3706,7 +3706,7 @@ namespace OpenDentBusiness
 			EhrPatient ehrPatTo = EhrPatients.GetOne(patientTo.PatNum);
 			if (ehrPatFrom != null && ehrPatTo == null)
 			{  //There is an entry for the FROM patient, but not the INTO patient.
-				ehrPatFrom.PatNum = patientTo.PatNum;
+				ehrPatFrom.PatientId = patientTo.PatNum;
 				EhrPatients.Update(ehrPatFrom); //Bring the patfrom entry over to the new.
 			}
 			//If the 'patFrom' had any ties to guardians, they should be deleted to prevent duplicate entries.

@@ -78,7 +78,7 @@ namespace OpenDentBusiness
 
 		public static void Save(ZipCode zipCode)
 		{
-			if (zipCode.ZipCodeNum == 0) Insert(zipCode);
+			if (zipCode.Id == 0) Insert(zipCode);
 			else
 			{
 				Update(zipCode);
@@ -86,9 +86,9 @@ namespace OpenDentBusiness
 		}
 
 		public static void Delete(ZipCode zipCode) 
-			=> Database.ExecuteNonQuery("DELETE from zipcode WHERE zipcodenum = " + zipCode.ZipCodeNum);
+			=> Database.ExecuteNonQuery("DELETE from zipcode WHERE zipcodenum = " + zipCode.Id);
 
 		public static List<ZipCode> GetByZipCodeDigits(string zipCodeDigits) 
-			=> GetWhere(x => x.ZipCodeDigits == zipCodeDigits);
+			=> GetWhere(x => x.Digits == zipCodeDigits);
 	}
 }

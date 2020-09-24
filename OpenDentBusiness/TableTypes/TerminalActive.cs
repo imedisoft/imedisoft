@@ -1,12 +1,14 @@
 using System;
 
-namespace OpenDentBusiness{
+namespace OpenDentBusiness
+{
 
 	///<summary>Each row is 1 computer, or if in RDP session, 1 connection from 1 computer, currently acting as a terminal for patient input.</summary>
 	[Serializable]
-	public class TerminalActive:TableBase {
+	public class TerminalActive : TableBase
+	{
 		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+		[CrudColumn(IsPriKey = true)]
 		public long TerminalActiveNum;
 		///<summary>The name of the computer where the terminal is active.</summary>
 		public string ComputerName;
@@ -28,33 +30,9 @@ namespace OpenDentBusiness{
 		///manager, but we will use the ComputerName+SessionId+ProcessId when the kiosk checks for available forms to display.</summary>
 		public string SessionName;
 
-		///<summary></summary>
-		public TerminalActive Copy() {
-			return (TerminalActive)this.MemberwiseClone();
+		public TerminalActive Copy()
+		{
+			return (TerminalActive)MemberwiseClone();
 		}
-
 	}
-
-		
-
-
-
-		
-	
-
-	
-
-	
-
-
 }
-
-
-
-
-
-
-
-
-
-

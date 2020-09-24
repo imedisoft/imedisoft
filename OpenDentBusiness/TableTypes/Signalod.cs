@@ -40,8 +40,6 @@ namespace OpenDentBusiness
 		/// </summary>
 		public DateTime Date;
 
-
-
 		public string Param1;
 		
 		public long? Param2;

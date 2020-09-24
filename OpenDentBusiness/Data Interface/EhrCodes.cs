@@ -337,7 +337,7 @@ namespace OpenDentBusiness {
 		public static List<EhrCode> GetForEventTypeByUse(EhrMeasureEventType ehrMeasureEventTypes) {
 			List<EhrCode> retVal=new List<EhrCode>();
 			//list of CodeValueResults of the specified type ordered by a weight calculated by summing values based on how recently the codes were used
-			List<string> listCodes=EhrMeasureEvents.GetListCodesUsedForType(ehrMeasureEventTypes);
+			List<string> listCodes=EhrMeasureEvents.GetResultCodesUsedByType(ehrMeasureEventTypes).ToList();
 			foreach(string codeStr in listCodes) {
 				EhrCode codeCur=Listt.FirstOrDefault(x => x.CodeValue==codeStr);
 				Snomed sCur=null;

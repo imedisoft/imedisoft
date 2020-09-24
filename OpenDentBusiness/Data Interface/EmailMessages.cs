@@ -362,8 +362,8 @@ namespace OpenDentBusiness{
 			for(int i=0;i<emailMessage.Attachments.Count;i++) {
 				EhrSummaryCcd ehrSummaryCcd=EhrSummaryCcds.GetOneForEmailAttach(emailMessage.Attachments[i].EmailAttachNum);
 				if(ehrSummaryCcd!=null) {
-					ehrSummaryCcd.PatNum=emailMessage.PatNum;
-					EhrSummaryCcds.Update(ehrSummaryCcd);
+					ehrSummaryCcd.PatientId=emailMessage.PatNum;
+					EhrSummaryCcds.Save(ehrSummaryCcd);
 				}
 			}
 		}
@@ -1290,10 +1290,10 @@ namespace OpenDentBusiness{
 							}
 						}
 						ehrSummaryCcd=new EhrSummaryCcd();
-						ehrSummaryCcd.ContentSummary=strAttachText;
-						ehrSummaryCcd.DateSummary=DateTime.Today;
-						ehrSummaryCcd.EmailAttachNum=i;//Temporary value, so we can locate the FK down below.
-						ehrSummaryCcd.PatNum=emailMessage.PatNum;
+						ehrSummaryCcd.Content=strAttachText;
+						ehrSummaryCcd.Date=DateTime.Today;
+						ehrSummaryCcd.EmailAttachmentId=i;//Temporary value, so we can locate the FK down below.
+						ehrSummaryCcd.PatientId=emailMessage.PatNum;
 						break;//We can only handle one CCD message per email, because we only have one patnum field per email record and the ehrsummaryccd record requires a patnum.
 					}
 				}
@@ -1312,8 +1312,8 @@ namespace OpenDentBusiness{
 				EmailMessages.Update(emailMessage);
 			}
 			if(ehrSummaryCcd!=null) {
-				ehrSummaryCcd.EmailAttachNum=emailMessage.Attachments[(int)ehrSummaryCcd.EmailAttachNum].EmailAttachNum;
-				EhrSummaryCcds.Insert(ehrSummaryCcd);
+				ehrSummaryCcd.EmailAttachmentId=emailMessage.Attachments[(int)ehrSummaryCcd.EmailAttachmentId].EmailAttachNum;
+				EhrSummaryCcds.Save(ehrSummaryCcd);
 			}
 			if(isEncrypted && isAck) {
 				//Send a Message Disposition Notification (MDN) message to the sender, as required by the Direct messaging specifications.

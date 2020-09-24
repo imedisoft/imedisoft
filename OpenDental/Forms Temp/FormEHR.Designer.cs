@@ -144,7 +144,7 @@
 			this.butVaccines.TabIndex = 27;
 			this.butVaccines.Text = "Vaccines";
 			this.butVaccines.UseVisualStyleBackColor = true;
-			this.butVaccines.Click += new System.EventHandler(this.butVaccines_Click);
+			this.butVaccines.Click += new System.EventHandler(this.VaccinesButton_Click);
 			// 
 			// label1
 			// 

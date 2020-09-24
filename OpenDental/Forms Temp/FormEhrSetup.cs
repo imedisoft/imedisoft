@@ -79,19 +79,19 @@ namespace OpenDental
 
 		private void butVaccineDef_Click(object sender, EventArgs e)
 		{
-			FormVaccineDefSetup FormE = new FormVaccineDefSetup();
+			FormEhrVaccineSetup FormE = new FormEhrVaccineSetup();
 			FormE.ShowDialog();
 		}
 
 		private void butDrugManufacturer_Click(object sender, EventArgs e)
 		{
-			FormDrugManufacturerSetup FormE = new FormDrugManufacturerSetup();
+			FormEhrDrugManufacturerSetup FormE = new FormEhrDrugManufacturerSetup();
 			FormE.ShowDialog();
 		}
 
 		private void butDrugUnit_Click(object sender, EventArgs e)
 		{
-			FormDrugUnitSetup FormE = new FormDrugUnitSetup();
+			FormEhrDrugUnitSetup FormE = new FormEhrDrugUnitSetup();
 			FormE.ShowDialog();
 		}
 

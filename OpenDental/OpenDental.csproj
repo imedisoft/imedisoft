@@ -541,13 +541,13 @@
     <Compile Include="Forms Temp\FormCarrierEdit.Designer.cs">
       <DependentUpon>FormCarrierEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormAutoNotePromptBase.cs">
+    <Compile Include="Forms\FormAutoNotePromptBase.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormAutoNotes.Designer.cs">
+    <Compile Include="Forms\FormAutoNotes.Designer.cs">
       <DependentUpon>FormAutoNotes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormEmailAutographEdit.Designer.cs">
+    <Compile Include="Forms\FormEmailAutographEdit.Designer.cs">
       <DependentUpon>FormEmailAutographEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormAutoCodeEdit.Designer.cs">
@@ -778,10 +778,10 @@
     <Compile Include="Forms Temp\FormOrthoCase.designer.cs">
       <DependentUpon>FormOrthoCase.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormAutoNoteExport.cs">
+    <Compile Include="Forms\FormAutoNoteExport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormAutoNoteExport.Designer.cs">
+    <Compile Include="Forms\FormAutoNoteExport.Designer.cs">
       <DependentUpon>FormAutoNoteExport.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormFeeSchedGroups.cs">
@@ -1211,10 +1211,10 @@
     <Compile Include="Forms Reports\FormRpDiscountPlan.designer.cs">
       <DependentUpon>FormRpDiscountPlan.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormAutoNoteResponsePicker.cs">
+    <Compile Include="Forms\FormAutoNoteResponsePicker.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormAutoNoteResponsePicker.designer.cs">
+    <Compile Include="Forms\FormAutoNoteResponsePicker.designer.cs">
       <DependentUpon>FormAutoNoteResponsePicker.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormApptSearchAdvanced.cs">
@@ -2009,7 +2009,7 @@
     <Compile Include="Forms Temp\FormErxAccess.designer.cs">
       <DependentUpon>FormErxAccess.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormEmailAutographEdit.cs">
+    <Compile Include="Forms\FormEmailAutographEdit.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormWikiDrafts.cs">
@@ -2399,11 +2399,11 @@
     <Compile Include="Forms Temp\FormEhrLabOrders.Designer.cs">
       <DependentUpon>FormEhrLabOrders.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormVaccineObsEdit.cs">
+    <Compile Include="Forms\Ehr\FormEhrPatientVaccineObservationEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormVaccineObsEdit.designer.cs">
-      <DependentUpon>FormVaccineObsEdit.cs</DependentUpon>
+    <Compile Include="Forms\Ehr\FormEhrPatientVaccineObservationEdit.designer.cs">
+      <DependentUpon>FormEhrPatientVaccineObservationEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormIcd10s.cs">
       <SubType>Form</SubType>
@@ -2423,16 +2423,16 @@
     <Compile Include="Forms Temp\FormEhrExportCCD.designer.cs">
       <DependentUpon>FormEhrExportCCD.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrCarePlanEdit.cs">
+    <Compile Include="Forms\Ehr\FormEhrCarePlanEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrCarePlanEdit.designer.cs">
+    <Compile Include="Forms\Ehr\FormEhrCarePlanEdit.designer.cs">
       <DependentUpon>FormEhrCarePlanEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrCarePlans.cs">
+    <Compile Include="Forms\Ehr\FormEhrCarePlans.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrCarePlans.designer.cs">
+    <Compile Include="Forms\Ehr\FormEhrCarePlans.designer.cs">
       <DependentUpon>FormEhrCarePlans.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormEhrLabResultEdit2014.cs">
@@ -2501,10 +2501,10 @@
     <Compile Include="Forms Temp\FormEhrEduResourcesPat.Designer.cs">
       <DependentUpon>FormEhrEduResourcesPat.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrEncryption.cs">
+    <Compile Include="Forms\Ehr\FormEhrEncryption.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrEncryption.Designer.cs">
+    <Compile Include="Forms\Ehr\FormEhrEncryption.Designer.cs">
       <DependentUpon>FormEhrEncryption.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormEhrGrowthCharts.cs">
@@ -2513,10 +2513,10 @@
     <Compile Include="Forms Temp\FormEhrGrowthCharts.Designer.cs">
       <DependentUpon>FormEhrGrowthCharts.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormEhrHash.cs">
+    <Compile Include="Forms\Ehr\FormEhrHash.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormEhrHash.Designer.cs">
+    <Compile Include="Forms\Ehr\FormEhrHash.Designer.cs">
       <DependentUpon>FormEhrHash.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormEhrLabPanelEdit.cs">
@@ -2633,11 +2633,11 @@
     <Compile Include="Forms Temp\FormEhrReminders.Designer.cs">
       <DependentUpon>FormEhrReminders.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrSummaryCcdEdit.cs">
+    <Compile Include="Forms T\FormEhrSummaryOfCareEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrSummaryCcdEdit.Designer.cs">
-      <DependentUpon>FormEhrSummaryCcdEdit.cs</DependentUpon>
+    <Compile Include="Forms T\FormEhrSummaryOfCareEdit.Designer.cs">
+      <DependentUpon>FormEhrSummaryOfCareEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormCpts.cs">
       <SubType>Form</SubType>
@@ -2645,16 +2645,16 @@
     <Compile Include="Forms Temp\FormCpts.designer.cs">
       <DependentUpon>FormCpts.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrVaccinePatEdit.cs">
+    <Compile Include="Forms\Ehr\FormEhrPatientVaccineEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrVaccinePatEdit.Designer.cs">
-      <DependentUpon>FormEhrVaccinePatEdit.cs</DependentUpon>
+    <Compile Include="Forms\Ehr\FormEhrPatientVaccineEdit.Designer.cs">
+      <DependentUpon>FormEhrPatientVaccineEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrVaccines.cs">
+    <Compile Include="Forms\Ehr\FormEhrVaccines.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrVaccines.Designer.cs">
+    <Compile Include="Forms\Ehr\FormEhrVaccines.Designer.cs">
       <DependentUpon>FormEhrVaccines.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormEhrVitalsignEdit.cs">
@@ -2675,10 +2675,10 @@
     <Compile Include="Forms Temp\FormEhrClinicalSummary.Designer.cs">
       <DependentUpon>FormEhrClinicalSummary.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrElectronicCopy.cs">
+    <Compile Include="Forms\Ehr\FormEhrElectronicCopy.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrElectronicCopy.Designer.cs">
+    <Compile Include="Forms\Ehr\FormEhrElectronicCopy.Designer.cs">
       <DependentUpon>FormEhrElectronicCopy.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormPopupAudit.cs">
@@ -2753,16 +2753,16 @@
     <Compile Include="Forms Temp\FormEHR.Designer.cs">
       <DependentUpon>FormEHR.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormEhrAmendmentEdit.cs">
+    <Compile Include="Forms\Ehr\FormEhrAmendmentEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormEhrAmendmentEdit.Designer.cs">
+    <Compile Include="Forms\Ehr\FormEhrAmendmentEdit.Designer.cs">
       <DependentUpon>FormEhrAmendmentEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormEhrAmendments.cs">
+    <Compile Include="Forms\Ehr\FormEhrAmendments.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormEhrAmendments.Designer.cs">
+    <Compile Include="Forms\Ehr\FormEhrAmendments.Designer.cs">
       <DependentUpon>FormEhrAmendments.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormFamilyHealthEdit.cs">
@@ -2813,10 +2813,10 @@
     <Compile Include="Forms Temp\FormPatListResultsEHR2014.Designer.cs">
       <DependentUpon>FormPatListResultsEHR2014.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrSummaryOfCare.cs">
+    <Compile Include="Forms T\FormEhrSummaryOfCare.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrSummaryOfCare.Designer.cs">
+    <Compile Include="Forms T\FormEhrSummaryOfCare.Designer.cs">
       <DependentUpon>FormEhrSummaryOfCare.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormVitalsignEdit2014.cs">
@@ -3257,16 +3257,16 @@
     <Compile Include="Forms Temp\FormElectIDEdit.designer.cs">
       <DependentUpon>FormElectIDEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormEhrQuarterlyKeyEdit.cs">
+    <Compile Include="Forms\Ehr\FormEhrQuarterlyKeyEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormEhrQuarterlyKeyEdit.designer.cs">
+    <Compile Include="Forms\Ehr\FormEhrQuarterlyKeyEdit.designer.cs">
       <DependentUpon>FormEhrQuarterlyKeyEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormEhrQuarterlyKeys.cs">
+    <Compile Include="Forms\Ehr\FormEhrQuarterlyKeys.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormEhrQuarterlyKeys.designer.cs">
+    <Compile Include="Forms\Ehr\FormEhrQuarterlyKeys.designer.cs">
       <DependentUpon>FormEhrQuarterlyKeys.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormTestLatency.cs">
@@ -3341,41 +3341,41 @@
     <Compile Include="Forms Temp\FormReminderRules.Designer.cs">
       <DependentUpon>FormReminderRules.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormVaccineDefSetup.cs">
+    <Compile Include="Forms\Ehr\FormEhrVaccineSetup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormVaccineDefSetup.designer.cs">
-      <DependentUpon>FormVaccineDefSetup.cs</DependentUpon>
+    <Compile Include="Forms\Ehr\FormEhrVaccineSetup.designer.cs">
+      <DependentUpon>FormEhrVaccineSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormDrugManufacturerEdit.cs">
+    <Compile Include="Forms\Ehr\FormEhrDrugManufacturerEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormDrugManufacturerEdit.designer.cs">
-      <DependentUpon>FormDrugManufacturerEdit.cs</DependentUpon>
+    <Compile Include="Forms\Ehr\FormEhrDrugManufacturerEdit.designer.cs">
+      <DependentUpon>FormEhrDrugManufacturerEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormDrugManufacturerSetup.cs">
+    <Compile Include="Forms\Ehr\FormEhrDrugManufacturerSetup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormDrugManufacturerSetup.designer.cs">
-      <DependentUpon>FormDrugManufacturerSetup.cs</DependentUpon>
+    <Compile Include="Forms\Ehr\FormEhrDrugManufacturerSetup.designer.cs">
+      <DependentUpon>FormEhrDrugManufacturerSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormDrugUnitEdit.cs">
+    <Compile Include="Forms\Ehr\FormEhrDrugUnitEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormDrugUnitEdit.designer.cs">
-      <DependentUpon>FormDrugUnitEdit.cs</DependentUpon>
+    <Compile Include="Forms\Ehr\FormEhrDrugUnitEdit.designer.cs">
+      <DependentUpon>FormEhrDrugUnitEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormDrugUnitSetup.cs">
+    <Compile Include="Forms\Ehr\FormEhrDrugUnitSetup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormDrugUnitSetup.designer.cs">
-      <DependentUpon>FormDrugUnitSetup.cs</DependentUpon>
+    <Compile Include="Forms\Ehr\FormEhrDrugUnitSetup.designer.cs">
+      <DependentUpon>FormEhrDrugUnitSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormVaccineDefEdit.cs">
+    <Compile Include="Forms\Ehr\FormEhrVaccineEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormVaccineDefEdit.designer.cs">
-      <DependentUpon>FormVaccineDefEdit.cs</DependentUpon>
+    <Compile Include="Forms\Ehr\FormEhrVaccineEdit.designer.cs">
+      <DependentUpon>FormEhrVaccineEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormImageSelectClaimAttach.cs">
       <SubType>Form</SubType>
@@ -3767,34 +3767,34 @@
     <Compile Include="Forms Temp\FormClaimPayPreAuth.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormAutoNotePromptPreview.cs">
+    <Compile Include="Forms\FormAutoNotePromptPreview.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormAutoNotePromptPreview.designer.cs">
+    <Compile Include="Forms\FormAutoNotePromptPreview.designer.cs">
       <DependentUpon>FormAutoNotePromptPreview.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormAutoNotePromptMultiResponse.cs">
+    <Compile Include="Forms\FormAutoNotePromptMultiResponse.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormAutoNotePromptMultiResponse.designer.cs">
+    <Compile Include="Forms\FormAutoNotePromptMultiResponse.designer.cs">
       <DependentUpon>FormAutoNotePromptMultiResponse.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormAutoNotePromptOneResponse.cs">
+    <Compile Include="Forms\FormAutoNotePromptOneResponse.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormAutoNotePromptOneResponse.designer.cs">
+    <Compile Include="Forms\FormAutoNotePromptOneResponse.designer.cs">
       <DependentUpon>FormAutoNotePromptOneResponse.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormAutoNotePromptText.cs">
+    <Compile Include="Forms\FormAutoNotePromptText.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormAutoNotePromptText.designer.cs">
+    <Compile Include="Forms\FormAutoNotePromptText.designer.cs">
       <DependentUpon>FormAutoNotePromptText.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormAutoNoteCompose.cs">
+    <Compile Include="Forms\FormAutoNoteCompose.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormAutoNoteCompose.designer.cs">
+    <Compile Include="Forms\FormAutoNoteCompose.designer.cs">
       <DependentUpon>FormAutoNoteCompose.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormRecallMessageEdit.cs">
@@ -4173,19 +4173,19 @@
     <Compile Include="Forms Temp\FormEtransEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormAutoNotePromptEdit.cs">
+    <Compile Include="Forms\FormAutoNotePromptEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormAutoNotePromptEdit.designer.cs">
+    <Compile Include="Forms\FormAutoNotePromptEdit.designer.cs">
       <DependentUpon>FormAutoNotePromptEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormAutoNoteEdit.cs">
+    <Compile Include="Forms\FormAutoNoteEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormAutoNoteEdit.designer.cs">
+    <Compile Include="Forms\FormAutoNoteEdit.designer.cs">
       <DependentUpon>FormAutoNoteEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormAutoNotes.cs">
+    <Compile Include="Forms\FormAutoNotes.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormXchargeSetup.cs">
@@ -5299,7 +5299,7 @@
     <EmbeddedResource Include="Forms Temp\FormOrthoCase.resx">
       <DependentUpon>FormOrthoCase.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormAutoNoteExport.resx">
+    <EmbeddedResource Include="Forms\FormAutoNoteExport.resx">
       <DependentUpon>FormAutoNoteExport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormFeeSchedGroups.resx">
@@ -5422,7 +5422,7 @@
     <EmbeddedResource Include="Forms Reports\FormRpDiscountPlan.resx">
       <DependentUpon>FormRpDiscountPlan.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormAutoNoteResponsePicker.resx">
+    <EmbeddedResource Include="Forms\FormAutoNoteResponsePicker.resx">
       <DependentUpon>FormAutoNoteResponsePicker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormApptSearchAdvanced.resx">
@@ -5845,7 +5845,7 @@
     <EmbeddedResource Include="Forms Temp\FormErxAccess.resx">
       <DependentUpon>FormErxAccess.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormEmailAutographEdit.resx">
+    <EmbeddedResource Include="Forms\FormEmailAutographEdit.resx">
       <DependentUpon>FormEmailAutographEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -6058,8 +6058,8 @@
     <EmbeddedResource Include="Forms Temp\FormEhrLabOrders.resx">
       <DependentUpon>FormEhrLabOrders.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormVaccineObsEdit.resx">
-      <DependentUpon>FormVaccineObsEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Ehr\FormEhrPatientVaccineObservationEdit.resx">
+      <DependentUpon>FormEhrPatientVaccineObservationEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormIcd10s.resx">
       <DependentUpon>FormIcd10s.cs</DependentUpon>
@@ -6072,10 +6072,10 @@
     <EmbeddedResource Include="Forms Temp\FormEhrExportCCD.resx">
       <DependentUpon>FormEhrExportCCD.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrCarePlanEdit.resx">
+    <EmbeddedResource Include="Forms\Ehr\FormEhrCarePlanEdit.resx">
       <DependentUpon>FormEhrCarePlanEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrCarePlans.resx">
+    <EmbeddedResource Include="Forms\Ehr\FormEhrCarePlans.resx">
       <DependentUpon>FormEhrCarePlans.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormEhrLabResultEdit2014.resx">
@@ -6119,16 +6119,16 @@
     <EmbeddedResource Include="Forms Temp\FormEhrEduResourcesPat.resx">
       <DependentUpon>FormEhrEduResourcesPat.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrElectronicCopy.resx">
+    <EmbeddedResource Include="Forms\Ehr\FormEhrElectronicCopy.resx">
       <DependentUpon>FormEhrElectronicCopy.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrEncryption.resx">
+    <EmbeddedResource Include="Forms\Ehr\FormEhrEncryption.resx">
       <DependentUpon>FormEhrEncryption.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormEhrGrowthCharts.resx">
       <DependentUpon>FormEhrGrowthCharts.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormEhrHash.resx">
+    <EmbeddedResource Include="Forms\Ehr\FormEhrHash.resx">
       <DependentUpon>FormEhrHash.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormEhrLabPanelEdit.resx">
@@ -6188,13 +6188,13 @@
     <EmbeddedResource Include="Forms Temp\FormEhrReminders.resx">
       <DependentUpon>FormEhrReminders.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrSummaryCcdEdit.resx">
-      <DependentUpon>FormEhrSummaryCcdEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Forms T\FormEhrSummaryOfCareEdit.resx">
+      <DependentUpon>FormEhrSummaryOfCareEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrVaccinePatEdit.resx">
-      <DependentUpon>FormEhrVaccinePatEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Ehr\FormEhrPatientVaccineEdit.resx">
+      <DependentUpon>FormEhrPatientVaccineEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrVaccines.resx">
+    <EmbeddedResource Include="Forms\Ehr\FormEhrVaccines.resx">
       <DependentUpon>FormEhrVaccines.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormEhrVitalsignEdit.resx">
@@ -6240,10 +6240,10 @@
     <EmbeddedResource Include="Forms Temp\FormEHR.resx">
       <DependentUpon>FormEHR.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormEhrAmendmentEdit.resx">
+    <EmbeddedResource Include="Forms\Ehr\FormEhrAmendmentEdit.resx">
       <DependentUpon>FormEhrAmendmentEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormEhrAmendments.resx">
+    <EmbeddedResource Include="Forms\Ehr\FormEhrAmendments.resx">
       <DependentUpon>FormEhrAmendments.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormFamilyHealthEdit.resx">
@@ -6271,7 +6271,7 @@
     <EmbeddedResource Include="Forms Temp\FormPatListResultsEHR2014.resx">
       <DependentUpon>FormPatListResultsEHR2014.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrSummaryOfCare.resx">
+    <EmbeddedResource Include="Forms T\FormEhrSummaryOfCare.resx">
       <DependentUpon>FormEhrSummaryOfCare.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormVitalsignEdit2014.resx">
@@ -6531,11 +6531,11 @@
       <DependentUpon>FormElectIDEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormEhrQuarterlyKeyEdit.resx">
+    <EmbeddedResource Include="Forms\Ehr\FormEhrQuarterlyKeyEdit.resx">
       <DependentUpon>FormEhrQuarterlyKeyEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormEhrQuarterlyKeys.resx">
+    <EmbeddedResource Include="Forms\Ehr\FormEhrQuarterlyKeys.resx">
       <DependentUpon>FormEhrQuarterlyKeys.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -6586,28 +6586,28 @@
     <EmbeddedResource Include="Forms Temp\FormReminderRules.resx">
       <DependentUpon>FormReminderRules.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormVaccineDefSetup.resx">
-      <DependentUpon>FormVaccineDefSetup.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Ehr\FormEhrVaccineSetup.resx">
+      <DependentUpon>FormEhrVaccineSetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormDrugManufacturerEdit.resx">
-      <DependentUpon>FormDrugManufacturerEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Ehr\FormEhrDrugManufacturerEdit.resx">
+      <DependentUpon>FormEhrDrugManufacturerEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormDrugManufacturerSetup.resx">
-      <DependentUpon>FormDrugManufacturerSetup.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Ehr\FormEhrDrugManufacturerSetup.resx">
+      <DependentUpon>FormEhrDrugManufacturerSetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormDrugUnitEdit.resx">
-      <DependentUpon>FormDrugUnitEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Ehr\FormEhrDrugUnitEdit.resx">
+      <DependentUpon>FormEhrDrugUnitEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormDrugUnitSetup.resx">
-      <DependentUpon>FormDrugUnitSetup.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Ehr\FormEhrDrugUnitSetup.resx">
+      <DependentUpon>FormEhrDrugUnitSetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormVaccineDefEdit.resx">
-      <DependentUpon>FormVaccineDefEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Ehr\FormEhrVaccineEdit.resx">
+      <DependentUpon>FormEhrVaccineEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormImageSelectClaimAttach.resx">
@@ -6937,15 +6937,15 @@
       <DependentUpon>FormEtransEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormAutoNotePromptEdit.resx">
+    <EmbeddedResource Include="Forms\FormAutoNotePromptEdit.resx">
       <DependentUpon>FormAutoNotePromptEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormAutoNoteEdit.resx">
+    <EmbeddedResource Include="Forms\FormAutoNoteEdit.resx">
       <DependentUpon>FormAutoNoteEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormAutoNotes.resx">
+    <EmbeddedResource Include="Forms\FormAutoNotes.resx">
       <DependentUpon>FormAutoNotes.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -8381,6 +8381,10 @@
     <None Include="Web References\NewCrop\Update1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\IconEnvelopeOpenText.png" />
+    <None Include="Resources\IconEnvelopeOpen.png" />
+    <None Include="Resources\IconEnvelope.png" />
+    <None Include="Resources\IconAt.png" />
     <None Include="Resources\IconToggleOff.png" />
     <None Include="Resources\IconToggleOn.png" />
     <None Include="Resources\IconTable.png" />
@@ -8782,23 +8786,23 @@
       <DependentUpon>FormClaimPayPreAuth.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormAutoNotePromptPreview.resx">
+    <EmbeddedResource Include="Forms\FormAutoNotePromptPreview.resx">
       <DependentUpon>FormAutoNotePromptPreview.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormAutoNotePromptMultiResponse.resx">
+    <EmbeddedResource Include="Forms\FormAutoNotePromptMultiResponse.resx">
       <DependentUpon>FormAutoNotePromptMultiResponse.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormAutoNotePromptOneResponse.resx">
+    <EmbeddedResource Include="Forms\FormAutoNotePromptOneResponse.resx">
       <DependentUpon>FormAutoNotePromptOneResponse.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormAutoNotePromptText.resx">
+    <EmbeddedResource Include="Forms\FormAutoNotePromptText.resx">
       <DependentUpon>FormAutoNotePromptText.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormAutoNoteCompose.resx">
+    <EmbeddedResource Include="Forms\FormAutoNoteCompose.resx">
       <DependentUpon>FormAutoNoteCompose.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

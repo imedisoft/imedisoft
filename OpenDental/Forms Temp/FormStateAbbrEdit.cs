@@ -36,7 +36,7 @@ namespace OpenDental {
 			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete State Abbr?")) {
 				return;
 			}
-			StateAbbrs.Delete(_stateAbbrCur.StateAbbrNum);
+			StateAbbrs.Delete(_stateAbbrCur.Id);
 			DialogResult=DialogResult.OK;
 		}
 

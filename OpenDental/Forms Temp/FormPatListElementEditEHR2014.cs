@@ -552,7 +552,7 @@ namespace OpenDental {
 				Element.CompareString=textSNOMED.Text;
 			}
 			Element.LabValue=textLabValue.Text;
-			Element.LabValueType=(HL70125)comboLabValueType.SelectedIndex;
+            Element.LabValueType=(EhrLaboratories.HL70125)comboLabValueType.SelectedIndex;
 			Element.LabValueUnits=comboUnits.Text;//UCUM units or blank.
 			try {
 				Element.StartDate=DateTime.Parse(textDateStart.Text);

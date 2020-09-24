@@ -76,7 +76,7 @@ namespace OpenDental {
 			List<string> listObsValueType=EhrLabResults.GetHL70125Descriptions();
 			comboObsValueType.Items.AddRange(listObsValueType.ToArray());
 			comboObsValueType.EndUpdate();
-			comboObsValueType.SelectedIndex=(int)Enum.Parse(typeof(HL70125),EhrLabResultCur.ValueType.ToString(),true)+1;
+            comboObsValueType.SelectedIndex=(int)Enum.Parse(typeof(EhrLaboratories.HL70125), EhrLabResultCur.ValueType.ToString(),true)+1;
 			#endregion
 			textObsValue.Text=GetObservationText();
 			#region Coded Elements
@@ -189,20 +189,20 @@ namespace OpenDental {
 		private string GetObservationText() {
 			//No need to check RemotingRole;
 			switch(EhrLabResultCur.ValueType) {
-				case HL70125.CE:
-				case HL70125.CWE:
-				case HL70125.SN:
+				case EhrLaboratories.HL70125.CE:
+				case EhrLaboratories.HL70125.CWE:
+				case EhrLaboratories.HL70125.SN:
 					return "";//Handled later in Load.
-				case HL70125.DT:
-				case HL70125.TS:
+				case EhrLaboratories.HL70125.DT:
+				case EhrLaboratories.HL70125.TS:
 					return EhrLabResultCur.ObservationValueDateTime;
-				case HL70125.NM:
+				case EhrLaboratories.HL70125.NM:
 					return EhrLabResultCur.ObservationValueNumeric.ToString();
-				case HL70125.FT:
-				case HL70125.ST:
-				case HL70125.TX:
+				case EhrLaboratories.HL70125.FT:
+				case EhrLaboratories.HL70125.ST:
+				case EhrLaboratories.HL70125.TX:
 					return EhrLabResultCur.ObservationValueText;
-				case HL70125.TM:
+				case EhrLaboratories.HL70125.TM:
 					return EhrLabResultCur.ObservationValueTime.ToShortTimeString();
 			}
 			return "";//Unknown value type.
@@ -334,28 +334,28 @@ namespace OpenDental {
 			EhrLabResultCur.ObservationDateTime=EhrLab.formatDateToHL7(textObsDateTime.Text);
 			EhrLabResultCur.AnalysisDateTime=EhrLab.formatDateToHL7(textAnalysisDateTime.Text);
 			EhrLabResultCur.ObservationResultStatus=((HL70085)comboObsStatus.SelectedIndex-1);
-			EhrLabResultCur.ValueType=((HL70125)comboObsValueType.SelectedIndex-1);
+            EhrLabResultCur.ValueType=((EhrLaboratories.HL70125)comboObsValueType.SelectedIndex-1);
 			EhrLabResultCur.referenceRange=textReferenceRange.Text;
-			switch(((HL70125)comboObsValueType.SelectedIndex-1)) {
-				case HL70125.CE:
-				case HL70125.CWE:
+			switch(((EhrLaboratories.HL70125)comboObsValueType.SelectedIndex-1)) {
+				case EhrLaboratories.HL70125.CE:
+				case EhrLaboratories.HL70125.CWE:
 					break;//nothing to do here. yet.
-				case HL70125.DT:
-				case HL70125.TS:
-					EhrLabResultCur.ObservationValueDateTime=EhrLab.formatDateToHL7(textObsValue.Text);
+				case EhrLaboratories.HL70125.DT:
+				case EhrLaboratories.HL70125.TS:
+                    EhrLabResultCur.ObservationValueDateTime = EhrLab.formatDateToHL7(textObsValue.Text);
 					break;
-				case HL70125.NM:
-					EhrLabResultCur.ObservationValueNumeric=PIn.Double(textObsValue.Text);
+				case EhrLaboratories.HL70125.NM:
+                    EhrLabResultCur.ObservationValueNumeric = PIn.Double(textObsValue.Text);
 					break;
-				case HL70125.FT:
-				case HL70125.ST:
-				case HL70125.TX:
-					EhrLabResultCur.ObservationValueText=textObsValue.Text;//should not contain |~^&# characters
+				case EhrLaboratories.HL70125.FT:
+				case EhrLaboratories.HL70125.ST:
+				case EhrLaboratories.HL70125.TX:
+                    EhrLabResultCur.ObservationValueText = textObsValue.Text;//should not contain |~^&# characters
 					break;
-				case HL70125.TM:
-					EhrLabResultCur.ObservationValueTime=PIn.Time(textObsValue.Text);
+				case EhrLaboratories.HL70125.TM:
+                    EhrLabResultCur.ObservationValueTime = PIn.Time(textObsValue.Text);
 					break;
-				case HL70125.SN:
+				case EhrLaboratories.HL70125.SN:
 					break;//nothing to do here yet.
 			}
 			//if(((HL70125)comboObsValueType.SelectedIndex-1)==HL70125.DT
@@ -424,31 +424,31 @@ namespace OpenDental {
 			groupSN.Enabled=false;
 			groupUnitsOfMeasure.Enabled=false; 
 			textObsValue.Height=20;
-			switch(((HL70125)comboObsValueType.SelectedIndex-1)) {
-				case HL70125.CE:
-				case HL70125.CWE:
-					groupCE.Enabled=true;
+			switch(((EhrLaboratories.HL70125)comboObsValueType.SelectedIndex-1)) {
+				case EhrLaboratories.HL70125.CE:
+				case EhrLaboratories.HL70125.CWE:
+                    groupCE.Enabled=true;
 					break;
-				case HL70125.DT:
-				case HL70125.TS:
-					textObsValue.Enabled=true;
+				case EhrLaboratories.HL70125.DT:
+				case EhrLaboratories.HL70125.TS:
+                    textObsValue.Enabled=true;
 					break;
-				case HL70125.NM:
-					textObsValue.Enabled=true;
-					groupUnitsOfMeasure.Enabled=true;
+				case EhrLaboratories.HL70125.NM:
+                    textObsValue.Enabled=true;
+                    groupUnitsOfMeasure.Enabled=true;
 					break;
-				case HL70125.FT:
-				case HL70125.ST:
-				case HL70125.TX:
-					textObsValue.Height=48;
-					textObsValue.Enabled=true;
+				case EhrLaboratories.HL70125.FT:
+				case EhrLaboratories.HL70125.ST:
+				case EhrLaboratories.HL70125.TX:
+                    textObsValue.Height=48;
+                    textObsValue.Enabled=true;
 					break;
-				case HL70125.TM:
-					textObsValue.Enabled=true;
+				case EhrLaboratories.HL70125.TM:
+                    textObsValue.Enabled=true;
 					break;
-				case HL70125.SN:
-					groupSN.Enabled=true;
-					groupUnitsOfMeasure.Enabled=true;
+				case EhrLaboratories.HL70125.SN:
+                    groupSN.Enabled=true;
+                    groupUnitsOfMeasure.Enabled=true;
 					break;
 				default:
 					break;

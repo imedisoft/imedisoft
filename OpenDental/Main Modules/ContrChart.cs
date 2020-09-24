@@ -4121,7 +4121,7 @@ namespace OpenDental {
 							continue;
 						}
 						if(doRefreshData || LoadData.ListTobaccoStatuses==null) {
-							LoadData.ListTobaccoStatuses=EhrMeasureEvents.RefreshByType(_patCur.PatNum,EhrMeasureEventType.TobaccoUseAssessed);
+							LoadData.ListTobaccoStatuses=EhrMeasureEvents.GetByPatient(_patCur.PatNum,EhrMeasureEventType.TobaccoUseAssessed).ToList();
 
 						}
 						List<EhrMeasureEvent> listTobaccoStatuses=LoadData.ListTobaccoStatuses
@@ -4136,7 +4136,7 @@ namespace OpenDental {
 						for(int i=0;i<listTobaccoStatuses.Count;i++) {//show the last three tobacco use assessments at most
 							EhrMeasureEvent ehrCur=listTobaccoStatuses[i];
 							row=new GridRow() { BackColor=listMiscColorDefs[3].Color,Tag="tabTobaccoUse" };
-							snmCur=Snomeds.GetByCode(ehrCur.CodeValueResult);
+							snmCur=Snomeds.GetByCode(ehrCur.ResultCode);
 							row.Cells.Add(snmCur!=null?snmCur.Description:"");
 							row.Cells.Add(ehrCur.Date.ToShortDateString()+(ehrCur.MoreInfo==""?"":(" - "+ehrCur.MoreInfo)));
 							if(i==listTobaccoStatuses.Count-1) {

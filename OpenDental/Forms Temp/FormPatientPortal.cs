@@ -1,4 +1,5 @@
 ﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -93,7 +94,7 @@ namespace OpenDental
 				newMeasureEvent.Type = EhrMeasureEventType.OnlineAccessProvided;
 				newMeasureEvent.PatientId = _userWebCur.FKey;
 				newMeasureEvent.MoreInfo = "";
-				EhrMeasureEvents.Insert(newMeasureEvent);
+				EhrMeasureEvents.Save(newMeasureEvent);
 				//5. Rename button
 				butGiveAccess.Text = "Remove Online Access";
 				Cursor = Cursors.Default;

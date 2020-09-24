@@ -94,8 +94,23 @@
     <Compile Include="AutoNoteCategory.cs" />
     <Compile Include="AutoNotePrompt.cs" />
     <Compile Include="AutoNotePromptType.cs" />
+    <Compile Include="CodeLists\HL7\AdministrativeSite.cs" />
+    <Compile Include="CodeLists\HL7\GenderIdentity.cs" />
+    <Compile Include="CodeLists\HL7\HL70323.cs" />
+    <Compile Include="CodeLists\HL7\NIP001.cs" />
+    <Compile Include="CodeLists\HL7\NIP003.cs" />
+    <Compile Include="CodeLists\HL7\HL70125.cs" />
+    <Compile Include="CodeLists\HL7\RouteOfAdministration.cs" />
+    <Compile Include="CodeLists\HL7\SexualOrientation.cs" />
+    <Compile Include="CodeLists\HL7\SubstanceRefusalReason.cs" />
+    <Compile Include="CodeLists\HL7\TreatmentCompletionStatus.cs" />
+    <Compile Include="Ehr\EhrCarePlan.cs" />
+    <Compile Include="Ehr\EhrDrugManufacturer.cs" />
+    <Compile Include="Ehr\EhrDrugUnit.cs" />
     <Compile Include="Ehr\EhrAmendment.cs" />
     <Compile Include="Ehr\EhrAmendmentSource.cs" />
+    <Compile Include="Ehr\EhrMeasureEvent.cs" />
+    <Compile Include="Ehr\EhrPatient.cs" />
     <Compile Include="Ehr\EhrProviderKey.cs" />
     <Compile Include="Ehr\CdsPermission.cs" />
     <Compile Include="Cemt\Connection.cs" />
@@ -108,6 +123,10 @@
     <Compile Include="DentalSchools\EvaluationCriterion.cs" />
     <Compile Include="DentalSchools\EvaluationCriterionDef.cs" />
     <Compile Include="DentalSchools\EvaluationDef.cs" />
+    <Compile Include="Ehr\EhrSummaryCcd.cs" />
+    <Compile Include="Ehr\EhrVaccine.cs" />
+    <Compile Include="Ehr\EhrPatientVaccine.cs" />
+    <Compile Include="Ehr\EhrPatientVaccineObs.cs" />
     <Compile Include="EmailAddress.cs" />
     <Compile Include="EmailAutograph.cs" />
     <Compile Include="Employee.cs" />
@@ -158,5 +177,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

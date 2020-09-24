@@ -43,7 +43,7 @@ namespace OpenDentBusiness.Crud{
 			StateAbbr stateAbbr;
 			foreach(DataRow row in table.Rows) {
 				stateAbbr=new StateAbbr();
-				stateAbbr.StateAbbrNum    = PIn.Long  (row["StateAbbrNum"].ToString());
+				stateAbbr.Id    = PIn.Long  (row["StateAbbrNum"].ToString());
 				stateAbbr.Description     = PIn.String(row["Description"].ToString());
 				stateAbbr.Abbr            = PIn.String(row["Abbr"].ToString());
 				stateAbbr.MedicaidIDLength= PIn.Int   (row["MedicaidIDLength"].ToString());
@@ -64,7 +64,7 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("MedicaidIDLength");
 			foreach(StateAbbr stateAbbr in listStateAbbrs) {
 				table.Rows.Add(new object[] {
-					POut.Long  (stateAbbr.StateAbbrNum),
+					POut.Long  (stateAbbr.Id),
 					            stateAbbr.Description,
 					            stateAbbr.Abbr,
 					POut.Int   (stateAbbr.MedicaidIDLength),
@@ -81,7 +81,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one StateAbbr into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(StateAbbr stateAbbr,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				stateAbbr.StateAbbrNum=ReplicationServers.GetKey("stateabbr","StateAbbrNum");
+				stateAbbr.Id=ReplicationServers.GetKey("stateabbr","StateAbbrNum");
 			}
 			string command="INSERT INTO stateabbr (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -89,7 +89,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="Description,Abbr,MedicaidIDLength) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(stateAbbr.StateAbbrNum)+",";
+				command+=POut.Long(stateAbbr.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(stateAbbr.Description)+"',"
@@ -99,9 +99,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				stateAbbr.StateAbbrNum=Database.ExecuteInsert(command);
+				stateAbbr.Id=Database.ExecuteInsert(command);
 			}
-			return stateAbbr.StateAbbrNum;
+			return stateAbbr.Id;
 		}
 
 		///<summary>Inserts one StateAbbr into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -114,14 +114,14 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO stateabbr (";
 			if(!useExistingPK) {
-				stateAbbr.StateAbbrNum=ReplicationServers.GetKeyNoCache("stateabbr","StateAbbrNum");
+				stateAbbr.Id=ReplicationServers.GetKeyNoCache("stateabbr","StateAbbrNum");
 			}
 			if(useExistingPK) {
 				command+="StateAbbrNum,";
 			}
 			command+="Description,Abbr,MedicaidIDLength) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(stateAbbr.StateAbbrNum)+",";
+				command+=POut.Long(stateAbbr.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(stateAbbr.Description)+"',"
@@ -131,9 +131,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				stateAbbr.StateAbbrNum=Database.ExecuteInsert(command);
+				stateAbbr.Id=Database.ExecuteInsert(command);
 			}
-			return stateAbbr.StateAbbrNum;
+			return stateAbbr.Id;
 		}
 
 		///<summary>Updates one StateAbbr in the database.</summary>
@@ -142,7 +142,7 @@ namespace OpenDentBusiness.Crud{
 				+"Description     = '"+POut.String(stateAbbr.Description)+"', "
 				+"Abbr            = '"+POut.String(stateAbbr.Abbr)+"', "
 				+"MedicaidIDLength=  "+POut.Int   (stateAbbr.MedicaidIDLength)+" "
-				+"WHERE StateAbbrNum = "+POut.Long(stateAbbr.StateAbbrNum);
+				+"WHERE StateAbbrNum = "+POut.Long(stateAbbr.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
@@ -165,7 +165,7 @@ namespace OpenDentBusiness.Crud{
 				return false;
 			}
 			command="UPDATE stateabbr SET "+command
-				+" WHERE StateAbbrNum = "+POut.Long(stateAbbr.StateAbbrNum);
+				+" WHERE StateAbbrNum = "+POut.Long(stateAbbr.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}

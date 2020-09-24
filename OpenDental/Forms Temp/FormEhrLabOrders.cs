@@ -148,7 +148,7 @@ namespace OpenDental {
 			newMeasureEvent.PatientId=FormLOE.EhrLabCur.PatNum;
 			newMeasureEvent.MoreInfo="";
 			newMeasureEvent.ObjectId=FormLOE.EhrLabCur.EhrLabNum;
-			EhrMeasureEvents.Insert(newMeasureEvent);
+			EhrMeasureEvents.Save(newMeasureEvent);
 			EhrLabs.SaveToDB(FormLOE.EhrLabCur);
 			for(int i=0;i<FormLOE.EhrLabCur.ListEhrLabResults.Count;i++) {
 				if(CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowCDS && CdsPermissions.GetByUser(Security.CurrentUser.Id).LabTestCDS) {

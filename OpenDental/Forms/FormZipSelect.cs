@@ -37,7 +37,7 @@ namespace Imedisoft.Forms
 			var zipCodes = ZipCodes.GetDeepCopy();
 			if (!string.IsNullOrWhiteSpace(zipCodeDigits))
 			{
-				zipCodes.RemoveAll(x => x.ZipCodeDigits != zipCodeDigits);
+				zipCodes.RemoveAll(x => x.Digits != zipCodeDigits);
 			}
 
 			foreach (var zipCode in zipCodes)
@@ -47,7 +47,7 @@ namespace Imedisoft.Forms
 
 			if (string.IsNullOrEmpty(zipCodeDigits) && zipCodes.Count > 0)
 			{
-				zipCodeDigits = zipCodes[0].ZipCodeDigits;
+				zipCodeDigits = zipCodes[0].Digits;
 			}
 
 			zipCodesListBox.SelectedIndex = -1;
@@ -57,7 +57,7 @@ namespace Imedisoft.Forms
 		{
             var zipCode = new ZipCode
             {
-                ZipCodeDigits = zipCodeDigits
+                Digits = zipCodeDigits
             };
 
             using var formZipCodeEdit = new FormZipCodeEdit(zipCode);

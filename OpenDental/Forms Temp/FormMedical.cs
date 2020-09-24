@@ -1150,7 +1150,7 @@ namespace OpenDental{
 				tabControlFormMedical.TabPages.RemoveByKey("tabFamHealthHist");
 				tabControlFormMedical.TabPages.RemoveByKey("tabTobaccoUse");
 			}
-			List<EhrMeasureEvent> listDocumentedMedEvents=EhrMeasureEvents.RefreshByType(PatCur.PatNum,EhrMeasureEventType.CurrentMedsDocumented);
+			List<EhrMeasureEvent> listDocumentedMedEvents=EhrMeasureEvents.GetByPatient(PatCur.PatNum,EhrMeasureEventType.CurrentMedsDocumented).ToList();
 			_EhrMeasureEventNum=0;
 			for(int i=0;i<listDocumentedMedEvents.Count;i++) {
 				if(listDocumentedMedEvents[i].Date.Date==DateTime.Today) {
@@ -1871,7 +1871,7 @@ namespace OpenDental{
 			string mostRecentAssessmentCode="";
 			if(gridAssessments.Rows.Count>1) {
 				//gridAssessments.Rows are tagged with all TobaccoUseAssessed events for the patient ordered by DateTEvent, last is most recent
-				mostRecentAssessmentCode=((EhrMeasureEvent)gridAssessments.Rows[gridAssessments.Rows.Count-1].Tag).CodeValueResult;
+				mostRecentAssessmentCode=((EhrMeasureEvent)gridAssessments.Rows[gridAssessments.Rows.Count-1].Tag).ResultCode;
 			}
 			//use Math.Max so that if _listAssessmentCodes doesn't contain the mostRecentAssessment code the combobox will default to the first in the list
 			comboAssessmentType.SelectedIndex=Math.Max(0,_listAssessmentCodes.FindIndex(x => x.CodeValue==mostRecentAssessmentCode));
@@ -1889,7 +1889,7 @@ namespace OpenDental{
 			//listEventCodes will contain all unique tobacco codes that are not in the user and non-user lists
 			List<string> listEventCodes=new List<string>();
 			foreach(GridRow row in gridAssessments.Rows) {
-				string eventCodeCur=((EhrMeasureEvent)row.Tag).CodeValueResult;
+				string eventCodeCur=((EhrMeasureEvent)row.Tag).ResultCode;
 				if(codeValues.Contains(eventCodeCur) || listEventCodes.Contains(eventCodeCur)) {
 					continue;
 				}
@@ -1933,13 +1933,13 @@ namespace OpenDental{
 			GridRow row;
 			Loinc lCur;
 			Snomed sCur;
-			List<EhrMeasureEvent> listEvents=EhrMeasureEvents.RefreshByType(PatCur.PatNum,EhrMeasureEventType.TobaccoUseAssessed);
+			List<EhrMeasureEvent> listEvents=EhrMeasureEvents.GetByPatient(PatCur.PatNum,EhrMeasureEventType.TobaccoUseAssessed).ToList();
 			foreach(EhrMeasureEvent eventCur in listEvents) {
 				row=new GridRow();
 				row.Cells.Add(eventCur.Date.ToShortDateString());
-				lCur=Loincs.GetByCode(eventCur.CodeValueEvent);//TobaccoUseAssessed events can be one of three types, all LOINC codes
+				lCur=Loincs.GetByCode(eventCur.EventCode);//TobaccoUseAssessed events can be one of three types, all LOINC codes
 				row.Cells.Add(lCur!=null?lCur.LongCommonName:eventCur.Type.ToString());
-				sCur=Snomeds.GetByCode(eventCur.CodeValueResult);
+				sCur=Snomeds.GetByCode(eventCur.ResultCode);
 				row.Cells.Add(sCur!=null?sCur.Description:"");
 				row.Cells.Add(eventCur.MoreInfo);
 				row.Tag=eventCur;
@@ -2075,13 +2075,13 @@ namespace OpenDental{
 			eventCur.Date=dateTEntered;
 			eventCur.Type=EhrMeasureEventType.TobaccoUseAssessed;
 			eventCur.PatientId=PatCur.PatNum;
-			eventCur.CodeValueEvent=_listAssessmentCodes[comboAssessmentType.SelectedIndex].CodeValue;
-			eventCur.CodeSystemEvent=_listAssessmentCodes[comboAssessmentType.SelectedIndex].CodeSystem;
+			eventCur.EventCode=_listAssessmentCodes[comboAssessmentType.SelectedIndex].CodeValue;
+			eventCur.EventCodeSystem=_listAssessmentCodes[comboAssessmentType.SelectedIndex].CodeSystem;
 			//SelectedIndex guaranteed to be greater than 0
-			eventCur.CodeValueResult=((SmokingSnoMed)comboSmokeStatus.SelectedIndex-1).ToString().Substring(1);
-			eventCur.CodeSystemResult="SNOMEDCT";//only allow SNOMEDCT codes for now.
+			eventCur.ResultCode=((SmokingSnoMed)comboSmokeStatus.SelectedIndex-1).ToString().Substring(1);
+			eventCur.ResultCodeSystem="SNOMEDCT";//only allow SNOMEDCT codes for now.
 			eventCur.MoreInfo="";
-			EhrMeasureEvents.Insert(eventCur);
+			EhrMeasureEvents.Save(eventCur);
 			FillGridAssessments();
 		}
 
@@ -2212,12 +2212,12 @@ namespace OpenDental{
 			meas.Date=dateTEntered;
 			meas.Type=EhrMeasureEventType.TobaccoUseAssessed;
 			meas.PatientId=PatCur.PatNum;
-			meas.CodeValueEvent=_listAssessmentCodes[comboAssessmentType.SelectedIndex].CodeValue;
-			meas.CodeSystemEvent=_listAssessmentCodes[comboAssessmentType.SelectedIndex].CodeSystem;
-			meas.CodeValueResult=_listTobaccoStatuses[comboTobaccoStatus.SelectedIndex].CodeValue;
-			meas.CodeSystemResult="SNOMEDCT";//only allow SNOMEDCT codes for now.
+			meas.EventCode=_listAssessmentCodes[comboAssessmentType.SelectedIndex].CodeValue;
+			meas.EventCodeSystem=_listAssessmentCodes[comboAssessmentType.SelectedIndex].CodeSystem;
+			meas.ResultCode=_listTobaccoStatuses[comboTobaccoStatus.SelectedIndex].CodeValue;
+			meas.ResultCodeSystem="SNOMEDCT";//only allow SNOMEDCT codes for now.
 			meas.MoreInfo="";
-			EhrMeasureEvents.Insert(meas);
+			EhrMeasureEvents.Save(meas);
 			comboTobaccoStatus.SelectedIndex=-1;
 			FillGridAssessments();
 		}
@@ -2299,9 +2299,9 @@ namespace OpenDental{
 				ehrMeasureEventCur.PatientId=PatCur.PatNum;
 				ehrMeasureEventCur.Date=DateTime.Now;
 				ehrMeasureEventCur.Type=EhrMeasureEventType.CurrentMedsDocumented;
-				ehrMeasureEventCur.CodeValueEvent="428191000124101";//SNOMEDCT code for document current meds procedure
-				ehrMeasureEventCur.CodeSystemEvent="SNOMEDCT";
-				EhrMeasureEvents.Insert(ehrMeasureEventCur);
+				ehrMeasureEventCur.EventCode="428191000124101";//SNOMEDCT code for document current meds procedure
+				ehrMeasureEventCur.EventCodeSystem="SNOMEDCT";
+				EhrMeasureEvents.Save(ehrMeasureEventCur);
 			}
 			//No is selected, if no EhrNotPerformed item for current meds documented, launch not performed edit window to allow user to select valid reason.
 			if(radioMedsDocumentedNo.Checked) {

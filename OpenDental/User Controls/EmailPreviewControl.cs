@@ -15,6 +15,7 @@ using OpenDentBusiness.IO;
 using Imedisoft.UI;
 using Imedisoft.Data;
 using Imedisoft.Data.Models;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class EmailPreviewControl:UserControl {

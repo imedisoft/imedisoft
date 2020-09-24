@@ -181,7 +181,7 @@ namespace OpenDentBusiness{
 			newMeasureEvent.Type = EhrMeasureEventType.ReminderSent;
 			newMeasureEvent.PatientId = com.PatNum;
 			newMeasureEvent.MoreInfo = com.Note;
-			EhrMeasureEvents.Insert(newMeasureEvent);
+			EhrMeasureEvents.Save(newMeasureEvent);
 			return com;
 		}
 

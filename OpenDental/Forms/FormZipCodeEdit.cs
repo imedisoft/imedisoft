@@ -25,7 +25,7 @@ namespace Imedisoft.Forms
 				labelState.Text = "Province";
 			}
 
-			zipTextBox.Text = zipCode.ZipCodeDigits;
+			zipTextBox.Text = zipCode.Digits;
 			cityTextBox.Text = zipCode.City;
 			stateTextBox.Text = zipCode.State;
 			frequentCheckBox.Checked = zipCode.IsFrequent;
@@ -74,7 +74,7 @@ namespace Imedisoft.Forms
 
 			zipCode.City = cityTextBox.Text;
 			zipCode.State = stateTextBox.Text;
-			zipCode.ZipCodeDigits = zipTextBox.Text;
+			zipCode.Digits = zipTextBox.Text;
 			zipCode.IsFrequent = frequentCheckBox.Checked;
 
 			ZipCodes.Save(zipCode);

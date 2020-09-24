@@ -1,14 +1,13 @@
 using Imedisoft.Data.Annotations;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace OpenDentBusiness
 {
-	/// <summary>
-	/// Each row is a single operatory or column in the appts module.
-	/// </summary>
-	[Table("operatories")]
+    /// <summary>
+    /// Each row is a single operatory or column in the appts module.
+    /// </summary>
+    [Table("operatories")]
 	public class Operatory : TableBase
 	{
 		[PrimaryKey]
@@ -56,8 +55,7 @@ namespace OpenDentBusiness
 		///<summary>DefNums of category WebSchedNewPatApptTypes that this operatory is associated to.  Filled within the OperatoryCache.
 		///Necessary for the sync method so that DefLink enteries can be made for newly created operatories.
 		///Also, used as an indicator that this operatory is ready for WSNPA (replaces IsNewPatAppt bool column above).</summary>
-		[Ignore]
-		public List<long> ListWSNPAOperatoryDefNums;
+		public List<long> ListWSNPAOperatoryDefNums { get; set; }
 
 		public Operatory Copy()
 		{

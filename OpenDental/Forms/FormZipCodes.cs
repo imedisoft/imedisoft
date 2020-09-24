@@ -32,7 +32,7 @@ namespace Imedisoft.Forms
 			foreach (var zipCode in ZipCodes.GetDeepCopy())
 			{
 				var gridRow = new GridRow();
-				gridRow.Cells.Add(zipCode.ZipCodeDigits);
+				gridRow.Cells.Add(zipCode.Digits);
 				gridRow.Cells.Add(zipCode.City);
 				gridRow.Cells.Add(zipCode.State);
 				gridRow.Cells.Add((zipCode.IsFrequent ? "X" : ""));

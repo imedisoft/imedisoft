@@ -1,6 +1,7 @@
 ﻿using CodeBase;
 using Imedisoft.Data;
 using Imedisoft.Data.Models;
+using Imedisoft.Data.Models.CodeLists.HL7;
 using OpenDentBusiness.FileIO;
 using System;
 using System.Collections.Generic;
@@ -65,7 +66,7 @@ namespace OpenDentBusiness
 		///<summary>Set each time ValidateAll and ValidateFunctionalStatus is called.</summary>
 		private static List<Problem> _listProblemsFuncFiltered;
 		///<summary>Set each time ValidateAll and ValidateImmunization is called.</summary>
-		private static List<VaccinePat> _listVaccinePatsFiltered;
+		private static List<EhrPatientVaccine> _listVaccinePatsFiltered;
 		///<summary>Set each time ValidateAll and ValidateMedication is called.</summary>
 		private static List<MedicationPat> _listMedPatsFiltered;
 		///<summary>Set each time ValidateAll and ValidatePlanOfCare is called.</summary>
@@ -1039,9 +1040,9 @@ Functional and Cognitive Status
 =====================================================================================================
 Immunizations
 =====================================================================================================");
-			List<VaccinePat> listVaccinePatsFiltered;
+			List<EhrPatientVaccine> listVaccinePatsFiltered;
 			if(!hasImmunization) {
-				listVaccinePatsFiltered=new List<VaccinePat>();
+				listVaccinePatsFiltered=new List<EhrPatientVaccine>();
 			}
 			else {
 				listVaccinePatsFiltered=_listVaccinePatsFiltered;
@@ -1064,20 +1065,20 @@ Immunizations
 				End("thead");
 				Start("tbody");
 				for(int i=0;i<listVaccinePatsFiltered.Count;i++) {
-					VaccineDef vaccineDef;
-					if(listVaccinePatsFiltered[i].VaccineDefNum==0) {
-						vaccineDef=new VaccineDef();
+					EhrVaccine vaccineDef;
+					if(listVaccinePatsFiltered[i].VaccineId == null) {
+						vaccineDef=new EhrVaccine();
 					}
 					else {
-						vaccineDef=VaccineDefs.GetOne(listVaccinePatsFiltered[i].VaccineDefNum);
+						vaccineDef=EhrVaccines.GetById(listVaccinePatsFiltered[i].VaccineId.Value);
 					}
 					Start("tr");
 					Cvx cvx;
-					if(String.IsNullOrEmpty(vaccineDef.CVXCode)) {
+					if(String.IsNullOrEmpty(vaccineDef.CvxCode)) {
 						cvx=new Cvx();
 					}
 					else {
-						cvx=Cvxs.GetOneFromDb(vaccineDef.CVXCode);
+						cvx=Cvxs.GetOneFromDb(vaccineDef.CvxCode);
 					}
 					if(String.IsNullOrEmpty(cvx.Code)) {
 						_w.WriteElementString("td","");
@@ -1085,11 +1086,11 @@ Immunizations
 					else {
 						_w.WriteElementString("td",cvx.Code+" - "+cvx.Description);
 					}
-					if(listVaccinePatsFiltered[i].DateTimeStart.Year<1880) {
+					if(listVaccinePatsFiltered[i].DateStart == null) {
 						_w.WriteElementString("td","");
 					}
 					else {
-						DateText("td",listVaccinePatsFiltered[i].DateTimeStart);
+						DateText("td",listVaccinePatsFiltered[i].DateStart.Value);
 					}
 					_w.WriteElementString("td","Completed");
 					End("tr");
@@ -1102,30 +1103,30 @@ Immunizations
 			}
 			End("text");
 			if(listVaccinePatsFiltered.Count==0) {//If there are no entries in the filtered list, then we want to add a dummy entry since at least one is required.
-				VaccinePat vacPat=new VaccinePat();
+				EhrPatientVaccine vacPat=new EhrPatientVaccine();
 				listVaccinePatsFiltered.Add(vacPat);
 			}
 			for(int i=0;i<listVaccinePatsFiltered.Count;i++) {
-				VaccineDef vaccineDef;
-				if(listVaccinePatsFiltered[i].VaccinePatNum==0) {
-					vaccineDef=new VaccineDef();
+				EhrVaccine vaccineDef;
+				if(listVaccinePatsFiltered[i].VaccineId == null) {
+					vaccineDef=new EhrVaccine();
 				}
 				else {
-					vaccineDef=VaccineDefs.GetOne(listVaccinePatsFiltered[i].VaccineDefNum);
+					vaccineDef=EhrVaccines.GetById(listVaccinePatsFiltered[i].VaccineId.Value);
 				}
 				Start("entry","typeCode","DRIV");
-				Start("substanceAdministration","classCode","SBADM","moodCode","EVN","negationInd",(listVaccinePatsFiltered[i].CompletionStatus==VaccineCompletionStatus.NotAdministered)?"true":"false");
+				Start("substanceAdministration","classCode","SBADM","moodCode","EVN","negationInd",(listVaccinePatsFiltered[i].CompletionStatus==TreatmentCompletionStatus.NotAdministered)?"true":"false");
 				TemplateId("2.16.840.1.113883.10.20.22.4.52");
 				_w.WriteComment("Immunization Activity Template");
 				Guid();
 				StartAndEnd("statusCode","code","completed");
 				Start("effectiveTime");
 				_w.WriteAttributeString("xsi","type",null,"IVL_TS");
-				if(listVaccinePatsFiltered[i].DateTimeStart.Year<1880) {
+				if(listVaccinePatsFiltered[i].DateStart == null) {
 					Attribs("nullFlavor","UNK");
 				}
 				else {
-					Attribs("value",listVaccinePatsFiltered[i].DateTimeStart.ToString("yyyyMMdd"));
+					Attribs("value",listVaccinePatsFiltered[i].DateStart.Value.ToString("yyyyMMdd"));
 				}
 				End("effectiveTime");
 				Start("consumable");
@@ -1133,11 +1134,11 @@ Immunizations
 				TemplateId("2.16.840.1.113883.10.20.22.4.54");
 				_w.WriteComment("Immunization Medication Information");
 				Start("manufacturedMaterial");
-				if(String.IsNullOrEmpty(vaccineDef.CVXCode)) {
+				if(String.IsNullOrEmpty(vaccineDef.CvxCode)) {
 					StartAndEnd("code","nullFlavor","UNK");
 				}
 				else {
-					Cvx cvx=Cvxs.GetOneFromDb(vaccineDef.CVXCode);
+					Cvx cvx=Cvxs.GetOneFromDb(vaccineDef.CvxCode);
 					StartAndEnd("code","code",cvx.Code,"codeSystem",strCodeSystemCvx,"displayName",cvx.Description,"codeSystemName",strCodeSystemNameCvx);
 				}
 				End("manufacturedMaterial");
@@ -1317,9 +1318,9 @@ Medications
 =====================================================================================================
 Care Plan
 =====================================================================================================");
-			List<EhrCarePlan> listEhrCarePlansAll=EhrCarePlans.Refresh(_patOutCcd.PatNum);
-			List<EhrCarePlan> listEhrCarePlansFiltered;
-			if(!hasPlanOfCare) {
+            //_ = EhrCarePlans.Refresh(_patOutCcd.PatNum);
+            List<EhrCarePlan> listEhrCarePlansFiltered;
+            if (!hasPlanOfCare) {
 				listEhrCarePlansFiltered=new List<EhrCarePlan>();
 			}
 			else {
@@ -1343,8 +1344,8 @@ Care Plan
 				Start("tbody");
 				for(int i=0;i<listEhrCarePlansFiltered.Count;i++) {
 					Start("tr");
-					Snomed snomedEducation;
-					snomedEducation=Snomeds.GetByCode(listEhrCarePlansFiltered[i].SnomedEducation);
+                    Snomed snomedEducation;
+                    snomedEducation =Snomeds.GetByCode(listEhrCarePlansFiltered[i].SnomedEducation);
 					if(snomedEducation==null) {
 						snomedEducation=new Snomed();
 					}
@@ -1359,11 +1360,11 @@ Care Plan
 					else {
 						_w.WriteElementString("td","Goal: "+snomedEducation.Code+" - "+snomedEducation.Description+"; Instructions: "+listEhrCarePlansFiltered[i].Instructions);//Planned Activity
 					}
-					if(listEhrCarePlansFiltered[i].DatePlanned.Year<1880) {
+					if(listEhrCarePlansFiltered[i].DatePlanned == null) {
 						_w.WriteElementString("td","");
 					}
 					else {
-						DateText("td",listEhrCarePlansFiltered[i].DatePlanned);//Planned Date
+						DateText("td",listEhrCarePlansFiltered[i].DatePlanned.Value);//Planned Date
 					}
 					End("tr");
 				}
@@ -1973,7 +1974,7 @@ Social History
 				for(int i=0;i<listEhrMeasureEventsFiltered.Count;i++) {
 					Start("tr");
 					_w.WriteElementString("td","Smoking");
-					Snomed snomedSmoking=Snomeds.GetByCode(listEhrMeasureEventsFiltered[i].CodeValueResult);
+					Snomed snomedSmoking=Snomeds.GetByCode(listEhrMeasureEventsFiltered[i].ResultCode);
 					if(snomedSmoking==null) {//Could be null if the code was imported from another EHR.
 						_w.WriteElementString("td","");
 					}
@@ -2053,7 +2054,7 @@ Social History
 				End("effectiveTime");
 				Start("value");
 				_w.WriteAttributeString("xsi","type",null,"CD");
-				Snomed snomedSmoking=Snomeds.GetByCode(listEhrMeasureEventsFiltered[i].CodeValueResult);
+				Snomed snomedSmoking=Snomeds.GetByCode(listEhrMeasureEventsFiltered[i].ResultCode);
 				if(snomedSmoking==null) {
 					Attribs("nullFlavor","UNK");
 				}
@@ -2657,14 +2658,16 @@ Vital Signs
 		}
 
 		///<summary>Filters list of vaccines. Also runs validation.</summary>
-		private static void FilterImmunization(Patient patCur) {
-			List<VaccinePat> listVaccinePatsAll=VaccinePats.Refresh(patCur.PatNum);
-			List<VaccinePat> listVaccinePatsFiltered=new List<VaccinePat>();
-			for(int i=0;i<listVaccinePatsAll.Count;i++) {
+		private static void FilterImmunization(Patient patCur)
+		{
+			List<EhrPatientVaccine> listVaccinePatsAll = EhrPatientVaccines.GetByPatient(patCur.PatNum).ToList();
+			List<EhrPatientVaccine> listVaccinePatsFiltered = new List<EhrPatientVaccine>();
+			for (int i = 0; i < listVaccinePatsAll.Count; i++)
+			{
 				//No Filters for this
 				listVaccinePatsFiltered.Add(listVaccinePatsAll[i]);
 			}
-			_listVaccinePatsFiltered=listVaccinePatsFiltered;
+			_listVaccinePatsFiltered = listVaccinePatsFiltered;
 		}
 
 		///<summary>Does validation on the filtered list. NEEDS TO BE ENHANCED.</summary>
@@ -2693,16 +2696,19 @@ Vital Signs
 		}
 
 		///<summary>Filters list of care plans. Also runs validation.</summary>
-		private static void FilterPlanOfCare(Patient patCur,DateTime date) {
-			List<EhrCarePlan> listEhrCarePlansAll=EhrCarePlans.Refresh(patCur.PatNum);
-			List<EhrCarePlan> listEhrCarePlansFiltered=new List<EhrCarePlan>();
-			for(int i=0;i<listEhrCarePlansAll.Count;i++) {
-				if(date!=DateTime.MinValue && listEhrCarePlansAll[i].DatePlanned.Date<date.Date) {
+		private static void FilterPlanOfCare(Patient patCur, DateTime date)
+		{
+			List<EhrCarePlan> listEhrCarePlansAll = EhrCarePlans.Refresh(patCur.PatNum).ToList();
+			List<EhrCarePlan> listEhrCarePlansFiltered = new List<EhrCarePlan>();
+			for (int i = 0; i < listEhrCarePlansAll.Count; i++)
+			{
+				if (date != DateTime.MinValue && listEhrCarePlansAll[i].DatePlanned.HasValue && listEhrCarePlansAll[i].DatePlanned.Value.Date < date.Date)
+				{
 					continue;//Exclude care plans which are in the past if a date limitation is specified.
 				}
 				listEhrCarePlansFiltered.Add(listEhrCarePlansAll[i]);
 			}
-			_listEhrCarePlansFiltered=listEhrCarePlansFiltered;
+			_listEhrCarePlansFiltered = listEhrCarePlansFiltered;
 		}
 
 		///<summary>Does validation on the filtered list. NEEDS TO BE ENHANCED.</summary>
@@ -2788,13 +2794,13 @@ Vital Signs
 
 		///<summary>Filters list of procedures. Also runs validation.</summary>
 		private static void FilterSocialHistory(Patient patCur) {
-			List<EhrMeasureEvent> listEhrMeasureEventsAll=EhrMeasureEvents.Refresh(patCur.PatNum);
+			List<EhrMeasureEvent> listEhrMeasureEventsAll=EhrMeasureEvents.GetByPatient(patCur.PatNum).ToList();
 			List<EhrMeasureEvent> listEhrMeasureEventsFiltered=new List<EhrMeasureEvent>();
 			for(int i=0;i<listEhrMeasureEventsAll.Count;i++) {
 				if(listEhrMeasureEventsAll[i].Type!=EhrMeasureEventType.TobaccoUseAssessed) {
 					continue;
 				}
-				if(listEhrMeasureEventsAll[i].CodeSystemResult!="SNOMEDCT") {
+				if(listEhrMeasureEventsAll[i].ResultCodeSystem!="SNOMEDCT") {
 					continue;//The user is currently only allowed to pick SNOMED smoking statuses. This is here in case we add more code system in the future, to prevent the format from breaking until we enhance.
 				}
 				listEhrMeasureEventsFiltered.Add(listEhrMeasureEventsAll[i]);

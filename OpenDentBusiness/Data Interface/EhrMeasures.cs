@@ -1792,7 +1792,7 @@ namespace OpenDentBusiness{
 			string explanation;
 			List<EhrMeasure> retVal=GetMUList();
 			List<MedicationPat> medList=MedicationPats.Refresh(pat.PatNum,true);
-			List<EhrMeasureEvent> listMeasureEvents=EhrMeasureEvents.Refresh(pat.PatNum);
+			List<EhrMeasureEvent> listMeasureEvents=EhrMeasureEvents.GetByPatient(pat.PatNum).ToList();
 			List<RefAttach> listRefAttach=RefAttaches.Refresh(pat.PatNum);
 			for(int i=0;i<retVal.Count;i++) {
 				mu=new EhrMu();
@@ -1914,7 +1914,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region Education
 					case EhrMeasureType.Education:
-						List<EhrMeasureEvent> listEd=EhrMeasureEvents.RefreshByType(pat.PatNum,EhrMeasureEventType.EducationProvided);
+						List<EhrMeasureEvent> listEd=EhrMeasureEvents.GetByPatient(pat.PatNum,EhrMeasureEventType.EducationProvided).ToList();
 						if(listEd.Count==0) {
 							mu.Details="No education resources provided.";
 						}
@@ -1928,7 +1928,7 @@ namespace OpenDentBusiness{
 					#region ElectronicCopyAccess
 					//This used to be called TimelyAccess.  In 2014, CMS required offices use the new V/D/T measure (patient portal).  Electronic copy was removed as well due to this change.
 					case EhrMeasureType.ElectronicCopyAccess:
-						List<EhrMeasureEvent> listOnline=EhrMeasureEvents.RefreshByType(pat.PatNum,EhrMeasureEventType.OnlineAccessProvided);
+						List<EhrMeasureEvent> listOnline=EhrMeasureEvents.GetByPatient(pat.PatNum,EhrMeasureEventType.OnlineAccessProvided).ToList();
 						if(listOnline.Count==0) {
 							mu.Details="No online access provided.";
 						}
@@ -1942,7 +1942,7 @@ namespace OpenDentBusiness{
 					#region TimelyAccess (Deprecated)
 					//This measure is now deprecated.  In 2014, CMS required offices use the new V/D/T measure (patient portal).  ElectronicCopyAccess is used instead.
 					case EhrMeasureType.TimelyAccess:
-						List<EhrMeasureEvent> listAccess=EhrMeasureEvents.RefreshByType(pat.PatNum,EhrMeasureEventType.OnlineAccessProvided);
+						List<EhrMeasureEvent> listAccess=EhrMeasureEvents.GetByPatient(pat.PatNum,EhrMeasureEventType.OnlineAccessProvided).ToList();
 						if(listAccess.Count==0) {
 							mu.Details="No online access provided.";
 						}
@@ -2274,7 +2274,7 @@ namespace OpenDentBusiness{
 					#region ElectronicCopy (Deprecated)
 					//This measure is now deprecated.  In 2014, CMS required offices use the new V/D/T measure (patient portal) which is where the patient will get their "electronic copy".
 					case EhrMeasureType.ElectronicCopy:
-						List<EhrMeasureEvent> listRequests=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ElectronicCopyRequested);
+						List<EhrMeasureEvent> listRequests=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ElectronicCopyRequested).ToList();
 						List<EhrMeasureEvent> listRequestsPeriod=new List<EhrMeasureEvent>();
 						for(int r=0;r<listRequests.Count;r++) {
 							if(listRequests[r].Date < DateTime.Now.AddYears(-1)) {//not within the last year
@@ -2289,7 +2289,7 @@ namespace OpenDentBusiness{
 						else {
 							int countMissingCopies=0;
 							bool copyProvidedinTime;
-							List<EhrMeasureEvent> listCopiesProvided=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ElectronicCopyProvidedToPt);
+							List<EhrMeasureEvent> listCopiesProvided=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ElectronicCopyProvidedToPt).ToList();
 							for(int rp=0;rp<listRequestsPeriod.Count;rp++) {
 								copyProvidedinTime=false;
 								DateTime deadlineDateCopy=listRequestsPeriod[rp].Date.Date.AddDays(3);
@@ -2343,7 +2343,7 @@ namespace OpenDentBusiness{
 						else{
 							int countMissing=0;
 							bool summaryProvidedinTime;
-							List<EhrMeasureEvent> listClinSum=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ClinicalSummaryProvidedToPt);
+							List<EhrMeasureEvent> listClinSum=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ClinicalSummaryProvidedToPt).ToList();
 							for(int p=0;p<listVisits.Count;p++) {
 								summaryProvidedinTime=false;
 								DateTime deadlineDate=listVisits[p].AddDays(3);
@@ -2390,7 +2390,7 @@ namespace OpenDentBusiness{
 							mu.Details="Patient age not 65+ or 5-.";
 						}
 						else {
-							List<EhrMeasureEvent> listReminders=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ReminderSent);
+							List<EhrMeasureEvent> listReminders=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ReminderSent).ToList();
 							//during reporting period.
 							bool withinLastYear=false;
 							for(int r=0;r<listReminders.Count;r++) {
@@ -2430,7 +2430,7 @@ namespace OpenDentBusiness{
 							mu.Details="Referral 'from' not entered within the last year.";
 						}
 						else if(countFromRefPeriod > 0) {
-							List<EhrMeasureEvent> listReconciles=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.MedicationReconcile);
+							List<EhrMeasureEvent> listReconciles=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.MedicationReconcile).ToList();
 							int countReconciles=0;//during reporting period.
 							for(int r=0;r<listReconciles.Count;r++) {
 								if(listReconciles[r].Date > DateTime.Now.AddYears(-1)) {//within the same period as the count for referrals.
@@ -2461,7 +2461,7 @@ namespace OpenDentBusiness{
 							mu.Details="No outgoing transitions of care within the last year.";
 						}
 						else{// > 0
-							List<EhrMeasureEvent> listCcds=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SummaryOfCareProvidedToDr);
+							List<EhrMeasureEvent> listCcds=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SummaryOfCareProvidedToDr).ToList();
 							int countCcds=0;//during reporting period.
 							for(int r=0;r<listCcds.Count;r++) {
 								if(listCcds[r].Date > DateTime.Now.AddYears(-1) && listCcds[r].ObjectId!=0) {//Quick filter for measure events that do not meet the criterion.
@@ -2490,7 +2490,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region DrugDrugInteractChecking
 					case EhrMeasureType.DrugDrugInteractChecking:
-						List<EhrMeasureEvent> listDDIC=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.DrugDrugInteractChecking,false);
+						List<EhrMeasureEvent> listDDIC=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.DrugDrugInteractChecking).ToList();
 						if(listDDIC.Count!=0 && !String.IsNullOrWhiteSpace(listDDIC[listDDIC.Count-1].MoreInfo)) {
 							mu.Met=MuMet.True;
 							mu.Details="Action taken/Explanation given";
@@ -2504,7 +2504,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region DrugFormularyChecking
 					case EhrMeasureType.DrugFormularyChecking:
-						List<EhrMeasureEvent> listDFC=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.DrugFormularyChecking,false);
+						List<EhrMeasureEvent> listDFC=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.DrugFormularyChecking).ToList();
 						if(listDFC.Count!=0 && !String.IsNullOrWhiteSpace(listDFC[listDFC.Count-1].MoreInfo)) {
 							mu.Met=MuMet.True;
 							mu.Details="Action taken/Explanation given";
@@ -2518,7 +2518,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region ProtectElectHealthInfo
 					case EhrMeasureType.ProtectElectHealthInfo:
-						List<EhrMeasureEvent> listPEHI=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.ProtectElectHealthInfo,false);
+						List<EhrMeasureEvent> listPEHI=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.ProtectElectHealthInfo).ToList();
 						if(listPEHI.Count!=0 && !String.IsNullOrWhiteSpace(listPEHI[listPEHI.Count-1].MoreInfo)) {
 							mu.Met=MuMet.True;
 							mu.Details="Action taken/Explanation given";
@@ -2532,7 +2532,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region ImmunizationRegistries
 					case EhrMeasureType.ImmunizationRegistries:
-						List<EhrMeasureEvent> listIR=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.ImmunizationRegistries,false);
+						List<EhrMeasureEvent> listIR=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.ImmunizationRegistries).ToList();
 						if(listIR.Count!=0 && !String.IsNullOrWhiteSpace(listIR[listIR.Count-1].MoreInfo)) {
 							mu.Met=MuMet.True;
 							mu.Details="Action taken/Explanation given";
@@ -2546,7 +2546,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region SyndromicSurveillance
 					case EhrMeasureType.SyndromicSurveillance:
-						List<EhrMeasureEvent> listSS=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.SyndromicSurveillance,false);
+						List<EhrMeasureEvent> listSS=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.SyndromicSurveillance).ToList();
 						if(listSS.Count!=0 && !String.IsNullOrWhiteSpace(listSS[listSS.Count-1].MoreInfo)) {
 							mu.Met=MuMet.True;
 							mu.Details="Action taken/Explanation given";
@@ -2560,7 +2560,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region PatientList
 					case EhrMeasureType.PatientList:
-						List<EhrMeasureEvent> listPL=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.PatientList,false);
+						List<EhrMeasureEvent> listPL=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.PatientList).ToList();
 						if(listPL.Count!=0) {
 							mu.Met=MuMet.True;
 							mu.Details="List generated";
@@ -4284,7 +4284,7 @@ namespace OpenDentBusiness{
 			List<EhrLab> ehrLabList=new List<EhrLab>();
 			ehrLabList=EhrLabs.GetAllForPat(pat.PatNum);
 			List<Procedure> listRadCpoeProcs=Procedures.GetProcsRadiologyCpoeForPat(pat.PatNum);
-			List<EhrMeasureEvent> listMeasureEvents=EhrMeasureEvents.Refresh(pat.PatNum);
+			List<EhrMeasureEvent> listMeasureEvents=EhrMeasureEvents.GetByPatient(pat.PatNum).ToList();
 			List<RefAttach> listRefAttach=RefAttaches.Refresh(pat.PatNum);
 			for(int i=0;i<retVal.Count;i++) {
 				mu=new EhrMu();
@@ -4327,7 +4327,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region Education
 					case EhrMeasureType.Education:
-						List<EhrMeasureEvent> listEd=EhrMeasureEvents.RefreshByType(pat.PatNum,EhrMeasureEventType.EducationProvided);
+						List<EhrMeasureEvent> listEd=EhrMeasureEvents.GetByPatient(pat.PatNum,EhrMeasureEventType.EducationProvided).ToList();
 						if(listEd.Count==0) {
 							mu.Details="No education resources provided.";
 						}
@@ -4340,7 +4340,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region ElectronicCopyAccess
 					case EhrMeasureType.ElectronicCopyAccess:
-						List<EhrMeasureEvent> listOnline=EhrMeasureEvents.RefreshByType(pat.PatNum,EhrMeasureEventType.OnlineAccessProvided);
+						List<EhrMeasureEvent> listOnline=EhrMeasureEvents.GetByPatient(pat.PatNum,EhrMeasureEventType.OnlineAccessProvided).ToList();
 						if(listOnline.Count==0) {
 							mu.Details="No online access provided.";
 						}
@@ -4634,7 +4634,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region ElectronicCopy
 					case EhrMeasureType.ElectronicCopy:
-						List<EhrMeasureEvent> listRequests=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ElectronicCopyRequested);
+						List<EhrMeasureEvent> listRequests=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ElectronicCopyRequested).ToList();
 						List<EhrMeasureEvent> listRequestsPeriod=new List<EhrMeasureEvent>();
 						for(int r=0;r<listRequests.Count;r++) {
 							if(listRequests[r].Date<DateTime.Now.AddYears(-1) || listRequests[r].PatientId!=pat.PatNum) {//not within the last year
@@ -4672,7 +4672,7 @@ namespace OpenDentBusiness{
 						else {
 							int countMissing=0;
 							bool summaryProvidedinTime;
-							List<EhrMeasureEvent> listClinSum=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ClinicalSummaryProvidedToPt);
+							List<EhrMeasureEvent> listClinSum=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ClinicalSummaryProvidedToPt).ToList();
 							for(int p=0;p<listVisits.Count;p++) {
 								summaryProvidedinTime=false;
 								DateTime deadlineDate=listVisits[p].AddDays(1);
@@ -4725,7 +4725,7 @@ namespace OpenDentBusiness{
 							mu.Details="Status not patient.";
 						}
 						else {
-							List<EhrMeasureEvent> listReminders=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ReminderSent);
+							List<EhrMeasureEvent> listReminders=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ReminderSent).ToList();
 							//during reporting period.
 							bool withinLastYear=false;
 							for(int r=0;r<listReminders.Count;r++) {
@@ -4765,7 +4765,7 @@ namespace OpenDentBusiness{
 							mu.Details="Referral 'from' not entered within the last year.";
 						}
 						else if(countFromRefPeriod > 0) {
-							List<EhrMeasureEvent> listReconciles=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.MedicationReconcile);
+							List<EhrMeasureEvent> listReconciles=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.MedicationReconcile).ToList();
 							int countReconciles=0;//during reporting period.
 							for(int r=0;r<listReconciles.Count;r++) {
 								if(listReconciles[r].Date > DateTime.Now.AddYears(-1)) {//within the same period as the count for referrals.
@@ -4796,7 +4796,7 @@ namespace OpenDentBusiness{
 							mu.Details="No outgoing transitions of care within the last year.";
 						}
 						else {// > 0
-							List<EhrMeasureEvent> listCcds=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SummaryOfCareProvidedToDr);
+							List<EhrMeasureEvent> listCcds=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SummaryOfCareProvidedToDr).ToList();
 							int countCcds=0;//during reporting period.
 							for(int r=0;r<listCcds.Count;r++) {
 								if(listCcds[r].Date > DateTime.Now.AddYears(-1) && listCcds[r].ObjectId!=0) {//Quick filter for measure events that do not meet the criterion.
@@ -4838,7 +4838,7 @@ namespace OpenDentBusiness{
 							mu.Details="No outgoing transitions of care within the last year.";
 						}
 						else {// > 0
-							List<EhrMeasureEvent> listCcds=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SummaryOfCareProvidedToDrElectronic);
+							List<EhrMeasureEvent> listCcds=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SummaryOfCareProvidedToDrElectronic).ToList();
 							int countCcds=0;//during reporting period.
 							for(int r=0;r<listCcds.Count;r++) {
 								if(listCcds[r].Date > DateTime.Now.AddYears(-1) && listCcds[r].ObjectId!=0) {//Quick filter for measure events that do not meet the criterion.
@@ -4867,7 +4867,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region SecureMessaging
 					case EhrMeasureType.SecureMessaging:
-						List<EhrMeasureEvent> listMsg=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SecureMessageFromPat);
+						List<EhrMeasureEvent> listMsg=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SecureMessageFromPat).ToList();
 						List<DateTime> listVisitsMsg=new List<DateTime>();//for this year
 						List<Procedure> listProcsMsg=Procedures.Refresh(pat.PatNum);
 						int msgCount=0;
@@ -4966,7 +4966,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region DrugDrugInteractChecking
 					case EhrMeasureType.DrugDrugInteractChecking:
-						List<EhrMeasureEvent> listDDIC=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.DrugDrugInteractChecking,false);
+						List<EhrMeasureEvent> listDDIC=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.DrugDrugInteractChecking).ToList();
 						if(listDDIC.Count!=0 && !String.IsNullOrWhiteSpace(listDDIC[listDDIC.Count-1].MoreInfo)) {
 							mu.Met=MuMet.True;
 							mu.Details="Action taken/Explanation given";
@@ -4980,7 +4980,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region DrugFormularyChecking
 					case EhrMeasureType.DrugFormularyChecking:
-						List<EhrMeasureEvent> listDFC=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.DrugFormularyChecking,false);
+						List<EhrMeasureEvent> listDFC=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.DrugFormularyChecking).ToList();
 						if(listDFC.Count!=0 && !String.IsNullOrWhiteSpace(listDFC[listDFC.Count-1].MoreInfo)) {
 							mu.Met=MuMet.True;
 							mu.Details="Action taken/Explanation given";
@@ -4994,7 +4994,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region ProtectElectHealthInfo
 					case EhrMeasureType.ProtectElectHealthInfo:
-						List<EhrMeasureEvent> listPEHI=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.ProtectElectHealthInfo,false);
+						List<EhrMeasureEvent> listPEHI=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.ProtectElectHealthInfo).ToList();
 						if(listPEHI.Count!=0 && !String.IsNullOrWhiteSpace(listPEHI[listPEHI.Count-1].MoreInfo)) {
 							mu.Met=MuMet.True;
 							mu.Details="Action taken/Explanation given";
@@ -5008,7 +5008,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region ImmunizationRegistries
 					case EhrMeasureType.ImmunizationRegistries:
-						List<EhrMeasureEvent> listIR=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.ImmunizationRegistries,false);
+						List<EhrMeasureEvent> listIR=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.ImmunizationRegistries).ToList();
 						if(listIR.Count!=0 && !String.IsNullOrWhiteSpace(listIR[listIR.Count-1].MoreInfo)) {
 							mu.Met=MuMet.True;
 							mu.Details="Action taken/Explanation given";
@@ -5022,7 +5022,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region SyndromicSurveillance
 					case EhrMeasureType.SyndromicSurveillance:
-						List<EhrMeasureEvent> listSS=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.SyndromicSurveillance,false);
+						List<EhrMeasureEvent> listSS=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.SyndromicSurveillance).ToList();
 						if(listSS.Count!=0 && !String.IsNullOrWhiteSpace(listSS[listSS.Count-1].MoreInfo)) {
 							mu.Met=MuMet.True;
 							mu.Details="Action taken/Explanation given";
@@ -5036,7 +5036,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region PatientList
 					case EhrMeasureType.PatientList:
-						List<EhrMeasureEvent> listPL=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.PatientList,false);
+						List<EhrMeasureEvent> listPL=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.PatientList).ToList();
 						if(listPL.Count!=0) {
 							mu.Met=MuMet.True;
 							mu.Details="List generated";
@@ -5141,7 +5141,7 @@ namespace OpenDentBusiness{
 			ehrLabList=EhrLabs.GetAllForPat(pat.PatNum);
 			
 			List<Procedure> listRadCpoeProcs=Procedures.GetProcsRadiologyCpoeForPat(pat.PatNum);
-			List<EhrMeasureEvent> listMeasureEvents=EhrMeasureEvents.Refresh(pat.PatNum);
+			List<EhrMeasureEvent> listMeasureEvents=EhrMeasureEvents.GetByPatient(pat.PatNum).ToList();
 			List<RefAttach> listRefAttach=RefAttaches.Refresh(pat.PatNum);
 			for(int i=0;i<retVal.Count;i++) {
 				mu=new EhrMu();
@@ -5184,7 +5184,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region Education
 					case EhrMeasureType.Education:
-						List<EhrMeasureEvent> listEd=EhrMeasureEvents.RefreshByType(pat.PatNum,EhrMeasureEventType.EducationProvided);
+						List<EhrMeasureEvent> listEd=EhrMeasureEvents.GetByPatient(pat.PatNum,EhrMeasureEventType.EducationProvided).ToList();
 						if(listEd.Count==0) {
 							mu.Details="No education resources provided.";
 						}
@@ -5197,7 +5197,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region ElectronicCopyAccess
 					case EhrMeasureType.ElectronicCopyAccess:
-						List<EhrMeasureEvent> listOnline=EhrMeasureEvents.RefreshByType(pat.PatNum,EhrMeasureEventType.OnlineAccessProvided);
+						List<EhrMeasureEvent> listOnline=EhrMeasureEvents.GetByPatient(pat.PatNum,EhrMeasureEventType.OnlineAccessProvided).ToList();
 						if(listOnline.Count==0) {
 							mu.Details="No online access provided.";
 						}
@@ -5404,7 +5404,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region ElectronicCopy
 					case EhrMeasureType.ElectronicCopy:
-						List<EhrMeasureEvent> listRequests=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ElectronicCopyRequested);
+						List<EhrMeasureEvent> listRequests=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ElectronicCopyRequested).ToList();
 						List<EhrMeasureEvent> listRequestsPeriod=new List<EhrMeasureEvent>();
 						for(int r=0;r<listRequests.Count;r++) {
 							if(listRequests[r].Date<DateTime.Now.AddYears(-1) || listRequests[r].PatientId!=pat.PatNum) {//not within the last year
@@ -5444,7 +5444,7 @@ namespace OpenDentBusiness{
 							mu.Details="Referral 'from' not entered within the last year.";
 						}
 						else if(countFromRefPeriod > 0) {
-							List<EhrMeasureEvent> listReconciles=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.MedicationReconcile);
+							List<EhrMeasureEvent> listReconciles=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.MedicationReconcile).ToList();
 							int countReconciles=0;//during reporting period.
 							for(int r=0;r<listReconciles.Count;r++) {
 								if(listReconciles[r].Date > DateTime.Now.AddYears(-1)) {//within the same period as the count for referrals.
@@ -5475,7 +5475,7 @@ namespace OpenDentBusiness{
 							mu.Details="No outgoing transitions of care within the last year.";
 						}
 						else {// > 0
-							List<EhrMeasureEvent> listCcds=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SummaryOfCareProvidedToDr);
+							List<EhrMeasureEvent> listCcds=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SummaryOfCareProvidedToDr).ToList();
 							int countCcds=0;//during reporting period.
 							for(int r=0;r<listCcds.Count;r++) {
 								if(listCcds[r].Date > DateTime.Now.AddYears(-1) && listCcds[r].ObjectId!=0) {//Quick filter for measure events that do not meet the criterion.
@@ -5517,7 +5517,7 @@ namespace OpenDentBusiness{
 							mu.Details="No outgoing transitions of care within the last year.";
 						}
 						else {// > 0
-							List<EhrMeasureEvent> listCcds=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SummaryOfCareProvidedToDrElectronic);
+							List<EhrMeasureEvent> listCcds=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SummaryOfCareProvidedToDrElectronic).ToList();
 							int countCcds=0;//during reporting period.
 							for(int r=0;r<listCcds.Count;r++) {
 								if(listCcds[r].Date > DateTime.Now.AddYears(-1) && listCcds[r].ObjectId!=0) {//Quick filter for measure events that do not meet the criterion.
@@ -5566,7 +5566,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region DrugDrugInteractChecking
 					case EhrMeasureType.DrugDrugInteractChecking:
-						List<EhrMeasureEvent> listDDIC=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.DrugDrugInteractChecking,false);
+						List<EhrMeasureEvent> listDDIC=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.DrugDrugInteractChecking).ToList();
 						if(listDDIC.Count!=0 && !String.IsNullOrWhiteSpace(listDDIC[listDDIC.Count-1].MoreInfo)) {
 							mu.Met=MuMet.True;
 							mu.Details="Action taken/Explanation given";
@@ -5580,7 +5580,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region DrugFormularyChecking
 					case EhrMeasureType.DrugFormularyChecking:
-						List<EhrMeasureEvent> listDFC=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.DrugFormularyChecking,false);
+						List<EhrMeasureEvent> listDFC=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.DrugFormularyChecking).ToList();
 						if(listDFC.Count!=0 && !String.IsNullOrWhiteSpace(listDFC[listDFC.Count-1].MoreInfo)) {
 							mu.Met=MuMet.True;
 							mu.Details="Action taken/Explanation given";
@@ -5594,7 +5594,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region ProtectElectHealthInfo
 					case EhrMeasureType.ProtectElectHealthInfo:
-						List<EhrMeasureEvent> listPEHI=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.ProtectElectHealthInfo,false);
+						List<EhrMeasureEvent> listPEHI=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.ProtectElectHealthInfo).ToList();
 						if(listPEHI.Count!=0 && !String.IsNullOrWhiteSpace(listPEHI[listPEHI.Count-1].MoreInfo)) {
 							mu.Met=MuMet.True;
 							mu.Details="Action taken/Explanation given";
@@ -5608,7 +5608,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region ImmunizationRegistries
 					case EhrMeasureType.ImmunizationRegistries:
-						List<EhrMeasureEvent> listIR=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.ImmunizationRegistries,false);
+						List<EhrMeasureEvent> listIR=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.ImmunizationRegistries).ToList();
 						if(listIR.Count!=0 && !String.IsNullOrWhiteSpace(listIR[listIR.Count-1].MoreInfo)) {
 							mu.Met=MuMet.True;
 							mu.Details="Action taken/Explanation given";
@@ -5622,7 +5622,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region SyndromicSurveillance
 					case EhrMeasureType.SyndromicSurveillance:
-						List<EhrMeasureEvent> listSS=EhrMeasureEvents.GetAllByTypeFromDB(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.SyndromicSurveillance,false);
+						List<EhrMeasureEvent> listSS=EhrMeasureEvents.GetByDateRange(new DateTime(DateTime.Now.Year,1,1),new DateTime(DateTime.Now.Year,12,31),EhrMeasureEventType.SyndromicSurveillance).ToList();
 						if(listSS.Count!=0 && !String.IsNullOrWhiteSpace(listSS[listSS.Count-1].MoreInfo)) {
 							mu.Met=MuMet.True;
 							mu.Details="Action taken/Explanation given";
@@ -6864,7 +6864,7 @@ namespace OpenDentBusiness{
 		/// <summary>Returns an int comparison of count when comparing reconciles and referrals. If reconciles are greater than or equal to referrals, returns 1. If referrals are greater than reconciles, returns -1. If there are no referrals, returns 0.</summary>
 		public static int CompareReferralsToReconciles(long patNum) {
 			List<RefAttach> listRefAttach=RefAttaches.Refresh(patNum);
-			List<EhrMeasureEvent> listMeasureEvents=EhrMeasureEvents.Refresh(patNum);
+			List<EhrMeasureEvent> listMeasureEvents=EhrMeasureEvents.GetByPatient(patNum).ToList();
 			int refFromCount=0;
 			int refFromPeriodCount=0;
 			for(int i=0;i<listRefAttach.Count;i++) {
@@ -6879,7 +6879,7 @@ namespace OpenDentBusiness{
 				return 0;
 			}
 			else {
-				List<EhrMeasureEvent> listReconciles=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.MedicationReconcile);
+				List<EhrMeasureEvent> listReconciles=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.MedicationReconcile).ToList();
 				int reconcileCount=0;//during reporting period.
 				for(int i=0;i<listReconciles.Count;i++) {
 					if(listReconciles[i].Date > DateTime.Now.AddYears(-1)) {//within the same period as the count for referrals.

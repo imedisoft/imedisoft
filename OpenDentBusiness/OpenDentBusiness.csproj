@@ -212,8 +212,8 @@
     <Compile Include="Cache\CacheDictNonPkAbs.cs" />
     <Compile Include="Cache\CacheListAbs.cs" />
     <Compile Include="Cache\FeeCache.cs" />
-    <Compile Include="Data Temp\Crud\AutoNoteCategories.cs" />
-    <Compile Include="Data Temp\Logic\AutoNoteCategories.cs" />
+    <Compile Include="Data\Crud\AutoNoteCategories.cs" />
+    <Compile Include="Data\Logic\AutoNoteCategories.cs" />
     <Compile Include="Data\Cemt\Crud\ConnectionGroups.cs" />
     <Compile Include="Data\Crud\AlertCategories.cs" />
     <Compile Include="Data\Crud\AlertCategoryLinks.cs" />
@@ -347,7 +347,6 @@
     <Compile Include="TableTypes\MobileAppDevice.cs" />
     <Compile Include="TableTypes\MobileDataByte.cs" />
     <Compile Include="TableTypes\Patient.cs" />
-    <Compile Include="TableTypes\Sensor.cs" />
     <Compile Include="TableTypes\OrthoCase.cs" />
     <Compile Include="TableTypes\OrthoPlanLink.cs" />
     <Compile Include="TableTypes\OrthoProcLink.cs" />
@@ -465,8 +464,8 @@
     <Compile Include="Data\Crud\AutoCodeItems.cs" />
     <Compile Include="Crud\AutomationConditionCrud.cs" />
     <Compile Include="Data\Crud\Automations.cs" />
-    <Compile Include="Data Temp\Crud\AutoNotePrompts.cs" />
-    <Compile Include="Data Temp\Crud\AutoNotes.cs" />
+    <Compile Include="Data\Crud\AutoNotePrompts.cs" />
+    <Compile Include="Data\Crud\AutoNotes.cs" />
     <Compile Include="Data\Ehr\Crud\CdsPermissions.cs" />
     <Compile Include="Crud\ClaimSnapshotCrud.cs" />
     <Compile Include="Crud\ConfirmationRequestCrud.cs" />
@@ -476,7 +475,7 @@
     <Compile Include="Crud\DispSupplyCrud.cs" />
     <Compile Include="Crud\EbillCrud.cs" />
     <Compile Include="Crud\EhrAptObsCrud.cs" />
-    <Compile Include="Crud\EhrCarePlanCrud.cs" />
+    <Compile Include="Data Temp\Crud\EhrCarePlans.cs" />
     <Compile Include="Crud\EhrLabClinicalInfoCrud.cs" />
     <Compile Include="Crud\EhrLabCrud.cs" />
     <Compile Include="Crud\EhrLabImageCrud.cs" />
@@ -486,7 +485,7 @@
     <Compile Include="Crud\EhrLabSpecimenConditionCrud.cs" />
     <Compile Include="Crud\EhrLabSpecimenCrud.cs" />
     <Compile Include="Crud\EhrLabSpecimenRejectReasonCrud.cs" />
-    <Compile Include="Crud\EhrPatientCrud.cs" />
+    <Compile Include="Data\Ehr\Crud\EhrPatients.cs" />
     <Compile Include="Crud\EhrTriggerCrud.cs" />
     <Compile Include="Crud\BenefitCrud.cs" />
     <Compile Include="Crud\CanadianNetworkCrud.cs" />
@@ -528,24 +527,24 @@
     <Compile Include="Crud\DisplayFieldCrud.cs" />
     <Compile Include="Crud\DocumentCrud.cs" />
     <Compile Include="Crud\DocumentMiscCrud.cs" />
-    <Compile Include="Crud\DrugManufacturerCrud.cs" />
-    <Compile Include="Crud\DrugUnitCrud.cs" />
+    <Compile Include="Data\Ehr\Crud\EhrDrugManufacturers.cs" />
+    <Compile Include="Data\Ehr\Crud\EhrDrugUnits.cs" />
     <Compile Include="Crud\DunningCrud.cs" />
     <Compile Include="Crud\EduResourceCrud.cs" />
-    <Compile Include="Data Temp\Crud\EhrAmendments.cs" />
+    <Compile Include="Data\Crud\EhrAmendments.cs" />
     <Compile Include="Crud\EhrCodeCrud.cs" />
     <Compile Include="Crud\EhrMeasureCrud.cs" />
-    <Compile Include="Crud\EhrMeasureEventCrud.cs" />
+    <Compile Include="Data Temp\Crud\EhrMeasureEvents.cs" />
     <Compile Include="Crud\EhrNotPerformedCrud.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Data\Ehr\Crud\EhrProviderKeys.cs" />
     <Compile Include="Crud\EhrQuarterlyKeyCrud.cs" />
-    <Compile Include="Crud\EhrSummaryCcdCrud.cs" />
+    <Compile Include="Data Temp\Crud\EhrSummaryCcds.cs" />
     <Compile Include="Crud\ElectIDCrud.cs" />
     <Compile Include="Data\Crud\EmailAddresses.cs" />
     <Compile Include="Crud\EmailAttachCrud.cs" />
-    <Compile Include="Data Temp\Crud\EmailAutographs.cs" />
+    <Compile Include="Data\Crud\EmailAutographs.cs" />
     <Compile Include="Crud\EmailMessageCrud.cs" />
     <Compile Include="Crud\EmailMessageUidCrud.cs" />
     <Compile Include="Crud\EmailTemplateCrud.cs" />
@@ -715,7 +714,7 @@
     <Compile Include="Data Interface\DashboardLayouts.cs" />
     <Compile Include="Data Interface\DisplayReports.cs" />
     <Compile Include="Data Interface\Ebills.cs" />
-    <Compile Include="Data Temp\Logic\EmailAutographs.cs" />
+    <Compile Include="Data\Logic\EmailAutographs.cs" />
     <Compile Include="Data Interface\FamAgings.cs" />
     <Compile Include="Data Interface\FHIRContactPoints.cs" />
     <Compile Include="Data Interface\FHIRSubscriptions.cs" />
@@ -768,9 +767,9 @@
     <Compile Include="Crud\UserodApptViewCrud.cs" />
     <Compile Include="Data\Crud\Users.cs" />
     <Compile Include="Crud\UserQueryCrud.cs" />
-    <Compile Include="Crud\VaccineDefCrud.cs" />
-    <Compile Include="Crud\VaccineObsCrud.cs" />
-    <Compile Include="Crud\VaccinePatCrud.cs" />
+    <Compile Include="Data\Ehr\Crud\EhrVaccines.cs" />
+    <Compile Include="Data\Ehr\Crud\EhrPatientVaccineObservations.cs" />
+    <Compile Include="Data\Ehr\Crud\EhrPatientVaccines.cs" />
     <Compile Include="Crud\VitalsignCrud.cs" />
     <Compile Include="Crud\WikiListHeaderWidthCrud.cs" />
     <Compile Include="Crud\WikiListHistCrud.cs" />
@@ -789,7 +788,7 @@
     <Compile Include="Data\Cemt\Logic\ConnectionGroups.cs" />
     <Compile Include="Data Interface\DispSupplies.cs" />
     <Compile Include="Data Interface\EhrAptObses.cs" />
-    <Compile Include="Data Interface\EhrCarePlans.cs" />
+    <Compile Include="Data Temp\Logic\EhrCarePlans.cs" />
     <Compile Include="Data Interface\EhrLabClinicalInfos.cs" />
     <Compile Include="Data Interface\EhrLabImages.cs" />
     <Compile Include="Data Interface\EhrLabNotes.cs" />
@@ -799,7 +798,7 @@
     <Compile Include="Data Interface\EhrLabSpecimenConditions.cs" />
     <Compile Include="Data Interface\EhrLabSpecimenRejectReasons.cs" />
     <Compile Include="Data Interface\EhrLabSpecimens.cs" />
-    <Compile Include="Data Interface\EhrPatients.cs">
+    <Compile Include="Data\Ehr\Logic\EhrPatients.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Data Interface\EhrTriggers.cs" />
@@ -809,7 +808,7 @@
     <Compile Include="Data Interface\CodeSystems.cs" />
     <Compile Include="Data Interface\Cpts.cs" />
     <Compile Include="Data Interface\Cvxs.cs" />
-    <Compile Include="Data Temp\Logic\EhrAmendments.cs" />
+    <Compile Include="Data\Logic\EhrAmendments.cs" />
     <Compile Include="Data Interface\EhrCodes.cs" />
     <Compile Include="Data Interface\EhrNotPerformeds.cs">
       <SubType>Code</SubType>
@@ -850,7 +849,7 @@
     <Compile Include="Data Interface\Sops.cs" />
     <Compile Include="Data\Ucums.cs" />
     <Compile Include="Data Interface\UserodApptViews.cs" />
-    <Compile Include="Data Interface\VaccineObses.cs" />
+    <Compile Include="Data\Ehr\Logic\EhrPatientVaccineObservations.cs" />
     <Compile Include="Data Interface\WikiListHeaderWidths.cs" />
     <Compile Include="Data Interface\WikiListHists.cs" />
     <Compile Include="Data Interface\WikiLists.cs" />
@@ -863,14 +862,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Data Interface\DocumentMiscs.cs" />
-    <Compile Include="Data Interface\DrugManufacturers.cs" />
-    <Compile Include="Data Interface\DrugUnits.cs" />
+    <Compile Include="Data\Ehr\Logic\EhrDrugManufacturers.cs" />
+    <Compile Include="Data\Ehr\Logic\EhrDrugUnits.cs" />
     <Compile Include="Data Interface\EduResources.cs" />
-    <Compile Include="Data Interface\EhrMeasureEvents.cs" />
+    <Compile Include="Data Temp\Logic\EhrMeasureEvents.cs" />
     <Compile Include="Data Interface\EhrMeasures.cs" />
     <Compile Include="Data\Ehr\Logic\EhrProviderKeys.cs" />
     <Compile Include="Data Interface\EhrQuarterlyKeys.cs" />
-    <Compile Include="Data Interface\EhrSummaryCcds.cs" />
+    <Compile Include="Data Temp\Logic\EhrSummaryCcds.cs" />
     <Compile Include="Data Interface\EmailAddresses.cs" />
     <Compile Include="Data Interface\EobAttaches.cs" />
     <Compile Include="Data Interface\ErxLogs.cs" />
@@ -906,8 +905,8 @@
     <Compile Include="Data Interface\ToothGridCells.cs" />
     <Compile Include="Data Interface\ToothGridCols.cs" />
     <Compile Include="Data Interface\ToothGridDefs.cs" />
-    <Compile Include="Data Interface\VaccineDefs.cs" />
-    <Compile Include="Data Interface\VaccinePats.cs" />
+    <Compile Include="Data\Ehr\Logic\EhrVaccines.cs" />
+    <Compile Include="Data\Ehr\Logic\EhrPatientVaccines.cs" />
     <Compile Include="Data Interface\Vitalsigns.cs" />
     <Compile Include="Data Interface\WikiPageHists.cs" />
     <Compile Include="Data Interface\WikiPages.cs" />
@@ -967,8 +966,8 @@
     <Compile Include="Data\Logic\AutoCodeConditions.cs" />
     <Compile Include="Data\Logic\AutoCodeItems.cs" />
     <Compile Include="Data\AutoCodes.cs" />
-    <Compile Include="Data Temp\Logic\AutoNotePrompts.cs" />
-    <Compile Include="Data Temp\Logic\AutoNotes.cs" />
+    <Compile Include="Data\Logic\AutoNotePrompts.cs" />
+    <Compile Include="Data\Logic\AutoNotes.cs" />
     <Compile Include="Data Interface\Benefits.cs" />
     <Compile Include="Data Interface\CanadianNetworks.cs" />
     <Compile Include="Data Interface\Carriers.cs" />
@@ -1223,7 +1222,6 @@
     <Compile Include="TableTypes\StateAbbr.cs" />
     <Compile Include="TableTypes\TaskHist.cs" />
     <Compile Include="Data\Models\UserClinic.cs" />
-    <Compile Include="TableTypes\UserGroupAttach.cs" />
     <Compile Include="TableTypes\UserodApptView.cs" />
     <Compile Include="TableTypes\UserWeb.cs" />
     <Compile Include="TableTypes\WebSchedRecall.cs" />
@@ -1232,7 +1230,6 @@
     <Compile Include="TableTypes\ProcButtonQuick.cs" />
     <Compile Include="TableTypes\EhrAptObs.cs" />
     <Compile Include="TableTypes\EhrLabImage.cs" />
-    <Compile Include="TableTypes\EhrPatient.cs" />
     <Compile Include="TableTypes\OIDExternal.cs" />
     <Compile Include="TableTypes\OIDInternal.cs" />
     <Compile Include="TableTypes\EhrLabSpecimenRejectReason.cs" />
@@ -1243,7 +1240,6 @@
     <Compile Include="TableTypes\EhrLabResultsCopyTo.cs" />
     <Compile Include="TableTypes\EhrLabClinicalInfo.cs" />
     <Compile Include="TableTypes\EhrLab.cs" />
-    <Compile Include="TableTypes\EhrCarePlan.cs" />
     <Compile Include="Data\Models\Ucum.cs" />
     <Compile Include="TableTypes\EmailMessageUid.cs" />
     <Compile Include="TableTypes\EhrTrigger.cs" />
@@ -1269,7 +1265,6 @@
     <Compile Include="TableTypes\PatientRace.cs" />
     <Compile Include="TableTypes\ResellerService.cs" />
     <Compile Include="TableTypes\Reseller.cs" />
-    <Compile Include="TableTypes\VaccineObs.cs" />
     <Compile Include="TableTypes\WikiListHeaderWidth.cs" />
     <Compile Include="TableTypes\WikiPageHist.cs" />
     <Compile Include="TableTypes\WikiPage.cs" />
@@ -1285,12 +1280,8 @@
     <Compile Include="TableTypes\EobAttach.cs" />
     <Compile Include="TableTypes\DashboardAR.cs" />
     <Compile Include="TableTypes\EhrQuarterlyKey.cs" />
-    <Compile Include="TableTypes\EhrSummaryCcd.cs" />
-    <Compile Include="TableTypes\DrugManufacturer.cs" />
-    <Compile Include="TableTypes\DrugUnit.cs" />
     <Compile Include="TableTypes\EduResource.cs" />
     <Compile Include="TableTypes\EhrMeasure.cs" />
-    <Compile Include="TableTypes\EhrMeasureEvent.cs" />
     <Compile Include="TableTypes\HL7DefMessage.cs" />
     <Compile Include="TableTypes\HL7DefSegment.cs" />
     <Compile Include="TableTypes\HL7Def.cs" />
@@ -1318,8 +1309,6 @@
     <Compile Include="TableTypes\InsFilingCodeSubtype.cs" />
     <Compile Include="CrudFramework\TableBase.cs" />
     <Compile Include="TableTypes\TimeCardRule.cs" />
-    <Compile Include="TableTypes\VaccineDef.cs" />
-    <Compile Include="TableTypes\VaccinePat.cs" />
     <Compile Include="TableTypes\Vitalsign.cs" />
     <Compile Include="TableTypes\XChargeTransaction.cs" />
     <Compile Include="TableTypes\XWebResponse.cs" />
@@ -1469,7 +1458,6 @@
     <Compile Include="TableTypes\Sheet.cs" />
     <Compile Include="TableTypes\Site.cs" />
     <Compile Include="TableTypes\Statement.cs" />
-    <Compile Include="TableTypes\TaskAncestor.cs" />
     <Compile Include="TableTypes\SupplyOrderItem.cs" />
     <Compile Include="TableTypes\SupplyOrder.cs" />
     <Compile Include="TableTypes\Supply.cs" />
@@ -1498,8 +1486,6 @@
     <Compile Include="Data Temp\InsurancePlan.cs" />
     <Compile Include="Db\Interval.cs" />
     <Compile Include="TableTypes\JournalEntry.cs" />
-    <Compile Include="TableTypes\Language.cs" />
-    <Compile Include="TableTypes\LanguageForeign.cs" />
     <Compile Include="TableTypes\Letter.cs" />
     <Compile Include="TableTypes\LetterMerge.cs" />
     <Compile Include="TableTypes\LetterMergeField.cs" />

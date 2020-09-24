@@ -1,7 +1,7 @@
 namespace OpenDentBusiness
 {
-    ///<summary>Keeps track of one file attached to an email.  Multiple files can be attached to an email using this method.</summary>
-    public class EmailAttach : TableBase
+	///<summary>Keeps track of one file attached to an email.  Multiple files can be attached to an email using this method.</summary>
+	public class EmailAttach : TableBase
 	{
 		///<summary>Primary key.</summary>
 		[CrudColumn(IsPriKey = true)]

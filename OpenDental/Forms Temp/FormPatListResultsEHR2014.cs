@@ -9,6 +9,7 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.Drawing.Printing;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormPatListResultsEHR2014:ODForm {
@@ -29,7 +30,7 @@ namespace OpenDental {
 			EhrMeasureEvent measureEvent=new EhrMeasureEvent();
 			measureEvent.Date=DateTime.Now;
 			measureEvent.Type=EhrMeasureEventType.PatientList;
-			EhrMeasureEvents.Insert(measureEvent);
+			EhrMeasureEvents.Save(measureEvent);
 			FillGrid();
 		}
 

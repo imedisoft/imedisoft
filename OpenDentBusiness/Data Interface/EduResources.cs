@@ -37,15 +37,15 @@ namespace OpenDentBusiness{
 			List<LabResult> labResultList = LabResults.GetAllForPatient(patNum);
 			List<EhrLabResult> listEhrLabResults= EhrLabResults.GetAllForPatient(patNum);
 			List<EduResource> eduResourceListAll = Crud.EduResourceCrud.SelectMany("SELECT * FROM eduresource");
-			List<EhrMeasureEvent> listTobaccoEvents=EhrMeasureEvents.RefreshByType(patNum,EhrMeasureEventType.TobaccoUseAssessed)
-				.FindAll(x => x.CodeSystemResult=="SNOMEDCT");
+			List<EhrMeasureEvent> listTobaccoEvents=EhrMeasureEvents.GetByPatient(patNum,EhrMeasureEventType.TobaccoUseAssessed)
+				.Where(x => x.ResultCodeSystem=="SNOMEDCT").ToList();
 			List<EduResource> retVal = new List<EduResource>();
 			eduResourceListAll.FindAll(x => x.DiseaseDefNum!=0 && diseaseList.Any(y => y.ProblemDefId==x.DiseaseDefNum)).ForEach(x => retVal.Add(x));
 			eduResourceListAll.FindAll(x => x.MedicationNum!=0
 					&& medicationPatList.Any(y => y.MedicationNum==x.MedicationNum 
 						|| (y.MedicationNum==0 && Medications.GetById(x.MedicationNum).RxCui==y.RxCui.ToString())))
 				.ForEach(x => retVal.Add(x));
-			eduResourceListAll.FindAll(x => x.SmokingSnoMed!="" && listTobaccoEvents.Any(y => y.CodeValueResult==x.SmokingSnoMed)).ForEach(x => retVal.Add(x));
+			eduResourceListAll.FindAll(x => x.SmokingSnoMed!="" && listTobaccoEvents.Any(y => y.ResultCode==x.SmokingSnoMed)).ForEach(x => retVal.Add(x));
 			foreach(EduResource resourceCur in eduResourceListAll.Where(x => x.LabResultID!="")) {
 				foreach(LabResult labResult in labResultList.Where(x => x.TestID==resourceCur.LabResultID)) {
 					if(resourceCur.LabResultCompare.StartsWith("<")){

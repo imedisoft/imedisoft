@@ -260,31 +260,31 @@ namespace OpenDental
 				}
 				switch (EhrLabCur.ListEhrLabResults[i].ValueType)
 				{
-					case HL70125.CE:
-					case HL70125.CWE:
+					case EhrLaboratories.HL70125.CE:
+					case EhrLaboratories.HL70125.CWE:
 						row.Cells.Add(EhrLabCur.ListEhrLabResults[i].ObservationValueCodedElementText);
 						break;
-					case HL70125.DT:
-					case HL70125.TS:
+					case EhrLaboratories.HL70125.DT:
+					case EhrLaboratories.HL70125.TS:
 						row.Cells.Add(EhrLabCur.ListEhrLabResults[i].ObservationValueDateTime);
 						break;
-					case HL70125.TM:
+					case EhrLaboratories.HL70125.TM:
 						row.Cells.Add(EhrLabCur.ListEhrLabResults[i].ObservationValueTime.ToString());
 						break;
-					case HL70125.NM:
+					case EhrLaboratories.HL70125.NM:
 						row.Cells.Add(EhrLabCur.ListEhrLabResults[i].ObservationValueNumeric.ToString());
 						break;
-					case HL70125.SN:
+					case EhrLaboratories.HL70125.SN:
 						row.Cells.Add(
-							EhrLabCur.ListEhrLabResults[i].ObservationValueComparator
+                            EhrLabCur.ListEhrLabResults[i].ObservationValueComparator
 							+ EhrLabCur.ListEhrLabResults[i].ObservationValueNumber1
 							+ (EhrLabCur.ListEhrLabResults[i].ObservationValueSeparatorOrSuffix == ""
 									? "" : EhrLabCur.ListEhrLabResults[i].ObservationValueSeparatorOrSuffix + EhrLabCur.ListEhrLabResults[i].ObservationValueNumber2)
 							);
 						break;
-					case HL70125.FT:
-					case HL70125.ST:
-					case HL70125.TX:
+					case EhrLaboratories.HL70125.FT:
+					case EhrLaboratories.HL70125.ST:
+					case EhrLaboratories.HL70125.TX:
 						row.Cells.Add(EhrLabCur.ListEhrLabResults[i].ObservationValueText);
 						break;
 				}

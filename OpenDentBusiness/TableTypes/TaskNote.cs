@@ -1,7 +1,6 @@
 ﻿using Imedisoft.Data.Annotations;
 using Imedisoft.Data.Models;
 using System;
-using System.Collections;
 
 namespace OpenDentBusiness
 {
@@ -32,7 +31,5 @@ namespace OpenDentBusiness
 		/// The date and time on which the note was created or last modified.
 		/// </summary>
 		public DateTime DateModified;
-
-		public TaskNote Copy() => (TaskNote)MemberwiseClone();
 	}
 }

@@ -15,7 +15,7 @@ namespace OpenDentBusiness {
 		public long SetIdOBX;
 		///<summary>This field identifies the data type used for ObservationValue (OBX-5).  OBX.2</summary>
 		[CrudColumn(SpecialType=CrudSpecialColType.EnumAsString)]
-		public HL70125 ValueType;
+		public EhrLaboratories.HL70125 ValueType;
 
 
 		#region Observation Identifier (Loinc Codes)  OBX.3

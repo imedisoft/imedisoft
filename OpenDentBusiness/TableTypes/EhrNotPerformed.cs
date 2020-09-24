@@ -2,7 +2,13 @@
 
 namespace OpenDentBusiness
 {
-	///<summary>For EHR module, these are all the items 'not performed' on patients.  Each row will link to the ehrcode table to retrieve relevant data.  To join this table to the ehrcode table you must join on CodeValue and CodeSystem.  Some items will have associated reasons attached to specify why it was not performed.  Those reasons will also be defined in the ehrcode table, so it may be necessary to join with that table again for the data relevant to the reason.</summary>
+	/// <summary>
+	/// For EHR module, these are all the items 'not performed' on patients. 
+	/// Each row will link to the ehrcode table to retrieve relevant data. 
+	/// To join this table to the ehrcode table you must join on CodeValue and CodeSystem. 
+	/// Some items will have associated reasons attached to specify why it was not performed. 
+	/// Those reasons will also be defined in the ehrcode table, so it may be necessary to join with that table again for the data relevant to the reason.
+	/// </summary>
 	[Serializable]
 	public class EhrNotPerformed : TableBase
 	{

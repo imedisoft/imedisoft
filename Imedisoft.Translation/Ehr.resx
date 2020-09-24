@@ -126,22 +126,131 @@
   <data name="Conditions" xml:space="preserve">
     <value>Conditions</value>
   </data>
+  <data name="CvxCodeAlreadyExistsForTheSelectedManufacturer" xml:space="preserve">
+    <value>CVX code already exists for the selected manufacturer.</value>
+  </data>
+  <data name="EncryptedMessageWithHash" xml:space="preserve">
+    <value>Encrypted Message:
+{0}
+
+Hash:
+{1}</value>
+  </data>
+  <data name="Encryption" xml:space="preserve">
+    <value>Encryption</value>
+  </data>
+  <data name="EnteredTextIsNotValidEncryptedText" xml:space="preserve">
+    <value>Text entered was not valid encrypted text.</value>
+  </data>
+  <data name="ImmunizationSubmission" xml:space="preserve">
+    <value>Immunization Submission</value>
+  </data>
   <data name="Instructions" xml:space="preserve">
     <value>Instructions</value>
   </data>
   <data name="InvalidProviderKey" xml:space="preserve">
     <value>Invalid provider key.</value>
   </data>
+  <data name="InvalidSummaryOfCareOnlyRawTextWillBeShown" xml:space="preserve">
+    <value>This is not a valid CCD, CCDA, CCR, or C32 message. Only the raw text will be shown.</value>
+  </data>
+  <data name="ManufacturerWithThisCodeAlreadyExists" xml:space="preserve">
+    <value>Manufacturer with this code already exists.</value>
+  </data>
+  <data name="NotAdministeredName" xml:space="preserve">
+    <value>Not administered: {0}</value>
+  </data>
+  <data name="NothingToDecrypt" xml:space="preserve">
+    <value>Nothing to decrypt.</value>
+  </data>
+  <data name="NothingToEncrypt" xml:space="preserve">
+    <value>Nothing to encrypt.</value>
+  </data>
+  <data name="NothingToSend" xml:space="preserve">
+    <value>Nothing to send.</value>
+  </data>
   <data name="PleaseEnterAmendmentSourceName" xml:space="preserve">
     <value>Please enter a source name.</value>
   </data>
+  <data name="PleaseEnterCodeSystem" xml:space="preserve">
+    <value>Please enter the code system.</value>
+  </data>
+  <data name="PleaseEnterDocumentationInNote" xml:space="preserve">
+    <value>Please enter documentation in the note.</value>
+  </data>
+  <data name="PleaseEnterMethodCode" xml:space="preserve">
+    <value>Please enter a method code.</value>
+  </data>
+  <data name="PleaseEnterValidExpirationDate" xml:space="preserve">
+    <value>Please enter a valid expiration date.</value>
+  </data>
   <data name="PleaseSelectAmendmentSource" xml:space="preserve">
     <value>Please select an amendment source.</value>
+  </data>
+  <data name="PleaseSelectAtLeastOneObservation" xml:space="preserve">
+    <value>At least one observation must be selected.</value>
+  </data>
+  <data name="PleaseSelectAtLeastOneVaccine" xml:space="preserve">
+    <value>Please select at least one vaccine.</value>
+  </data>
+  <data name="PleaseSelectManufacturer" xml:space="preserve">
+    <value>Please select a manufacturer.</value>
+  </data>
+  <data name="PleaseSelectQuestionThisObservationAnswers" xml:space="preserve">
+    <value>Please select the question this observation answers.</value>
+  </data>
+  <data name="PleaseSelectSnomedCtGoal" xml:space="preserve">
+    <value>Please select the SNOMED CT goal.</value>
+  </data>
+  <data name="PleaseSelectTwoOrMoreObservations" xml:space="preserve">
+    <value>Two or more observations must be selected.</value>
+  </data>
+  <data name="PleaseSelectVaccine" xml:space="preserve">
+    <value>Please select a vaccine.</value>
+  </data>
+  <data name="PleaseSelectValueUnits" xml:space="preserve">
+    <value>Please select the value units.</value>
+  </data>
+  <data name="ProvidedToPatient" xml:space="preserve">
+    <value>Provided to patient</value>
+  </data>
+  <data name="RequestedByPatient" xml:space="preserve">
+    <value>Requested by patient</value>
+  </data>
+  <data name="SpecifiedValueIsNotValidDate" xml:space="preserve">
+    <value>The specified value is not a valid date.</value>
+  </data>
+  <data name="SpecifiedValueIsNotValidDateTime" xml:space="preserve">
+    <value>The specified value is not a valid date and time.</value>
+  </data>
+  <data name="SpecifiedValueIsNotValidNumber" xml:space="preserve">
+    <value>The specified value is not a valid number.</value>
+  </data>
+  <data name="SummaryOfCare" xml:space="preserve">
+    <value>Summary of Care</value>
+  </data>
+  <data name="SummaryOfCareNotExported" xml:space="preserve">
+    <value>Summary of Care not exported.</value>
+  </data>
+  <data name="SummaryOfCareNotShown" xml:space="preserve">
+    <value>Summary of Care not shown.</value>
   </data>
   <data name="TriggerCategories" xml:space="preserve">
     <value>Trigger Categories</value>
   </data>
   <data name="TriggersEnabled" xml:space="preserve">
     <value>Triggers Enabled</value>
+  </data>
+  <data name="UnableToDeleteDrugManufacturerIsInUse" xml:space="preserve">
+    <value>Unable to delete. The drug manufacturer is in use by one or more vaccines.</value>
+  </data>
+  <data name="UnableToDeleteDrugUnitIsInUse" xml:space="preserve">
+    <value>Unable to delete. The drug unit is in use by a vaccine assigned to one or more patients.</value>
+  </data>
+  <data name="UnableToDeleteVaccineIsInUse" xml:space="preserve">
+    <value>Unable to delete. The vaccine is in use by one or more patients.</value>
+  </data>
+  <data name="Vaccine" xml:space="preserve">
+    <value>Vaccine</value>
   </data>
 </root>

@@ -1,8 +1,6 @@
 using Imedisoft.Data.Annotations;
 using Imedisoft.Data.Models;
 using System;
-using System.Collections;
-using System.Data;
 
 namespace OpenDentBusiness
 {
@@ -10,7 +8,6 @@ namespace OpenDentBusiness
     /// A task is a single todo item.
     /// </summary>
     [Table("tasks")]
-	[CrudTable(AuditPerms = CrudAuditPerm.TaskNoteEdit)]
 	public class Task
 	{
 		[PrimaryKey]
@@ -183,29 +180,13 @@ namespace OpenDentBusiness
 		Weekly = 2,
 		Monthly = 4,
 		Yearly = 8,
-
-		/// <summary>Use in combination with Weekly.</summary>
 		Monday = 16,
-
-		/// <summary>Use in combination with Weekly.</summary>
 		Tuesday = 32,
-
-		/// <summary>Use in combination with Weekly.</summary>
 		Wednesday = 64,
-
-		/// <summary>Use in combination with Weekly.</summary>
 		Thursday = 128,
-
-		/// <summary>Use in combination with Weekly.</summary>
 		Friday = 256,
-
-		/// <summary>Use in combination with Weekly.</summary>
 		Saturday = 512,
-
-		/// <summary>Use in combination with Weekly.</summary>
 		Sunday = 1024,
-
-		/// <summary>Specific date for a reminder.</summary>
 		Once = 2048,
 	}
 

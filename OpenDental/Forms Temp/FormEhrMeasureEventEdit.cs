@@ -18,7 +18,7 @@ namespace OpenDental {
 
 		private void FormEhrMeasureEventEdit_Load(object sender,EventArgs e) {
 			textDateTime.Text=_measureEventCur.Date.ToString();
-			Patient patCur=Patients.GetPat(_measureEventCur.PatientId);
+			Patient patCur=Patients.GetPat(_measureEventCur.PatientId??0);
 			if(patCur!=null) {
 				textPatient.Text=patCur.GetNameFL();
 			}
@@ -26,11 +26,11 @@ namespace OpenDental {
 				labelMoreInfo.Text=MeasureDescript;
 			}
 			if(_measureEventCur.Type==EhrMeasureEventType.TobaccoUseAssessed) {
-				Loinc lCur=Loincs.GetByCode(_measureEventCur.CodeValueEvent);//TobaccoUseAssessed events can be one of three types, all LOINC codes
+				Loinc lCur=Loincs.GetByCode(_measureEventCur.EventCode);//TobaccoUseAssessed events can be one of three types, all LOINC codes
 				if(lCur!=null) {
 					textType.Text=lCur.LongCommonName;//Example: History of tobacco use Narrative
 				}
-				Snomed sCur=Snomeds.GetByCode(_measureEventCur.CodeValueResult);//TobaccoUseAssessed results can be any SNOMEDCT code, we recommend one of 8 codes, but the CQM measure allows 54 codes and we let the user select any SNOMEDCT they want
+				Snomed sCur=Snomeds.GetByCode(_measureEventCur.ResultCode);//TobaccoUseAssessed results can be any SNOMEDCT code, we recommend one of 8 codes, but the CQM measure allows 54 codes and we let the user select any SNOMEDCT they want
 				if(sCur!=null) {
 					textResult.Text=sCur.Description;//Examples: Non-smoker (finding) or Smoker (finding)
 				}
@@ -143,12 +143,8 @@ namespace OpenDental {
 				listLogEdits.Insert(0,"EHR Measure Event was edited.");
 				SecurityLogs.MakeLogEntry(Permissions.EhrMeasureEventEdit,_measureEventCur.PatientId,string.Join("  ",listLogEdits));
 			}
-			if(_measureEventCur.Id == 0) {//should never happen, only updates happen here
-				EhrMeasureEvents.Insert(_measureEventCur);
-			}
-			else {
-				EhrMeasureEvents.Update(_measureEventCur);
-			}
+			EhrMeasureEvents.Save(_measureEventCur);
+			
 			DialogResult=DialogResult.OK;
 		}
 
